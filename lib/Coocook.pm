@@ -122,6 +122,8 @@ __PACKAGE__->config(
         use_hidden_input   => 0,        # lure bots into filling <input> hidden by CSS
     },
 
+    login_sleep_secs => 1,
+
     registration_example_username => 'daniel_boehmer42',
 
     email_from_address => do {
