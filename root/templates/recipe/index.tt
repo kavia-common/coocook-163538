@@ -1,26 +1,24 @@
 [% title = "Recipes" %]
 
-<table>
+<table class="table">
     <tr>
-        <th>Recipe</th>
-        <th colspan="2">Actions</th>
+        <th scope="col">Recipe</th>
+        <th scope="col">Actions</th>
     </tr>
 [% FOR recipe IN recipes %]
     <tr>
-    <td><a href="[% recipe.edit_url %]">[% recipe.name | html %]</a></td>
-    <td>
-        <form class="inline" method="post" action="[% recipe.duplicate_url %]">
-            Name: <input type="text" name="name" value="Duplicate of [% recipe.name | html %]">
-            <input type="submit" value="Duplicate">
-            <span class="text-accent rounded-circle mx-1 cc-tooltip material-icons" data-bs-toggle="tooltip" data-bs-placement="right" title='Click "Duplicate" to duplicate your recipe.'>help_outline</span>
-        </form>
-    </td>
-    <td>
-        <form class="inline" method="post" action="[% recipe.delete_url %]">
-            <input type="submit" value="Delete">
-        </form>
-    </td>
-    </li>
+        <td><a href="[% recipe.edit_url %]">[% recipe.name | html %]</a></td>
+        <td class="d-flex gap-2">
+            <button onclick="setValues('[% recipe.duplicate_url %]', '[% recipe.name %]');" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#dublicateRecipeModal" data-bs-toggle="tooltip" data-bs-placement="top" title='Dublicate [% recipe.name %]'>
+                <i class="material-icons">file_copy</i>
+            </button>
+            <form class="inline" method="post" action="[% recipe.delete_url %]">
+                <button class="btn btn-outline-danger btn-sm" type="submit" value="Delete">
+                    <i class="material-icons">delete_forever</i>
+                </button>
+            </form>
+        </td>
+    </tr>
 [% END %]
 </table>
 
@@ -28,3 +26,28 @@
     <em>Recipes</em> are templates for new dishes in the food plan.
     Like dishes each recipe is a list of ingredients together with cooking instructions.
 [% END %]
+
+<form method="post" id="dublicateForm" action="">
+    <div class="modal fade" id="dublicateRecipeModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Duplicate <i id="recipeNameTitle"></i></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Enter a new name for the duplicate of <i id="recipeNameBody"></i>.</p>
+                    <div class="mb-2 form-floating">
+                        <input id="new-name" class="form-control" type="text" name="name" placeholder="name of dublicate" required>
+                        <label for="new-name">Name of dublicate</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Dublicate</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+[% new %]

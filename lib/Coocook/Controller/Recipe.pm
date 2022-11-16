@@ -47,6 +47,8 @@ sub recipes : Chained('submenu') PathPart('recipes') RequiresCapability('view_pr
     }
 
     $c->stash( recipes => \@recipes );
+
+    push @{ $c->stash->{js} }, '/js/recipe/recipe.js';
 }
 
 =head2 index
