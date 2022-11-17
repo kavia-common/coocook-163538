@@ -13,7 +13,7 @@ $t->login_ok( 'john_doe', 'P@ssw0rd' );
 $t->follow_link_ok( { text => 'Test Project' } );
 $t->follow_link_ok( { text => 'Articles' } );
 
-$t->follow_link_ok( { text => 'New article' } );
+$t->follow_link_ok( { text => 'add New article' } );
 
 $t->submit_form_ok( { with_fields => { name => 'aether' } }, "create article" );
 
