@@ -1,15 +1,18 @@
 [% title = "Create recipe" %]
 
 <form method="post" action="[% create_url %]">
-    <p>
-        <label for="name">Name:</label>
-        <input  id="name" type="text" name="name" placeholder="name">
-    </p>
 
-    <p>
-        <label for="servings">Servings:</label>
-        <input  id="servings" type="number" name="servings" value="4">
-    </p>
+    <div class="d-flex gap-3 mb-3">
+        <div class="form-floating flex-grow-1">
+            <input id="name" type="text" name="name" class="form-control" placeholder="name">
+            <label for="name">Name</label>
+        </div>
+        <div class="form-floating">
+            <input id="servings" type="number" name="servings" value="4" class="form-control" placeholder="servings">
+            <label for="servings">Servings</label>
+        </div>
+    </div>
 
-    <input type="submit" value="Create">
+    <input class="btn btn-primary" type="submit" value="Create">
+
 </form>
