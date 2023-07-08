@@ -1,14 +1,35 @@
-[% title = "Import recipes" %]
+[% title = "Import recipe" %]
 
-<ul>
-[% FOR recipe IN recipes %]
-    <li>
-        <form method="get" action="[% recipe.import_url %]" class="inline">
-            <input type="submit" value="Import">
-        </form>
-        <a href="[% recipe.url %]">[% recipe.name | html %]</a>
-        (from <a href="[% recipe.project.url %]">[% recipe.project.name | html %]</a>
-        by <a href="[% recipe.project.owner.url %]">[% recipe.project.owner.display_name | html %]</a>)
-    </li>
+[% IF recipes.size == 0 %]
+<p>No recipes to import</p>
+[% ELSE %]
+<table class="table striped align-middle">
+    <thead>
+        <tr>
+            <th style="width:130px;"></th>
+            <th>Recipe</th>
+            <th>Source</th>
+        </tr>
+    </thead>
+    <tbody>
+    [% FOR recipe IN recipes %]
+    <tr>
+        <td>
+            <form method="get" action="[% recipe.import_url %]" class="inline">
+                <button type="submit" title="Import" class="btn btn-primary">
+                    <i class="material-icons">cloud_download</i> Import
+                </button>
+            </form>
+        </td>
+        <td>
+            <a href="[% recipe.url %]">[% recipe.name | html %]</a>
+        </td>
+        <td>
+            <a href="[% recipe.project.url %]">[% recipe.project.name | html %]</a>
+            by <a href="[% recipe.project.owner.url %]">[% recipe.project.owner.display_name | html %]</a>
+        </td>
+    </tr>
+    [% END %]
+    </tbody>
+</table>
 [% END %]
-</ul>
