@@ -14,7 +14,7 @@
             <th scope="col">Shop Section</th>
             <th scope="col">Units</th>
             <th scope="col">Tags</th>
-            <th scope="col">Actions</th>
+            <th scope="col" class="btn-icon-1"></th>
         </tr>
     </thead>
     <tbody>
@@ -30,7 +30,7 @@
             <td>
             [% IF article.delete_url %]
                 <form method="post" action="[% article.delete_url %]" class="action-btn">
-                    <button class="btn btn-outline-danger btn-sm" type="submit" title="Delete [% article.name | html %]">
+                    <button class="btn btn-outline-danger btn-sm btn-quad" type="submit" title="Delete [% article.name | html %]">
                         <i class="material-icons">delete_forever</i>
                     </button>
                 </form>

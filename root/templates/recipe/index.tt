@@ -1,25 +1,29 @@
 [% title = "Recipes" %]
 
 <table class="table">
-    <tr>
-        <th scope="col">Recipe</th>
-        <th scope="col">Actions</th>
-    </tr>
-[% FOR recipe IN recipes %]
-    <tr>
-        <td><a href="[% recipe.edit_url %]">[% recipe.name | html %]</a></td>
-        <td class="d-flex gap-2">
-            <button onclick="setValues('[% recipe.duplicate_url %]', '[% recipe.name %]');" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#dublicateRecipeModal" data-bs-toggle="tooltip" data-bs-placement="top" title='Dublicate [% recipe.name %]'>
-                <i class="material-icons">file_copy</i>
-            </button>
-            <form class="inline" method="post" action="[% recipe.delete_url %]">
-                <button class="btn btn-outline-danger btn-sm" type="submit" value="Delete">
-                    <i class="material-icons">delete_forever</i>
+    <thead>
+        <tr>
+            <th scope="col">Recipe</th>
+            <th scope="col" class="btn-icon-2"></th>
+        </tr>
+    </thead>
+    <tbody>
+    [% FOR recipe IN recipes %]
+        <tr>
+            <td><a href="[% recipe.edit_url %]">[% recipe.name | html %]</a></td>
+            <td class="d-flex gap-2">
+                <button onclick="setValues('[% recipe.duplicate_url %]', '[% recipe.name %]');" class="btn btn-outline-dark btn-sm btn-quad" data-bs-toggle="modal" data-bs-target="#dublicateRecipeModal" data-bs-toggle="tooltip" data-bs-placement="top" title='Dublicate [% recipe.name %]'>
+                    <i class="material-icons">file_copy</i>
                 </button>
-            </form>
-        </td>
-    </tr>
-[% END %]
+                <form class="inline" method="post" action="[% recipe.delete_url %]">
+                    <button class="btn btn-outline-danger btn-sm btn-quad" type="submit" value="Delete">
+                        <i class="material-icons">delete_forever</i>
+                    </button>
+                </form>
+            </td>
+        </tr>
+    [% END %]
+    </tbody>
 </table>
 
 [% WRAPPER includes/infobox.tt %]
@@ -38,12 +42,12 @@
                 <div class="modal-body">
                     <p>Enter a new name for the duplicate of <i id="recipeNameBody"></i>.</p>
                     <div class="mb-2 form-floating">
-                        <input id="new-name" class="form-control" type="text" name="name" placeholder="name of dublicate" required>
-                        <label for="new-name">Name of dublicate</label>
+                        <input id="new-name" class="form-control" type="text" name="name" placeholder="name of duplicate" required>
+                        <label for="new-name">Name of duplicate</label>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Dublicate</button>
+                    <button type="submit" class="btn btn-primary">Duplicate</button>
                 </div>
             </div>
         </div>

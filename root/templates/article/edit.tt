@@ -76,7 +76,7 @@ IF article; escape_title( 'Article', article.name ); ELSE; title="New Article"; 
                 Tags
             </div>
             <div class="col-10">
-                <input type="text" class="form-control" name="tags" value="[% article.tags_rs.joined %]" placeholder="Tags" style="width: 500px;">
+                <input type="text" class="form-control" name="tags" value="[% article.tags_rs.joined %]" placeholder="Tags" style="max-width: 500px;">
             </div>
         </div>
     </div>
