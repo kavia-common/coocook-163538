@@ -324,7 +324,6 @@ subtest "simply check GET for all endpoints" => sub {    # TODO could we autogen
     $t->get_ok('/project/1/Test-Project/recipes');
     $t->get_ok('/project/1/Test-Project/recipes/import');
     $t->get_ok('/project/1/Test-Project/recipes/import/2');
-    $t->get_ok('/project/1/Test-Project/recipes/new');
     $t->get_ok('/project/1/Test-Project/settings');
     $t->get_ok('/project/1/Test-Project/shop_sections');
     $t->get_ok('/project/1/Test-Project/tag/1');

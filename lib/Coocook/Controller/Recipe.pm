@@ -21,19 +21,7 @@ Catalyst Controller.
 
 =cut
 
-sub submenu : Chained('/project/base') PathPart('') CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-
-    $c->stash(
-        submenu_items => [
-            { text => "All recipes",    action => 'recipe/index' },
-            { text => "Add recipe",     action => 'recipe/new_recipe' },
-            { text => "Import recipes", action => 'recipe/importable_recipes' },
-        ]
-    );
-}
-
-sub recipes : Chained('submenu') PathPart('recipes') RequiresCapability('view_project')
+sub recipes : Chained('/project/base') PathPart('recipes') RequiresCapability('view_project')
   CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
@@ -56,9 +44,15 @@ sub recipes : Chained('submenu') PathPart('recipes') RequiresCapability('view_pr
 =cut
 
 sub index : GET HEAD Chained('recipes') PathPart('') RequiresCapability('view_project') Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->stash(
+        create_url        => $c->project_uri( $self->action_for('create') ),
+        import_recipe_url => $c->project_uri('recipe/importable_recipes'),
+    );
 }
 
-sub base : Chained('submenu') PathPart('recipe') CaptureArgs(1) {
+sub base : Chained('/project/base') PathPart('recipe') CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 
     $c->stash( recipe => $c->project->recipes->find($id) || $c->detach('/error/not_found') );
@@ -125,16 +119,6 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
         import_url => $c->uri_for_action( '/browse/recipe/import', [ $recipe->id, $recipe->url_name ] ) );
 }
 
-sub new_recipe : GET HEAD Chained('submenu') PathPart('recipes/new')
-  RequiresCapability('edit_project') {
-    my ( $self, $c ) = @_;
-
-    $c->stash(
-        template   => 'recipe/new.tt',
-        create_url => $c->project_uri( $self->action_for('create') ),
-    );
-}
-
 sub add : POST Chained('base') Args(0) RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
@@ -153,7 +137,7 @@ sub add : POST Chained('base') Args(0) RequiresCapability('edit_project') {
     $c->detach( redirect => [ $recipe->id, '#ingredients' ] );
 }
 
-sub create : POST Chained('submenu') Args(0) RequiresCapability('edit_project') {
+sub create : POST Chained('/project/base') Args(0) RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
     my $name       = $c->req->params->get('name');
@@ -250,7 +234,7 @@ sub redirect : Private {
     }
 }
 
-sub importable_recipes : GET HEAD Chained('submenu') PathPart('recipes/import') Args(0)
+sub importable_recipes : GET HEAD Chained('/project/base') PathPart('recipes/import') Args(0)
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
