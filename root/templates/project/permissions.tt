@@ -10,7 +10,7 @@ has_admin = 0 %]
         <tr>
             <th scope="col">User/Organization</th>
             <th scope="col">Role</th>
-            <th scope="col">Actions</th>
+            <th scope="col" class="btn-icon-1"></th>
         </tr>
     </thead>
     <tbody>
