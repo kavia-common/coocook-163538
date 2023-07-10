@@ -1,70 +1,72 @@
 [% title = "Units";
 
-# TODO This seems not to be used here. Obsolete?
-USE SignificantDigits %]
+js_push_template_path();
+
+USE NiceNumber;
+
+new = BLOCK %]
+<p>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-unit-modal" title="Add new unit">
+        <i class="material-icons">add</i>&thinsp;New unit
+    </button>
+</p>
+[% END; new %]
 
 <table class="table">
-    <tr class="sticky-top bg-white" style="z-index:1011;">
-        <th>Unit</th>
-        <th>Conversions</th>
-        <th>Actions</th>
-    </tr>
+    <thead>
+        <tr class="sticky-top bg-white border-bottom" style="z-index:1011;">
+            <th>Unit</th>
+            <th>Conversions</th>
+            <th class="btn-icon-1"></th>
+        </tr>
+    </thead>
     [% FOR unit IN units;
-        conversions = unit.conversions || [undef];
-
-        FOR conversion IN conversions;
-            IF loop.first %]
-            <tr>
-                <td rowspan="[% unit.conversions.size %]">
-                    <div class="sticky-top sticky-stacked bg-white" style="z-index:1010;">
-                        <a href="[% unit.url %]">[% unit.short_name | html %] ([% unit.long_name | html %])</a>
-                    </div>
-                </td>
-            [% END;
-
-            IF conversion %]
-                <td style="vertical-align: middle;">
-                    [% display_value_unit(1, unit, {html=>1}) %]
-                    =
-                    [% display_value_unit(conversion.factor, conversion.unit, {html=>1}) %]
-                    <span> | </span>
-                    [% display_value_unit(1, conversion.unit, {html=>1}) %]
-                    =
-                    [% display_value_unit(1 / conversion.factor, unit, {html=>1}) %]
-                </td>
-            [% ELSE %]
-                <td></td>
-                <td></td>
-            [% END;
-
-            IF loop.first %]
-                <td rowspan="[% unit.conversions.size %]" style="vertical-align: middle;">
-                    [% IF unit.delete_url %]
-                    <form action="[% unit.delete_url %]" method="post" class="d-inline">
-                        <button class="btn btn-outline-danger btn-sm" type="submit" value="Delete">
-                            <i class="material-icons">delete_forever</i>
-                        </button>
-                    </form>
-                    [% END %]
-                </td>
-            [% END %]
-            </tr>
+    conversions = unit.conversions || [undef] %]
+    <tbody class="parent unit-table">
+    [% FOR conversion IN conversions;
+        IF loop.first %]
+        <tr>
+            <td rowspan="[% unit.conversions.size %]">
+                <div class="sticky-top sticky-stacked bg-white" style="z-index:1010;">
+                    <a href="[% unit.url %]">[% unit.short_name | html %] ([% unit.long_name | html %])</a>
+                </div>
+            </td>
         [% END;
-    END %]
+        IF conversion %]
+            <td style="vertical-align: middle;">
+                [% display_value_unit(1, unit, {html=>1}) %]
+                =
+                [% display_value_unit(conversion.factor, conversion.unit, {html=>1}) %]
+                <span> | </span>
+                [% display_value_unit(1, conversion.unit, {html=>1}) %]
+                =
+                [% display_value_unit(1 / conversion.factor, unit, {html=>1}) %]
+            </td>
+        [% ELSE %]
+            <td></td>
+        [% END;
+        IF loop.first %]
+            <td rowspan="[% unit.conversions.size %]">
+                [% IF unit.delete_url %]
+                <form action="[% unit.delete_url %]" method="post" class="sticky-top sticky-stacked bg-white action-btn" style="z-index:1010;">
+                    <button class="btn btn-outline-danger btn-sm btn-quad" type="submit" title="Delete">
+                        <i class="material-icons">delete_forever</i>
+                    </button>
+                </form>
+                [% ELSE %]
+                <button class="sticky-top sticky-stacked bg-white btn btn-outline-danger btn-sm btn-quad action-btn" disabled title="This is used for dish/recipe ingredients or purchase list items" style="pointer-events:auto;cursor:default">
+                    <i class="material-icons">delete_forever</i>
+                </button>
+                [% END %]
+            </td>
+        [% END %]
+        </tr>
+    [% END %]
+    </tbody>
+[% END %]
 </table>
 
-<div class="card mt-5">
-    <div class="card-header">
-        <h3 class="m-0">Add Unit</h3>
-    </div>
-    <div class="card-body">
-        <form method="post" action="[% create_url %]" class="d-flex gap-2">
-            <input id="short_name" type="text" name="short_name" placeholder="Short name" class="form-control" required>
-            <input id="long_name" type="text" name="long_name" class="form-control" placeholder="Long name" required>
-            <input class="btn btn-primary" type="submit" value="Save">
-        </form>
-    </div>
-</div>
+[% new %]
 
 [% WRAPPER includes/infobox.tt %]
     <em>Units</em> are measurement quantities used to declare
@@ -73,3 +75,29 @@ USE SignificantDigits %]
     Ingredients and purchase list items can be converted from one unit to another
     if a <em>conversion factor</em> is defined between the units.
 [% END %]
+
+<form method="post" action="[% create_url %]">
+    <div class="modal fade" id="create-unit-modal" tabindex="-1" aria-labelledby="create-modal-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="create-modal-label">Create new unit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-2 form-floating">
+                        <input id="create-short-name" class="form-control" name="short_name" placeholder="Short name" required autofocus>
+                        <label for="create-short-name">Short name</label>
+                    </div>
+                    <div class="mb-2 form-floating">
+                        <input id="create-long-name" class="form-control" name="long_name" placeholder="Long name" required>
+                        <label for="create-long-name">Long name</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

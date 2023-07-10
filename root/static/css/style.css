@@ -363,6 +363,19 @@ cc-autocomplete {
     display: none;
 }
 
+/* Show/hide action buttons on hover/no hover */
+.parent:hover .action-btn {
+    visibility: visible;
+}
+
+.parent .action-btn {
+    visibility: hidden;
+}
+
+.unit-table:not(:nth-child(2)) {
+    border-width: 0;
+}
+
 /******** footer part ********/
 footer {
     width: 100%;
