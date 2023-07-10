@@ -16,99 +16,104 @@ js.push('/lib/zxcvbn.js');
 </div>
 [% END %]
 
-<p><a href="[% profile_url %]">View your profile</a></p>
+<p>
+    <a href="[% profile_url %]" class="btn btn-outline-primary">View your profile</a>
+</p>
 
-<form method="post" action="[% change_display_name_url %]">
-<div class="card">
-    <div class="card-header"><h3 class="my-2">Change your user’s display name</h3></div>
-
-<div class="card-body">
-    <div class="mb-3"><label>Username:</label> [% user.name %]</div>
-
-    <div class="row g-3 align-items-center mb-3">
-        <div class="col-auto">
-            <label for="display_name" class="col-form-label">Display name:</label>
-        </div>
-        <div class="col-auto">
-            <input type="text" name="display_name" value="[% user.display_name | html %]" id="display_name" class="form-control">
-        </div>
-        <div class="col-auto">
-            <input type="submit" value="Change display name" class="btn btn-primary">
-        </div>
-    </div>
-
-    <div>
-        You can’t change your username that you use for login
-        and that others use to reference your account,
-        e.g. to give you permissions on their projects.
-    </div>
-</div>
-</div>
-</form>
-
-<div class="card my-4">
-    <div class="card-header"><h3 class="my-2">Change your password</h3></div>
-
-<div class="card-body">
-    <form method="post" action="[% change_password_url %]">
-        <div class="mb-3" style="max-width: 300px;">
-        <input type="password" name="current_password"  placeholder="current password" class="form-control mb-1">
-        </div>
-
-        <div class="mb-3" style="max-width: 300px;">
-        <input type="password" name="password"  placeholder="new password" class="form-control mb-1">
-        <span id="meter"></span>
-        </div>
-
-        <div class="mb-3" style="max-width: 300px;">
-        <input type="password" name="password2" placeholder="confirm new password" class="form-control">
-        <span id="comparator"></span>
-
-        </div>
-        <input type="submit" value="Change password" class="btn btn-primary mb-3">
-    </form>
-    <div>
-        If you don’t know your current password anymore, you can
-        <a href="[% recovery_url %]">request a recovery link</a>
-        to set a new password.
-    </div>
-</div>
-</div>
-
-<div class="card my-4">
-    <div class="card-header"><h3 class="my-2">Change your email address</h3></div>
-
-    <div class="card-body">
-        <div class="mb-3">
-            This is the email address that you get notifications from [% name %] sent to
-            and that you can use to recover your account in case you lost your password.
-            The address is never displayed to other users.
-        </div>
-
-[% IF user.new_email_fc %]
-        <form method="post" action="[% cancel_email_change_url %]" name="cancel_email_change">
-            <div class="mb-3">
-            You’ve requested change to <strong>[% user.new_email_fc | html %]</strong>
-            at [% display_datetime(user.token_created, {short=>1}) %] UTC
-                <input type="submit" value="Cancel" class="btn btn-primary">
+<div class="row g-3">
+    <div class="col-12 col-md-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h3 class="my-2">Change your user’s display name</h3>
             </div>
-        </form>
-[% END %]
-
-        <form method="post" action="[% change_email_url %]">
-            <div class="row g-3 align-items-center mb-3">
-                <div class="col-auto">
-                    <input type="email"  value="[% user.email_fc | html %]" name="new_email" required placeholder="new email address" class="form-control">
+            <div class="card-body">
+                <div class="mb-2 form-floating">
+                    <input class="form-control" value="[% user.name %]" placeholder="Username" readonly>
+                    <label>Username</label>
+                    <small class="text-muted">
+                        You can’t change your username that you use for login
+                        and that others use to reference your account,
+                        e.g. to give you permissions on their projects.
+                    </small>
                 </div>
-                <div class="col-auto">
-                    <input type="submit" value="Change email address" class="btn btn-primary">
+                <form method="post" action="[% change_display_name_url %]">
+                    <div class="mb-2 form-floating">
+                        <input id="display_name" class="form-control" type="text" name="display_name" value="[% user.display_name | html %]">
+                        <label for="display_name">Display name</label>
+                    </div>
+                    <input type="submit" value="Change display name" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h3 class="my-2">Change your password</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" action="[% change_password_url %]">
+                    <div class="mb-2 form-floating">
+                        <input id="current-password" type="password" name="current_password"  placeholder="current password" class="form-control">
+                        <label for="current-password">Current password</label>
+                    </div>
+                    <div class="mb-2 form-floating">
+                        <input id="password" type="password" name="password"  placeholder="new password" class="form-control mb-1">
+                        <label for="password">New password</label>
+                        <span id="meter"></span>
+                    </div>
+                    <div class="mb-2 form-floating">
+                        <input id="password-2" type="password" name="password2" placeholder="confirm new password" class="form-control">
+                        <label for="password-2">Confirm new password</label>
+                        <span id="comparator"></span>
+                    </div>
+                    <input type="submit" value="Change password" class="btn btn-primary mb-2">
+                </form>
+                <div>
+                    If you don’t know your current password anymore, you can
+                    <a href="[% recovery_url %]">request a recovery link</a>
+                    to set a new password.
                 </div>
             </div>
-        </form>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-header">
+                <h3 class="my-2">Change your email address</h3>
+            </div>
+            <div class="card-body">
+                <div class="mb-2">
+                    This is the email address that you get notifications from [% name %] sent to
+                    and that you can use to recover your account in case you lost your password.
+                    The address is never displayed to other users.
+                </div>
 
-        <div>
-            You’ll receive an email to both your current and the new email address
-            and need to click a link to confirm the change.
+                [% IF user.new_email_fc %]
+                <form method="post" action="[% cancel_email_change_url %]" name="cancel_email_change">
+                    <div class="mb-2">
+                        You’ve requested change to <strong>[% user.new_email_fc | html %]</strong>
+                        at [% display_datetime(user.token_created, {short=>1}) %] UTC
+                        <input type="submit" value="Cancel" class="btn btn-primary">
+                    </div>
+                </form>
+                [% END %]
+
+                <form method="post" action="[% change_email_url %]">
+                    <div class="mb-2 form-floating">
+                        <input id="email" type="email"  value="[% user.email_fc | html %]" name="new_email" required placeholder="new email address" class="form-control">
+                        <label for="email">New email address</label>
+                    </div>
+                    <div class="mb-2">
+                        <input type="submit" value="Change email address" class="btn btn-primary">
+                    </div>
+                </form>
+
+                <div>
+                    You’ll receive an email to both your current and the new email address
+                    and need to click a link to confirm the change.
+                </div>
+            </div>
         </div>
     </div>
 </div>
