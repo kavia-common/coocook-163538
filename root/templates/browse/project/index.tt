@@ -19,7 +19,7 @@ END %]
 
 <ul>
 [% FOR proj IN projects; # don't overwrite $project! %]
-    <li>[% '🔒' UNLESS proj.is_public %]<a href="[% proj.url %]">[% proj.name | html %]</a></li>
+    <li>[% link_project(proj) %]</li>
 [% END %]
 </ul>
 

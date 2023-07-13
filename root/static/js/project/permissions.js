@@ -1,8 +1,10 @@
 function renderUserOrgOption(data) {
     return [
-        `${data.type === "user" ? "👤" : "👥"} ${data.display_name} (${
-            data.name
-        })`,
+        `${
+            data.type === "user"
+                ? `<i class="material-icons">person</i>`
+                : `<i class="material-icons">groups</i>`
+        } ${data.display_name} (${data.name})`,
         data.name,
     ];
 }

@@ -35,7 +35,7 @@
             <div class="card-body p-0">
                 <div class="list-group list-group-flush">
                     [% FOR organization IN organizations %]
-                    [% link_organization_2(organization, organization.url) %]
+                    [% link_organization(organization, organization.url) %]
                     [% END %]
                 </div>                
             </div>

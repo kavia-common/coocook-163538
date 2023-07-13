@@ -51,24 +51,21 @@ MACRO display_value_unit(value, unit, opts) BLOCK;
 END;
 
 MACRO link_organization(organization, url) BLOCK;
-    THROW "no URL" UNLESS url;
-    # the font we use has no glyph for groups as of December 2020 ~%]
-    👥 <a href="[% url %]" title="Show organiztion">[% organization.display_name | html %]</a> (<span class="organization">[% organization.name %]</span>)
-[%~ END;
-
-# TODO remove old version
-MACRO link_organization_2(organization, url) BLOCK;
     THROW "no URL" UNLESS url ~%]
-    <a href="[% url %]" title="Show organiztion" class="list-group-item list-group-item-action">
+    <a href="[% url %]" title="Show organization" class="list-group-item list-group-item-action">
         <i class="material-icons">groups</i>
         <span class="text-primary text-decoration-underline"> [% organization.display_name | html %]</span>
-         (<span class="organization">[% organization.name %]</span>)
     </a>
+    (<span class="organization">[% organization.name %]</span>)
 [%~ END;
 
 MACRO link_user(user, url) BLOCK;
     THROW "no URL" UNLESS url ~%]
-    👤 <a href="[% url %]" title="Show user profile">[% user.display_name | html %]</a> (<span class="username">[% user.name %]</span>)
+    <i class="material-icons">person</i> <a href="[% url %]" title="Show user profile">[% user.display_name | html %]</a> (<span class="username">[% user.name %]</span>)
+[%~ END;
+
+MACRO link_project(project) BLOCK; ~%]
+    <a href="[% project.url %]">[% '<i class="material-icons md-18">lock</i> ' UNLESS project.is_public; project.name | html %]</a>
 [%~ END;
 
 MACRO numerus(number, singular, plural, opts) BLOCK; # apply correct grammatical number

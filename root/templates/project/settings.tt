@@ -45,12 +45,14 @@
         <div class="card-header"><h3 class="my-2">Visibility</h3></div>
 
     <div class="card-body">
-        <p>Project is: <strong>[% project.is_public ? 'public' : '🔒private' %]</strong></p>
+        <p>Project is: <strong>[% project.is_public ? 'public' : '<i class="material-icons md-18">lock</i> private' %]</strong></p>
 
 [% IF NOT project.is_public %]
         <input type="hidden" name="public" value="on">
 [% END %]
-        <input type="submit" value="[% project.is_public ? 'Make 🔒private' : 'Make public' %]" class="btn btn-primary mb-3">
+        <button type="submit" class="btn btn-primary mb-3">
+            [% project.is_public ? 'Make <i class="material-icons md-18">lock</i> private' : 'Make public' %]
+        </button>
         <p>
             Public projects can be viewed by anyone, even without logging in
             and might be indexed by search engines.
@@ -66,10 +68,12 @@
     <div class="card-header"><h3 class="my-2">Archiving</h3></div>
 
     <div class="card-body">
-        <p>This project is [% project.archived ? '📁' : '<strong>not</strong>' %] archived.</p>
+        <p>This project is [% project.archived ? '<i class="material-icons">folder</i>' : '<i class="material-icons">folder_off</i> <strong>not</strong>' %] archived.</p>
 
         <form method="post" action="[% project.archived ? project_urls.unarchive : project_urls.archive %]">
-            <input type="submit" name="[% project.archived ? 'unarchive' : 'archive' %]" value="[% project.archived ? 'Un-archive' : '📁 Archive' %]" class="btn btn-primary mb-3">
+            <button type="submit" name="[% project.archived ? 'unarchive' : 'archive' %]" value="" class="btn btn-primary mb-3">
+                [% project.archived ? '<i class="material-icons">folder_off</i> Un-archive' : '<i class="material-icons">folder</i> Archive' %]
+            </button>
         </form>
 
         <p class="m-0">

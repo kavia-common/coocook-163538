@@ -10,7 +10,7 @@ $t->login_ok( 'john_doe', 'P@ssw0rd' );
 
 $t->follow_link_ok( { text => 'Settings' } );
 $t->follow_link_ok( { text => 'Organizations' } );
-$t->follow_link_ok( { text => 'Test Data' } );
+$t->follow_link_ok( { text => 'groups Test Data' } );
 
 {
     my $org_url = $t->uri;

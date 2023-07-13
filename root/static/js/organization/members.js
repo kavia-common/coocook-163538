@@ -1,5 +1,8 @@
 function renderUserOption(data) {
-    return [`👤 ${data.display_name} (${data.name})`, data.name];
+    return [
+        `<i class="material-icons">groups</i> ${data.display_name} (${data.name})`,
+        data.name,
+    ];
 }
 
 const userList = Array.from(

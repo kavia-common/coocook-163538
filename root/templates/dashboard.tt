@@ -13,7 +13,7 @@
             </div>
             <div class="col-auto">
                 <input type="radio" name="is_public" value="" id="is_private" [% can_create_private_project ? 'checked' : 'disabled' %] class="form-check-input">
-                <label for="is_private" [% 'style="color:grey" title="your account may not create private projects"' UNLESS can_create_private_project %] class="form-check-label">🔒private</label>
+                <label for="is_private" [% 'style="color:grey" title="your account may not create private projects"' UNLESS can_create_private_project %] class="form-check-label"><i class="material-icons md-18">lock</i> private</label>
             </div>
             <div class="col-auto">
                 <input type="submit" value="Create project" class="btn btn-primary">
@@ -28,7 +28,7 @@
 
     <ul class="list-unstyled d-flex flex-wrap gap-3">
     [% FOR proj IN my_projects; # don't overwrite $project! %]
-        <li><a class="item-box text-white" href="[% proj.url %]">[% '🔒' UNLESS proj.is_public %] [% proj.name | html %]</a></li>
+        <li><a class="item-box text-white" href="[% proj.url %]">[% '<i class="material-icons">lock</i>' UNLESS proj.is_public %] [% proj.name | html %]</a></li>
     [% END %]
     </ul>
 

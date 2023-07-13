@@ -1,6 +1,6 @@
 [% escape_title( 'Organization', organization.display_name ) %]
 
-<p>Name: 👥 [% organization.name %]</p>
+<p>Name: <i class="material-icons">groups</i> [% organization.name %]</p>
 
 [% IF update_url %]
 <form class="inline" method="post" action="[% update_url %]">
@@ -45,9 +45,9 @@
     <p>None visible.</p>
 [% ELSE %]
 <ul>
-    [% FOR organization_project IN organizations_projects %]
-    <li><a href="[% organization_project.project.url %]">[% '🔒' UNLESS organization_project.project.is_public; organization_project.project.name | html %]</a> ([% organization_project.role %])</li>
-    [% END %]
+[% FOR organization_project IN organizations_projects %]
+    <li><a href="[% organization_project.project_url %]">[% '<i class="material-icons md-18">lock</i> ' UNLESS organization_project.project.is_public; organization_project.project.name | html %]</a> ([% organization_project.role %])</li>
+[% END %]
 </ul>
 [% END %]
 

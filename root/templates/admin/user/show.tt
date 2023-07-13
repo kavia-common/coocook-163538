@@ -45,8 +45,7 @@
 <ul>
 [% FOR permission IN permissions %]
     <li>
-        [% '🔒' UNLESS permission.project.is_public %]<a href="[% permission.project.url %]">[% permission.project.name | html %]</a>
-        ([% permission.role %])
+        [% link_project(permission.project) %] ([% permission.role %])
     </li>
 [% END %]
 </ul>
