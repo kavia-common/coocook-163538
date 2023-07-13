@@ -61,19 +61,6 @@ footer a:focus,
 }
 
 /*===========================================================================
-  align material icons vertical: https://stackoverflow.com/questions/56171473/different-material-icons-styles-do-not-align
-  ===========================================================================*/
-i.material-icons,
-i.material-icons-outlined {
-    vertical-align: middle;
-    position: relative;
-}
-
-.material-icons.md-36 {
-    font-size: 36px;
-}
-
-/*===========================================================================
   markdown preview
   ===========================================================================*/
 .row .markdown-preview {
