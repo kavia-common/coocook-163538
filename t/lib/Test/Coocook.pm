@@ -538,7 +538,7 @@ sub robots_flags_ok {
     my $robots = HTML::Meta::Robots->new->parse($string);
 
     for ( sort keys %$flags ) {
-        my ( $flag => $expected ) = ( $_ => $flags->{$_} );
+        my ( $flag => $expected ) = $flags->%{$_};
 
         if ( $robots->$flag xor $expected ) {
             return $fail->(

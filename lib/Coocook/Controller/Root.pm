@@ -74,24 +74,21 @@ sub auto : Private {
         }
     }
 
-    # TODO use hash slice
     $c->stash(
-        map { $_ => $c->config->{$_} }
-          qw<
-          date_format_short
-          date_format_long
-          datetime_format_short
-          datetime_format_long
-          donate_url
-          help_links
-          icon_type
-          icon_url
-          icon_urls
-          me_url
-          >
-    );
-
-    $c->stash(
+        $c->config->%{
+            qw<
+              date_format_short
+              date_format_long
+              datetime_format_short
+              datetime_format_long
+              donate_url
+              help_links
+              icon_type
+              icon_url
+              icon_urls
+              me_url
+            >
+        },
         css => [    # this comment makes perltidy not merge these lines
             '/lib/themed-bootstrap/themed' . ( $c->debug ? '.css' : '.min.css' ),
             '/css/material-design-icons.css',
