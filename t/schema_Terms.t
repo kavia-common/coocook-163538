@@ -75,7 +75,7 @@ subtest previous => sub {
 
 subtest cmp_validity_today => sub {
     for (qw< CMP_VALID_IN_PAST CMP_VALID_TODAY CMP_VALID_IN_FUTURE >) {
-        ok defined ${ $Coocook::Schema::Result::Terms::{$_} }, "\$Result::Terms::$_ is defined";
+        ok defined $Coocook::Schema::Result::Terms::{$_}->$*, "\$Result::Terms::$_ is defined";
     }
 
     # TODO calling cmp_validity_today() seems to have side effects!

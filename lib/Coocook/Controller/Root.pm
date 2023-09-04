@@ -103,7 +103,7 @@ sub auto : Private {
 
     for my $key (qw< css js >) {
         if ( my $config = $c->config->{$key} ) {
-            push @{ $c->stash->{$key} }, ref $config eq 'ARRAY' ? @$config : $config;
+            push $c->stash->{$key}->@*, ref $config eq 'ARRAY' ? @$config : $config;
         }
     }
 
@@ -288,7 +288,7 @@ Attempt to render a view, if needed.
 sub end : ActionClass('RenderView') {
     my ( $self, $c ) = @_;
 
-    for my $item ( @{ $c->stash->{submenu_items} } ) {
+    for my $item ( $c->stash->{submenu_items}->@* ) {
         next if $item->{forbidden};
         next if $item->{url};
 
@@ -314,7 +314,7 @@ sub end : ActionClass('RenderView') {
     }
 
     # remove subitems that have the 'forbidden' flag
-    @{ $c->stash->{submenu_items} } = grep { not $_->{forbidden} } @{ $c->stash->{submenu_items} };
+    $c->stash->{submenu_items}->@* = grep { not $_->{forbidden} } $c->stash->{submenu_items}->@*;
 
     {
         my $errors = $c->stash->{errors};

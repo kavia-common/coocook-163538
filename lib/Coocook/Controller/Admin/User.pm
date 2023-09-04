@@ -146,7 +146,7 @@ sub update : POST Chained('base') Args(0) RequiresCapability('manage_users') {
                     $roles->delete();
                 }
 
-                for my $role ( @{ $c->stash->{global_roles} } ) {
+                for my $role ( $c->stash->{global_roles}->@* ) {
                     $checked{$role}
                       or next;
 

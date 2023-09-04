@@ -180,7 +180,7 @@ sub require_capability {
 Returns the L<Coocook::Model::Messages> object for the current session.
 
     $c->messages->debug("add message");    # call methods on object
-    my @messages = @{ $c->messages };     # use as arrayref
+    my @messages = $c->messages->@*;       # use as arrayref
 
 =cut
 
@@ -261,7 +261,7 @@ sub redirect_canonical_case {
         return;
     }
 
-    my @args = @{ $c->req->captures };    # $c->req->args contains only args for current chain element
+    my @args = $c->req->captures->@*;    # $c->req->args contains only args for current chain element
     $args[$args_index] = $canonical_value;
 
     my $uri = $c->uri_for( $c->action, \@args );

@@ -364,7 +364,7 @@ for my $rule (@rules) {
         }
     }
 
-    for my $capability ( @{ $rule->{grants_capabilities} } ) {
+    for my $capability ( $rule->{grants_capabilities}->@* ) {
         $capabilities{$capability}
           and die "capabilities can be granted by only 1 rule: '$capability'";
 
@@ -394,7 +394,7 @@ sub capability_needs_input {
     my $rule = $capabilities{$capability}
       or croak "no such capability '$capability'";
 
-    return @{ $rule->{needs_input} };
+    return $rule->{needs_input}->@*;
 }
 
 sub has_capability {
@@ -407,13 +407,13 @@ sub has_capability {
       or croak "input must be hashref";
 
     # invalid call of caller doesn't pass hash keys
-    for my $key ( @{ $rule->{needs_input} }, 'user' ) {   # key 'user' is always required, even if undef
+    for my $key ( $rule->{needs_input}->@*, 'user' ) {    # key 'user' is always required, even if undef
         exists $input->{$key}
           or croak "missing input key '$key'";
     }
 
     # unauthorized request if required input isn't present
-    for my $key ( @{ $rule->{needs_input} } ) {
+    for my $key ( $rule->{needs_input}->@* ) {
         $input->{$key}
           or return;
     }

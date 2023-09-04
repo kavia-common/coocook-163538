@@ -177,13 +177,15 @@ ok $importer = Coocook::Model::RecipeImporter->new(
 ok $importer->identify_candidates, "identify_candidates()";
 
 ok $_->{target_candidate}, "found target_candidate"
-  for @{ $importer->source_articles }, @{ $importer->source_units };
+  for $importer->source_articles->@*, $importer->source_units->@*;
 
 my %ingredients = (
     map {
-        $_->{id} =>
-          { article => $_->{article}{target_candidate}{id}, unit => $_->{unit}{target_candidate}{id} }
-    } @{ $importer->ingredients }
+        $_->{id} => {
+            article => $_->{article}{target_candidate}{id},
+            unit    => $_->{unit}{target_candidate}{id},
+        }
+    } $importer->ingredients->@*
 );
 
 $ingredients{1}{comment} = my $comment = "comment from line " . __LINE__;

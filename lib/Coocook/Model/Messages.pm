@@ -54,7 +54,7 @@ sub new {
 sub add {
     my $self = shift;
 
-    my %message = @_ == 1 ? %{ $_[0] } : @_;
+    my %message = @_ == 1 ? $_[0]->%* : @_;
 
     if ( keys %message == 1 ) {
         my ( $type => $text ) = %message;
@@ -95,12 +95,12 @@ Returns unblessed array reference.
 
 =cut
 
-sub messages { [ @{ $_[0] } ] }
+sub messages { [ $_[0]->@* ] }
 
 =head2 next()
 
 =cut
 
-sub next { shift @{ $_[0] } }
+sub next { shift $_[0]->@* }
 
 1;

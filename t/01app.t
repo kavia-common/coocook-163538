@@ -32,7 +32,7 @@ subtest "attributes of controller actions" => sub {
             }
 
             my %attrs = do {
-                my @attrs = @{ $action->attributes };
+                my @attrs = $action->attributes->@*;
                 s/ \( .+ $ //x for @attrs;    # remove arguments in parenthesis, e.g. RequiresCapability(foo)
                 map { $_ => 1 } @attrs;
             };

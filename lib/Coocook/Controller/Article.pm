@@ -31,7 +31,7 @@ sub index : GET HEAD Chained('/project/base') PathPart('articles') Args(0)
         my $edit_action   = $self->action_for('edit');
         my $delete_action = $self->action_for('delete');
 
-        my %shop_sections = map { $_->id => $_ } @{ $c->stash->{shop_sections} };
+        my %shop_sections = map { $_->id => $_ } $c->stash->{shop_sections}->@*;
 
         my $articles = $c->project->articles->sorted->hri;
 
@@ -57,7 +57,7 @@ sub index : GET HEAD Chained('/project/base') PathPart('articles') Args(0)
 
     while ( my $article_unit = $articles_units->next ) {
         my ( $article => $unit ) = @$article_unit{ 'article_id', 'unit_id' };
-        push @{ $articles{$article}{units} }, $units{$unit};
+        push $articles{$article}{units}->@*, $units{$unit};
     }
 
     $c->stash(
@@ -125,8 +125,8 @@ sub delete : POST Chained('base') Args(0) RequiresCapability('edit_project') {
     $c->forward('dishes_recipes');
 
     for ( 'dishes', 'recipes' ) {
-        if ( @{ $c->stash->{$_} } > 0 ) {
-            $c->log->warn( sprintf "article is used in %i %s", scalar @{ $c->stash->{$_} }, $_ );
+        if ( $c->stash->{$_}->@* > 0 ) {
+            $c->log->warn( sprintf "article is used in %i %s", scalar $c->stash->{$_}->@*, $_ );
 
             $c->detach('/error/bad_request');    # TODO add error text
         }
@@ -198,7 +198,7 @@ sub dishes_recipes : Private {
         $dish->{meal} = $meal;
 
         if ( defined $recipe and exists $recipes{$recipe} ) {
-            push @{ $recipes{$recipe}{dishes} }, $dish;
+            push $recipes{$recipe}{dishes}->@*, $dish;
         }
         else {
             push @dishes, $dish;

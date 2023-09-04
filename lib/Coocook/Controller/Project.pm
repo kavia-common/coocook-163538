@@ -127,8 +127,8 @@ sub show : GET HEAD Chained('submenu') PathPart('') Args(0) RequiresCapability('
     my $days = $c->model('Plan')->project( $c->project );
 
     for my $day (@$days) {
-        for my $meal ( @{ $day->{meals} } ) {
-            for my $dish ( @{ $meal->{dishes} } ) {
+        for my $meal ( $day->{meals}->@* ) {
+            for my $dish ( $meal->{dishes}->@* ) {
                 $dish->{url} = $c->project_uri( '/dish/edit', $dish->{id} );
             }
         }
@@ -315,7 +315,7 @@ sub post_import : POST Chained('base') PathPart('import') Args(0)
 
     # extract properties selected in form
     my @properties =
-      grep { my $key = $_->{key}; $c->req->params->get("property_$key") } @{ $importer->properties };
+      grep { my $key = $_->{key}; $c->req->params->get("property_$key") } $importer->properties->@*;
 
     my $ok =
       $importer->can_import_properties( $target, [ map { $_->{key} } @properties ], \my @errors );

@@ -66,10 +66,10 @@ sub BUILD {
     my $self = shift;
 
     # link IDs in ingredients to source_(article|unit) hashrefs
-    my %articles = map { $_->{id} => $_ } @{ $self->source_articles };
-    my %units    = map { $_->{id} => $_ } @{ $self->source_units };
+    my %articles = map { $_->{id} => $_ } $self->source_articles->@*;
+    my %units    = map { $_->{id} => $_ } $self->source_units->@*;
 
-    for my $ingredient ( @{ $self->ingredients } ) {
+    for my $ingredient ( $self->ingredients->@* ) {
         $ingredient->{article} = $articles{ $ingredient->{article_id} };
         $ingredient->{unit}    = $units{ $ingredient->{unit_id} };
     }
@@ -90,7 +90,7 @@ sub identify_candidates {
 
         # index @$target_rows by all @$keys
         for my $key (@$keys) {
-            push @{ $target_rows{$key}{ $_->{$key} } }, $_ for @$target_rows;
+            push $target_rows{$key}{ $_->{$key} }->@*, $_ for @$target_rows;
         }
 
         my $source_method = "source_${rel}";
@@ -119,10 +119,10 @@ sub identify_candidates {
 sub import_data {    # import() used by 'use'
     my ( $self, %args ) = @_;
 
-    my %ingredients = %{ $args{ingredients} };    # shallow copy
+    my %ingredients = $args{ingredients}->%*;    # shallow copy
 
-    my %articles = map { $_->{id} => $_ } @{ $self->target_articles };
-    my %units    = map { $_->{id} => $_ } @{ $self->target_units };
+    my %articles = map { $_->{id} => $_ } $self->target_articles->@*;
+    my %units    = map { $_->{id} => $_ } $self->target_units->@*;
 
     my $ingredients_rs = $self->recipe->ingredients;
 
@@ -138,7 +138,7 @@ sub import_data {    # import() used by 'use'
                 }
             );
 
-            for my $ingredient ( @{ $self->ingredients } ) {
+            for my $ingredient ( $self->ingredients->@* ) {
                 my $ingredient_id = $ingredient->{id};
 
                 my $mapping = delete $ingredients{$ingredient_id}

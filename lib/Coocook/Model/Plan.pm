@@ -76,7 +76,7 @@ sub day {
                     };
                 }
 
-                push @{ $meals{ $dish->meal_id }{dishes} }, \%dish;
+                push $meals{ $dish->meal_id }{dishes}->@*, \%dish;
             }
 
             if ( my $prepare_at_meal = $dish->prepare_at_meal_id ) {
@@ -87,7 +87,7 @@ sub day {
                         date => $dish->meal->date,
                     };
 
-                    push @{ $meals{ $dish->prepare_at_meal->id }{prepared_dishes} }, \%dish;
+                    push $meals{ $dish->prepare_at_meal->id }{prepared_dishes}->@*, \%dish;
                 }
             }
         }
@@ -110,7 +110,7 @@ sub day {
         );
 
         while ( my $ingredient = $ingredients->next ) {
-            push @{ $dishes{ $ingredient->dish_id }{ingredients} },
+            push $dishes{ $ingredient->dish_id }{ingredients}->@*,
               {
                 prepare => $ingredient->format_bool( $ingredient->prepare ),
                 value   => $ingredient->value,
@@ -147,7 +147,7 @@ sub project {
             meals => [],
         };
 
-        push @{ $day->{meals} },
+        push $day->{meals}->@*,
           $meals{ $meal->id } = $meal->as_hashref(
             date            => $day->{date},
             deletable       => !!$meal->deletable,
@@ -164,10 +164,10 @@ sub project {
 
         weaken $dish->{meal};
 
-        push @{ $dish->{meal}{dishes} }, $dish;
+        push $dish->{meal}{dishes}->@*, $dish;
 
         if ( my $prepare_meal_id = $dish->{prepare_at_meal_id} ) {
-            push @{ $meals{$prepare_meal_id}{prepared_dishes} }, $dish;
+            push $meals{$prepare_meal_id}{prepared_dishes}->@*, $dish;
         }
     }
     return [ @days{ sort keys %days } ];

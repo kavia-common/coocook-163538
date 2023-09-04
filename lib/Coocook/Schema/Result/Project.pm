@@ -119,7 +119,7 @@ sub articles_cached_units {
 
             $a_u->related_resultset('unit')->set_cache( [ $units{$u} ] );
 
-            push @{ $articles_units{$a} }, $a_u;
+            push $articles_units{$a}->@*, $a_u;
 
             $units_with_articles{$u}++;
         }

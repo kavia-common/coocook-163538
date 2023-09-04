@@ -64,7 +64,7 @@ schema_from_schema_loader(
                 my ($any_column)   = keys %$rels;
                 my $any_rs         = $rels->{$any_column};
                 my $any_id         = $row->get_column($any_column);
-                my @other_projects = keys %{ $map{$any_rs}{$any_id} };
+                my @other_projects = keys $map{$any_rs}{$any_id}->%*;
 
                 # create a copy for each @other_projects
                 for my $project (@other_projects) {

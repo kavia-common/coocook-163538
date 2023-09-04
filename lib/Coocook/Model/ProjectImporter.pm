@@ -99,12 +99,12 @@ for my $property (@internal_properties) {
 
     $property->{$_} ||= [] for qw< depends_on dependency_of soft_depends_on soft_dependency_of >;
 
-    for ( @{ $property->{depends_on} } ) {
-        push @{ $internal_properties{$_}{dependency_of} }, $property->{key};
+    for ( $property->{depends_on}->@* ) {
+        push $internal_properties{$_}{dependency_of}->@*, $property->{key};
     }
 
-    for ( @{ $property->{soft_depends_on} } ) {
-        push @{ $internal_properties{$_}{soft_dependency_of} }, $property->{key};
+    for ( $property->{soft_depends_on}->@* ) {
+        push $internal_properties{$_}{soft_dependency_of}->@*, $property->{key};
     }
 }
 
@@ -120,7 +120,7 @@ for my $property (@public_properties) {
 
     # reduce lists to public properties
     for (qw< depends_on dependency_of >) {
-        $property->{$_} = [ grep { exists $public_properties{$_} } @{ $property->{$_} } ];
+        $property->{$_} = [ grep { exists $public_properties{$_} } $property->{$_}->@* ];
     }
 }
 
@@ -156,7 +156,7 @@ sub _importable_properties {
 
     # begin with all properties with existing data
   PROPERTY: for my $property ( values %public_properties ) {
-        for my $conflict ( @{ $property->{conflicts} } ) {
+        for my $conflict ( $property->{conflicts}->@* ) {
             if ( $inventory->{$conflict} > 0 ) {
                 $unimportable{ $property->{key} } = 1;
 
@@ -253,7 +253,7 @@ sub import_data {    # import() is used by 'use'
         sub {
             for my $property (@internal_properties) {
                 if ( $property->{auto} ) {    # auto: skip if not all dependencies requested
-                    grep { not $requested_props{$_} } @{ $property->{depends_on} }
+                    grep { not $requested_props{$_} } $property->{depends_on}->@*
                       and next;
                 }
                 else {                        # explicitly requested by key
@@ -266,7 +266,7 @@ sub import_data {    # import() is used by 'use'
                 # - has the 'auto' flag
                 my $is_dependency =
                   !!grep { $requested_props{$_} or $internal_properties{$_}{auto} }
-                  ( @{ $property->{dependency_of} }, @{ $property->{soft_dependency_of} } );
+                  ( $property->{dependency_of}->@*, $property->{soft_dependency_of}->@* );
 
                 # accept coderef or arrayref of coderefs
                 my @imports = map { ref eq 'ARRAY' ? @$_ : $_ } $property->{import};
@@ -359,7 +359,7 @@ sub _validate_properties {
         my $property = $public_properties{$property_key}
           or croak "Unknown property: '$property_key'";
 
-        for my $dependency ( @{ $property->{depends_on} } ) {
+        for my $dependency ( $property->{depends_on}->@* ) {
             $property_keys{$dependency}
               or croak "$property_key requires $dependency";
         }

@@ -48,7 +48,7 @@ sub preview : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('
         my $cursor = $articles_units->cursor;
 
         while ( my ( $article => $unit ) = $cursor->next ) {
-            push @{ $articles{$article}{unit_ids_joined} }, $unit;
+            push $articles{$article}{unit_ids_joined}->@*, $unit;
         }
 
         for my $article (@$articles) {
@@ -99,7 +99,7 @@ sub post : POST Chained('base') PathPart('') Args(0) RequiresCapability('import_
 
     my %ingredients;
 
-    for my $ingredient ( @{ $importer->ingredients } ) {
+    for my $ingredient ( $importer->ingredients->@* ) {
         my $id = $ingredient->{id};
 
         $ingredients{$id} =

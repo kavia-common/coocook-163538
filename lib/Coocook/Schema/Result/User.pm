@@ -133,7 +133,7 @@ sub add_roles {
     my ( $self, @roles ) = @_;
 
     if ( @roles == 1 and ref $roles[0] eq 'ARRAY' ) {
-        @roles = @{ $roles[0] };
+        @roles = $roles[0]->@*;
     }
 
     for my $role (@roles) {
