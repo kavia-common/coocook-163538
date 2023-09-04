@@ -5,6 +5,7 @@
 use v5.30.0;
 use strict;
 use warnings;
+use experimental qw(signatures);
 use utf8;
 use sigtrap qw/die normal-signals/;
 
@@ -92,33 +93,24 @@ else {
 
 }
 
-sub deploy {
-    my $flags = shift;
-
+sub deploy ($flags) {
     system "$dir/coocook_deploy.pl " . $flags;
 }
 
-sub server {
-    my $flags = shift || '';
-
+sub server ( $flags = '' ) {
     system "$dir/coocook_server.pl " . $flags;
 }
 
-sub error {
-    my $msg = shift;
-
+sub error ($msg) {
     return colored( 'ERROR:', 'red' ) . " $msg";
 }
 
-sub warning {
-    my $msg = shift;
-
+sub warning ($msg) {
     return colored( 'WARNING:', 'yellow' ) . " $msg";
 }
 
-sub usage {
-    my $command = shift;
-    my %help    = (
+sub usage ($command) {
+    my %help = (
         commands => <<~EOT,
         Usage:
             $0 [command] [flags]

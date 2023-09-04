@@ -3,6 +3,7 @@ package Coocook::Script::Users;
 # ABSTRACT: script for exporting a list of users
 
 use Moose;
+use experimental qw(signatures);
 use namespace::autoclean;
 
 use feature 'say';
@@ -65,9 +66,7 @@ has total => (
     documentation => "print the total number of users",
 );
 
-sub run {
-    my $self = shift;
-
+sub run ($self) {
     if ( $self->discard ) {
         defined $self->email_verified and $self->email_verified eq '0'
           or die "Option --discard requires --email_verified=0!\n";
@@ -132,9 +131,7 @@ sub run {
     );
 }
 
-sub _parse_created {
-    my ( $self, $created, $now ) = @_;
-
+sub _parse_created ( $self, $created = undef, $now = undef ) {
     $now = $now ? $now->clone : DateTime->now();
 
     defined $created
@@ -158,9 +155,7 @@ sub _parse_created {
     return { created => { $op => $self->_schema->storage->datetime_parser->format_datetime($dt) } };
 }
 
-sub _print_total {
-    my ( $self, $total ) = @_;
-
+sub _print_total ( $self, $total ) {
     $self->total
       and say $total, " ", $total == 1 ? "user" : "users";
 }

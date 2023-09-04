@@ -4,6 +4,7 @@ package Coocook::Schema::Component::Result::Boolify;
 
 use strict;
 use warnings;
+use experimental qw(signatures);
 
 use parent 'DBIx::Class::FilterColumn';
 
@@ -20,9 +21,7 @@ sub register_column {
     return $class->next::method(@_);
 }
 
-sub to_bool {
-    my ( $self, $value ) = @_;
-
+sub to_bool ( $self, $value ) {
     return $value ? 1 : 0;
 }
 

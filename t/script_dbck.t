@@ -1,4 +1,5 @@
 use Test2::V0;
+use experimental qw(signatures);
 
 use Coocook;
 use Coocook::Script::Dbck;
@@ -21,7 +22,9 @@ ok no_warnings { $app->run }, "no warnings with test data";
 {
     $db->txn_begin;
 
-    $db->storage->dbh_do( sub { $_[1]->do('ALTER TABLE projects ADD COLUMN foobar integer') } );
+    $db->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do(<<~SQL) } );
+    ALTER TABLE projects ADD COLUMN foobar integer
+    SQL
 
     like warnings { $app->run } => [
         qr/table \W?projects\W?/,    #perldoc
@@ -68,9 +71,17 @@ for my $rs ( sort keys %$cols ) {
 
         $db->txn_begin;
 
+        # set first row's value to empty string ''
         # can't use DBIC update() here because Component::Result::Boolify is too good
-        $db->storage->dbh_do(
-            sub { $_[1]->do("UPDATE $table SET $col='' WHERE id=(SELECT id FROM $table LIMIT 1)") } );
+        $db->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do(<<~SQL) } );
+        UPDATE $table
+        SET $col = ''
+        WHERE id = (
+            SELECT id
+            FROM $table
+            LIMIT 1
+        )
+        SQL
 
         like warning { $app->run } => qr/column \W?$col\W? .+ empty string ''/, "$col of '' in $rs";
 
@@ -79,8 +90,16 @@ for my $rs ( sort keys %$cols ) {
         if ( $col eq 'value' ) {
             $db->txn_begin;
 
-            $db->storage->dbh_do(
-                sub { $_[1]->do("UPDATE $table SET value='0,1' WHERE id=(SELECT id FROM $table LIMIT 1)") } );
+            # set first row's value to German number format '0,1'
+            $db->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do(<<~SQL) } );
+            UPDATE $table
+            SET value = '0,1'
+            WHERE id = (
+                SELECT id
+                FROM $table
+                LIMIT 1
+            )
+            SQL
 
             like warning { $app->run } => qr/($rs|$table) .+ number.format .+ '0,1'/x,
               "invalid number format '0,1' in $rs";

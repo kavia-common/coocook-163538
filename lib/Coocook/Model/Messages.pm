@@ -2,6 +2,7 @@ package Coocook::Model::Messages;
 
 use strict;
 use warnings;
+use experimental qw(signatures);
 
 use Carp;
 
@@ -35,9 +36,7 @@ for my $type (@types) {
 
 =cut
 
-sub new {
-    my $class = shift;
-
+sub new ($class) {
     return bless [], $class;
 }
 
@@ -51,10 +50,8 @@ sub new {
 
 =cut
 
-sub add {
-    my $self = shift;
-
-    my %message = @_ == 1 ? $_[0]->%* : @_;
+sub add ( $self, @args ) {
+    my %message = @args == 1 ? $args[0]->%* : @args;
 
     if ( keys %message == 1 ) {
         my ( $type => $text ) = %message;
@@ -83,8 +80,7 @@ Removes all messages.
 
 =cut
 
-sub clear {
-    my $self = shift;
+sub clear ($self) {
     @$self = ();
     return $self;
 }
@@ -95,12 +91,12 @@ Returns unblessed array reference.
 
 =cut
 
-sub messages { [ $_[0]->@* ] }
+sub messages ($self) { [@$self] }
 
 =head2 next()
 
 =cut
 
-sub next { shift $_[0]->@* }
+sub next ($self) { shift @$self }
 
 1;

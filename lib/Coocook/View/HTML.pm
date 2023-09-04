@@ -3,8 +3,8 @@ package Coocook::View::HTML;
 # ABSTRACT: view for Coocook to create HTML pages with Template Toolkit
 
 use Moose;
-
 use MooseX::NonMoose;
+use experimental qw(signatures);
 use namespace::autoclean;
 
 extends 'Catalyst::View::TT';
@@ -33,9 +33,7 @@ Set C<< $stash->{title} >> and C<< $stash->{html_title} >> in 1 step.
 
 =cut
 
-sub escape_title {
-    my ( $self, $c, $title, $text ) = @_;
-
+sub escape_title ( $self, $c, $title, $text ) {
     my $html_filter = $self->template->context->filter('html');
 
     $self->template->context->stash->update(

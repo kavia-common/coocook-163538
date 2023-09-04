@@ -1,4 +1,5 @@
 use Test2::V0;
+use experimental qw(signatures);
 
 use Coocook::Model::ProjectImporter;
 use Scalar::Util qw(refaddr);
@@ -14,9 +15,7 @@ ok my $importer = Coocook::Model::ProjectImporter->new();
 
 # TODO this is probably implemented better somewhere on CPAN
 #      but I couldn't find it, even asked #perl-help on IRC
-sub _no_shared_references {
-    my ( $a, $b, $name ) = @_;
-
+sub _no_shared_references ( $a, $b, $name = undef ) {
     my ( %a, %b );
 
     # collect reference addresses

@@ -4,11 +4,10 @@ package Coocook::ActionRole::RequiresCapability;
 
 use Coocook::Model::Authorization;
 use Moose::Role;
+use experimental qw(signatures);
 use namespace::autoclean;
 
-after BUILD => sub {
-    my ( $class, $args ) = @_;
-
+after BUILD => sub ( $class, $args ) {
     if ( my $capabilities = $args->{attributes}{RequiresCapability} ) {
         @$capabilities <= 1
           or join( '+', sort @$capabilities ) eq

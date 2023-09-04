@@ -3,6 +3,7 @@ package Coocook::Schema::ResultSet::User;
 use feature 'fc';
 
 use Moose;
+use experimental qw(signatures);
 use namespace::autoclean;
 
 use Data::Validate::Email 'is_email';
@@ -19,9 +20,7 @@ sub sorted_by_columns { 'name_fc' }
 
 =cut
 
-sub email_valid_and_available {
-    my ( $self, $email ) = @_;
-
+sub email_valid_and_available ( $self, $email ) {
     my $blacklist = $self->result_source->schema->resultset('BlacklistEmail');
 
     is_email($email)
@@ -41,9 +40,7 @@ sub email_valid_and_available {
     );
 }
 
-sub name_available {
-    my ( $self, $name ) = @_;
-
+sub name_available ( $self, $name ) {
     my $name_fc = fc $name;
 
     my $blacklist     = $self->result_source->schema->resultset('BlacklistUsername');
@@ -58,9 +55,7 @@ sub name_available {
 
 =cut
 
-sub site_owners {
-    my $self = shift;
-
+sub site_owners ($self) {
     return $self->search(
         {
             'roles_users.role' => 'site_owner',
@@ -75,9 +70,7 @@ sub site_owners {
 
 =cut
 
-sub with_projects_count {
-    my $self = shift;
-
+sub with_projects_count ($self) {
     return $self->search(
         undef,
         {
@@ -88,9 +81,7 @@ sub with_projects_count {
     );
 }
 
-sub with_valid_limited_token {
-    my $self = shift;
-
+sub with_valid_limited_token ($self) {
     return $self->search(
         {
             $self->me('token_expires') => {    # AND
@@ -101,9 +92,7 @@ sub with_valid_limited_token {
     );
 }
 
-sub with_valid_or_unlimited_token {
-    my $self = shift;
-
+sub with_valid_or_unlimited_token ($self) {
     return $self->search(
         {
             $self->me('token_expires') => [    # OR

@@ -1,4 +1,5 @@
 use Test2::V0;
+use experimental qw(signatures);
 
 use Test2::Require::Module 'Test::PostgreSQL';
 use Test2::Require::Module 'DateTime::Format::Pg';
@@ -102,7 +103,7 @@ for my $source ( $schema_from_dbic->sources ) {
     if ( $result_source->has_column('id') ) {
         my $table = $result_source->name;
 
-        $schema_from_dbic->storage->dbh_do( sub { $_[1]->do(<<~SQL) } );
+        $schema_from_dbic->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do(<<~SQL) } );
         SELECT setval('${table}_id_seq', (SELECT MAX(id) FROM $table), true)
         SQL
     }
@@ -131,7 +132,9 @@ subtest "deleting projects" => sub {
 };
 
 # rename Pgsql schema to match SQLite schema name 'main'
-$schema_from_deploy->storage->dbh_do( sub { $_[1]->do('ALTER SCHEMA public RENAME TO main') } );
+$schema_from_deploy->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do(<<SQL) } );
+ALTER SCHEMA public RENAME TO main
+SQL
 
 my $sqlite_schema = TestDB->new();
 
@@ -198,11 +201,9 @@ subtest "timestamps are stored in UTC" => sub {
     my $schema = $schema_from_dbic;
 
     # with Test::PostgreSQL the default timezone is UTC which makes bugs unnoticeable
-    $schema->storage->dbh_do(
-        sub {
-            $_[1]->do("SET TIME ZONE 'Pacific/Chatham'");    # weird timezone UTC+12:45
-        }
-    );
+    $schema->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do(<<~SQL) } );
+    SET TIME ZONE 'Pacific/Chatham' -- weird timezone UTC+12:45
+    SQL
 
     my $t = Test::Coocook->new(
         config => { enable_user_registration => 1 },
@@ -256,9 +257,7 @@ subtest "issue #266 order of meals/dishes" => sub {
     my $project = $user->create_related( owned_projects => { name => '', description => '' } );
 
     $schema->storage->dbh_do(
-        sub {
-            my ( undef, $dbh ) = @_;
-
+        sub ( $storage, $dbh ) {
             $dbh->do(<<~SQL) for qw( b c a );    # irregular order
             INSERT INTO meals (project_id,date,name,comment) VALUES (1,'2000-01-01', '$_','')
             SQL
@@ -287,8 +286,7 @@ for my $schema ( $schema_from_dbic, $schema_from_deploy, $schema_from_upgrades )
     $schema->storage->dbh->disconnect();
 }
 
-sub schema_diff_like {
-    my ( $schema1, $schema2, $expected_diff, $name ) = @_;
+sub schema_diff_like ( $schema1, $schema2, $expected_diff, $name = undef ) {
 
     # TODO doesn't detect constraint changes, e.g. missing UNIQUEs
     my $diff = diff_db_schema( map { $_->storage->dbh } $schema1, $schema2 );

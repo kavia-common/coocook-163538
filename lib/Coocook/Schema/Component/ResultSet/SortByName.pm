@@ -4,12 +4,11 @@ package Coocook::Schema::Component::ResultSet::SortByName;
 
 use strict;
 use warnings;
+use experimental qw(signatures);
 
 sub sorted_by_columns { 'name' }
 
-sub sorted {
-    my $self = shift;
-
+sub sorted ($self) {
     return $self->search(
         undef,
         {

@@ -3,6 +3,7 @@ package Coocook::Helpers;
 # ABSTRACT: role with useful Controller helper methods as $c->my_helper(...)
 
 use Moose::Role;
+use experimental qw(signatures);
 use namespace::autoclean;
 
 use Carp;
@@ -19,9 +20,7 @@ that can be passed to C<< $c->uri_for_local_part($uri_local_part) >>.
 
 # TODO better name?
 # TODO test this
-sub current_uri_local_part {
-    my ($c) = @_;
-
+sub current_uri_local_part ($c) {
     my $current_uri = $c->req->uri->rel( $c->req->base );
 
     $current_uri =~ s! ^ \. / !/!x             # ./     => /
@@ -37,9 +36,7 @@ Similar to C<< $c->uri_for() >> but accepts query part.
 =cut
 
 # TODO test this
-sub uri_for_local_part {
-    my ( $c, $local_part ) = @_;
-
+sub uri_for_local_part ( $c, $local_part ) {
     return $c->req->base . $local_part;
 }
 
@@ -78,9 +75,7 @@ Returns C<undef> if action is not permitted.
 
     sub bar : RequiresCapability('view_bar') { ... }
 
-    sub baz {
-        my ( $self, $c ) = @_;
-
+    sub baz ( $self, $c ) {
         # with path and query arguments
         my $uri = $c->uri_for_action_if_permitted( '/foo/bar', { limit => 42 } );
 
@@ -129,9 +124,7 @@ C<\%input> may override information from stash.
 
 =cut
 
-sub has_capability {
-    my ( $c, $capability, $input ) = @_;
-
+sub has_capability ( $c, $capability, $input = undef ) {
     my $authz = $c->model('Authorization');
 
     $input //= {};
@@ -184,7 +177,7 @@ Returns the L<Coocook::Model::Messages> object for the current session.
 
 =cut
 
-sub messages { return shift->stash->{messages} }
+sub messages ($self) { return $self->stash->{messages} }
 
 =head2 $c->project_uri($action, @arguments, \%query_params?)
 
@@ -212,11 +205,7 @@ sub project_uri {
     return $c->uri_for_action( $action, [ $project->id, $project->url_name, @_ ], @query );
 }
 
-sub project {
-    my $c = shift;
-
-    $c->stash->{project};
-}
+sub project ($c) { $c->stash->{project} }
 
 =head2 $c->redirect_canonical_case( $args_index, $canonical_value )
 
@@ -237,9 +226,7 @@ or the capabilities required by the action must be given.
 
 =cut
 
-sub redirect_canonical_case {
-    my ( $c, $args_index, $canonical_value ) = @_;
-
+sub redirect_canonical_case ( $c, $args_index, $canonical_value ) {
     $c->req->method eq 'GET'
       or $c->req->method eq 'HEAD'
       or return;
@@ -332,9 +319,7 @@ until the first user (site admin) is registered.
 
 =cut
 
-sub user_registration_enabled {
-    my $c = shift;
-
+sub user_registration_enabled ($c) {
     $c->model('DB::User')->results_exist
       or return 1;
 

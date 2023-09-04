@@ -1,6 +1,7 @@
 package Coocook::Schema::Result::Project;
 
 use Moose;
+use experimental qw(signatures);
 use namespace::autoclean;
 
 use Carp;
@@ -55,9 +56,7 @@ __PACKAGE__->has_many( units          => 'Coocook::Schema::Result::Unit',       
 __PACKAGE__->many_to_many( unit_conversions => units => 'conversions_from' );
 
 # trigger for generating url_name[_fc]
-before store_column => sub {
-    my ( $self, $column, $value ) = @_;
-
+before store_column => sub ( $self, $column, $value ) {
     if ( $column eq 'name' ) {
         $self->set_columns( Coocook::Util::url_names_hashref($value) );
     }
@@ -65,18 +64,14 @@ before store_column => sub {
 
 __PACKAGE__->meta->make_immutable;
 
-sub archive {
-    my $self = shift;
-
+sub archive ($self) {
     $self->archived
       and croak "Project already archived";
 
     $self->update( { archived => DateTime->now() } );
 }
 
-sub unarchive {
-    my $self = shift;
-
+sub unarchive ($self) {
     $self->archived
       or croak "Project not archived";
 
@@ -84,9 +79,7 @@ sub unarchive {
 }
 
 # pseudo-relationship
-sub dishes {
-    my $self = shift;
-
+sub dishes ($self) {
     return $self->result_source->schema->resultset('Dish')->search(
         {
             'meal.project_id' => $self->id,
@@ -98,9 +91,7 @@ sub dishes {
 }
 
 # fetch articles, units and cache their relationships
-sub articles_cached_units {
-    my $self = shift;
-
+sub articles_cached_units ($self) {
     my $articles = $self->articles;
     my @articles = $articles->sorted->all;
 
@@ -146,7 +137,9 @@ Shortcut.
 
 =cut
 
-sub dish_ingredients { shift->meals->search_related('dishes')->search_related('ingredients') }
+sub dish_ingredients ($self) {
+    return $self->meals->search_related('dishes')->search_related('ingredients');
+}
 
 =head2 inventory()
 
@@ -154,9 +147,7 @@ Returns a hashref with counts for related object.
 
 =cut
 
-sub inventory {
-    my $self = shift;
-
+sub inventory ($self) {
     my $self_rs = $self->self_rs;
 
     return $self_rs->search(
@@ -187,9 +178,7 @@ Indicates if this project can be archived.
 
 =cut
 
-sub is_stale {
-    my ( $self, $pivot_date ) = @_;
-
+sub is_stale ( $self, $pivot_date = undef ) {
     return $self->self_rs->stale($pivot_date)->results_exist();
 }
 
@@ -201,9 +190,7 @@ TODO: Should probably autocreate tags that do not yet exist.
 
 =cut
 
-sub tags_from_names {
-    my ( $self, $names ) = @_;
-
+sub tags_from_names ( $self, $names ) {
     return $self->tags->from_names($names);
 }
 
@@ -213,9 +200,7 @@ Returns a resultset with all C<Result::Organization>s without any related C<orga
 
 =cut
 
-sub organizations_without_permission {
-    my $self = shift;
-
+sub organizations_without_permission ($self) {
     my $permitted_organizations = $self->organizations_projects->get_column('organization_id');
 
     return $self->result_source->schema->resultset('Organization')->search(
@@ -231,9 +216,7 @@ Returns a resultset to all projects except itself.
 
 =cut
 
-sub other_projects {
-    my $self = shift;
-
+sub other_projects ($self) {
     return $self->result_source->resultset->search( { id => { '!=' => $self->id } } );
 }
 
@@ -243,9 +226,7 @@ Returns a resultset with all C<Result::User>s without any related C<projects_use
 
 =cut
 
-sub users_without_permission {
-    my $self = shift;
-
+sub users_without_permission ($self) {
     my $permitted_users = $self->projects_users->get_column('user_id');
 
     return $self->result_source->schema->resultset('User')->search(

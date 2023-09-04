@@ -1,6 +1,7 @@
 package Coocook::Schema::ResultSet::Terms;
 
 use Moose;
+use experimental qw(signatures);
 use namespace::autoclean;
 
 use DateTime;
@@ -23,22 +24,20 @@ __PACKAGE__->meta->make_immutable;
 
 =cut
 
-sub order {
-    return
-      shift->search( undef, { order_by => { ( shift() < 0 ? '-DESC' : '-ASC' ) => 'valid_from' } } );
+sub order ( $self, $order ) {
+    return $self->search( undef,
+        { order_by => { ( $order < 0 ? '-DESC' : '-ASC' ) => 'valid_from' } } );
 }
 
-sub valid_on_date_rs {
-    my ( $self, $date ) = @_;
-
+sub valid_on_date_rs ( $self, $date ) {
     return $self->search( { valid_from => { '<=' => ref $date ? $self->format_date($date) : $date } },
         { order_by => { -DESC => 'valid_from' } } );
 }
 
-sub valid_on_date { shift->valid_on_date_rs(@_)->one_row }
+sub valid_on_date ( $self, @args ) { $self->valid_on_date_rs(@args)->one_row }
 
-sub valid_today_rs { shift->valid_on_date_rs( DateTime->today ) }
+sub valid_today_rs ($self) { $self->valid_on_date_rs( DateTime->today ) }
 
-sub valid_today { shift->valid_on_date_rs( DateTime->today )->one_row }
+sub valid_today ($self) { $self->valid_on_date_rs( DateTime->today )->one_row }
 
 1;

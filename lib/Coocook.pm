@@ -6,6 +6,7 @@ package Coocook;
 use Moose;
 use namespace::autoclean;
 
+use experimental qw(signatures);
 use utf8;
 
 use Catalyst::Runtime 5.80;
@@ -25,9 +26,7 @@ use Catalyst::Runtime 5.80;
 ## no critic (BuiltinFunctions::ProhibitStringyEval Subroutines::ProhibitSubroutinePrototypes)
 # too bad Perl doesn't offer to check if a module is available
 # other code (that passes perlcritic) for testing this is much more verbose
-sub mod_installed ($) {
-    my ($module) = @_;
-
+sub mod_installed ($module) {
     local $@;
 
     return eval("require $module; 1") ? $module : ();
@@ -146,9 +145,7 @@ __PACKAGE__->config(
         $username . '@' . $hostname;
     },
 
-    email_signature => sub {
-        my $c = shift;
-
+    email_signature => sub ($c) {
         return $c->config->{name} . " " . $c->uri_for_action('/index');
     },
 

@@ -1,6 +1,7 @@
 package Coocook::Schema::Result::TagGroup;
 
 use Moose;
+use experimental qw(signatures);
 use namespace::autoclean;
 
 extends 'Coocook::Schema::Result';
@@ -38,9 +39,7 @@ __PACKAGE__->has_many(
 
 __PACKAGE__->meta->make_immutable;
 
-sub deletable {
-    my $self = shift;
-
+sub deletable ($self) {
     return !$self->tags->results_exist;
 }
 

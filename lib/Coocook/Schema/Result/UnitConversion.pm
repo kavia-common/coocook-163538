@@ -1,6 +1,7 @@
 package Coocook::Schema::Result::UnitConversion;
 
 use Moose;
+use experimental qw(signatures);
 use namespace::autoclean;
 
 extends 'Coocook::Schema::Result';
@@ -23,9 +24,7 @@ __PACKAGE__->belongs_to( unit2 => 'Coocook::Schema::Result::Unit', 'unit2_id' );
 
 __PACKAGE__->meta->make_immutable;
 
-sub reverse {
-    my $self = shift;
-
+sub reverse ($self) {
     $self->set_columns(
         {
             unit1_id => $self->unit2_id,

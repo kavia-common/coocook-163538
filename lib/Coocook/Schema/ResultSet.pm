@@ -4,6 +4,7 @@ package Coocook::Schema::ResultSet;
 
 use Moose;
 use MooseX::NonMoose;
+use experimental qw(signatures);
 use namespace::autoclean;
 
 use Carp;
@@ -40,9 +41,7 @@ before first => sub {
 __PACKAGE__->meta->make_immutable;
 
 # from https://metacpan.org/pod/release/MSTROUT/DBIx-Class-0.08100/lib/DBIx/Class/Manual/Cookbook.pod#SELECT-COUNT(DISTINCT-colname)
-sub count_distinct {
-    my ( $self, $column ) = @_;
-
+sub count_distinct ( $self, $column ) {
     return $self->search( undef, { columns => { count => { COUNT => { DISTINCT => $column } } } } )
       ->hri->one_row->{count};
 }
@@ -53,16 +52,12 @@ Returns new resultset with only the column 'id' selected.
 
 =cut
 
-sub only_id_col {
-    my ( $self, $id_column_name ) = @_;
-
-    return $self->search( undef, { columns => [ $id_column_name || 'id' ] } );
+sub only_id_col ( $self, $id_column_name = 'id' ) {
+    return $self->search( undef, { columns => [$id_column_name] } );
 }
 
-sub assert_no_sth {
-    my $self = shift;
-
-    # Check if DBIx::Class::Storage::DBI::Cursor already has a statement handle
+# Check if DBIx::Class::Storage::DBI::Cursor already has a statement handle
+sub assert_no_sth ($self) {
     defined( $self->cursor->{sth} ) and croak "Statement already running";
 }
 

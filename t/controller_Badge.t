@@ -1,4 +1,5 @@
 use Test2::V0;
+use experimental qw(signatures);
 
 use lib 't/lib/';
 use Test::Coocook;
@@ -40,9 +41,7 @@ $t->header_like( 'Content-Type' => qr{ ^ image/svg\+xml \b }x );
 $t->content_contains('<svg ');
 $t->content_contains('</svg>');
 
-sub dish_badge_contains {
-    my ( $number, $text ) = @_;
-
+sub dish_badge_contains ( $number, $text ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     $dish->update( { servings => $number } );

@@ -3,6 +3,7 @@ package Coocook::Schema;
 # ABSTRACT: DBIx::Class-based SQL database representation
 
 use Moose;
+use experimental qw(signatures);
 use namespace::autoclean;
 
 use Carp;
@@ -49,9 +50,7 @@ sub connection {
     my $on_connect_do = \$connect_info->{on_connect_do};
 
     # identifying the sql_type at connect time is easier than parsing the DSN
-    my $enable_fk = sub {
-        my $storage = shift;
-
+    my $enable_fk = sub ($storage) {
         $storage->sqlt_type eq 'SQLite'
           and return ['PRAGMA foreign_keys = 1'];
 
@@ -91,17 +90,13 @@ Returns accumulated number of rows in @resultsets. Defaults to all resultsets.
 
 =cut
 
-sub count {
-    my $self = shift;
-
+sub count ( $self, @sources ) {
     my $records = 0;
-    $records += $self->resultset($_)->count for @_ ? @_ : $self->sources;
+    $records += $self->resultset($_)->count for @sources ? @sources : $self->sources;
     return $records;
 }
 
-sub statistics {
-    my $self = shift;
-
+sub statistics ($self) {
     return {
         dishes_served   => $self->resultset('Dish')->in_past_or_today->sum_servings,
         dishes_planned  => $self->resultset('Dish')->in_future->sum_servings,
@@ -121,17 +116,15 @@ Otherwise does nothing.
 
 =cut
 
-sub pgsql_set_constraints_deferred {
-    my $self = shift;
-
+sub pgsql_set_constraints_deferred ($self) {
     if ( $self->storage->sqlt_type eq 'PostgreSQL' ) {
-        $self->storage->dbh_do( sub { $_[1]->do('SET CONSTRAINTS ALL DEFERRED') } );
+        $self->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do('SET CONSTRAINTS ALL DEFERRED') } );
     }
 }
 
 =head1 SQLite-specific Methods
 
-=head2 $schema->fk_checks_off_do( sub { ... } )
+=head2 $schema->fk_checks_off_do( sub { ... }, @args )
 
 Runs given coderef with SQLite pragma C<foreign_keys> temporarily turned off.
 The original pragma state is then restored.
@@ -145,16 +138,13 @@ know how to do this.
 
 =cut
 
-sub fk_checks_off_do {
-    my $self    = shift;
-    my $coderef = shift;
-
+sub fk_checks_off_do ( $self, $coderef, @args ) {
     my $original_state = $self->sqlite_pragma('foreign_keys');
 
     $original_state
       and $self->disable_fk_checks();
 
-    my $result = $coderef->(@_);
+    my $result = $coderef->(@args);
 
     $original_state
       and $self->enable_fk_checks();
@@ -175,9 +165,7 @@ and resets the original state when it goes out of scope.
 
 =cut
 
-sub fk_checks_off_guard {
-    my $self = shift;
-
+sub fk_checks_off_guard ($self) {
     my $original_state = $self->sqlite_pragma('foreign_keys');
 
     $self->disable_fk_checks();
@@ -185,12 +173,10 @@ sub fk_checks_off_guard {
     return guard { $original_state and $self->enable_fk_checks() };
 }
 
-sub enable_fk_checks  { shift->sqlite_pragma( foreign_keys => 1 ) }
-sub disable_fk_checks { shift->sqlite_pragma( foreign_keys => 0 ) }
+sub enable_fk_checks  ($self) { $self->sqlite_pragma( foreign_keys => 1 ) }
+sub disable_fk_checks ($self) { $self->sqlite_pragma( foreign_keys => 0 ) }
 
-sub sqlite_pragma {
-    my ( $self, $pragma, $set_value ) = @_;
-
+sub sqlite_pragma ( $self, $pragma, $set_value = undef ) {
     my $storage = $self->storage;
 
     $storage->sqlt_type eq 'SQLite'
@@ -205,10 +191,10 @@ sub sqlite_pragma {
       and $storage->debugfh->print("$sql\n");
 
     return $storage->dbh_do(
-        sub {
+        sub ( $storage, $dbh ) {
             defined $set_value
-              ? $_[1]->do($sql)
-              : $_[1]->selectrow_array($sql);
+              ? $dbh->do($sql)
+              : $dbh->selectrow_array($sql);
         }
     );
 }

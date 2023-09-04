@@ -1,6 +1,7 @@
 package Coocook::Schema::Result::Tag;
 
 use Moose;
+use experimental qw(signatures);
 use namespace::autoclean;
 
 extends 'Coocook::Schema::Result';
@@ -32,9 +33,7 @@ __PACKAGE__->many_to_many( recipes  => recipes_tags  => 'recipe' );
 
 __PACKAGE__->meta->make_immutable;
 
-sub deletable {
-    my $self = shift;
-
+sub deletable ($self) {
     $self->articles_tags->results_exist and return;
     $self->dishes_tags->results_exist   and return;
     $self->recipes_tags->results_exist  and return;

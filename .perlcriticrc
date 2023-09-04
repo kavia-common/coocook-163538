@@ -1,4 +1,4 @@
-exclude = TestingAndDebugging::ProhibitNoStrict
+exclude = Subroutines::ProhibitSubroutinePrototypes TestingAndDebugging::ProhibitNoStrict
 include = Miscellanea::ProhibitUnrestrictedNoCritic TestingAndDebugging::ProhibitProlongedStrictureOverride
 
 [TestingAndDebugging::RequireUseStrict]

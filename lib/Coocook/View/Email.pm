@@ -4,6 +4,7 @@ package Coocook::View::Email;
 
 use Moose;
 use MooseX::NonMoose;
+use experimental qw(signatures);
 use namespace::autoclean;
 
 use Email::Stuffer;
@@ -20,9 +21,7 @@ Catalyst View.
 
 =cut
 
-sub process {
-    my ( $self, $c ) = @_;
-
+sub process ( $self, $c, @args ) {
     my $stash = $c->stash->{email};
 
     # automatically set template filename based on action path

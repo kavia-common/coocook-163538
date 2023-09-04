@@ -4,12 +4,11 @@ package Coocook::Model::Badge;
 
 use strict;
 use warnings;
+use experimental qw(signatures);
 
 use SVG;
 
-sub create_badge {
-    my ( $class, $text_left_content, $text_right_content, $other_color ) = @_;
-
+sub create_badge ( $class, $text_left_content, $text_right_content, $other_color ) {
     my $text_right_width = 7 * length($text_right_content) + 10;
 
     # create an SVG object

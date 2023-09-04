@@ -5,14 +5,13 @@ package Coocook::Filter::NumberSuffix;
 use strict;
 use warnings;
 
+use experimental qw(signatures);
 use parent 'Template::Plugin::Filter';
 
 use Coocook::Filter::SignificantDigits;
 use Scalar::Util 'looks_like_number';
 
-sub filter {
-    my ( $self, $number ) = @_;
-
+sub filter ( $self, $number ) {
     defined $number or return;
     length $number  or return "";
 

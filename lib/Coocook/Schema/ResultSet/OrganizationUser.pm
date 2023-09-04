@@ -1,6 +1,7 @@
 package Coocook::Schema::ResultSet::OrganizationUser;
 
 use Moose;
+use experimental qw(signatures);
 use namespace::autoclean;
 
 extends 'Coocook::Schema::ResultSet';
@@ -13,9 +14,7 @@ Returns a new resultset with records where C<role> is C<owner>.
 
 =cut
 
-sub owners {
-    my $self = shift;
-
+sub owners ($self) {
     return $self->search( { $self->me('role') => 'owner' } );
 }
 

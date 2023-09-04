@@ -1,5 +1,7 @@
 use Test2::V0;
 
+use experimental qw(signatures);
+
 use Coocook::Model::Authorization;
 
 use lib 't/lib/';
@@ -17,13 +19,10 @@ ok my $authz = Coocook::Model::Authorization->new();
 sub has_cap_ok   { _test_has_capability( 1, @_ ) }
 sub hasnt_cap_ok { _test_has_capability( 0, @_ ) }
 
-sub _test_has_capability {
-    my ( $expects_true, $capability, $input, $name ) = @_;
+sub _test_has_capability ( $expects_true, $capability, $input, $name = undef ) {
+    local $Test::Builder::Level = $Test::Builder::Level + 2;    # +1 from has[nt]_cap_ok wrapper
 
-    # +1 from has[nt]_cap_ok wrapper
-    local $Test::Builder::Level = $Test::Builder::Level + 2;
-
-    $input->{user} //= undef;    # make sure key is always present
+    $input->{user} //= undef;                                   # make sure key is always present
 
     my ($result) = my @result = $authz->has_capability( $capability, $input );
 

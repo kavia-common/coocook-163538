@@ -2,10 +2,11 @@ package Coocook::Script::Dbck;
 
 # ABSTRACT: script for checking the database integrity just like `fsck` checks filesystems
 
-use feature 'fc';    # Perl 5.16
-use open ':locale';
 use Moose;
+use experimental qw(signatures);
+use feature 'fc';    # Perl 5.16
 use namespace::autoclean;
+use open ':locale';
 
 use Coocook::Schema;
 use Coocook::Util;
@@ -28,9 +29,7 @@ our $SQLITE_NUMERIC_COLUMNS = {
     Item             => [ 'offset', 'value' ],
 };
 
-sub run {
-    my $self = shift;
-
+sub run ($self) {
     $self->check_schema();
     $self->check_relationships();
     $self->check_sqlite_numeric_values();
@@ -39,9 +38,7 @@ sub run {
     $self->check_unit_conversions_values();
 }
 
-sub check_schema {
-    my $self = shift;
-
+sub check_schema ($self) {
     my $live_schema = $self->_schema;
 
     $live_schema->storage->sqlt_type eq 'SQLite'
@@ -93,9 +90,7 @@ sub check_schema {
     }
 }
 
-sub check_relationships {
-    my $self = shift;
-
+sub check_relationships ($self) {
     my @m_n_tables = (
         { Article          => [qw< me shop_section >] },
         { ArticleTag       => [qw< article tag >] },
@@ -161,8 +156,7 @@ sub check_relationships {
     }
 }
 
-sub check_sqlite_numeric_values {
-    my $self = shift;
+sub check_sqlite_numeric_values ($self) {
 
     # only SQLite has weak typing
     $self->_schema->storage->sqlt_type eq 'SQLite'
@@ -192,9 +186,7 @@ sub check_sqlite_numeric_values {
     }
 }
 
-sub check_fc_values {
-    my $self = shift;
-
+sub check_fc_values ($self) {
     my $organizations = $self->_schema->resultset('Organization');
     my $usernames_fc  = $self->_schema->resultset('User')->get_column('name_fc');
 
@@ -214,9 +206,7 @@ sub check_fc_values {
     }
 }
 
-sub check_url_name_values {
-    my $self = shift;
-
+sub check_url_name_values ($self) {
     my $projects = $self->_schema->resultset('Project');
 
     while ( my $project = $projects->next ) {
@@ -229,9 +219,7 @@ sub check_url_name_values {
     }
 }
 
-sub check_unit_conversions_values {
-    my $self = shift;
-
+sub check_unit_conversions_values ($self) {
     my $count = $self->_schema->resultset('UnitConversion')->count(
         {
             unit1_id => { '>' => { -ident => 'unit2_id' } },
@@ -243,15 +231,13 @@ sub check_unit_conversions_values {
     }
 }
 
-sub _debug {
-    my $self = shift;
-
+sub _debug ( $self, @list ) {
     $self->debug
       or return;
 
     local $| = 1;
 
-    print @_, "\n";
+    print @list, "\n";
 }
 
 __PACKAGE__->meta->make_immutable;

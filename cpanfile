@@ -67,6 +67,7 @@ requires "Term::Size::Any" => "0";
 requires "Try::Tiny" => "0";
 requires "URI" => "0";
 requires "YAML::XS" => "0";
+requires "experimental" => "0";
 requires "feature" => "0";
 requires "namespace::autoclean" => "0";
 requires "open" => "0";

@@ -1,9 +1,10 @@
 package Coocook::Model::Organizations;
 
+use Moose;
+use experimental qw(signatures);
 use feature 'fc';    # Perl v5.16
 
 use Carp;
-use Moose;
 
 extends 'Catalyst::Model';
 
@@ -14,17 +15,14 @@ has schema => (
 
 __PACKAGE__->meta->make_immutable;
 
-sub ACCEPT_CONTEXT {    # TODO this is called once per request. can we get $schema once for all?
-    my ( $self, $c, @args ) = @_;
-
+# TODO this is called once per request. can we get $schema once for all?
+sub ACCEPT_CONTEXT ( $self, $c, @args ) {
     $self->schema( $c->model('DB')->schema );
 
     return $self;
 }
 
-sub create {
-    my ( $self, %args ) = @_;
-
+sub create ( $self, %args ) {
     my $name_fc = fc $args{name};
 
     $args{display_name}   //= $args{name};
@@ -49,9 +47,7 @@ sub create {
     );
 }
 
-sub find_by_name {
-    my ( $self, $name ) = @_;
-
+sub find_by_name ( $self, $name ) {
     return $self->schema->resultset('Organization')->find( { name_fc => fc $name } );
 }
 
@@ -63,6 +59,6 @@ is not used for users/organizations and not blacklisted.
 =cut
 
 # proxied to Result::User because of shared namespace
-sub name_available { shift->schema->resultset('User')->name_available(@_) }
+sub name_available ( $self, @args ) { $self->schema->resultset('User')->name_available(@args) }
 
 1;

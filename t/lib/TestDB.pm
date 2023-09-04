@@ -2,6 +2,7 @@ package TestDB;
 
 use Test2::V0;
 
+use experimental qw(signatures);
 use parent 'DBICx::TestDatabase';
 
 use Coocook::Script::Deploy;
@@ -18,9 +19,7 @@ Like L<DBICx::TestDatabase> but can initialize database with C<share/test_data.s
 
 =cut
 
-sub new {
-    my ( $class, %opts ) = @_;
-
+sub new ( $class, %opts ) {
     my $deploy    = delete $opts{deploy}    // 1;
     my $test_data = delete $opts{test_data} // 1;
 
@@ -42,9 +41,8 @@ Returns C<$schema> again.
 
 =cut
 
-sub execute_test_data {    # not 'insert_' because not all statements are INSERTs
-    my ( $class, $schema, $filename ) = @_;
-
+# method name not 'insert_' because not all statements are INSERTs
+sub execute_test_data ( $class, $schema, $filename = 'share/test_data.sql' ) {
     open my $fh, '<', $filename // 'share/test_data.sql'
       or die $!;
 
@@ -77,7 +75,7 @@ sub execute_test_data {    # not 'insert_' because not all statements are INSERT
             $storage->debug
               and $storage->debugfh->print("$continued_line\n");
 
-            $storage->dbh_do( sub { $_[1]->do($continued_line) } );
+            $storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do($continued_line) } );
 
             $continued_line = "";
         }
@@ -94,9 +92,7 @@ sub execute_test_data {    # not 'insert_' because not all statements are INSERT
 
 =cut
 
-sub install_ok {
-    my ( $schema, $version, $name ) = @_;
-
+sub install_ok ( $schema, $version = undef, $name = undef ) {
     my $dh = _build_dh( $schema, $version );
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
@@ -108,9 +104,7 @@ sub install_ok {
 
 =cut
 
-sub upgrade_ok {
-    my ( $schema, $version, $name ) = @_;
-
+sub upgrade_ok ( $schema, $version = undef, $name = undef ) {
     my $dh = _build_dh( $schema, $version );
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
@@ -118,9 +112,7 @@ sub upgrade_ok {
     ok $dh->upgrade(), $name || "upgrade to version " . $dh->to_version;
 }
 
-sub _build_dh {
-    my ( $schema, $version ) = @_;
-
+sub _build_dh ( $schema, $version = undef ) {
     return Coocook::DeploymentHandler->new(
         {
             schema           => $schema,

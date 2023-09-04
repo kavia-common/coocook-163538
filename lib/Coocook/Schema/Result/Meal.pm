@@ -1,7 +1,9 @@
 package Coocook::Schema::Result::Meal;
 
 use Moose;
+use experimental qw(signatures);
 use namespace::autoclean;
+
 use JSON::MaybeXS;
 
 extends 'Coocook::Schema::Result';
@@ -47,9 +49,7 @@ __PACKAGE__->has_many(
 
 __PACKAGE__->meta->make_immutable;
 
-sub deletable {
-    my $self = shift;
-
+sub deletable ($self) {
     return ( !$self->dishes->results_exist and !$self->prepared_dishes->results_exist );
 }
 
@@ -59,19 +59,16 @@ Deletes all but prepared dishes
 
 =cut
 
-sub delete_dishes {
-    my $self = shift;
-
+sub delete_dishes ($self) {
     $self->dishes->update_items_and_delete;
 }
 
-sub for_meals_dishes_editor {
-    my $self = shift;
-    my $relevant_columns =
-      [ 'meal_id', 'comment', 'id', 'name', 'prepare_at_meal_id', 'servings', 'position' ];
-    my $related_dishes = $self->search_related( dishes => ( undef, { columns => $relevant_columns } ) );
-    my $prepared_dishes =
-      $self->search_related( prepared_dishes => ( undef, { columns => $relevant_columns } ) );
+sub for_meals_dishes_editor ($self) {
+    my @cols = qw( meal_id comment id name prepare_at_meal_id servings position );
+
+    my $related_dishes  = $self->search_related( dishes          => ( undef, { columns => \@cols } ) );
+    my $prepared_dishes = $self->search_related( prepared_dishes => ( undef, { columns => \@cols } ) );
+
     return $self->as_hashref(
         date            => $self->date->ymd,
         deletable       => $self->deletable ? JSON()->true : JSON()->false,

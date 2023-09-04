@@ -3,6 +3,7 @@ package Coocook::Model::Autocomplete;
 # ABSTRACT: provide data to autocomplete HTML input elements
 
 use Moose;
+use experimental qw(signatures);
 
 extends 'Catalyst::Model';
 
@@ -13,17 +14,14 @@ has schema => (
 
 __PACKAGE__->meta->make_immutable;
 
-sub ACCEPT_CONTEXT {    # TODO this is called once per request. can we get $schema once for all?
-    my ( $self, $c, @args ) = @_;
-
+# TODO this is called once per request. can we get $schema once for all?
+sub ACCEPT_CONTEXT ( $self, $c, @args ) {
     $self->schema( $c->model('DB')->schema );
 
     return $self;
 }
 
-sub organizations_users {
-    my ( $self, $search ) = @_;
-
+sub organizations_users ( $self, $search ) {
     my $arrayref = $self->users($search);
     $_->{type} = 'user' for @$arrayref;
 
@@ -43,9 +41,7 @@ sub organizations_users {
     return $arrayref;
 }
 
-sub users {
-    my ( $self, $search ) = @_;
-
+sub users ( $self, $search ) {
     my $users = $self->schema->resultset('User')->search(
         {
             -or => [

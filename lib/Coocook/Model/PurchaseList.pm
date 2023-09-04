@@ -3,6 +3,8 @@ package Coocook::Model::PurchaseList;
 # ABSTRACT: business logic for plain data structure of purchase list
 
 use Moose;
+use experimental qw(signatures);
+
 use Scalar::Util 'weaken';
 
 has list => (
@@ -23,9 +25,7 @@ has units => (
     default => sub { [] },
 );
 
-sub BUILD {
-    my $self = shift;
-
+sub BUILD ( $self, $args ) {
     my $list    = $self->list;
     my $project = $list->project;
 

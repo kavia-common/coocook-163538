@@ -1,14 +1,13 @@
 package Coocook::Schema::ResultSet::Item;
 
 use Moose;
+use experimental qw(signatures);
 use namespace::autoclean;
 
 extends 'Coocook::Schema::ResultSet';
 
 # find item and add value or create new item with value
-sub add_or_create {
-    my ( $self, $args ) = @_;
-
+sub add_or_create ( $self, $args ) {
     my $item = $self->find_or_new(
         {
             purchase_list_id => $args->{purchase_list_id},

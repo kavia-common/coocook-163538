@@ -6,6 +6,7 @@ use v5.24;
 use utf8;
 use warnings;
 use strict;
+use experimental qw(signatures);
 
 use File::Basename;
 use File::Fetch;
@@ -29,9 +30,7 @@ say '';
 say colored( '=== installing coocook web dependencies ===', 'cyan' );
 install( \@dependencies );
 
-sub download {
-    my ($deps) = @_;
-
+sub download ($deps) {
     make_path '.cache';
 
     for my $pkg ( $deps->@* ) {
@@ -53,9 +52,7 @@ sub download {
     }
 }
 
-sub install {
-    my ($deps) = @_;
-
+sub install ($deps) {
     for my $pkg ( $deps->@* ) {
         rmtree 'root/static/lib/' . $pkg->name;
         make_path 'root/static/lib/' . $pkg->name;
@@ -70,9 +67,7 @@ package WebDependency {
     use Term::ANSIColor;
     use File::Copy::Recursive qw/rmove/;
 
-    sub new {
-        my ( $class, $pkg_hash ) = @_;
-
+    sub new ( $class, $pkg_hash ) {
         $pkg_hash->{extract_paths} ||= [];
         my $self = {
             name          => $pkg_hash->{name},
@@ -94,15 +89,14 @@ package WebDependency {
         return bless $self, $class;
     }
 
-    sub name          { shift->{name} }
-    sub url           { shift->{url} }
-    sub version       { shift->{version} }
-    sub ff            { shift->{ff} }
-    sub extract_paths { shift->{extract_paths} }
-    sub archive_name  { shift->ff->output_file }
+    sub name          ($self) { $self->{name} }
+    sub url           ($self) { $self->{url} }
+    sub version       ($self) { $self->{version} }
+    sub ff            ($self) { $self->{ff} }
+    sub extract_paths ($self) { $self->{extract_paths} }
+    sub archive_name  ($self) { $self->ff->output_file }
 
-    sub print_command {
-        my ( $self, $command ) = @_;
+    sub print_command ( $self, $command ) {
 
         my $pkg_id         = $self->name . '@' . $self->version;
         my $status_width   = length "SUCCESS";
@@ -125,9 +119,7 @@ package WebDependency {
         print "$command $pkg_id ", '.' x ( $points < $min_points ? $min_points : $points );
     }
 
-    sub print_status {
-        my $self   = shift;
-        my $status = shift;
+    sub print_status ( $self, $status ) {
         if ( $status eq 'SUCCESS' ) {
             say colored( " $status", 'green' );
         }
@@ -139,16 +131,12 @@ package WebDependency {
         }
     }
 
-    sub download {
-        my ( $self, %args ) = @_;
-
+    sub download ( $self, %args ) {
         $self->ff->fetch( to => $args{dest_dir} )
           or error( $self->ff->error(1) );
     }
 
-    sub extract {
-        my $self = shift;
-
+    sub extract ($self) {
         my $archive_name = $self->archive_name;
         my $tmp_dir      = File::Temp->newdir();
 
@@ -198,9 +186,7 @@ package WebDependency {
     }
 }
 
-sub error {
-    my ($msg) = @_;
-
+sub error ($msg) {
     say '';
     die colored( $msg, 'red' ) . "\n";
 }

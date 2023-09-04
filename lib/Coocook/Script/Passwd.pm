@@ -3,6 +3,7 @@ package Coocook::Script::Passwd;
 # ABSTRACT: script for setting a new password for a user
 
 use Moose;
+use experimental qw(signatures);
 use namespace::autoclean;
 
 use Coocook::Schema;
@@ -34,9 +35,7 @@ has _readline => (
     },
 );
 
-sub run {
-    my $self = shift;
-
+sub run ($self) {
     my $user = $self->_schema->resultset('User')->find( { name_fc => fc( $self->username ) } )
       or die "No such user\n";
 
@@ -51,9 +50,7 @@ sub run {
       and printf "Successfully updated password for Coocook user '%s'\n", $user->name;
 }
 
-sub readline {
-    my ( $self, $prompt ) = @_;
-
+sub readline ( $self, $prompt ) {
     $prompt and print $prompt;
 
     Term::ReadKey::ReadMode('noecho');

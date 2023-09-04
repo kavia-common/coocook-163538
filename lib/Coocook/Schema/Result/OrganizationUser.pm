@@ -1,6 +1,7 @@
 package Coocook::Schema::Result::OrganizationUser;
 
 use Moose;
+use experimental qw(signatures);
 use namespace::autoclean;
 
 extends 'Coocook::Schema::Result';
@@ -23,10 +24,8 @@ __PACKAGE__->belongs_to( user => 'Coocook::Schema::Result::User', 'user_id' );
 
 __PACKAGE__->has_many(
     other_organizations_users => __PACKAGE__,
-    sub {    # conditions above simple equality must use coderefs
-             # https://metacpan.org/pod/DBIx::Class::Relationship::Base#Custom-join-conditions
-        my $args = shift;
-
+    sub ($args) {    # conditions above simple equality must use coderefs
+                     # https://metacpan.org/pod/DBIx::Class::Relationship::Base#Custom-join-conditions
         return {
             "$args->{foreign_alias}.organization_id" => { -ident => "$args->{self_alias}.organization_id" },
             "$args->{foreign_alias}.user_id"         => { '!=' => { -ident => "$args->{self_alias}.user_id" } },
@@ -36,9 +35,7 @@ __PACKAGE__->has_many(
 
 __PACKAGE__->meta->make_immutable;
 
-sub make_owner {
-    my $self = shift;
-
+sub make_owner ($self) {
     $self->role eq 'owner'
       and return warn "project_user.role already 'owner'";
 

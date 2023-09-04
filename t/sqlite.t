@@ -1,4 +1,5 @@
 use Test2::V0;
+use experimental qw(signatures);
 
 use Coocook::Schema;
 
@@ -94,9 +95,7 @@ subtest "issue #266 order of meals/dishes" => sub {
       ->create( { name => '', password_hash => '', display_name => '', email_fc => '' } );
     my $project = $user->create_related( owned_projects => { name => '', description => '' } );
     $schema->storage->dbh_do(
-        sub {
-            my ( undef, $dbh ) = @_;
-
+        sub ( $storage, $dbh ) {
             $dbh->do(<<~SQL) for qw( b c a );    # irregular order
             INSERT INTO meals (project_id,date,name,comment) VALUES (1,'2000-01-01', '$_','')
             SQL
@@ -118,9 +117,7 @@ subtest "issue #266 order of meals/dishes" => sub {
       "dishes in order of insertion into database";
 };
 
-sub schema_eq {
-    my ( $schema1, $schema2, $test_name ) = @_;
-
+sub schema_eq ( $schema1, $schema2, $test_name ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     my $a = { id => 1, dbh => $schema1->storage->dbh };

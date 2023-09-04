@@ -2,16 +2,16 @@ package Coocook::Model::Plan;
 
 # ABSTRACT: business logic for plain data structures of project/day plans
 
-use DateTime;
 use Moose;
+use experimental qw(signatures);
+
+use DateTime;
 use MooseX::NonMoose;
 use Scalar::Util 'weaken';
 
 __PACKAGE__->meta->make_immutable;
 
-sub day {
-    my ( $self, $project, $dt ) = @_;
-
+sub day ( $self, $project, $dt ) {
     my %meals;
     my @meals;
 
@@ -132,9 +132,7 @@ sub day {
     return \@meals;
 }
 
-sub project {
-    my ( $self, $project ) = @_;
-
+sub project ( $self, $project ) {
     my %days;
     my %meals;
 
@@ -173,9 +171,7 @@ sub project {
     return [ @days{ sort keys %days } ];
 }
 
-sub project_for_meals_dishes_editor {
-    my ( $self, $project ) = @_;
-
+sub project_for_meals_dishes_editor ( $self, $project ) {
     my %days;
 
     my $meals = $project->meals;
@@ -189,14 +185,14 @@ sub project_for_meals_dishes_editor {
     return \%days;
 }
 
-sub resolve_meal_dish_path {
-    my ( $self, $project, $path ) = @_;
+sub resolve_meal_dish_path ( $self, $project, $path ) {
     if ( $path->{item_type} eq 'dish' ) {
         return $project->dishes->find( $path->{dish_id} );
     }
     elsif ( $path->{item_type} eq 'meal' ) {
         return $project->meals->find( $path->{meal_id} );
     }
+    die;
 }
 
 1;

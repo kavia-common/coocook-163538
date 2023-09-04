@@ -2,9 +2,10 @@ package Coocook::Script::Cron;
 
 # ABSTRACT: script to be executed regularly by cron for routine tasks
 
-use open ':locale';
 use Moose;
+use experimental qw(signatures);
 use namespace::autoclean;
+use open ':locale';
 
 with 'Coocook::Script::Role::HasDebug';
 with 'Coocook::Script::Role::HasSchema';
@@ -19,9 +20,7 @@ has delta_days => (
 
 my $DAY_SECS = 60 * 60 * 24;
 
-sub run {
-    my $self = shift;
-
+sub run ($self) {
     my $sessions = $self->_schema->resultset('Session');
     my $expired  = $sessions->search( { expires => { '<' => time - $DAY_SECS * $self->delta_days } } );
 

@@ -1,6 +1,7 @@
 package Coocook::Schema::Result::Dish;
 
 use Moose;
+use experimental qw(signatures);
 use namespace::autoclean;
 
 extends 'Coocook::Schema::Result';
@@ -53,11 +54,8 @@ __PACKAGE__->many_to_many( tags => dishes_tags => 'tag' );
 
 __PACKAGE__->meta->make_immutable;
 
-sub recalculate {
-    my $self = shift;
-
+sub recalculate ( $self, $servings2 ) {
     my $servings1 = $self->servings;
-    my $servings2 = shift || die "servings undefined";
 
     $self->txn_do(
         sub {
@@ -76,9 +74,7 @@ sub recalculate {
     );
 }
 
-sub update_items_and_delete {
-    my $self = shift;
-
+sub update_items_and_delete ($self) {
     $self->txn_do(
         sub {
             for my $ingredient ( $self->ingredients->all ) {
@@ -90,8 +86,7 @@ sub update_items_and_delete {
     );
 }
 
-sub for_meals_dishes_editor {
-    my $self = shift;
+sub for_meals_dishes_editor ($self) {
     return { $self->as_hashref->%*, date => $self->meal->date->ymd };
 }
 

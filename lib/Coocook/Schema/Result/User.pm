@@ -1,6 +1,7 @@
 package Coocook::Schema::Result::User;
 
 use Moose;
+use experimental qw(signatures);
 use namespace::autoclean;
 
 use Carp;
@@ -63,9 +64,7 @@ __PACKAGE__->many_to_many( projects => projects_users => 'project' );
 __PACKAGE__->has_many( terms_users => 'Coocook::Schema::Result::TermsUser', 'user_id' );
 __PACKAGE__->many_to_many( terms => terms_users => 'terms' );
 
-around [ 'set_column', 'store_column' ] => sub {
-    my ( $orig, $self, $column => $value ) = @_;
-
+around [ 'set_column', 'store_column' ] => sub ( $orig, $self, $column, $value ) {
     if ( $column eq 'name' ) {    # automatically set 'name_fc' from 'name'
         $self->$orig( name_fc => fc($value) );
     }
@@ -89,12 +88,10 @@ around [ 'set_column', 'store_column' ] => sub {
 
 __PACKAGE__->meta->make_immutable;
 
-sub alternative_email_valid_and_available {
-    my $self = shift;
-
+sub alternative_email_valid_and_available ( $self, @args ) {
     my $other_users = $self->result_source->resultset->search( { id => { '!=' => $self->id } } );
 
-    return $other_users->email_valid_and_available(@_);
+    return $other_users->email_valid_and_available(@args);
 }
 
 sub blacklist {
@@ -109,15 +106,12 @@ sub blacklist {
     );
 }
 
-sub check_password {    # method name defined by Catalyst::Authentication::Credential::Password
-    my ( $self, $password ) = @_;
-
+# method name defined by Catalyst::Authentication::Credential::Password
+sub check_password ( $self, $password ) {
     return Coocook::Model::Token->from_string($password)->verify_salted_hash( $self->password_hash );
 }
 
-sub check_base64_token {
-    my ( $self, $token ) = @_;
-
+sub check_base64_token ( $self, $token ) {
     $self->token_hash
       or return;
 
@@ -129,8 +123,7 @@ sub check_base64_token {
     return Coocook::Model::Token->from_base64($token)->verify_salted_hash( $self->token_hash );
 }
 
-sub add_roles {
-    my ( $self, @roles ) = @_;
+sub add_roles ( $self, @roles ) {
 
     if ( @roles == 1 and ref $roles[0] eq 'ARRAY' ) {
         @roles = $roles[0]->@*;
@@ -141,10 +134,8 @@ sub add_roles {
     }
 }
 
-sub has_any_role {
-    my $self = shift;
-
-    my $roles = ( @_ == 1 and ref $_[0] eq 'ARRAY' ) ? $_[0] : \@_;
+sub has_any_role ( $self, @roles ) {
+    my $roles = ( @roles == 1 and ref $roles[0] eq 'ARRAY' ) ? $roles[0] : \@roles;
 
     return $self->roles_users->results_exist( { role => { -in => $roles } } );
 }
@@ -163,11 +154,8 @@ is always false.
 
 =cut
 
-sub has_any_project_role {
-    my $self    = shift;
-    my $project = shift;
-
-    my $roles = ( @_ == 1 and ref $_[0] eq 'ARRAY' ) ? $_[0] : \@_;
+sub has_any_project_role ( $self, $project, @roles ) {
+    my $roles = ( @roles == 1 and ref $roles[0] eq 'ARRAY' ) ? $roles[0] : \@roles;
 
     if ( @$roles == 0 ) {
         carp "has_any_project_role() with zero roles";
@@ -187,34 +175,25 @@ sub has_any_project_role {
         { project_id => $project->id, $organizations_projects->me('role') => { -in => $roles } } );
 }
 
-sub has_any_organization_role {
-    my $self         = shift;
-    my $organization = shift;
-
-    my $roles = ( @_ == 1 and ref $_[0] eq 'ARRAY' ) ? $_[0] : \@_;
+sub has_any_organization_role ( $self, $organization, @roles ) {
+    my $roles = ( @roles == 1 and ref $roles[0] eq 'ARRAY' ) ? $roles[0] : \@roles;
 
     return $self->organizations_users->results_exist(
         { organization_id => $organization->id, role => { -in => $roles } } );
 }
 
-sub is_member_of {
-    my ( $self, $organization ) = @_;
-
+sub is_member_of ( $self, $organization ) {
     return $self->organizations_users->results_exist( { organization_id => $organization->id } );
 }
 
-sub roles {
-    my $self = shift;
-
+sub roles ($self) {
     return $self->roles_users->get_column('role')->all;
 }
 
-sub status_code        { ( shift->status )[0] }
-sub status_description { ( shift->status )[1] }
+sub status_code        ($self) { ( $self->status )[0] }
+sub status_description ($self) { ( $self->status )[1] }
 
-sub status {
-    my $self = shift;
-
+sub status ($self) {
     if ( $self->email_verified ) {
         if ( my $token_expires = $self->token_expires ) {
             if ( DateTime->now <= $token_expires ) {

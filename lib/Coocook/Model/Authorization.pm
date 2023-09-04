@@ -4,6 +4,7 @@ package Coocook::Model::Authorization;
 
 use strict;
 use warnings;
+use experimental qw(signatures);
 
 use Carp;
 
@@ -382,24 +383,18 @@ sub new {
     return $singleton ||= bless {}, __PACKAGE__;
 }
 
-sub capability_exists {
-    my ( $self, $capability ) = @_;
-
+sub capability_exists ( $self, $capability ) {
     return exists $capabilities{$capability};
 }
 
-sub capability_needs_input {
-    my ( $self, $capability ) = @_;
-
+sub capability_needs_input ( $self, $capability ) {
     my $rule = $capabilities{$capability}
       or croak "no such capability '$capability'";
 
     return $rule->{needs_input}->@*;
 }
 
-sub has_capability {
-    my ( $self, $capability, $input ) = @_;
-
+sub has_capability ( $self, $capability, $input ) {
     my $rule = $capabilities{$capability}
       or croak "no such capability '$capability'";
 

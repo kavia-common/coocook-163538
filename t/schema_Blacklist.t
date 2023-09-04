@@ -1,4 +1,5 @@
 use Test2::V0;
+use experimental qw(signatures);
 
 use lib 't/lib';
 use TestDB;
@@ -14,16 +15,14 @@ subtest BlacklistEmail => sub {
 
     can_ok $blacklist, 'is_email_ok';
 
-    sub email_ok {
-        my ( $email, $name ) = @_;
+    sub email_ok ( $email, $name = "$email is ok" ) {
         local $Test::Builder::Level = $Test::Builder::Level + 1;
-        ok $blacklist->is_email_ok($email), $name || "$email is ok";
+        ok $blacklist->is_email_ok($email), $name;
     }
 
-    sub email_not_ok {
-        my ( $email, $name ) = @_;
+    sub email_not_ok ( $email, $name = "$email is not ok" ) {
         local $Test::Builder::Level = $Test::Builder::Level + 1;
-        ok !$blacklist->is_email_ok($email), $name || "$email is not ok";
+        ok !$blacklist->is_email_ok($email), $name;
     }
 
     email_not_ok 'somebody@example.com';

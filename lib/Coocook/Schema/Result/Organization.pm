@@ -1,6 +1,7 @@
 package Coocook::Schema::Result::Organization;
 
 use Moose;
+use experimental qw(signatures);
 use namespace::autoclean;
 
 use Coocook::Model::Token;
@@ -45,9 +46,7 @@ __PACKAGE__->has_many(
 );
 __PACKAGE__->many_to_many( users => organizations_users => 'user' );
 
-around [ 'set_column', 'store_column' ] => sub {
-    my ( $orig, $self, $column => $value ) = @_;
-
+around [ 'set_column', 'store_column' ] => sub ( $orig, $self, $column, $value ) {
     if ( $column eq 'name' ) {
         $self->$orig( name_fc => fc($value) );
     }
@@ -57,11 +56,8 @@ around [ 'set_column', 'store_column' ] => sub {
 
 __PACKAGE__->meta->make_immutable;
 
-sub has_any_project_role {
-    my $self    = shift;
-    my $project = shift;
-
-    my $roles = ( @_ == 1 and ref $_[0] eq 'ARRAY' ) ? $_[0] : \@_;
+sub has_any_project_role ( $self, $project, @roles ) {
+    my $roles = ( @roles == 1 and ref $roles[0] eq 'ARRAY' ) ? $roles[0] : \@roles;
 
     return $self->organizations_projects->results_exist(
         { project_id => $project->id, role => { -in => $roles } } );
@@ -73,9 +69,7 @@ Returns a resultset with all C<Result::User>s without any related C<organization
 
 =cut
 
-sub users_without_membership {
-    my $self = shift;
-
+sub users_without_membership ($self) {
     my $members = $self->organizations_users->get_column('user_id');
 
     return $self->result_source->schema->resultset('User')->search(
