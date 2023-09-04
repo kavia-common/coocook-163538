@@ -102,11 +102,9 @@ for my $source ( $schema_from_dbic->sources ) {
     if ( $result_source->has_column('id') ) {
         my $table = $result_source->name;
 
-        $schema_from_dbic->storage->dbh_do(
-            sub {
-                $_[1]->do(<<SQL) } );
-SELECT setval('${table}_id_seq', (SELECT MAX(id) FROM $table), true)
-SQL
+        $schema_from_dbic->storage->dbh_do( sub { $_[1]->do(<<~SQL) } );
+        SELECT setval('${table}_id_seq', (SELECT MAX(id) FROM $table), true)
+        SQL
     }
 }
 

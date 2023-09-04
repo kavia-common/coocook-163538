@@ -119,45 +119,50 @@ sub warning {
 sub usage {
     my $command = shift;
     my %help    = (
-        commands => qq{Usage:
-    $0 [command] [flags]
+        commands => <<~EOT,
+        Usage:
+            $0 [command] [flags]
 
-    CLI Tool for managing Coocook instances.
+            CLI Tool for managing Coocook instances.
 
-    Commands:
+            Commands:
 
-    deploy            Manage the database of the Coocook instance
-    serve             Run the local development server
-    help              Display this and exit
-    help [command]    Display help for specific command
-    },
+            deploy            Manage the database of the Coocook instance
+            serve             Run the local development server
+            help              Display this and exit
+            help [command]    Display help for specific command
+        EOT
 
-        deploy => qq{Usage:
-    $0 deploy [flags]
+        deploy => <<~EOT,
+        Usage:
+            $0 deploy [flags]
 
-    Manage the database of the Coocook instance.
+            Manage the database of the Coocook instance.
 
-    flags:
+            flags:
 
-    -i --install    create new database
-    -u --upgrade    upgrade existing database to fit new schema
-    },
+            -i --install    create new database
+            -u --upgrade    upgrade existing database to fit new schema
+        EOT
 
-        serve => qq{Usage:
-    $0 serve [flags]
+        serve => <<~EOT,
+        Usage:
+            $0 serve [flags]
 
-    Run the local development server.
+            Run the local development server.
 
-    flags:
+            flags:
 
-    -d --debug      Enable debug output
-    -r --restart    Enable live reload when files are changed
-    },
-        help => qq{Usage:
-    $0 help [command]
+            -d --debug      Enable debug output
+            -r --restart    Enable live reload when files are changed
+        EOT
 
-    Display help for specific command.
-    },
+        help => <<~EOT,
+        Usage:
+            $0 help [command]
+
+            Display help for specific command.
+        EOT
     );
 
     defined $help{$command} or say error("$command is not a valid command for $0.") and exit(1);
