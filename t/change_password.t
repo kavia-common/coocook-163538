@@ -129,7 +129,7 @@ $t->shift_emails();
 # email to new address
 $t->email_like( qr/John Doe/, "user's display name" );
 $t->email_like( qr/john_doe/, "username" );
-$t->get_ok_email_link_like( qr{verify}, "follw link to verify address change" );
+$t->get_ok_email_link_like( qr{verify}, "follow link to verify address change" );
 
 $t->shift_emails();
 $t->email_count_is( 0, "no more emails left" );

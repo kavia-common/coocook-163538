@@ -227,7 +227,7 @@ sub get_ok_email_link_like {
 
         if ($expected_status) {
             $self->get( $urls[0] );
-            $self->status_is(400);
+            $self->status_is($expected_status);
         }
         else {
             $self->get_ok( $urls[0] );
