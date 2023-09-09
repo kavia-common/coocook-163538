@@ -11,7 +11,7 @@ use TestDB qw(install_ok upgrade_ok);
 # share/ddl/SQLite/upgrade/12-13/fix-cascade.sql is the
 # first upgrade script that has an equal result
 #
-# earlier upgrade scripts should NOT be fixed because
+# earlier upgrade scripts MUST NOT be fixed because
 # deployments from these versions stay the same and
 # will be fixed with upgrade to version 13. Luckily
 # we are pretty sure there are no installations
@@ -39,6 +39,17 @@ for my $version ( 2 .. $Coocook::Schema::VERSION ) {
     subtest "schema version $version" => sub {
         $schema_from_deploy = TestDB->new( deploy => 0 );
         install_ok( $schema_from_deploy, $version );
+
+        {    # assert all tables are populated #286
+            my $dbh = $schema_from_upgrades->storage->dbh;
+            my $sth = $dbh->table_info( undef, undef, undef, 'TABLE' );
+
+            while ( my $table = $sth->fetchrow_hashref ) {
+                my $name = $table->{TABLE_NAME};
+                my ($count) = $dbh->selectrow_array("SELECT COUNT(*) FROM $name");
+                $count > 0 or die "missing any test data in table $name";
+            }
+        }
 
         upgrade_ok( $schema_from_upgrades, $version );
 
