@@ -2,6 +2,8 @@ use Test2::V0;
 use Test2::Require::AuthorTesting;
 use Test::PerlTidy;
 
+note "Perl::Tidy version " . $Perl::Tidy::VERSION;
+
 run_tests(
     exclude => [
         qr{ ^\.build/ }x,                 # Dist::Zilla build directory
