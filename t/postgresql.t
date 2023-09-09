@@ -32,7 +32,9 @@ my $schema_from_upgrades = Coocook::Schema->connect( $psql->dsn( dbname => 'upgr
 install_ok( $schema_from_upgrades, $FIRST_PGSQL_SCHEMA_VERSION );
 
 ok(
-    TestDB->execute_test_data( $schema_from_upgrades, "t/test_data_v$FIRST_PGSQL_SCHEMA_VERSION.sql" ),
+    TestDB->execute_test_data(
+        $schema_from_upgrades, "t/test_data_v${FIRST_PGSQL_SCHEMA_VERSION}_install.sql"
+    ),
     "populate test data"
 );
 
@@ -42,6 +44,13 @@ for my $version ( $FIRST_PGSQL_SCHEMA_VERSION + 1 .. $Coocook::Schema::VERSION )
         $dbh->do("CREATE DATABASE $database");
         $schema_from_deploy = Coocook::Schema->connect( $psql->dsn( dbname => $database ) );
         install_ok( $schema_from_deploy, $version );
+
+        if ( -f ( my $sql_file = "t/test_data_v${version}_upgrade.sql" ) ) {
+            ok(
+                TestDB->execute_test_data( $schema_from_upgrades, $sql_file ),
+                "populate additional test data for schema version $version"
+            );
+        }
 
         upgrade_ok( $schema_from_upgrades, $version );
 

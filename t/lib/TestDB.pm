@@ -43,7 +43,8 @@ Returns C<$schema> again.
 sub execute_test_data {    # not 'insert_' because not all statements are INSERTs
     my ( $class, $schema, $filename ) = @_;
 
-    open my $fh, '<', $filename // 'share/test_data.sql';
+    open my $fh, '<', $filename // 'share/test_data.sql'
+      or die $!;
 
     my $continued_line = "";
 

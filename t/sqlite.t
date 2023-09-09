@@ -26,8 +26,8 @@ my $schema_from_upgrades = TestDB->new( deploy => 0 );
 
 install_ok( $schema_from_upgrades, 1 );
 
-ok( TestDB->execute_test_data( $schema_from_upgrades, 't/test_data_v1.sql' ),
-    "populate test data" );
+ok( TestDB->execute_test_data( $schema_from_upgrades, 't/test_data_v1_install.sql' ),
+    "populate test data for schema version 1" );
 
 # generated upgrade scripts contain
 # CREATE TEMPORARY TABLE ... with FKs on main tables which is impossible
@@ -37,6 +37,13 @@ $schema_from_upgrades->disable_fk_checks();
 
 for my $version ( 2 .. $Coocook::Schema::VERSION ) {
     subtest "schema version $version" => sub {
+        if ( -f ( my $sql_file = "t/test_data_v${version}_upgrade.sql" ) ) {
+            ok(
+                TestDB->execute_test_data( $schema_from_upgrades, $sql_file ),
+                "populate additional test data for schema version $version"
+            );
+        }
+
         $schema_from_deploy = TestDB->new( deploy => 0 );
         install_ok( $schema_from_deploy, $version );
 
