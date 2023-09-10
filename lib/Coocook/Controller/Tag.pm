@@ -2,6 +2,7 @@ package Coocook::Controller::Tag;
 
 use Moose;
 use namespace::autoclean;
+use PerlX::Maybe;
 
 BEGIN { extends 'Coocook::Controller' }
 
@@ -187,8 +188,8 @@ sub create : POST Chained('/project/base') PathPart('tags/create') Args(0)
 
     my $tag = $c->project->create_related(
         tags => {
-            tag_group => $group,
-            name      => $c->req->params->get('name'),
+            maybe tag_group => $group,
+            name            => $c->req->params->get('name'),
         }
     );
     $c->forward('redirect');
