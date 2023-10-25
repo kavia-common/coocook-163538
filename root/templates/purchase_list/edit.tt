@@ -48,10 +48,9 @@ js_push_template_path();
             <tbody>
                 <tr id="item-[% item.id %]">
                     [% rowspan = item.ingredients.size;
-                    IF item.offset !=0;
-                    rowspan = rowspan + 1;
-                    END;
-                     %]
+                    IF item.offset != 0;
+                        rowspan = rowspan + 1;
+                    END %]
                     <td class="item-amount" rowspan="[% rowspan %]">
                         <datalist id="values-[% loop.count %]">
                             <option value="[% item.value + item.offset %]">
@@ -85,8 +84,9 @@ js_push_template_path();
                                END %]
                         </span>
                     </td>
+
                     [% FOREACH ingredient IN item.ingredients %]
-                    [% '<tr>' UNLESS loop.index == 0 %]
+            [% '<tr>' UNLESS loop.first %]
                     <td class="print small-font" colspan="5">[% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %] ([% ingredient.dish.meal.date.strftime('%a, %F') %] - [% ingredient.dish.meal.name | html %] - [% ingredient.dish.name | html %])[% IF ingredient.comment; '<br>'; ingredient.comment | html; END %]</td>
                     <td class="amount" style="text-align:right;">[% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %]</td>
                     <td class="date" style="text-align:center;">[% ingredient.dish.meal.date.strftime('%a, %F') %]</td>
@@ -101,10 +101,12 @@ js_push_template_path();
                         </form>
                         [% END %]
                     </td>
+
                     <td class="comment">[% IF ingredient.comment; '('; ingredient.comment | html; ')'; END %]</td>
-                </tr>
-                    [% END;
-                    IF item.offset %]
+            [% '</tr>' UNLESS loop.first %]
+                    [% END %]
+
+                    [% IF item.offset %]
                 <tr>
                     <td colspan="4" class="text-end rounding">
                         <small>[% display_value_unit( item.offset, item.unit, {html=>1, force_sign=>1} ) %] – <em>rounding difference</em></small>
@@ -119,6 +121,7 @@ js_push_template_path();
                     <td></td>
                 </tr>
                     [% END %]
+
             </tbody>
             [% END %]
         </table>
