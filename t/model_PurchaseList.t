@@ -22,10 +22,16 @@ is $sections => array {
         field name       => "bakery products";
         field items      => array {
             item hash {
+                field id               => 1;
+                field purchase_list_id => 1;
                 field value            => 1000;
+                field offset           => +0;
+                field unit_id          => 1;
                 field unit             => hash { field short_name => "g";     etc() };
                 field article          => hash { field name       => "flour"; etc() };
+                field article_id       => 1;
                 field convertible_into => [ hash { field short_name => 'kg'; etc } ];
+                field purchased        => F();
                 field ingredients      => array {
                     item hash {
                         field id   => 1;
@@ -46,7 +52,8 @@ is $sections => array {
                     };
                     item hash { field id => 4; etc() },
                 };
-                etc();
+                field comment => "";
+                end();
             };
             item hash {
                 field value            => 37.5;
