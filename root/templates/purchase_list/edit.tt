@@ -29,11 +29,11 @@ js_push_template_path();
             <colgroup>
                 <col style="width:25%">
                 <col style="width:10%">
-                <col style="width:5%">
+                <col class="btn-icon-1">
+                <col>
                 <col style="width:15%">
                 <col style="width:10%">
                 <col style="width:10%">
-                <col class="btn-icon-1">
                 <col>
             </colgroup>
             <thead>
@@ -87,11 +87,6 @@ js_push_template_path();
 
                     [% FOREACH ingredient IN item.ingredients %]
             [% '<tr>' UNLESS loop.first %]
-                    <td class="print small-font" colspan="5">[% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %] ([% ingredient.dish.meal.date.strftime('%a, %F') %] - [% ingredient.dish.meal.name | html %] - [% ingredient.dish.name | html %])[% IF ingredient.comment; '<br>'; ingredient.comment | html; END %]</td>
-                    <td class="amount" style="text-align:right;">[% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %]</td>
-                    <td class="date" style="text-align:center;">[% ingredient.dish.meal.date.strftime('%a, %F') %]</td>
-                    <td class="meal">[% ingredient.dish.meal.name | html %]</td>
-                    <td class="dish">[% ingredient.dish.name | html %]</td>
                     <td>
                         [% IF ingredient.remove_url %]
                         <form method="post" action="[% ingredient.remove_url %]">
@@ -101,6 +96,11 @@ js_push_template_path();
                         </form>
                         [% END %]
                     </td>
+                    <td class="print small-font" colspan="5">[% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %] ([% ingredient.dish.meal.date.strftime('%a, %F') %] - [% ingredient.dish.meal.name | html %] - [% ingredient.dish.name | html %])[% IF ingredient.comment; '<br>'; ingredient.comment | html; END %]</td>
+                    <td class="amount" style="text-align:right;">[% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %]</td>
+                    <td class="date" style="text-align:center;">[% ingredient.dish.meal.date.strftime('%a, %F') %]</td>
+                    <td class="meal">[% ingredient.dish.meal.name | html %]</td>
+                    <td class="dish">[% ingredient.dish.name | html %]</td>
 
                     <td class="comment">[% IF ingredient.comment; '('; ingredient.comment | html; ')'; END %]</td>
             [% '</tr>' UNLESS loop.first %]
