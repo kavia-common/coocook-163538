@@ -37,14 +37,16 @@ is $sections => array {
                     item hash {
                         field id   => 1;
                         field dish => hash {
-                            field name => "pancakes";
-                            field meal => hash {
+                            field name    => "pancakes";
+                            field comment => "sweet";
+                            field meal    => hash {
                                 field id   => 1;
                                 field date => object {
                                     prop isa => 'DateTime';
                                     call ymd => '2000-01-01';
                                 };
-                                field name => "breakfast";
+                                field name    => "breakfast";
+                                field comment => "Best meal of the day!";
                                 etc();
                             };
                             etc();
@@ -61,7 +63,7 @@ is $sections => array {
                 field offset           => +0.5;
                 field total            => 38.0;
                 field unit             => hash { field short_name => "g";    etc() };
-                field article          => hash { field name       => "salt"; etc() };
+                field article          => hash { field name       => "salt"; field comment => "NaCl"; etc() };
                 field convertible_into => [];
                 field ingredients      => array {
                     item hash { field id => 6; etc() };

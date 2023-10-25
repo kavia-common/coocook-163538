@@ -75,9 +75,17 @@ js_push_template_path();
                         </form>
                         [% END %]
                         <span[% IF item.update_offset_url; ' class="print"'; END %]>[% display_value_unit(item.total, item.unit, {print=>1}) %]</span>
+                        [% IF item.comment.length %]
+                            <br>
+                            <span class="comment">([% item.comment | html %])</span>
+                        [% END %]
                     </td>
                     <td class="item" rowspan="[% rowspan %]">
-                        [% item.article.name | html %]
+                        [% item.article.name | html;
+                        IF item.article.comment.length %]
+                            <br>
+                            <span class="comment">([% item.article.comment | html %])</span>
+                        [% END %]
                         <span class="print">
                             [% IF    item.offset < 0; '&CircleMinus;';
                                ELSIF item.offset > 0; '&CirclePlus;';
@@ -96,13 +104,25 @@ js_push_template_path();
                         </form>
                         [% END %]
                     </td>
-                    <td class="print small-font" colspan="5">[% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %] ([% ingredient.dish.meal.date.strftime('%a, %F') %] - [% ingredient.dish.meal.name | html %] - [% ingredient.dish.name | html %])[% IF ingredient.comment; '<br>'; ingredient.comment | html; END %]</td>
+                    <td class="print small-font" colspan="5">[% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %] ([% ingredient.dish.meal.date.strftime('%a, %F') %] - [% ingredient.dish.meal.name | html %] - [% ingredient.dish.name | html %])[% IF ingredient.comment.length; '<br>'; ingredient.comment | html; END %]</td>
                     <td class="amount" style="text-align:right;">[% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %]</td>
                     <td class="date" style="text-align:center;">[% ingredient.dish.meal.date.strftime('%a, %F') %]</td>
-                    <td class="meal">[% ingredient.dish.meal.name | html %]</td>
-                    <td class="dish">[% ingredient.dish.name | html %]</td>
+                    <td class="meal">
+                        [% ingredient.dish.meal.name | html;
+                        IF ingredient.dish.meal.comment.length %]
+                            <br>
+                            <span class="comment">([% ingredient.dish.meal.comment | html %])</span>
+                        [% END %]
+                    </td>
+                    <td class="dish">
+                        [% ingredient.dish.name | html;
+                        IF ingredient.dish.comment.length %]
+                            <br>
+                            <span class="comment">([% ingredient.dish.comment | html %])</span>
+                        [% END %]
+                    </td>
 
-                    <td class="comment">[% IF ingredient.comment; '('; ingredient.comment | html; ')'; END %]</td>
+                    <td class="comment">[% IF ingredient.comment.length; '('; ingredient.comment | html; ')'; END %]</td>
             [% '</tr>' UNLESS loop.first %]
                     [% END %]
 

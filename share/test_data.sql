@@ -42,7 +42,7 @@ INSERT INTO "shop_sections"
 INSERT INTO "articles"
 (id, project_id, shop_section_id, shelf_life_days, preorder_servings, preorder_workdays,            name, comment) VALUES
 ( 1,          1,               1,            NULL,              NULL,              NULL,         'flour',      ''),
-( 2,          1,               1,            NULL,              NULL,              NULL,          'salt',      ''),
+( 2,          1,               1,            NULL,              NULL,              NULL,          'salt',  'NaCl'),
 ( 3,          1,            NULL,            NULL,              NULL,              NULL,         'water',      ''),
 ( 4,          1,               2,            NULL,              NULL,              NULL,        'cheese',      ''),
 ( 5,          1,            NULL,            NULL,              NULL,              NULL,          'love',      ''), -- has no unit
@@ -92,7 +92,7 @@ INSERT INTO "recipe_ingredients"
 
 INSERT INTO "dishes"
 (id, meal_id, position, from_recipe_id,       name, servings, prepare_at_meal_id,   preparation,               description, comment) VALUES
-( 1,       1,        1,           NULL, 'pancakes',        4,               NULL,            '', 'Make them really sweet!',      ''),
+( 1,       1,        1,           NULL, 'pancakes',        4,               NULL,            '', 'Make them really sweet!', 'sweet'),
 ( 2,       2,        2,              1,    'pizza',        2,               NULL,            '',                        '',      ''),
 ( 3,       3,        3,           NULL,    'bread',        4,                  2, 'Bake bread!',                        '',      '');
 
