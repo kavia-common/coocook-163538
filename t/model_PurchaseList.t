@@ -57,6 +57,7 @@ is $sections => array {
             };
             item hash {
                 field value            => 37.5;
+                field offset           => +0.5;
                 field unit             => hash { field short_name => "g";    etc() };
                 field article          => hash { field name       => "salt"; etc() };
                 field convertible_into => [];
@@ -64,6 +65,7 @@ is $sections => array {
                     item hash { field id => 6; etc() };
                     item hash { field id => 8; etc() };
                 };
+                field comment => "rounded to integer";
                 etc();
             };
         };

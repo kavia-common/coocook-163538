@@ -115,9 +115,9 @@ INSERT INTO "purchase_lists"
 ( 1,          1, 'all at once', '1999-12-31');
 
 INSERT INTO "items"
-(id, purchase_list_id, value, "offset", unit_id, article_id, purchased, comment) VALUES
-( 1,                1,  1000,      0.0,       1,          1,     FALSE,      ''),
-( 2,                1,  37.5,      0.0,       1,          2,     FALSE,      '');
+(id, purchase_list_id, value, "offset", unit_id, article_id, purchased,              comment) VALUES
+( 1,                1,  1000,      0.0,       1,          1,     FALSE,                   ''),
+( 2,                1,  37.5,     +0.5,       1,          2,     FALSE, 'rounded to integer');
 
 UPDATE "dish_ingredients" SET item_id = 1 WHERE id IN (1,4);
 UPDATE "dish_ingredients" SET item_id = 2 WHERE id IN (6,8);

@@ -46,9 +46,7 @@ subtest "successfully assign items" => sub {
 subtest "change item total" => sub {
     $t->get_ok('/project/1/Test-Project/purchase_list/1');
 
-    $t->content_contains('value="42.5"');
-
-    $t->content_lacks('rounding difference');
+    $t->content_contains( my $original_value = 'value="43"' );
 
     $t->submit_form_ok(
         {
@@ -61,7 +59,7 @@ subtest "change item total" => sub {
 
     $t->get_ok('/project/1/Test-Project/purchase_list/1');
 
-    $t->content_lacks('value="42.5"');
+    $t->content_lacks($original_value);
 
     $t->content_contains('value="39"');
 
