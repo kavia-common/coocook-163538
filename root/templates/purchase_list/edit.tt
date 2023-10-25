@@ -108,15 +108,18 @@ js_push_template_path();
 
                     [% IF item.offset %]
                 <tr>
-                    <td colspan="4" class="text-end rounding">
-                        <small>[% display_value_unit( item.offset, item.unit, {html=>1, force_sign=>1} ) %] – <em>rounding difference</em></small>
-                    </td>
                     <td>
                         [% IF item.update_offset_url %]
                         <form name="remove-offset" method="post" action="[% item.update_offset_url %]">
                             <button type="submit" class="btn btn-outline-danger btn-sm btn-quad mb-1 material-icons" title="Reset rounding" name="offset" value="0">undo</button>
                         </form>
                         [% END %]
+                    </td>
+                    <td class="text-end rounding">
+                        <small>[% display_value_unit( item.offset, item.unit, {html=>1, force_sign=>1} ) %]</small>
+                    </td>
+                    <td colspan="3" class="rounding">
+                        <small><em>rounding difference</em></small>
                     </td>
                     <td></td>
                 </tr>

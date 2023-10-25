@@ -63,7 +63,7 @@ subtest "change item total" => sub {
 
     $t->content_contains('value="39"');
 
-    $t->text_contains("\N{MINUS SIGN}3.5\N{THIN SPACE}g \N{EN DASH} rounding difference");
+    $t->text_contains( "\N{MINUS SIGN}3.5\N{THIN SPACE}g" . "rounding difference" );
 
     $t->submit_form_ok(
         {
