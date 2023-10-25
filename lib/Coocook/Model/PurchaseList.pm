@@ -42,6 +42,7 @@ sub BUILD ( $self, $args ) {
     for my $item ( values %items ) {
         $item->{article}     = $articles{ $item->{article_id} };
         $item->{unit}        = $units{ $item->{unit_id} };
+        $item->{total}       = $item->{value} + $item->{offset};
         $item->{ingredients} = [];
 
         push @{ $items_per_section{ $item->{article}{shop_section_id} || '' } }, $item;

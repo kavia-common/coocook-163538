@@ -26,6 +26,7 @@ is $sections => array {
                 field purchase_list_id => 1;
                 field value            => 1000;
                 field offset           => +0;
+                field total            => 1000;
                 field unit_id          => 1;
                 field unit             => hash { field short_name => "g";     etc() };
                 field article          => hash { field name       => "flour"; etc() };
@@ -58,6 +59,7 @@ is $sections => array {
             item hash {
                 field value            => 37.5;
                 field offset           => +0.5;
+                field total            => 38.0;
                 field unit             => hash { field short_name => "g";    etc() };
                 field article          => hash { field name       => "salt"; etc() };
                 field convertible_into => [];
