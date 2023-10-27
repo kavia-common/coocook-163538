@@ -25,7 +25,7 @@ js_push_template_path();
     </div>
 
     <div class="mb-2 table-responsive">
-        <table class="table align-middle pl-editor">
+        <table class="table align-middle pl-editor no-print">
             <colgroup>
                 <col style="width:25%">
                 <col style="width:10%">
@@ -46,8 +46,8 @@ js_push_template_path();
                     <th></th>
                 </tr>
             </thead>
-            [% FOREACH item IN section.items %]
             <tbody>
+            [% FOREACH item IN section.items %]
                 <tr id="item-[% item.id %]">
                     [% rowspan = item.ingredients.size;
                     IF item.offset != 0;
@@ -60,7 +60,7 @@ js_push_template_path();
                             <option value="[% item.next_lower_value%]">
                         </datalist>
                         [% IF item.update_offset_url %]
-                        <form class="d-flex justify-content-between no-print" name="total" method="post" action="[% item.update_offset_url %]">
+                        <form class="d-flex justify-content-between" name="total" method="post" action="[% item.update_offset_url %]">
                             <div class="input-group flex-nowrap">
                                 [% IF item.offset %]<span class="input-group-text px-1">ca.</span>[% END %]
                                 <input id="total" class="form-control" type="number" min="0" step="any" name="total" list="values-[% loop.count %]" value="[% item.total %]">
@@ -70,13 +70,12 @@ js_push_template_path();
                         </form>
                         [% END;
                         IF item.convert_url AND item.convertible_into.size %]
-                        <form class="d-flex flex-wrap justify-content-end border rounded my-1 w-100 no-print" name="convert" method="post" action="[% item.convert_url %]" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Click on one of the units, to convert the displayed value to this unit">
+                        <form class="d-flex flex-wrap justify-content-end border rounded my-1 w-100" name="convert" method="post" action="[% item.convert_url %]" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Click on one of the units, to convert the displayed value to this unit">
                             [% FOREACH unit IN item.convertible_into %]
                             <button class="btn btn-outline-secondary btn-sm m-1" type="submit" name="unit" value="[% unit.id %]">[% unit.short_name | html %]</button>
                             [% END %]
                         </form>
                         [% END %]
-                        <span[% IF item.update_offset_url; ' class="print"'; END %]>[% display_value_unit(item.total, item.unit, {print=>1}) %]</span>
                         [% IF item.comment.length %]
                             <br>
                             <span class="comment">([% item.comment | html %])</span>
@@ -88,16 +87,13 @@ js_push_template_path();
                             <br>
                             <span class="comment">([% item.article.comment | html %])</span>
                         [% END %]
-                        <span class="print">
-                            [% IF    item.offset < 0; '&CircleMinus;';
-                               ELSIF item.offset > 0; '&CirclePlus;';
-                               END %]
-                        </span>
                     </td>
 
                     [% FOREACH ingredient IN item.ingredients %]
-            [% '<tr>' UNLESS loop.first %]
-                    <td class="print small-font" colspan="5">[% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %] ([% ingredient.dish.meal.date.strftime('%a, %F') %] - [% ingredient.dish.meal.name | html %] - [% ingredient.dish.name | html %])[% IF ingredient.comment.length; '<br>'; ingredient.comment | html; END %]</td>
+                        [% UNLESS loop.first %]
+                </tr>
+                <tr>
+                        [% END %]
                     <td class="amount" style="text-align:right;">[% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %]</td>
                     <td class="comment">[% IF ingredient.comment.length; '('; ingredient.comment | html; ')'; END %]</td>
                     <td class="dish">
@@ -124,8 +120,7 @@ js_push_template_path();
                         </form>
                         [% END %]
                     </td>
-
-            [% '</tr>' UNLESS loop.first %]
+                </tr>
                     [% END %]
 
                     [% IF item.offset %]
@@ -134,7 +129,7 @@ js_push_template_path();
                         <small>[% display_value_unit( item.offset, item.unit, {html=>1, force_sign=>1} ) %]</small>
                     </td>
                     <td></td>
-                    <td colspan="3" class="rounding">
+                    <td class="rounding" colspan="3">
                         <small><em>rounding difference</em></small>
                     </td>
                     <td>
@@ -147,8 +142,81 @@ js_push_template_path();
                 </tr>
                     [% END %]
 
-            </tbody>
             [% END %]
+            </tbody>
+        </table>
+
+        <table class="table align-middle pl-editor print">
+            <colgroup>
+                <col style="width:20%">
+                <col style="width:20%">
+                <col style="width:60%">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Amount</th>
+                    <th>Article</th>
+                    <th>Dish Ingredients, Meals</th>
+                </tr>
+            </thead>
+            <tbody>
+            [% FOREACH item IN section.items %]
+                <tr>
+                    [% rowspan = item.ingredients.size;
+                    IF item.offset != 0;
+                        rowspan = rowspan + 1;
+                    END %]
+                    <td class="item-amount" rowspan="[% rowspan %]">
+                        [% IF    item.offset < 0; '&CircleMinus;';
+                           ELSIF item.offset > 0; '&CirclePlus;';
+                        END %]
+                        [% display_value_unit(item.total, item.unit, {print=>1}) %]
+                        [% IF item.comment.length %]
+                            <br>
+                            <span class="comment">([% item.comment | html %])</span>
+                        [% END %]
+                    </td>
+                    <td class="item" rowspan="[% rowspan %]">
+                        [% item.article.name | html;
+                        IF item.article.comment.length %]
+                            <br>
+                            <span class="comment">([% item.article.comment | html %])</span>
+                        [% END %]
+                    </td>
+
+                    [% FOREACH ingredient IN item.ingredients %]
+                        [% UNLESS loop.first %]
+                </tr>
+                <tr>
+                        [% END %]
+                    <td class="small-font">
+                        [% display_value_unit( ingredient.value, ingredient.unit, {print=>1} ) %]
+                        [% IF ingredient.comment.length %]([% ingredient.comment | html %])[% END %]
+                        for
+                        <em>[% ingredient.dish.name | html %]</em>
+                        [% IF ingredient.dish.comment.length %]([% ingredient.dish.comment | html %])[% END %]
+                        at
+                        <em>[% ingredient.dish.meal.name | html %]</em>
+                        [% IF ingredient.dish.meal.comment.length %]([% ingredient.dish.meal.comment | html %])[% END %]
+
+                        on [% ingredient.dish.meal.date.strftime('%a, %F') %]
+                    </td>
+                </tr>
+                    [% END %]
+
+                    [% IF item.offset %]
+                <tr>
+                    <td>
+                        <small>
+                            [% display_value_unit( item.offset, item.unit, {print=>1, force_sign=>1} ) %]
+                            <em>rounding difference</em>
+                        </small>
+                    </td>
+                </tr>
+                    [% END %]
+
+            [% END %]
+            </tbody>
         </table>
 
     </div>
