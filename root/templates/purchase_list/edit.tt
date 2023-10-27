@@ -29,19 +29,21 @@ js_push_template_path();
             <colgroup>
                 <col style="width:25%">
                 <col style="width:10%">
-                <col class="btn-icon-1">
                 <col>
                 <col style="width:15%">
                 <col style="width:10%">
                 <col style="width:10%">
                 <col>
+                <col class="btn-icon-1">
             </colgroup>
             <thead>
                 <tr>
                     <th>Amount</th>
                     <th>Article</th>
-                    <th colspan="5">Dishes</th>
-                    <th>Comment</th>
+                    <th colspan="2">Ingredients</th>
+                    <th>Dishes</th>
+                    <th colspan="2">Meals</th>
+                    <th></th>
                 </tr>
             </thead>
             [% FOREACH item IN section.items %]
@@ -95,6 +97,24 @@ js_push_template_path();
 
                     [% FOREACH ingredient IN item.ingredients %]
             [% '<tr>' UNLESS loop.first %]
+                    <td class="print small-font" colspan="5">[% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %] ([% ingredient.dish.meal.date.strftime('%a, %F') %] - [% ingredient.dish.meal.name | html %] - [% ingredient.dish.name | html %])[% IF ingredient.comment.length; '<br>'; ingredient.comment | html; END %]</td>
+                    <td class="amount" style="text-align:right;">[% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %]</td>
+                    <td class="comment">[% IF ingredient.comment.length; '('; ingredient.comment | html; ')'; END %]</td>
+                    <td class="dish">
+                        [% ingredient.dish.name | html;
+                        IF ingredient.dish.comment.length %]
+                            <br>
+                            <span class="comment">([% ingredient.dish.comment | html %])</span>
+                        [% END %]
+                    </td>
+                    <td class="meal">
+                        [% ingredient.dish.meal.name | html;
+                        IF ingredient.dish.meal.comment.length %]
+                            <br>
+                            <span class="comment">([% ingredient.dish.meal.comment | html %])</span>
+                        [% END %]
+                    </td>
+                    <td class="date" style="text-align:center;">[% ingredient.dish.meal.date.strftime('%a, %F') %]</td>
                     <td>
                         [% IF ingredient.remove_url %]
                         <form method="post" action="[% ingredient.remove_url %]">
@@ -104,30 +124,19 @@ js_push_template_path();
                         </form>
                         [% END %]
                     </td>
-                    <td class="print small-font" colspan="5">[% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %] ([% ingredient.dish.meal.date.strftime('%a, %F') %] - [% ingredient.dish.meal.name | html %] - [% ingredient.dish.name | html %])[% IF ingredient.comment.length; '<br>'; ingredient.comment | html; END %]</td>
-                    <td class="amount" style="text-align:right;">[% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %]</td>
-                    <td class="date" style="text-align:center;">[% ingredient.dish.meal.date.strftime('%a, %F') %]</td>
-                    <td class="meal">
-                        [% ingredient.dish.meal.name | html;
-                        IF ingredient.dish.meal.comment.length %]
-                            <br>
-                            <span class="comment">([% ingredient.dish.meal.comment | html %])</span>
-                        [% END %]
-                    </td>
-                    <td class="dish">
-                        [% ingredient.dish.name | html;
-                        IF ingredient.dish.comment.length %]
-                            <br>
-                            <span class="comment">([% ingredient.dish.comment | html %])</span>
-                        [% END %]
-                    </td>
 
-                    <td class="comment">[% IF ingredient.comment.length; '('; ingredient.comment | html; ')'; END %]</td>
             [% '</tr>' UNLESS loop.first %]
                     [% END %]
 
                     [% IF item.offset %]
                 <tr>
+                    <td class="text-end rounding">
+                        <small>[% display_value_unit( item.offset, item.unit, {html=>1, force_sign=>1} ) %]</small>
+                    </td>
+                    <td></td>
+                    <td colspan="3" class="rounding">
+                        <small><em>rounding difference</em></small>
+                    </td>
                     <td>
                         [% IF item.update_offset_url %]
                         <form name="remove-offset" method="post" action="[% item.update_offset_url %]">
@@ -135,13 +144,6 @@ js_push_template_path();
                         </form>
                         [% END %]
                     </td>
-                    <td class="text-end rounding">
-                        <small>[% display_value_unit( item.offset, item.unit, {html=>1, force_sign=>1} ) %]</small>
-                    </td>
-                    <td colspan="3" class="rounding">
-                        <small><em>rounding difference</em></small>
-                    </td>
-                    <td></td>
                 </tr>
                     [% END %]
 
