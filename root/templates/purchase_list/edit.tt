@@ -52,6 +52,9 @@ js_push_template_path();
                     [% rowspan = item.ingredients.size;
                     IF item.offset != 0;
                         rowspan = rowspan + 1;
+                    END;
+                    IF rowspan == 0;
+                       rowspan = 1;
                     END %]
                     <td class="item-amount" rowspan="[% rowspan %]">
                         <datalist id="values-[% loop.count %]">
@@ -89,6 +92,10 @@ js_push_template_path();
                         [% END %]
                     </td>
 
+                    [% IF item.ingredients.empty %]
+                    <td colspan="6">No ingredients. This might be caused by a software bug.</td>
+                </tr>
+                    [% END %]
                     [% FOREACH ingredient IN item.ingredients %]
                         [% UNLESS loop.first %]
                 </tr>
@@ -165,6 +172,9 @@ js_push_template_path();
                     [% rowspan = item.ingredients.size;
                     IF item.offset != 0;
                         rowspan = rowspan + 1;
+                    END;
+                    IF rowspan == 0;
+                        rowspan = 1;
                     END %]
                     <td class="item-amount" rowspan="[% rowspan %]">
                         [% IF    item.offset < 0; '&CircleMinus;';
@@ -184,6 +194,10 @@ js_push_template_path();
                         [% END %]
                     </td>
 
+                    [% IF item.ingredients.empty %]
+                    <td>No ingredients. This might be caused by a software bug.</td>
+                </tr>
+                    [% END %]
                     [% FOREACH ingredient IN item.ingredients %]
                         [% UNLESS loop.first %]
                 </tr>
