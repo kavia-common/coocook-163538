@@ -211,6 +211,23 @@ sub get_project_plan_ajax : GET HEAD Chained('submenu') PathPart('project_plan')
     };
 }
 
+=head2 I<move_meal_or_dish_ajax()>
+
+Move a L<Meal> before or after another L<Meal> or move a L<Dish> to another L<Meal> or before or after
+another L<Dish>.
+
+=head3 ERRORS
+
+=over 4
+
+=item UNQMEAL
+The name of a meal should be unique per day. For this reason, this method throws an error when it tries
+to move a meal with a name which already exists on the target date.
+
+=back
+
+=cut
+
 sub move_meal_or_dish_ajax : POST Chained('submenu') PathPart('move_meal_dish') Args(0) Does(~Ajax)
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
@@ -242,6 +259,13 @@ sub move_meal_or_dish_ajax : POST Chained('submenu') PathPart('move_meal_dish') 
         return;
     }
     elsif ( $source_path->{item_type} eq 'meal' && $target_path->{item_type} eq 'meal' ) {
+        if ( $moved->name eq $target->name ) {
+            $c->stash->{json_data} =
+              { error =>
+                  { message => 'Multiple meals with the same name and date are not allowed.', code => 'UNQMEAL' } };
+            $c->status_code(500);
+            return;
+        }
         $moved->move_to_group( { project_id => $project->id, date => $target->date }, $target->position );
     }
 

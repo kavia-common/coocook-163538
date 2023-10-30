@@ -195,4 +195,12 @@ sub resolve_meal_dish_path ( $self, $project, $path ) {
     die;
 }
 
+sub meals_have_same_name_and_date {
+    my ( $self, $project, $pathA, $pathB ) = @_;
+    if ( $pathA->{item_type} ne 'meal' || $pathB->{item_type} ne 'meal' ) { return 0 }
+
+    return $project->meals->find( $pathA->{meal_id} )->name eq
+      $project->meals->find( $pathB->{meal_id} );
+}
+
 1;
