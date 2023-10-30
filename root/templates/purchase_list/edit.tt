@@ -133,11 +133,11 @@ js_push_template_path();
                     [% IF item.offset %]
                 <tr>
                     <td class="text-end rounding">
-                        <small>[% display_value_unit( item.offset, item.unit, {html=>1, force_sign=>1} ) %]</small>
+                        [% display_value_unit( item.offset, item.unit, {html=>1, force_sign=>1} ) %]
                     </td>
                     <td></td>
                     <td class="rounding" colspan="3">
-                        <small><em>rounding difference</em></small>
+                        <i>rounding difference</i>
                     </td>
                     <td>
                         [% IF item.update_offset_url %]
@@ -205,13 +205,13 @@ js_push_template_path();
                         [% END %]
                     <td class="small-font">
                         [% display_value_unit( ingredient.value, ingredient.unit, {print=>1} ) %]
-                        [% IF ingredient.comment.length %]([% ingredient.comment | html %])[% END %]
+                        [% IF ingredient.comment.length %]<i>([% ingredient.comment | html %])</i>[% END %]
                         for
-                        <em>[% ingredient.dish.name | html %]</em>
-                        [% IF ingredient.dish.comment.length %]([% ingredient.dish.comment | html %])[% END %]
+                        [% ingredient.dish.name | html %]
+                        [% IF ingredient.dish.comment.length %]<i>([% ingredient.dish.comment | html %])</i>[% END %]
                         at
-                        <em>[% ingredient.dish.meal.name | html %]</em>
-                        [% IF ingredient.dish.meal.comment.length %]([% ingredient.dish.meal.comment | html %])[% END %]
+                        [% ingredient.dish.meal.name | html %]
+                        [% IF ingredient.dish.meal.comment.length %]<i>([% ingredient.dish.meal.comment | html %])</i>[% END %]
 
                         on [% ingredient.dish.meal.date.strftime('%a, %F') %]
                     </td>
@@ -220,11 +220,9 @@ js_push_template_path();
 
                     [% IF item.offset %]
                 <tr>
-                    <td>
-                        <small>
-                            [% display_value_unit( item.offset, item.unit, {print=>1, force_sign=>1} ) %]
-                            <em>rounding difference</em>
-                        </small>
+                    <td class="small-font">
+                        [% display_value_unit( item.offset, item.unit, {print=>1, force_sign=>1} ) %]
+                        <em>rounding difference</em>
                     </td>
                 </tr>
                     [% END %]
