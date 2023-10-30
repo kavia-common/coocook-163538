@@ -178,7 +178,6 @@ sub edit : GET HEAD Chained('submenu') PathPart('edit') Args(0) RequiresCapabili
                 createMealURL     => $c->project_uri('/meal/create')->as_string,
                 createDishURL     => $c->project_uri('/dish/create')->as_string,
                 dishFromRecipeURL => $c->project_uri('/dish/from_recipe')->as_string,
-                updateMealURL     => $c->project_uri('/meal/create')->as_string,
             }
         ),
     );
@@ -263,7 +262,7 @@ sub move_meal_or_dish_ajax : POST Chained('submenu') PathPart('move_meal_dish') 
             $c->stash->{json_data} =
               { error =>
                   { message => 'Multiple meals with the same name and date are not allowed.', code => 'UNQMEAL' } };
-            $c->status_code(500);
+            $c->response->status(500);
             return;
         }
         $moved->move_to_group( { project_id => $project->id, date => $target->date }, $target->position );
