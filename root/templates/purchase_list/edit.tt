@@ -40,7 +40,7 @@ js_push_template_path();
                 <tr>
                     <th>Amount</th>
                     <th>Article</th>
-                    <th colspan="2">Ingredients</th>
+                    <th colspan="2">Amounts</th>
                     <th>Dishes</th>
                     <th colspan="2">Meals</th>
                     <th></th>
@@ -166,7 +166,7 @@ js_push_template_path();
                     <th>
                         <div class="d-flex flex-wrap" style="column-gap:1rem;">
                             <span>
-                                <i class="material-icons md-18">straighten</i> Ingredients
+                                <i class="material-icons md-18">straighten</i> Amounts
                             </span>
                             <span>
                                 <i class="material-icons md-18">restaurant</i> Dishes
