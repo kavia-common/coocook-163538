@@ -61,12 +61,6 @@
         display: table-footer-group;
     }
 
-    p,
-    div,
-    table {
-        font-size: 12px;
-    }
-
     .comment {
         color: #000;
     }
