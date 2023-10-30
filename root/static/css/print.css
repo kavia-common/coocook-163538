@@ -6,7 +6,7 @@
     }
 
     .print {
-        display: unset !important;
+        display: revert !important;
     }
 
     button,
