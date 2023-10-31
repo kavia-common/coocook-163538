@@ -109,7 +109,7 @@ on 'test' => sub {
 };
 
 on 'develop' => sub {
-  requires "Perl::Tidy" => "20210402";
+  requires "Perl::Tidy" => "== 20230912"; # when upgrading change "t/zz-perltidy.t" accordingly!
   requires "Test::Perl::Critic";
   requires "Test::PerlTidy";
 
