@@ -1,3 +1,10 @@
+on 'configure' => sub {
+  requires "ExtUtils::MakeMaker::CPANfile" => "0";
+};
+
+requires "perl" => "v5.32.0";
+requires "namespace::autoclean" => "0";
+
 requires "App::DH" => "0";
 requires "Carp" => "0";
 requires "Catalyst" => "0";
@@ -64,13 +71,7 @@ requires "Term::Size::Any" => "0";
 requires "Try::Tiny" => "0";
 requires "URI" => "0";
 requires "YAML::XS" => "0";
-requires "feature" => "0";
-requires "namespace::autoclean" => "0";
-requires "open" => "0";
-requires "parent" => "0";
-requires "perl" => "v5.32.0";
-requires "strict" => "0";
-requires "warnings" => "0";
+
 suggests "DBD::Pg" => "0"; # when running on PostgreSQL
 suggests "DateTime::Format::Pg" => "0";
 suggests "Sys::Hostname::FQDN" => "0";
@@ -85,7 +86,6 @@ on 'test' => sub {
   requires "DateTime::Format::SQLite" => "0";
   requires "Email::Sender::Simple" => "0";
   requires "ExtUtils::MakeMaker" => "0";
-  requires "File::Spec" => "0";
   requires "HTML::TreeBuilder::XPath" => "0";
   requires "Regexp::Common" => "0";
   requires "Scope::Guard" => "0";
@@ -105,31 +105,20 @@ on 'test' => sub {
   requires "Test::WWW::Mechanize::Catalyst" => "0";
   requires "Time::HiRes" => "0";
   requires "WWW::Mechanize::TreeBuilder" => "0";
-  requires "lib" => "0";
-};
 
-on 'test' => sub {
   recommends "CPAN::Meta" => "2.120900";
   recommends "Test::PostgreSQL" => "0";
-};
-
-on 'configure' => sub {
-  requires "ExtUtils::MakeMaker::CPANfile" => "0";
 };
 
 on 'develop' => sub {
   requires "Perl::Tidy" => "20210402";
   requires "Test::Perl::Critic" => "0";
   requires "Test::PerlTidy" => "0";
-};
 
-on 'develop' => sub {
   recommends "CatalystX::LeakChecker" => "0"; # loaded if available
   recommends "DBD::Pg" => "0";
   recommends "DateTime::Format::Pg" => "0";
-};
 
-on 'develop' => sub {
   suggests "Catalyst::Plugin::StackTrace" => "0";
   suggests "Catalyst::Restarter" => "0";
   suggests "Term::Size::Any" => "0";
