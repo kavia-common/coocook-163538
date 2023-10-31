@@ -100,8 +100,6 @@ on 'test' => sub {
   requires "Test::MockObject";
   requires "Test::More";
   requires "Test::Output";
-  requires "Test::Perl::Critic";
-  requires "Test::PerlTidy";
   requires "Test::WWW::Mechanize::Catalyst";
   requires "Time::HiRes";
   requires "WWW::Mechanize::TreeBuilder";
