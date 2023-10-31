@@ -1,5 +1,5 @@
 on 'configure' => sub {
-  requires "ExtUtils::MakeMaker::CPANfile";
+    requires "ExtUtils::MakeMaker::CPANfile";
 };
 
 requires "perl" => "v5.32.0";
@@ -31,7 +31,7 @@ requires "Crypt::Digest::SHA256";
 requires "DBIx::Class::Core";
 requires "DBIx::Class::DeploymentHandler";
 requires "DBIx::Class::FilterColumn";
-requires "DBIx::Class::Helpers" => "2.036000"; # supports RS->results_exist() with condition
+requires "DBIx::Class::Helpers" => "2.036000";    # supports RS->results_exist() with condition
 requires "DBIx::Class::Helpers::Util";
 requires "DBIx::Class::InflateColumn::DateTime";
 requires "DBIx::Class::ResultSet";
@@ -72,53 +72,53 @@ requires "Try::Tiny";
 requires "URI";
 requires "YAML::XS";
 
-suggests "DBD::Pg"; # when running on PostgreSQL
+suggests "DBD::Pg";    # when running on PostgreSQL
 suggests "DateTime::Format::Pg";
 suggests "Sys::Hostname::FQDN";
 
 on 'test' => sub {
-  requires "DBI";
-  requires "DBICx::TestDatabase";
-  requires "DBIx::Class::Schema";
-  requires "DBIx::Class::Schema::Loader";
-  requires "DBIx::Diff::Schema";
-  requires "Data::Dumper";
-  requires "DateTime::Format::SQLite";
-  requires "Email::Sender::Simple";
-  requires "ExtUtils::MakeMaker";
-  requires "HTML::TreeBuilder::XPath";
-  requires "Regexp::Common";
-  requires "Scope::Guard";
-  requires "Sub::Exporter";
-  requires "Test2::API";
-  requires "Test2::Require::AuthorTesting";
-  requires "Test2::Require::Module";
-  requires "Test2::V0";
-  requires "Test::Builder";
-  requires "Test::Compile" => "v2.2.2";
-  requires "Test::Memory::Cycle";
-  requires "Test::MockObject";
-  requires "Test::More";
-  requires "Test::Output";
-  requires "Test::WWW::Mechanize::Catalyst";
-  requires "Time::HiRes";
-  requires "WWW::Mechanize::TreeBuilder";
+    requires "DBI";
+    requires "DBICx::TestDatabase";
+    requires "DBIx::Class::Schema";
+    requires "DBIx::Class::Schema::Loader";
+    requires "DBIx::Diff::Schema";
+    requires "Data::Dumper";
+    requires "DateTime::Format::SQLite";
+    requires "Email::Sender::Simple";
+    requires "ExtUtils::MakeMaker";
+    requires "HTML::TreeBuilder::XPath";
+    requires "Regexp::Common";
+    requires "Scope::Guard";
+    requires "Sub::Exporter";
+    requires "Test2::API";
+    requires "Test2::Require::AuthorTesting";
+    requires "Test2::Require::Module";
+    requires "Test2::V0";
+    requires "Test::Builder";
+    requires "Test::Compile" => "v2.2.2";
+    requires "Test::Memory::Cycle";
+    requires "Test::MockObject";
+    requires "Test::More";
+    requires "Test::Output";
+    requires "Test::WWW::Mechanize::Catalyst";
+    requires "Time::HiRes";
+    requires "WWW::Mechanize::TreeBuilder";
 
-  recommends "CPAN::Meta" => "2.120900";
-  recommends "Test::PostgreSQL";
+    recommends "CPAN::Meta" => "2.120900";
+    recommends "Test::PostgreSQL";
 };
 
 on 'develop' => sub {
-  requires "Perl::Tidy" => "== 20230912"; # when upgrading change "t/zz-perltidy.t" accordingly!
-  requires "Sub::Override";
-  requires "Test::Perl::Critic";
-  requires "Test::PerlTidy";
+    requires "Perl::Tidy" => "== 20230912";    # when upgrading change "t/zz-perltidy.t" accordingly!
+    requires "Sub::Override";
+    requires "Test::Perl::Critic";
+    requires "Test::PerlTidy";
 
-  recommends "CatalystX::LeakChecker"; # loaded if available
-  recommends "DBD::Pg";
-  recommends "DateTime::Format::Pg";
+    recommends "CatalystX::LeakChecker";       # loaded if available
+    recommends "DBD::Pg";
+    recommends "DateTime::Format::Pg";
 
-  suggests "Catalyst::Plugin::StackTrace";
-  suggests "Catalyst::Restarter";
-  suggests "Term::Size::Any";
+    suggests "Catalyst::Plugin::StackTrace";
+    suggests "Catalyst::Restarter";
+    suggests "Term::Size::Any";
 };
