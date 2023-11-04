@@ -180,12 +180,13 @@ sub sqlite_pragma {
     $storage->debug
       and $storage->debugfh->print("$sql\n");
 
-    if ( defined $set_value ) {
-        return $storage->dbh_do( sub { $_[1]->do($sql) } );
-    }
-    else {
-        return $storage->dbh_do( sub { return $_[1]->selectrow_array($sql) } );
-    }
+    return $storage->dbh_do(
+        sub {
+            defined $set_value
+              ? $_[1]->do($sql)
+              : $_[1]->selectrow_array($sql);
+        }
+    );
 }
 
 1;
