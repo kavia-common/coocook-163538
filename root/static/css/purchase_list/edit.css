@@ -15,4 +15,14 @@
     .pl-editor {
         min-width: unset;
     }
+
+    th.amount-dish-meal,
+    td.amount-dish-meal {
+        border-right: none;
+    }
+
+    th.date,
+    td.date {
+        border-left: none;
+    }
 }

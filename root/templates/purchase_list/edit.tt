@@ -157,13 +157,14 @@ js_push_template_path();
             <colgroup>
                 <col style="width:20%">
                 <col style="width:20%">
-                <col style="width:60%">
+                <col style="width:50%">
+                <col style="width:10%">
             </colgroup>
             <thead>
                 <tr>
                     <th>Amount</th>
                     <th>Article</th>
-                    <th>
+                    <th class="amount-dish-meal">
                         <div class="d-flex flex-wrap" style="column-gap:1rem;">
                             <span>
                                 <i class="material-icons md-18">straighten</i> Amounts
@@ -176,6 +177,7 @@ js_push_template_path();
                             </span>
                         </div>
                     </th>
+                    <th class="date text-end">Dates</th>
                 </tr>
             </thead>
             <tbody>
@@ -207,7 +209,7 @@ js_push_template_path();
                     </td>
 
                     [% IF item.ingredients.empty %]
-                    <td>No ingredients. This might be caused by a software bug.</td>
+                    <td colspan="2">No ingredients. This might be caused by a software bug.</td>
                 </tr>
                     [% END %]
                     [% FOREACH ingredient IN item.ingredients %]
@@ -215,7 +217,7 @@ js_push_template_path();
                 </tr>
                 <tr>
                         [% END %]
-                    <td class="small-font">
+                    <td class="small-font amount-dish-meal">
                         <div class="d-flex flex-wrap" style="column-gap:1rem;">
                             <span>
                                 <i class="material-icons md-18">straighten</i>
@@ -231,16 +233,16 @@ js_push_template_path();
                                 <i class="material-icons md-18">calendar_today</i>
                                 [% ingredient.dish.meal.name | html %]
                                 [% IF ingredient.dish.meal.comment.length %]<i>([% ingredient.dish.meal.comment | html %])</i>[% END %]
-                                on [% ingredient.dish.meal.date.strftime('%a, %F') %]
                             </span>
                         </div>
                     </td>
+                    <td class="small-font date text-end">[% ingredient.dish.meal.date.strftime('%a, %F') %]</th>
                 </tr>
                     [% END %]
 
                     [% IF item.offset %]
                 <tr>
-                    <td class="small-font">
+                    <td class="small-font date" colspan="2">
                         [% display_value_unit( item.offset, item.unit, {print=>1, force_sign=>1} ) %]
                         <em>rounding difference</em>
                     </td>
