@@ -6,16 +6,8 @@ use Moose;
 use namespace::autoclean;
 
 use Coocook::DeploymentHandler;
+use File::Spec;
 use PerlX::Maybe;
-
-# TODO upgrade fails on Perl 5.26 because .pl file can't be found
-# can be fixed by setting PERL_USE_UNSAFE_INC
-# wrong assumption of '.' in @INC, probably in DBIx::Class::DeploymentHandler
-#
-# Can't locate share/ddl/SQLite/upgrade/4-5/002_url_names.pl
-# in @INC (@INC contains: ...) at (eval 1153) line 4.
-# at .../site_perl/5.26.0/Context/Preserve.pm line 43.
-use lib '.';
 
 {    # workaround to let Producer::SQLite NOT mangle index names
     use SQL::Translator::Producer::SQLite;
@@ -32,6 +24,12 @@ use lib '.';
 extends 'App::DH';
 
 has '+schema' => ( default => 'Coocook::Schema' );
+
+# Since Perl 5.26 @INC doesn't contain '.' anymore and
+# includes of .pl files do require qualified paths.
+# I tried './share/ddl' but DBIx::Class::DeploymentHandler finds files
+# and removes the './' part. Absolute path works.
+has '+script_dir' => ( default => File::Spec->rel2abs('share/ddl') );
 
 sub _build_database { [qw< SQLite PostgreSQL >] }
 
