@@ -82,6 +82,17 @@ schema_eq(
     "schema from upgrade SQLs and schema from Coocook::Schema code are equal"
 );
 
+{
+    my $unit_conversions = $schema_from_upgrades->resultset('UnitConversion')
+      ->search( undef, { columns => [qw( unit1_id factor unit2_id )] } );
+
+    is [ $unit_conversions->hri->all ] => [
+        { unit1_id => 1, factor => 0.001, unit2_id => 2 },    # g to kg
+        { unit1_id => 2, factor => 0.001, unit2_id => 4 },    # kg to t
+      ],
+      "unit_conversions created from old quantity data by migration";
+}
+
 subtest "issue #266 order of meals/dishes" => sub {
     my $schema = TestDB->new( deploy => 0 );
     install_ok( $schema, 24 );
@@ -112,17 +123,6 @@ subtest "issue #266 order of meals/dishes" => sub {
       => [qw( b c a )],
       "dishes in order of insertion into database";
 };
-
-{
-    my $unit_conversions = $schema_from_upgrades->resultset('UnitConversion')
-      ->search( undef, { columns => [qw( unit1_id factor unit2_id )] } );
-
-    is [ $unit_conversions->hri->all ] => [
-        { unit1_id => 1, factor => 0.001, unit2_id => 2 },    # g to kg
-        { unit1_id => 2, factor => 0.001, unit2_id => 4 },    # kg to t
-      ],
-      "unit_conversions created from old quantity data by migration";
-}
 
 sub schema_eq {
     my ( $schema1, $schema2, $test_name ) = @_;
