@@ -13,9 +13,6 @@ plan(5);
 
 my $schema = TestDB->new( deploy => 0 );
 
-# TODO this pragma makes the test fail
-$schema->storage->dbh->do('PRAGMA foreign_keys = OFF');
-
 try_ok {
     Coocook::Script::Deploy->new(
         _schema    => $schema,

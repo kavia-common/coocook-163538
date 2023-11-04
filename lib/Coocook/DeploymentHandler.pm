@@ -6,6 +6,7 @@ use warnings;
 use parent 'DBIx::Class::DeploymentHandler';
 
 use File::Spec;
+use Sub::Name;
 
 sub new {
     my ( $self, $args ) = @_;
@@ -22,6 +23,22 @@ sub new {
     local $args->{script_directory} = File::Spec->rel2abs($script_directory);
 
     $self->next::method($args);
+}
+
+sub upgrade {
+    my $self = shift;
+
+    $self->schema->storage->sqlt_type eq 'SQLite'
+      or return $self->next::method(@_);
+
+    # next::method() doesn't work without subname() inside a coderef
+    my $orig = subname __PACKAGE__ . '::upgrade' => sub { $self->next::method(@_) };
+
+    # DBIC::DeploymentHandler wraps our upgrade SQLs in txn_do().
+    # In SQLite disabling the pragma 'foreign_keys' inside this transaction
+    # has no effect and removing tables with the pragma in effect doesn't work.
+    # So we disable the pragma for all upgrade scripts.
+    return $self->schema->fk_checks_off_do( $orig, @_ );
 }
 
 {    # workaround to let Producer::SQLite NOT mangle index names
