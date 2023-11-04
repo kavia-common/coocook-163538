@@ -1,5 +1,7 @@
 use Test2::V0;
 
+plan(8);
+
 use lib 't/lib';
 use TestDB qw(install_ok upgrade_ok);
 
@@ -27,7 +29,8 @@ is intercept(
         field trace_line => __LINE__ - 5;
         etc();
     };
-};
+},
+  "error line reported by install_ok()";
 
 is intercept(
     sub {
@@ -40,7 +43,5 @@ is intercept(
         field trace_line => __LINE__ - 5;
         etc();
     };
-
-};
-
-done_testing;
+},
+  "error line reported by upgrade_ok()";
