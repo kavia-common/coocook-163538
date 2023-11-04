@@ -61,26 +61,31 @@ $t->robots_flags_ok( { index => 0 } );
     # normally an organization needs an owner
     # but then we couldn't test registration of first user
     # so we trick a little
-    my $fk_guard     = $schema->fk_checks_off_guard();
-    my $organization = $schema->resultset('Organization')->create(
-        {
-            name           => "TestOrganization",
-            display_name   => "Test Organization",
-            description_md => __FILE__,
-            owner_id       => 9999,
+    $schema->fk_checks_off_do(
+        sub {
+            my $organization = $schema->resultset('Organization')->create(
+                {
+                    name           => "TestOrganization",
+                    display_name   => "Test Organization",
+                    description_md => __FILE__,
+                    owner_id       => 9999,
+                }
+            );
+
+            $t->register_fails_like(
+                { %userdata_ok, username => $organization->name },
+                qr/username is not available/,
+                "organization name"
+            );
+
+            $t->register_fails_like(
+                { %userdata_ok, username => uc $organization->name },
+                qr/username is not available/,
+                "organization name in uppercase"
+            );
+
+            $organization->delete();
         }
-    );
-
-    $t->register_fails_like(
-        { %userdata_ok, username => $organization->name },
-        qr/username is not available/,
-        "organization name"
-    );
-
-    $t->register_fails_like(
-        { %userdata_ok, username => uc $organization->name },
-        qr/username is not available/,
-        "organization name in uppercase"
     );
 
     $t->register_ok( \%userdata_ok );
