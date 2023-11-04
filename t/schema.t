@@ -5,7 +5,7 @@ use Coocook::Schema;
 use lib 't/lib';
 use TestDB;
 
-plan(8);
+plan(9);
 
 ok my $db = TestDB->new;
 
@@ -154,6 +154,27 @@ subtest fk_checks_off_do => sub {
     like dies {
         $db->fk_checks_off_do( sub { $row->insert() } )
     }, qr/FOREIGN KEY constraint failed/, "throws error at end of fk_checks_off_do after insert";
+};
+
+subtest fk_checks_off_guard => sub {
+    $db->sqlite_pragma('foreign_keys') or die;
+
+    {
+        ok my $guard = $db->fk_checks_off_guard(), "fk_checks_off_guard()";
+        ok !$db->sqlite_pragma('foreign_keys'),    "PRAGMA foreign_keys is disabled";
+    }
+    ok $db->sqlite_pragma('foreign_keys'), "PRAGMA foreign_keys is re-enabled";
+
+    {
+        ok $db->disable_fk_checks(), "PRAGMA foreign_keys is disabled beforehand ...";
+        !$db->sqlite_pragma('foreign_keys') or die;
+        ok my $guard = $db->fk_checks_off_guard(), "fk_checks_off_guard()";
+        ok !$db->sqlite_pragma('foreign_keys'),    "PRAGMA foreign_keys is disabled";
+    }
+    ok !$db->sqlite_pragma('foreign_keys'), "PRAGMA foreign_keys stays disabled";
+    $db->enable_fk_checks();
+
+    $db->sqlite_pragma('foreign_keys') or die;
 };
 
 subtest assert_no_sth => sub {
