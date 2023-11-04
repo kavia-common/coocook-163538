@@ -151,11 +151,9 @@ subtest fk_checks_off_do => sub {
 
     like dies { $row->insert }, qr/FOREIGN KEY constraint failed/, "inserting doesn't work outside";
 
-    todo "How to enforce checks when re-enabling 'foreign_keys' pragma?" => sub {
-        like dies {
-            $db->fk_checks_off_do( sub { $row->insert() } )
-        }, qr/some error/, "throws error at end of fk_checks_off_do after insert";    # TODO error message
-    };
+    like dies {
+        $db->fk_checks_off_do( sub { $row->insert() } )
+    }, qr/FOREIGN KEY constraint failed/, "throws error at end of fk_checks_off_do after insert";
 };
 
 subtest assert_no_sth => sub {

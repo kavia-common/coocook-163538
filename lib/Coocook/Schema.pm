@@ -158,6 +158,12 @@ sub fk_checks_off_do {
     $original_state
       and $self->enable_fk_checks();
 
+    my $error = $self->storage->dbh_do( sub { $_[1]->selectrow_array('PRAGMA foreign_key_check') } );
+
+    if ($error) {
+        croak "FOREIGN KEY constraint failed after block inside fk_checks_off_do()";
+    }
+
     return $result;
 }
 
