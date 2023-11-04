@@ -5,6 +5,9 @@ package Coocook::Script::Deploy;
 use Moose;
 use namespace::autoclean;
 
+use DBIx::Class::DeploymentHandler;
+use PerlX::Maybe;
+
 # TODO upgrade fails on Perl 5.26 because .pl file can't be found
 # can be fixed by setting PERL_USE_UNSAFE_INC
 # wrong assumption of '.' in @INC, probably in DBIx::Class::DeploymentHandler
@@ -31,6 +34,19 @@ extends 'App::DH';
 has '+schema' => ( default => 'Coocook::Schema' );
 
 sub _build_database { [qw< SQLite PostgreSQL >] }
+
+sub _build__dh {    # copy from App::DH
+    my ($self) = @_;
+    return DBIx::Class::DeploymentHandler->new(    # adjusted to custom class
+        {
+            schema           => $self->_schema,
+            force_overwrite  => $self->force,
+            script_directory => $self->script_dir,
+            databases        => $self->database,
+            maybe to_version => $self->target,
+        },
+    );
+}
 
 __PACKAGE__->meta->make_immutable;
 
