@@ -278,17 +278,21 @@ subtest favicons => sub {
     $t->content_lacks('<link.+icon');
 
     $t->reload_config(
-        icon_url  => 'alpha.ico',
         icon_type => 'image/x-icon',
+        icon_url  => '/alpha.ico',
         icon_urls => {
-            ''      => 'beta.png',
-            '72x72' => '72.png',
+            ''      => '/beta.png',
+            '72x72' => 'https://example/72.png',    # absolute URL
         },
     );
     $t->reload_ok();
-    $t->content_contains(q{<link rel="icon" type="image/x-icon" href="alpha.ico">});
-    $t->content_contains(q{<link rel="apple-touch-icon"  href="beta.png">});
-    $t->content_contains(q{<link rel="apple-touch-icon" sizes="72x72" href="72.png">});
+    $t->content_contains(q{<link rel="icon" type="image/x-icon" href="https://localhost/alpha.ico">});
+    $t->content_contains(q{<link rel="apple-touch-icon"  href="https://localhost/beta.png">});
+    $t->content_contains(q{<link rel="apple-touch-icon" sizes="72x72" href="https://example/72.png">});
+
+    my $guard = $t->local_config_guard( icon_url => 'no scheme or root slash' );
+    $t->get('/');
+    $t->status_is( 500, "error string that is not absolute URI or absolute path" );
 };
 
 subtest "canonical URLs" => sub {
