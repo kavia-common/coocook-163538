@@ -218,12 +218,21 @@ __PACKAGE__->setup();
 sub setup_finalize {
     my $self = shift;
 
-    my $return = $self->next::method(@_);
+    my $config = $self->config;
 
-    $self->config->{email_sender_name} ||= $self->config->{name};
+    $config->{email_sender_name} ||= $config->{name};
 
-    $self->config->{content_security_policy} //= sub {
-        if ( my $static_uri = $self->config->{static_base_uri} ) {
+    if ( defined( my $static_base_uri = $ENV{COOCOOK_STATIC_BASE_URI} ) ) {
+        if ( length $static_base_uri ) {
+            $config->{static_base_uri} = $static_base_uri;
+        }
+        else {
+            delete $config->{static_base_uri};
+        }
+    }
+
+    $config->{content_security_policy} //= sub {
+        if ( my $static_uri = $config->{static_base_uri} ) {
             return qq(connect-src 'self'; img-src data: $static_uri; font-src $static_uri;);
         }
 
@@ -231,7 +240,7 @@ sub setup_finalize {
       }
       ->();
 
-    return $return;
+    return $self->next::method(@_);
 }
 
 =head1 SEE ALSO
