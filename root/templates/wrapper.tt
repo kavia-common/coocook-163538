@@ -38,7 +38,7 @@
 [% END %]
 
 [% FOREACH path IN css %]
-    <link rel="stylesheet" href="[% uri_for_static(path) %]">
+    <link rel="stylesheet" href="[% path.match('^https?://') ? path : uri_for_static(path) %]">
 [% END %]
 </head>
 
@@ -250,7 +250,7 @@
     </div>
 
     [% FOR path IN js %]
-    <script src="[% uri_for_static(path) %]"></script>
+    <script src="[% path.match('^https?://') ? path : uri_for_static(path) %]"></script>
     [% END %]
 </body>
 </html>

@@ -128,7 +128,7 @@ sub auto : Private {
 
     for my $key (qw< css js >) {
         if ( my $config = $c->config->{$key} ) {
-            push $c->stash->{$key}->@*, ref $config eq 'ARRAY' ? @$config : $config;
+            push $c->stash->{$key}->@*, map { $c->uri_for($_) } ref $config eq 'ARRAY' ? @$config : $config;
         }
     }
 
