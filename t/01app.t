@@ -269,8 +269,8 @@ subtest favicons => sub {
     );
     $t->reload_ok();
     $t->content_contains(q{<link rel="icon" type="image/x-icon" href="alpha.ico">});
-    $t->content_contains(q{<link rel="apple-touch-icon-precomposed"  href="beta.png">});
-    $t->content_contains(q{<link rel="apple-touch-icon-precomposed" sizes="72x72" href="72.png">});
+    $t->content_contains(q{<link rel="apple-touch-icon"  href="beta.png">});
+    $t->content_contains(q{<link rel="apple-touch-icon" sizes="72x72" href="72.png">});
 };
 
 subtest "canonical URLs" => sub {
