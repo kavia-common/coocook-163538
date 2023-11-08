@@ -291,8 +291,20 @@ subtest favicons => sub {
     $t->content_contains(q{<link rel="apple-touch-icon" sizes="72x72" href="https://example/72.png">});
 
     my $guard = $t->local_config_guard( icon_url => 'no scheme or root slash' );
-    $t->get('/');
-    $t->status_is( 500, "error string that is not absolute URI or absolute path" );
+
+    # Test2::Tools::Exception doesn't catch server side errors here.
+    # workaround stolen from
+    # https://github.com/perl-catalyst/catalyst-runtime/blob/master/t/data_handler.t
+    my $stderr;
+    {
+        local *STDERR;
+        open( STDERR, ">", \$stderr ) or die "Can't open STDERR: $!";
+        $t->get('/');
+    }
+    like
+      $stderr => qr/absolute URI/,
+      "error string that is not absolute URI or absolute path";
+    $t->status_is(500);
 };
 
 subtest "canonical URLs" => sub {
