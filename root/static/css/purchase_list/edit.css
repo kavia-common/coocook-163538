@@ -25,4 +25,9 @@
     td.date {
         border-left: none;
     }
+
+    td.amount-dish-meal .dish,
+    td.amount-dish-meal .meal {
+        margin-left: 1em;
+    }
 }

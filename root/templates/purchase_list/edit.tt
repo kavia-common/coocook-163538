@@ -218,18 +218,18 @@ js_push_template_path();
                 <tr>
                         [% END %]
                     <td class="small-font amount-dish-meal">
-                        <div class="d-flex flex-wrap" style="column-gap:1rem;">
-                            <span>
+                        <div class="d-flex flex-wrap">
+                            <span class="amount">
                                 <i class="material-icons md-18">straighten</i>
                                 [% display_value_unit( ingredient.value, ingredient.unit, {print=>1} ) %]
                                 [% IF ingredient.comment.length %]<i>([% ingredient.comment | html %])</i>[% END %]
                             </span>
-                            <span>
+                            <span class="dish">
                                 <i class="material-icons md-18">restaurant</i>
                                 [% ingredient.dish.name | html %]
                                 [% IF ingredient.dish.comment.length %]<i>([% ingredient.dish.comment | html %])</i>[% END %]
                             </span>
-                            <span>
+                            <span class="meal">
                                 <i class="material-icons md-18">calendar_today</i>
                                 [% ingredient.dish.meal.name | html %]
                                 [% IF ingredient.dish.meal.comment.length %]<i>([% ingredient.dish.meal.comment | html %])</i>[% END %]
