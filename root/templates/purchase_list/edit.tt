@@ -57,39 +57,39 @@ js_push_template_path();
                        rowspan = 1;
                     END %]
                     <td class="item-amount" rowspan="[% rowspan %]">
+                    [% IF item.update_offset_url %]
                         <datalist id="values-[% loop.count %]">
                             <option value="[% item.total %]">
                             <option value="[% item.next_higher_value %]">
                             <option value="[% item.next_lower_value%]">
                         </datalist>
-                        [% IF item.update_offset_url %]
                         <form class="d-flex justify-content-between" name="total" method="post" action="[% item.update_offset_url %]">
                             <div class="input-group flex-nowrap">
-                                [% IF item.offset %]<span class="input-group-text px-1">ca.</span>[% END %]
+                            [% IF item.offset %]<span class="input-group-text px-1">ca.</span>[% END %]
                                 <input id="total" class="form-control" type="number" min="0" step="any" name="total" list="values-[% loop.count %]" value="[% item.total %]">
                                 <span class="input-group-text">[% display_unit( item.unit, {html=>1} ) %]</span>
                             </div>
                             <button class="btn btn-outline-primary ms-1 material-icons" type="submit" title="Update amount">done</button>
                         </form>
-                        [% END;
-                        IF item.convert_url AND item.convertible_into.size %]
+                    [% END;
+                    IF item.convert_url AND item.convertible_into.size %]
                         <form class="d-flex flex-wrap justify-content-end border rounded my-1 w-100" name="convert" method="post" action="[% item.convert_url %]" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Click on one of the units, to convert the displayed value to this unit">
-                            [% FOREACH unit IN item.convertible_into %]
+                        [% FOREACH unit IN item.convertible_into %]
                             <button class="btn btn-outline-secondary btn-sm m-1" type="submit" name="unit" value="[% unit.id %]">[% unit.short_name | html %]</button>
-                            [% END %]
+                        [% END %]
                         </form>
-                        [% END %]
-                        [% IF item.comment.length %]
-                            <br>
-                            <span class="comment">([% item.comment | html %])</span>
-                        [% END %]
+                    [% END %]
+                    [% IF item.comment.length %]
+                        <br>
+                        <span class="comment">([% item.comment | html %])</span>
+                    [% END %]
                     </td>
                     <td class="item" rowspan="[% rowspan %]">
-                        [% item.article.name | html;
-                        IF item.article.comment.length %]
-                            <br>
-                            <span class="comment">([% item.article.comment | html %])</span>
-                        [% END %]
+                    [% item.article.name | html;
+                    IF item.article.comment.length %]
+                        <br>
+                        <span class="comment">([% item.article.comment | html %])</span>
+                    [% END %]
                     </td>
 
                     [% IF item.ingredients.empty %]
