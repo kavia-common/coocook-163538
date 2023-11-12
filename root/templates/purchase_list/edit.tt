@@ -71,7 +71,13 @@ js_push_template_path();
                             </div>
                             <button class="btn btn-outline-primary ms-1 material-icons" type="submit" title="Update amount">done</button>
                         </form>
-                    [% END;
+                    [% ELSE;
+                        IF    item.offset < 0; '&CircleMinus;';
+                        ELSIF item.offset > 0; '&CirclePlus;';
+                        END;
+                        display_value_unit( item.total, item.unit, {html=>1} );
+                    END;
+
                     IF item.convert_url AND item.convertible_into.size %]
                         <form class="d-flex flex-wrap justify-content-end border rounded my-1 w-100" name="convert" method="post" action="[% item.convert_url %]" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Click on one of the units, to convert the displayed value to this unit">
                         [% FOREACH unit IN item.convertible_into %]
