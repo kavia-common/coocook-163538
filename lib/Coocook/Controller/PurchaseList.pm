@@ -92,6 +92,14 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
         units    => $list->units,
     );
 
+    for my $article ( $list->articles->@* ) {
+        $article->{url} = $c->project_uri( '/article/edit', $article->{id} );
+    }
+
+    for my $dish ( $list->dishes->@* ) {
+        $dish->{url} = $c->project_uri( '/dish/edit', $dish->{id} );
+    }
+
     $c->has_capability('edit_project')
       or return;
 

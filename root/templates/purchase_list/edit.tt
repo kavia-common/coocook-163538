@@ -91,8 +91,8 @@ js_push_template_path();
                     [% END %]
                     </td>
                     <td class="item" rowspan="[% rowspan %]">
-                    [% item.article.name | html;
-                    IF item.article.comment.length %]
+                        <a href="[% item.article.url %]">[% item.article.name | html %]</a>
+                    [% IF item.article.comment.length %]
                         <br>
                         <span class="comment">([% item.article.comment | html %])</span>
                     [% END %]
@@ -110,8 +110,8 @@ js_push_template_path();
                     <td class="amount" style="text-align:right;">[% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %]</td>
                     <td class="comment">[% IF ingredient.comment.length; '('; ingredient.comment | html; ')'; END %]</td>
                     <td class="dish">
-                        [% ingredient.dish.name | html;
-                        IF ingredient.dish.comment.length %]
+                        <a href="[% ingredient.dish.url %]">[% ingredient.dish.name | html %]</a>
+                        [% IF ingredient.dish.comment.length %]
                             <br>
                             <span class="comment">([% ingredient.dish.comment | html %])</span>
                         [% END %]
