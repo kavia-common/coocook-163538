@@ -220,7 +220,13 @@ sub update_or_insert : Private {
     if ( !defined $name or $name !~ m/\S/ ) {
         $c->messages->error("Name must not be empty");
 
-        $c->redirect_detach( $c->project_uri( '/article/edit', $article->id ) );
+        $c->redirect_detach(
+            $c->project_uri(
+                $article->in_storage
+                ? ( $self->action_for('edit') => $article->id )
+                : $self->action_for('new_article')
+            )
+        );
     }
 
     my @tags = $c->project->tags->from_names( $c->req->params->get('tags') )->only_id_col->all;
