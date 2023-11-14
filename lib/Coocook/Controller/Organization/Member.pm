@@ -30,21 +30,24 @@ sub index : GET HEAD Chained('/organization/base') PathPart('members') Args(0)
 
     for (@organizations_users) {
         my $organization_user = $_;
+        my $user              = $_->user;
 
-        $_ = $organization_user->as_hashref( user => $organization_user->user );
+        $_ = $organization_user->as_hashref(
+            user => $user->as_hashref(
+                url => $c->uri_for_action( '/user/show', [ $user->name ] ),
+            ),
 
-        $_->{user_url} = $c->uri_for_action( '/user/show', [ $organization_user->user->name ] );
+            transfer_ownership_url => $c->uri_for_action_if_permitted(
+                $self->action_for('make_owner'),
+                { membership => $organization_user },
+                [ $organization->name, $user->name ]
+            ),
 
-        $_->{transfer_ownership_url} = $c->uri_for_action_if_permitted(
-            $self->action_for('make_owner'),
-            { membership => $organization_user },
-            [ $organization->name, $organization_user->user->name ]
-        );
-
-        $_->{remove_url} = $c->uri_for_action_if_permitted(
-            $self->action_for('remove'),
-            { membership => $organization_user },
-            [ $organization->name, $organization_user->user->name ]
+            remove_url => $c->uri_for_action_if_permitted(
+                $self->action_for('remove'),
+                { membership => $organization_user },
+                [ $organization->name, $user->name ]
+            ),
         );
 
         # can't use uri_for_action_if_permitted() because action has non-declarative check
@@ -52,8 +55,7 @@ sub index : GET HEAD Chained('/organization/base') PathPart('members') Args(0)
             edit_organization_membership => { membership => $organization_user, role => 'member' } )
           or next;
 
-        $_->{edit_url} =
-          $c->uri_for( $self->action_for('edit'), [ $organization->name, $organization_user->user->name ] );
+        $_->{edit_url} = $c->uri_for( $self->action_for('edit'), [ $organization->name, $user->name ] );
     }
 
     if ( my @other_users = $organization->users_without_membership->sorted->hri->all ) {

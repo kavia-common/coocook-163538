@@ -18,9 +18,9 @@ has_admin = 0 %]
         <tr>
             <td>
     [% IF permission.organization;
-        link_organization(permission.organization, permission.organization_url);
+        link_organization(permission.organization);
     ELSIF permission.user;
-        link_user(permission.user, permission.user_url);
+        link_user(permission.user);
     ELSE;
         THROW undef "permissions neither organization nor user";
     END %]

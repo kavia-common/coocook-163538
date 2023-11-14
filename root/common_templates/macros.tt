@@ -32,12 +32,12 @@ MACRO display_unit(unit, opts) BLOCK;
 END;
 
 MACRO display_value(value, opts) BLOCK;
-    '−' IF value < 0; # non-ASCII minus https://www.compart.com/de/unicode/U+2212
+    '−' IF value < 0;    # > non-ASCII minus https://www.compart.com/de/unicode/U+2212
     IF opts.force_sign;
         '±' IF value == 0;
         '+' IF value > 0;
     END;
-    IF value < 0;
+    IF value < 0;    # > heal broken syntax highlighting
         value = 0 - value;
     END;
     USE SignificantDigits;
@@ -50,14 +50,15 @@ MACRO display_value_unit(value, unit, opts) BLOCK;
     display_unit(unit, opts);
 END;
 
-MACRO link_organization(organization, url) BLOCK;
-    THROW "no URL" UNLESS url ~%]
-    <i class="material-icons">groups</i> <a href="[% url %]" title="Show organization">[% organization.display_name | html %]</a> (<span class="organization">[% organization.name %]</span>)
+MACRO link_organization(organization) BLOCK;
+    THROW "no URL" UNLESS organization.url ~%]
+    <i class="material-icons">groups</i> <a href="[% organization.url %]" title="Show organization">[% organization.display_name | html %]</a>
+    (<span class="organization">[% organization.name %]</span>)
 [%~ END;
 
-MACRO link_user(user, url) BLOCK;
-    THROW "no URL" UNLESS url ~%]
-    <i class="material-icons">person</i> <a href="[% url %]" title="Show user profile">[% user.display_name | html %]</a> (<span class="username">[% user.name %]</span>)
+MACRO link_user(user) BLOCK;
+    THROW "no user URL" UNLESS user.url ~%]
+    <i class="material-icons">person</i> <a href="[% user.url %]" title="Show user profile">[% user.display_name | html %]</a> (<span class="username">[% user.name %]</span>)
 [%~ END;
 
 MACRO link_project(project) BLOCK; ~%]

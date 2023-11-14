@@ -22,7 +22,7 @@ has_admin = 0 %]
         <tbody>
         [% FOR o_u IN organizations_users %]
             <tr>
-                <td>[% link_user(o_u.user, o_u.user_url) %]</td>
+                <td>[% link_user(o_u.user) %]</td>
                 <td>
                 [% IF o_u.edit_url %]
                     <form class="input-group" method="post" action="[% o_u.edit_url %]" style="width:150px">

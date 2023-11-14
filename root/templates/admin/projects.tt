@@ -17,7 +17,7 @@
         <td>[% '<i class="material-icons">lock</i>' UNLESS proj.is_public %]</td>
         <td><a href="[% proj.url %]">[% proj.name | html %]</a></td>
         <td>[% proj.created %]</td>
-        <td>[% link_user(proj.owner, proj.owner.url) %]</td>
+        <td>[% link_user(proj.owner) %]</td>
     </tr>
 [% END %]
 </tbody>

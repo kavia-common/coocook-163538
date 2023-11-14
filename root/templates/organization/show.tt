@@ -35,7 +35,7 @@
 
 <ul>
 [% FOR organization_user IN organizations_users %]
-    <li>[% link_user(organization_user.user, organization_user.user_url) %] ([% organization_user.role %])</li>
+    <li>[% link_user(organization_user.user) %] ([% organization_user.role %])</li>
 [% END %]
 </ul>
 
