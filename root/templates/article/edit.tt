@@ -73,11 +73,11 @@ IF article; escape_title( 'Article', article.name ); ELSE; title="New Article"; 
                 </div>
             </div>
             <div class="col-10 d-flex gap-2 align-items-center">
-                <input id="preorder_workdays" class="form-control" type="number" name="preorder_workdays" value="[% article.preorder_workdays OR default_preorder_workdays %]" style="width: 100px;">
+                <input id="preorder_workdays" class="form-control" type="number" min="0" name="preorder_workdays" value="[% article.preorder_workdays OR default_preorder_workdays %]" style="width: 100px;">
                 <label for="preorder_workdays" class=" text-nowrap">business days in advance</label>
 
                 <span>if</span>
-                <input id="preorder_servings" class="form-control" type="number" name="preorder_servings" value="[% article.preorder_servings OR default_preorder_servings %]" style="width: 100px;">
+                <input id="preorder_servings" class="form-control" type="number" min="1" name="preorder_servings" value="[% article.preorder_servings OR default_preorder_servings %]" style="width: 100px;">
                 <label for="preorder_servings" class=" text-nowrap">servings or more</label>
             </div>
         </div>
@@ -90,7 +90,7 @@ IF article; escape_title( 'Article', article.name ); ELSE; title="New Article"; 
             </div>
             <div class="col-10 d-flex gap-2 align-items-center">
                 <span>of</span>
-                <input id="shelf_life_days" class="form-control" type="number" name="shelf_life_days" value="[% article.shelf_life_days.defined ? article.shelf_life_days : default_shelf_life_days %]" style="width: 100px;">
+                <input id="shelf_life_days" class="form-control" type="number" min="0" name="shelf_life_days" value="[% article.shelf_life_days.defined ? article.shelf_life_days : default_shelf_life_days %]" style="width: 100px;">
                 <label for="shelf_life_days">days</label>
             </div>
         </div>
