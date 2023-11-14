@@ -20,33 +20,33 @@ has_admin = 0 %]
                 <th class="btn-icon-2">Actions</th>
         </thead>
         <tbody>
-        [% FOR g_u IN organizations_users %]
+        [% FOR o_u IN organizations_users %]
             <tr>
-                <td>[% link_user(g_u.user, g_u.user_url) %]</td>
+                <td>[% link_user(o_u.user, o_u.user_url) %]</td>
                 <td>
-                [% IF g_u.edit_url %]
-                    <form class="input-group" method="post" action="[% g_u.edit_url %]" style="width:150px">
+                [% IF o_u.edit_url %]
+                    <form class="input-group" method="post" action="[% o_u.edit_url %]" style="width:150px">
                         <select class="form-select form-select-sm" name="role">
                         [% FOR role IN roles %]
-                            <option value="[% role %]" [% 'selected' IF g_u.role == role %]>[% role %]</option>
+                            <option value="[% role %]" [% 'selected' IF o_u.role == role %]>[% role %]</option>
                         [% END %]
                         </select>
                         <button class="btn btn-outline-secondary btn-sm material-icons" type="submit" title="Update role">done</button>
                     </form>
                 [% ELSE %]
-                    <span class="px-2">[% g_u.role %]</span>
+                    <span class="px-2">[% o_u.role %]</span>
                 [% END %]
                 </td>
                 <td>
                     <div class="d-flex justify-content-end">
-                    [% IF g_u.transfer_ownership_url;
+                    [% IF o_u.transfer_ownership_url;
                         has_admin = 1 %]
-                        <form name="transfer-ownership" method="post" action="[% g_u.transfer_ownership_url %]">
+                        <form name="transfer-ownership" method="post" action="[% o_u.transfer_ownership_url %]">
                             <button class="btn btn-outline-secondary btn-sm btn-quad material-icons" type="submit" title="Transfer ownership">sync_alt</button>
                         </form>
                     [% END %]
-                    [% IF g_u.remove_url %]
-                        <form class="ms-2" method="post" action="[% g_u.remove_url %]">
+                    [% IF o_u.remove_url %]
+                        <form class="ms-2" method="post" action="[% o_u.remove_url %]">
                             <button class="btn btn-outline-danger btn-sm btn-quad material-icons" type="submit" title="Remove">delete_forever</button>
                         </form>
                     [% END %]
