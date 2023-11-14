@@ -29,18 +29,38 @@ IF article; escape_title( 'Article', article.name ); ELSE; title="New Article"; 
     <div class="container d-flex flex-column gap-3">
         <div class="row">
             <div class="col-2 d-flex align-items-center" style="min-width: 180px;">
+                Suggested units
                 <i class="material-icons md-18" style="color:rgb(251, 220, 53)">star</i>
-                Preferred Units
             </div>
             <div class="col-10 d-flex gap-2 flex-wrap">
             [% FOR unit IN units;
-                id = unit.id;
-                IF units_in_use.$id; # pass ID of used unit as hidden field because value of disabled checkbox isn't sent %]
-                <input type="hidden" name="units" value="[% id %]">
-                [% END %]
+                ingredients_plus_items = article.id ?   unit.number_of_dish_ingredients
+                                                      + unit.number_of_recipe_ingredients
+                                                      + unit.number_of_items
+                                                    : undef %]
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="[% unit.id %]" id="u[% unit.id %]" name="units" [% 'title="article is used with this unit" disabled' IF units_in_use.$id %] [% 'checked' IF selected_units.$id %]>
-                    <label class="form-check-label" for="u[% unit.id %]">[% display_unit(unit, {html => 1}) %]</label>
+                    <input class="form-check-input" type="checkbox" value="[% unit.id %]" id="u[% unit.id %]" name="units" [% 'checked' IF unit.selected %]>
+                    <label class="form-check-label" for="u[% unit.id %]" style="[% 'font-weight: bold' IF ingredients_plus_items %]">
+                        [% display_unit(unit, {html => 1});
+
+                        IF ingredients_plus_items %]
+                            <span title="used for [%
+                                IF unit.number_of_recipe_ingredients > 0;
+                                    numerus(unit.number_of_recipe_ingredients, 'recipe ingredient', 'recipe ingredients');
+                                    ' and ' IF unit.number_of_dish_ingredients > 0
+                                            OR unit.number_of_items > 0;
+                                END;
+
+                                IF unit.number_of_dish_ingredients > 0;
+                                    numerus(unit.number_of_dish_ingredients, 'dish ingredient', 'dish ingredients');
+                                    ' and ' IF unit.number_of_items > 0;
+                                END;
+
+                                IF unit.number_of_items > 0;
+                                    numerus(unit.number_of_items, 'purchase list item', 'purchase list items');
+                                END %]">([% ingredients_plus_items %])</span>
+                        [% END %]
+                    </label>
                 </div>
             [% END %]
             </div>
@@ -111,7 +131,7 @@ IF article; escape_title( 'Article', article.name ); ELSE; title="New Article"; 
 [% END;
 
 WRAPPER includes/infobox.tt %]
-   <em>Preferred units</em> will be suggested first when adding an ingredient
+   Autocomplete will prioritize <em>suggested units</em> when adding an ingredient
    with this article to a recipe/dish. Other units may be used, too.
 </p>
 
