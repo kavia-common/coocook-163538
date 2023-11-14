@@ -150,9 +150,12 @@
                         END %]
                     </ul>
                     <div>
-                        [% IF project %]
-                        <a class="text-dark nav-link px-2" href="[% project_urls.project %]">project <b>[% project.name | html%]</b></a>
-                        [% ELSIF user AND NOT submenu_items.size %]
+                        [% IF project;
+                            link_project(project, {
+                                class => 'text-dark nav-link px-2 fw-bold',
+                                url   => project_urls.project,
+                            });
+                        ELSIF user AND NOT submenu_items.size %]
                         <p class="text-dark my-2">Please create or choose a project now.</p>
                         [% END %]
                     </div>

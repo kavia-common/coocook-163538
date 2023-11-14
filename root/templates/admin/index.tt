@@ -4,7 +4,7 @@
 
 <ul>
 [% FOR proj IN projects %]
-    <li><a href="[% proj.url %]">[% proj.name | html %]</a></li>
+    <li>[% link_project(proj) %]</li>
 [% END %]
     <li><a href="[% admin_urls.projects %]">…</a></li>
 </ul>
@@ -25,7 +25,7 @@
 
 <ul>
 [% FOR u IN users %]
-    <li>[% u.name | html %] <a href="[% u.url %]">[% u.display_name | html %]</a></li>
+    <li>[% link_user(u) %]</li>
 [% END %]
     <li><a href="[% admin_urls.users %]">…</a></li>
 </ul>
@@ -34,7 +34,7 @@
 
 <ul>
 [% FOR organization IN organizations %]
-    <li>[% organization.name | html %] <a href="[% organization.url %]">[% organization.display_name | html %]</a></li>
+    <li>[% link_organization(organization) %]</li>
 [% END %]
     <li><a href="[% admin_urls.organizations %]">…</a></li>
 </ul>

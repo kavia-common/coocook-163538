@@ -25,8 +25,8 @@
             <a href="[% recipe.url %]">[% recipe.name | html %]</a>
         </td>
         <td>
-            <a href="[% recipe.project.url %]">[% recipe.project.name | html %]</a>
-            by <a href="[% recipe.project.owner.url %]">[% recipe.project.owner.display_name | html %]</a>
+            [% link_project(recipe.project) %]
+            by [% link_user(recipe.project.owner) %]
         </td>
     </tr>
     [% END %]

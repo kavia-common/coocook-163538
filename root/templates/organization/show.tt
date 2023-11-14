@@ -46,7 +46,7 @@
 [% ELSE %]
 <ul>
 [% FOR organization_project IN organizations_projects %]
-    <li><a href="[% organization_project.project_url %]">[% '<i class="material-icons md-18">lock</i> ' UNLESS organization_project.project.is_public; organization_project.project.name | html %]</a> ([% organization_project.role %])</li>
+    <li>[% link_project(organization_project.project) %] ([% organization_project.role %])</li>
 [% END %]
 </ul>
 [% END %]

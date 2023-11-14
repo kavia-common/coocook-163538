@@ -9,7 +9,7 @@
             </div>
             <div class="col-auto">
                 <input type="radio" name="is_public" value="on" id="is_public" [% 'checked' UNLESS can_create_private_project %] class="form-check-input">
-                <label for="is_public" class="form-check-label">public</label>
+                <label for="is_public" class="form-check-label"><i class="material-icons md-18">public</i> public</label>
             </div>
             <div class="col-auto">
                 <input type="radio" name="is_public" value="" id="is_private" [% can_create_private_project ? 'checked' : 'disabled' %] class="form-check-input">
@@ -28,7 +28,7 @@
 
     <ul class="list-unstyled d-flex flex-wrap gap-3">
     [% FOR proj IN my_projects; # don't overwrite $project! %]
-        <li><a class="item-box text-white" href="[% proj.url %]">[% '<i class="material-icons">lock</i>' UNLESS proj.is_public %] [% proj.name | html %]</a></li>
+        <li>[% link_project(proj, {class=>'item-box text-white', icon_class=>' '}) %]</li>
     [% END %]
     </ul>
 
@@ -43,7 +43,7 @@
     [% ELSE %]
     <ul class="list-unstyled d-flex flex-wrap gap-3">
     [% FOR proj IN other_projects; # don't overwrite $project! %]
-        <li><a class="item-box text-white" href="[% proj.url %]">[% proj.name | html %]</a></li>
+        <li>[% link_project(proj, {class=>'item-box text-white', icon_class=>' '}) %]</li>
     [% END %]
     </ul>
     [% END %]

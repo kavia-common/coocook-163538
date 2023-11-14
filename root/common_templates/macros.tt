@@ -18,6 +18,11 @@ MACRO display_datetime(datetime, opts) BLOCK;
     datetime.strftime( opts.short ? datetime_format_short : datetime_format_long );
 END;
 
+MACRO display_project(project, opts) BLOCK; ~%]
+    <i class="material-icons [% opts.icon_class || 'md-18' %]">[% project.is_public ? 'public' : 'lock' %]</i>
+    [% project.name | html;
+END;
+
 MACRO display_unit(unit, opts) BLOCK;
     IF opts.html ~%]
         <abbr title="[% unit.long_name | html %]">[% unit.short_name | html %]</abbr>
@@ -61,8 +66,9 @@ MACRO link_user(user) BLOCK;
     <i class="material-icons">person</i> <a href="[% user.url %]" title="Show user profile">[% user.display_name | html %]</a> (<span class="username">[% user.name %]</span>)
 [%~ END;
 
-MACRO link_project(project) BLOCK; ~%]
-    <a href="[% project.url %]">[% '<i class="material-icons md-18">lock</i> ' UNLESS project.is_public; project.name | html %]</a>
+MACRO link_project(project, opts) BLOCK;
+    THROW "no project URL" UNLESS project.url || opts.url ~%]
+    <a href="[% opts.url || project.url %]" class="[% opts.class %]">[% display_project(project, opts) %]</a>
 [%~ END;
 
 MACRO numerus(number, singular, plural, opts) BLOCK; # apply correct grammatical number

@@ -20,10 +20,12 @@
             </div>
             <div class="card-body p-0">
                 <div class="list-group list-group-flush">
-                    [% FOR proj IN projects %]
-                    <a href="[% proj.url %]" title="Show project" class="list-group-item list-group-item-action text-primary text-decoration-underline">[% proj.name | html %]</a>
-                    [% END %]
-                </div>                
+                [% FOR proj IN projects %]
+                    <div class="list-group-item list-group-item-action">
+                        [% link_project(proj) %]
+                    </div>
+                [% END %]
+                </div>
             </div>
         </div>
     </div>

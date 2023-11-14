@@ -3,7 +3,7 @@
     <li>
         <a href="[% recipe.url %]">[% recipe.name | html %]</a>
         (from [% link_project(recipe.project) %]
-        by <a href="[% recipe.project.owner.url %]">[% recipe.project.owner.display_name | html %]</a>)
+        by [% link_user(recipe.project.owner) %])
     </li>
 [% END %]
 </ul>

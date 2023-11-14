@@ -23,7 +23,7 @@
 
         <ul class="list-unstyled d-flex flex-wrap gap-3 m-0">
 [% FOR proj IN active_public_projects # don't overwrite $project! %]
-                <li><a class="item-box text-white" href="[% proj.url %]">[% proj.name | html %]</a></li>
+                <li>[% link_project(proj, {class=>'item-box text-white', icon_class=>' '}) %]</li>
 [% END %]
         </ul>
 
