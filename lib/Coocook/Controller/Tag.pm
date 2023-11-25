@@ -47,7 +47,7 @@ sub index : GET HEAD Chained('submenu') PathPart('tags') Args(0) RequiresCapabil
     my %groups = map { $_->{id} => $_ } @groups;
 
     for my $group (@groups) {
-        $group->{tags} = [];
+        $group->{tags}       = [];
         $group->{delete_url} = $c->project_uri( $self->action_for('delete_group'), $group->{id} );
         $group->{update_url} = $c->project_uri( $self->action_for('update_group'), $group->{id} );
     }
@@ -64,9 +64,8 @@ sub index : GET HEAD Chained('submenu') PathPart('tags') Args(0) RequiresCapabil
         }
     }
 
-    my @existing_tag_names = $c->project->tags->get_column('name')->all;
+    my @existing_tag_names       = $c->project->tags->get_column('name')->all;
     my @existing_tag_group_names = $c->project->tag_groups->get_column('name')->all;
-
 
     $c->stash(
         groups                        => \@groups,
@@ -148,7 +147,8 @@ sub edit : GET HEAD Chained('tag') PathPart('') Args(0) RequiresCapability('view
 
     $c->stash(
         update_url => $c->project_uri( $self->action_for('update'), $tag->id ),
-        delete_url => $tag->deletable ? $c->project_uri( $self->action_for('delete'), $tag->id ) : undef,
+        delete_url => $c->project_uri( $self->action_for('delete'), $tag->id ),
+        is_in_use  => $tag->is_in_use,
     );
 }
 
@@ -175,7 +175,6 @@ sub delete : POST Chained('tag') Args(0) RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
     my $tag = $c->stash->{tag};
-    $tag->deletable or die "Not deletable";
     $tag->delete;
     $c->forward('redirect');
 }
@@ -201,8 +200,9 @@ sub create : POST Chained('/project/base') PathPart('tags/create') Args(0)
 
     my $tag = $c->project->create_related(
         tags => {
-            maybe tag_group => $group,
-            name            => $c->req->params->get('name'),
+            maybe
+              tag_group => $group,
+            name => $c->req->params->get('name'),
         }
     );
     $c->forward('redirect');

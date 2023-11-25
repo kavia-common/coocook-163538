@@ -1,49 +1,136 @@
-[% escape_title( 'Tag', tag.name ) %]
+[% escape_title( 'Tag', tag.name );
+js_push_template_path() %]
 
-[% IF delete_url %]
-<form method="post" action="[% delete_url %]">
-    <input type="submit" value="Delete Tag">
-</form>
-[% END %]
+<div class="d-flex gap-2">
+    <button class="btn btn-primary update" title="Edit tag" data-bs-toggle="modal" data-bs-target="#edit-tag">
+        <i class="material-icons">edit</i> Edit
+    </button>
+    [% IF is_in_use %]
+    <button class="btn btn-danger" title="Delete tag" data-bs-toggle="modal" data-bs-target="#delete-tag">
+        <i class="material-icons">delete_forever</i> Delete
+    </button>
+    [% ELSE %]
+    <form method="post" action="[% delete_url %]">
+        <button id="delete-btn" type="submit" class="btn btn-danger" title="Delete tag">
+            <i class="material-icons">delete_forever</i> Delete
+        </button>
+    </form>
+    [% END %]
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card my-3">
+            <div class="card-header">
+                <h3 class="my-2">Articles</h3>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    [% IF articles.size == 0 %]
+                    <li class="list-group-item">No related articles</li>
+                    [% ELSE;
+                    FOREACH article IN articles %]
+                    <li  class="list-group-item"><a href="[% article.url %]">[% article.name | html %]</a></li>
+                    [% END; END %]
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card my-3">
+            <div class="card-header">
+                <h3 class="my-2">Dishes</h3>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    [% IF dishes.size == 0 %]
+                    <li class="list-group-item">No related dishes</li>
+                    [% ELSE;
+                    FOREACH dish IN dishes %]
+                    <li  class="list-group-item"><a href="[% article.url %]">[% dish.name | html %]</a></li>
+                    [% END; END %]
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card my-3">
+            <div class="card-header">
+                <h3 class="my-2">Recipes</h3>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    [% IF dishes.size == 0 %]
+                    <li class="list-group-item">No related recipes</li>
+                    [% ELSE;
+                    FOREACH recipe IN recipes %]
+                    <li  class="list-group-item"><a href="[% article.url %]">[% recipe.name | html %]</a></li>
+                    [% END; END %]
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 
 <form method="post" action="[% update_url %]">
-    <div class="card">
-        <div class="card-header"><h3>Edit Tag</h3></div>
-
-    <div class="card-body">
-        <input type="text" name="name" value="[% tag.name | html %]">
-        <select name="tag_group">
-            <option value="">(no tag group)</option>
-[% FOR group IN groups %]
-            <option value="[% group.id %]" [% 'selected' IF group.id == tag.tag_group.id %]>[% group.name | html %]</option>
-[% END %]
-        </select>
-        <input type="submit" value="Edit">
-    </div>
+    <div class="modal fade" id="edit-tag" tabindex="-1" aria-labelledby="edit-tag-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="edit-tag-label">Edit Tag</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating mb-3">
+                        <input id="edit-name" class="form-control" type="text" name="name" placeholder="name" value="[% tag.name %]" required>
+                        <label for="edit-name" class="form-label">Name</label>
+                    </div>
+                    <div class="form-floating">
+                        <select id="tag-group" class="form-control" name="tag_group" placeholder="group">
+                            <option value="">(none)</option>
+                            [% FOR group IN groups %]
+                            <option value="[% group.id %]" [% 'selected' IF group.id == tag.tag_group.id %]>[% group.name | html %]</option>
+                            [% END %]
+                        </select>
+                        <label for="tag-group" class="form-label">Tag group</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
     </div>
 </form>
 
-<h3>Articles</h3>
-
-<ul>
-[% FOREACH article IN articles %]
-    <li><a href="[% article.url %]">[% article.name | html %]</a></li>
+[% IF is_in_use %]
+<form method="post" action="[% delete_url %]">
+    <div class="modal fade" id="delete-tag" tabindex="-1" aria-labelledby="delete-tag-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="delete-tag-label">Delete Tag <em>[% tag.name %]</em></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Do you really want to delete the tag <em>[% tag.name %]</em>?
+                    The tag is used in:
+                    <ul class="m-0">
+                        [% IF articles.size %]<li>[% numerus(articles.size, "article", "articles") %]</li>[% END;
+                        IF dishes.size %]<li>[% numerus(dishes.size, "dish", "dishes") %]</li>[% END;
+                        IF recipes.size %]<li>[% numerus(recipes.size, "recipe", "recipes") %]</li>[% END %]
+                    </ul>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-secondary btn-sm" title="Cancel" data-bs-dismiss="modal">
+                        <i class="material-icons">close</i> Cancel
+                    </button>
+                    <button id="delete-btn" type="submit" class="btn btn-danger btn-sm" title="Delete tag">
+                        <i class="material-icons">delete_forever</i> Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
 [% END %]
-</ul>
-
-<h3>Dishes</h3>
-
-<ul>
-[% FOREACH dish IN dishes %]
-    <li><a href="[% dish.url %]">[% dish.name | html %]</a></li>
-[% END %]
-</ul>
-
-<h3>Recipes</h3>
-
-<ul>
-[% FOREACH recipe IN recipes %]
-    <li><a href="[% recipe.url %]">[% recipe.name | html %]</a></li>
-[% END %]
-</ul>
-
