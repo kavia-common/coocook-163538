@@ -1,4 +1,15 @@
-[% title = "Tags" %]
+[% title = "Tags";
+
+js_push_template_path() %]
+
+<p>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-tag">
+        <i class="material-icons">add</i> New Tag
+    </button>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-tg">
+        <i class="material-icons">add</i> New Tag group
+    </button>
+</p>
 
 <div class="alert alert-warning">
     <i class="material-icons">warning</i>
@@ -6,21 +17,86 @@
 </div>
 
 [% FOR group IN groups %]
-<h3>Tag Group [% group.name | html %]</h3>
-
-<p>Tags:
-    [% FOR tag IN group.tags %]
-    <a href="[% tag.edit_url %]">[% tag.name | html %]</a>
-    [% END %]
-</p>
+<div class="my-4 card">
+    <div class="card-header d-flex flex-wrap gap-1 align-items-center">
+        <h3 class="card-title">Tag Group <i>[% group.name | html %]</i></h3>
+        <div class="ms-auto d-flex gap-1">
+            <button
+                class="btn btn-outline-dark btn-sm btn-quad atg"
+                title="Add tag to tag group [% group.name | html %]"
+                data-bs-target="#add-to-group"
+                data-bs-toggle="modal"
+                data-id="[% group.id %]"
+                data-name="[% group.name | html %]"
+            >
+                <i class="material-icons">add</i>
+            </button>
+            <button
+                class="btn btn-sm btn-quad btn-outline-dark edit-tg"
+                title="Edit tag group [% group.name | html %]"
+                data-bs-target="#tg-edit"
+                data-bs-toggle="modal"
+                data-comment="[% group.comment | html %]"
+                data-name="[% group.name | html %]"
+                data-url="[% group.update_url %]"
+            >
+                <i class="material-icons">edit</i>
+            </button>
+            [% IF group.tags.size %]
+            <div
+                title="Can't delete tag group which contains tags"
+                data-bs-placement="bottom"
+                data-bs-toggle="tooltip"
+            >
+                <button class="btn btn-sm btn-quad btn-outline-danger" disabled>
+                    <i class="material-icons">delete</i>
+                </button>
+            </div>
+            [% ELSE %]
+            <form method="post" action="[% group.delete_url %]">
+                <button
+                    class="btn btn-sm btn-quad btn-outline-danger"
+                    title="Delete tag group [% group.name | html %]"
+                    type="submit"
+                >
+                    <i class="material-icons">delete</i>
+                </button>
+            </form>
+            [% END %]
+        </div>
+    </div>
+    <div class="card-body">
+        [% IF group.comment %]<p class="text-muted">[% group.comment | html %]</p>[% END %]
+        <p>Tags:</p>
+        <div class="d-flex flex-wrap gap-2">
+            [% FOR tag IN group.tags %]
+            <a href="[% tag.edit_url %]" class="btn btn-outline-primary">[% tag.name | html %]</a>
+            [% END %]
+        </div>
+    </div>
+</div>
 [% END %]
 
-<h3>Other Tags</h3>
-
-<p>Tags:
-[% FOR tag IN other_tags %]
-    <a href="[% tag.edit_url %]">[% tag.name | html %]</a>
+[% IF other_tags.size %]
+<div class="my-4 card">
+    <div class="card-header">
+        <h3 class="card-title">Other Tags</h3>
+    </div>
+    <div class="card-body d-flex flex-wrap gap-2">
+        [% FOR tag IN other_tags %]
+        <a href="[% tag.edit_url %]" class="btn btn-outline-primary">[% tag.name | html %]</a>
+        [% END %]
+    </div>
+</div>
 [% END %]
+
+<p>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-tag">
+        <i class="material-icons">add</i> New Tag
+    </button>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-tg">
+        <i class="material-icons">add</i> New Tag group
+    </button>
 </p>
 
 [% WRAPPER includes/infobox.tt %]
@@ -31,3 +107,111 @@
 <p>
     <em>Tag groups</em> can be used to organize similar tags together.
 [% END %]
+
+<form id="add-tag-form" method="post" action="[% create_url %]">
+    <div class="modal fade" id="add-tag" tabindex="-1" aria-labelledby="add-tag-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="add-tag-label">Create Tag</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating mb-3">
+                        <input id="tag-new-name" class="form-control" type="text" name="name" placeholder="name" required>
+                        <label for="tag-new-name" class="form-label">Name</label>
+                    </div>
+                    <div class="form-floating">
+                        <select id="tag-new-group" class="form-control" name="tag_group" placeholder="group">
+                            <option value="">(none)</option>
+                            [% FOR group IN tag_groups %]
+                            <option value="[% group.id %]">[% group.name | html %]</option>
+                            [% END %]
+                        </select>
+                        <label for="tag-new-group" class="form-label">Tag group</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form id="add-tag-group-form" method="post" action="[% create_group_url %]">
+    <div class="modal fade" id="add-tg" tabindex="-1" aria-labelledby="add-tg-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="add-tg-label">Create tag group</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating mb-3">
+                        <input id="tg-new-name" class="form-control" type="text" name="name" placeholder="name" required>
+                        <label for="tg-new-name" class="form-label">Name</label>
+                    </div>
+                    <div class="form-floating">
+                        <input id="tg-comment" class="form-control" name="comment" placeholder="comment">
+                        <label for="tg-comment" class="form-label">Comment</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form id="tg-edit-form" method="post" action="">
+    <div class="modal fade" id="tg-edit" tabindex="-1" aria-labelledby="edit-tg-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="edit-tg-label">Edit tag group <i id="tg-edit-title"></i></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating mb-3">
+                        <input id="tg-edit-name" class="form-control" type="text" name="name" placeholder="name" required>
+                        <label for="tg-edit-name" class="form-label">Name</label>
+                    </div>
+                    <div class="form-floating">
+                        <input id="tg-edit-comment" class="form-control" name="comment" placeholder="comment">
+                        <label for="tg-edit-comment" class="form-label">Comment</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form id="add-to-group-form" method="post" action="[% create_url %]">
+    <div class="modal fade" id="add-to-group" tabindex="-1" aria-labelledby="add-to-group-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="add-to-group-label">Create Tag for tag group <i id="atg-title"></i></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating mb-3">
+                        <input id="atg-name" class="form-control" type="text" name="name" placeholder="name" required>
+                        <label for="atg-name" class="form-label">Name</label>
+                    </div>
+                    <input id="atg-group" type="hidden" name="tag_group">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script id="existing-names" type="application/json">{"tags":[% existing_tag_names_json | html %],"tagGroups":[% existing_tag_group_names_json | html %]}</script>

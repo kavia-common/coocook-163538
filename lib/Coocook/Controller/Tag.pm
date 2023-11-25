@@ -4,6 +4,8 @@ use Moose;
 use namespace::autoclean;
 use PerlX::Maybe;
 
+use JSON::MaybeXS ();
+
 BEGIN { extends 'Coocook::Controller' }
 
 =head1 NAME
@@ -46,6 +48,8 @@ sub index : GET HEAD Chained('submenu') PathPart('tags') Args(0) RequiresCapabil
 
     for my $group (@groups) {
         $group->{tags} = [];
+        $group->{delete_url} = $c->project_uri( $self->action_for('delete_group'), $group->{id} );
+        $group->{update_url} = $c->project_uri( $self->action_for('update_group'), $group->{id} );
     }
 
     my $other_tags = [];
@@ -56,13 +60,22 @@ sub index : GET HEAD Chained('submenu') PathPart('tags') Args(0) RequiresCapabil
         while ( my $tag = $tags->next ) {
             $tag->{edit_url} = $c->project_uri( $self->action_for('edit'), $tag->{id} );
 
-            push @{ $tag->{tag_group} ? $groups{ $tag->{tag_group} }{tags} || die : $other_tags }, $tag;
+            push @{ $tag->{tag_group_id} ? $groups{ $tag->{tag_group_id} }{tags} || die : $other_tags }, $tag;
         }
     }
 
+    my @existing_tag_names = $c->project->tags->get_column('name')->all;
+    my @existing_tag_group_names = $c->project->tag_groups->get_column('name')->all;
+
+
     $c->stash(
-        groups     => \@groups,
-        other_tags => $other_tags,
+        groups                        => \@groups,
+        other_tags                    => $other_tags,
+        create_url                    => $c->project_uri( $self->action_for('create') ),
+        tag_groups                    => [ $c->project->tag_groups->sorted->hri->all ],
+        create_group_url              => $c->project_uri( $self->action_for('create_group') ),
+        existing_tag_names_json       => JSON::MaybeXS->new->encode( \@existing_tag_names ),
+        existing_tag_group_names_json => JSON::MaybeXS->new->encode( \@existing_tag_group_names ),
     );
 }
 

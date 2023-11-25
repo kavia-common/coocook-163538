@@ -37,7 +37,7 @@
                     [% FOR organization IN organizations %]
                     [% link_organization(organization, organization.url) %]
                     [% END %]
-                </div>                
+                </div>
             </div>
         </div>
     </div>
