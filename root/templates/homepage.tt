@@ -1,13 +1,16 @@
-[% INCLUDE 'homepage_intro.tt' %]
+[% include_between_header_and_main = 'homepage_hero.tt';
 
-<div class="content-box">
+INCLUDE 'homepage_intro.tt' %]
+
+<section>
+    <div class="content-box">
 [% INCLUDE 'includes/recipes_of_the_day.tt' %]
 
         <h2>Recent public recipes</h2>
 
         <ul class="list-unstyled d-flex flex-wrap gap-3">
 [% FOR recipe IN public_recipes %]
-                <li><a class="item-box text-white" href="[% recipe.url %]">[% recipe.name | html %]</a></li>
+            <li><a class="item-box text-white" href="[% recipe.url %]">[% recipe.name | html %]</a></li>
 [% END %]
         </ul>
 
@@ -23,11 +26,11 @@
 
         <ul class="list-unstyled d-flex flex-wrap gap-3 m-0">
 [% FOR proj IN active_public_projects # don't overwrite $project! %]
-        <li>
-            <a href="[% proj.url %]" class="item-box text-white text-decoration-none">
-                [% display_project(proj, {icon_class=>' '}) %]
-            </a>
-        </li>
+            <li>
+                <a href="[% proj.url %]" class="item-box text-white text-decoration-none">
+                    [% display_project(proj, {icon_class=>' '}) %]
+                </a>
+            </li>
 [% END %]
         </ul>
 
@@ -35,4 +38,5 @@
         <p><i>It looks like [% name %] doesn’t have any active public projects yet.</i></p>
 [% END %]
 
-</div>
+    </div>
+</section>

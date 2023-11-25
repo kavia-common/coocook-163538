@@ -1,42 +1,44 @@
-<div class="px-4 mb-5">
-    <p>[% name %] is a web application for collecting recipes and making food plans. You can &hellip;</p>
-</div>
-<div class="content-box mb-5">
-    <div class="d-flex justify-content-around flex-column flex-sm-row align-items-center gap-3">
-        <div class="d-flex flex-column gap-3 text-center">
-            <i class="material-icons fs-1">menu_book</i>
-            <span>collect recipes</span>
-        </div>
-        <i class="material-icons d-none d-sm-block">east</i>
-        <i class="material-icons d-block d-sm-none">south</i>
-        <div class="d-flex flex-column gap-3 text-center">
-            <i class="material-icons fs-1">restaurant_menu</i>
-            <span>create a food plan</span>
-        </div>
-        <i class="material-icons d-none d-sm-block">east</i>
-        <i class="material-icons d-block d-sm-none">south</i>
-        <div class="d-flex flex-column gap-3 text-center">
-            <i class="material-icons fs-1">fact_check</i>
-            <span>gather purchase lists</span>
-        </div>
-        <i class="material-icons d-none d-sm-block">east</i>
-        <i class="material-icons d-block d-sm-none">south</i>
-        <div class="d-flex flex-column gap-3 text-center">
-            <i class="material-icons fs-1">print</i>
-            <span>print a project overview</span>
+<section>
+    <div class="px-4 mb-5">
+        <p>[% name %] is a web application for collecting recipes and making food plans. You can &hellip;</p>
+    </div>
+    <div class="content-box mb-5">
+        <div class="d-flex justify-content-around flex-column flex-sm-row align-items-center gap-3">
+            <div class="d-flex flex-column gap-3 text-center">
+                <i class="material-icons fs-1">menu_book</i>
+                <span>collect recipes</span>
+            </div>
+            <i class="material-icons d-none d-sm-block">east</i>
+            <i class="material-icons d-block d-sm-none">south</i>
+            <div class="d-flex flex-column gap-3 text-center">
+                <i class="material-icons fs-1">restaurant_menu</i>
+                <span>create a food plan</span>
+            </div>
+            <i class="material-icons d-none d-sm-block">east</i>
+            <i class="material-icons d-block d-sm-none">south</i>
+            <div class="d-flex flex-column gap-3 text-center">
+                <i class="material-icons fs-1">fact_check</i>
+                <span>gather purchase lists</span>
+            </div>
+            <i class="material-icons d-none d-sm-block">east</i>
+            <i class="material-icons d-block d-sm-none">south</i>
+            <div class="d-flex flex-column gap-3 text-center">
+                <i class="material-icons fs-1">print</i>
+                <span>print a project overview</span>
+            </div>
         </div>
     </div>
-</div>
-<div class="px-4 mb-5">
-    <p>
-        You are more interested in Coocook?
-        Check out the <a href="https://coocook.org/faq">FAQ on Coocook.org</a> and
-        <a href="https://lists.coocook.org/">join our mailing list</a>
-        to get more informations.
-    </p>
-    <p>
-        You celebrate Coocook as much as we do and want to make it better, too? Great!
-        <a href="https://gitlab.com/coocook/coocook/issues">Report bugs or suggestions for improvement</a>
-        or even become part of the open volunteer development team.
-    </p>
-</div>
+    <div class="px-4 mb-5">
+        <p>
+            You are more interested in Coocook?
+            Check out the <a href="https://coocook.org/faq">FAQ on Coocook.org</a> and
+            <a href="https://lists.coocook.org/">join our mailing list</a>
+            to get more informations.
+        </p>
+        <p>
+            You celebrate Coocook as much as we do and want to make it better, too? Great!
+            <a href="https://gitlab.com/coocook/coocook/issues">Report bugs or suggestions for improvement</a>
+            or even become part of the open volunteer development team.
+        </p>
+    </div>
+</section>
