@@ -7,6 +7,7 @@ use Moose;
 use namespace::autoclean;
 
 use Catalyst::Runtime 5.80;
+use PerlX::Maybe;
 
 our $VERSION = 0.004;
 
@@ -161,8 +162,14 @@ __PACKAGE__->config(
     ],
 
     'Model::DB' => {
-        connect_info => {
-            dsn => 'development',                        # referrs to dbic.yaml
+        connect_info => {                                # env vars similar to those from DBI.pm:
+            dsn =>                                       # referrs to dbic.yaml because of Schema::Config
+              $ENV{COOCOOK_DSN}                          # like DBI_DSN
+              || 'development',
+
+            maybe user => $ENV{COOCOOK_USER},            # like DBI_USER
+
+            maybe password => $ENV{COOCOOK_PASS},        # like DBI_PASS
         },
     },
 
