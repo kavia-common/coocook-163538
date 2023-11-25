@@ -11,7 +11,7 @@ use TestDB qw(install_ok upgrade_ok);
 # share/ddl/SQLite/upgrade/12-13/fix-cascade.sql is the
 # first upgrade script that has an equal result
 #
-# earlier upgrade scripts should NOT be fixed because
+# earlier upgrade scripts MUST NOT be fixed because
 # deployments from these versions stay the same and
 # will be fixed with upgrade to version 13. Luckily
 # we are pretty sure there are no installations
@@ -26,19 +26,31 @@ my $schema_from_upgrades = TestDB->new( deploy => 0 );
 
 install_ok( $schema_from_upgrades, 1 );
 
-ok( TestDB->execute_test_data( $schema_from_upgrades, 't/test_data_v1.sql' ),
-    "populate test data" );
-
-# generated upgrade scripts contain
-# CREATE TEMPORARY TABLE ... with FKs on main tables which is impossible
-# http://sqlite.1065341.n5.nabble.com/Foreign-keys-amp-TEMPORARY-tables-td92306.html
-diag "TODO disabling PRAGMA foreign_keys on DB from upgrade SQLs";
-$schema_from_upgrades->disable_fk_checks();
+ok( TestDB->execute_test_data( $schema_from_upgrades, 't/test_data_v1_install.sql' ),
+    "populate test data for schema version 1" );
 
 for my $version ( 2 .. $Coocook::Schema::VERSION ) {
     subtest "schema version $version" => sub {
+        if ( -f ( my $sql_file = "t/test_data_v${version}_upgrade.sql" ) ) {
+            ok(
+                TestDB->execute_test_data( $schema_from_upgrades, $sql_file ),
+                "populate additional test data for schema version $version"
+            );
+        }
+
         $schema_from_deploy = TestDB->new( deploy => 0 );
         install_ok( $schema_from_deploy, $version );
+
+        {    # assert all tables are populated #286
+            my $dbh = $schema_from_upgrades->storage->dbh;
+            my $sth = $dbh->table_info( undef, undef, undef, 'TABLE' );
+
+            while ( my $table = $sth->fetchrow_hashref ) {
+                my $name = $table->{TABLE_NAME};
+                my ($count) = $dbh->selectrow_array("SELECT COUNT(*) FROM $name");
+                $count > 0 or die "missing any test data in table $name";
+            }
+        }
 
         upgrade_ok( $schema_from_upgrades, $version );
 
@@ -63,6 +75,17 @@ schema_eq(
     $schema_from_upgrades => $schema_from_code,
     "schema from upgrade SQLs and schema from Coocook::Schema code are equal"
 );
+
+{
+    my $unit_conversions = $schema_from_upgrades->resultset('UnitConversion')
+      ->search( undef, { columns => [qw( unit1_id factor unit2_id )] } );
+
+    is [ $unit_conversions->hri->all ] => [
+        { unit1_id => 1, factor => 0.001, unit2_id => 2 },    # g to kg
+        { unit1_id => 2, factor => 0.001, unit2_id => 4 },    # kg to t
+      ],
+      "unit_conversions created from old quantity data by migration";
+}
 
 subtest "issue #266 order of meals/dishes" => sub {
     my $schema = TestDB->new( deploy => 0 );
@@ -94,17 +117,6 @@ subtest "issue #266 order of meals/dishes" => sub {
       => [qw( b c a )],
       "dishes in order of insertion into database";
 };
-
-{
-    my $unit_conversions = $schema_from_upgrades->resultset('UnitConversion')
-      ->search( undef, { columns => [qw( unit1_id factor unit2_id )] } );
-
-    is [ $unit_conversions->hri->all ] => [
-        { unit1_id => 1, factor => 0.001, unit2_id => 2 },    # g to kg
-        { unit1_id => 2, factor => 0.001, unit2_id => 4 },    # kg to t
-      ],
-      "unit_conversions created from old quantity data by migration";
-}
 
 sub schema_eq {
     my ( $schema1, $schema2, $test_name ) = @_;

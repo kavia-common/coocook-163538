@@ -9,6 +9,7 @@ use Carp;
 use Clone;    # indirect dependency required for connection()
 use DateTime;
 use DBIx::Class::Helpers::Util qw< normalize_connect_info >;
+use Scope::Guard               qw(guard);
 
 our $VERSION = 27;    # version of schema definition, not software version!
 
@@ -158,7 +159,30 @@ sub fk_checks_off_do {
     $original_state
       and $self->enable_fk_checks();
 
+    my $error = $self->storage->dbh_do( sub { $_[1]->selectrow_array('PRAGMA foreign_key_check') } );
+
+    if ($error) {
+        croak "FOREIGN KEY constraint failed after block inside fk_checks_off_do()";
+    }
+
     return $result;
+}
+
+=head2 fk_checks_off_guard()
+
+Returns a L<Scope::Guard> object that temporarily disables FOREIGN KEY checks
+and resets the original state when it goes out of scope.
+
+=cut
+
+sub fk_checks_off_guard {
+    my $self = shift;
+
+    my $original_state = $self->sqlite_pragma('foreign_keys');
+
+    $self->disable_fk_checks();
+
+    return guard { $original_state and $self->enable_fk_checks() };
 }
 
 sub enable_fk_checks  { shift->sqlite_pragma( foreign_keys => 1 ) }
@@ -180,12 +204,13 @@ sub sqlite_pragma {
     $storage->debug
       and $storage->debugfh->print("$sql\n");
 
-    if ( defined $set_value ) {
-        return $storage->dbh_do( sub { $_[1]->do($sql) } );
-    }
-    else {
-        return $storage->dbh_do( sub { return $_[1]->selectrow_array($sql) } );
-    }
+    return $storage->dbh_do(
+        sub {
+            defined $set_value
+              ? $_[1]->do($sql)
+              : $_[1]->selectrow_array($sql);
+        }
+    );
 }
 
 1;

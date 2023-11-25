@@ -17,22 +17,6 @@ $schema->resultset('BlacklistEmail')
 $schema->resultset('BlacklistUsername')
   ->add_username( my $blacklist_username = 'blacklisted', comment => __FILE__ );
 
-# normally an organization needs an owner
-# but then we couldn't test all the error cases in one block ...
-# so we trick a little
-my $organization = $schema->fk_checks_off_do(
-    sub {
-        return $schema->resultset('Organization')->create(
-            {
-                name           => "TestOrganization",
-                display_name   => "Test Organization",
-                description_md => __FILE__,
-                owner_id       => 9999,
-            }
-        );
-    }
-);
-
 $t->get_ok('/');
 
 $t->text_contains("first user");
@@ -74,16 +58,34 @@ $t->robots_flags_ok( { index => 0 } );
         "blacklisted username in uppercase"
     );
 
-    $t->register_fails_like(
-        { %userdata_ok, username => $organization->name },
-        qr/username is not available/,
-        "organization name"
-    );
+    # normally an organization needs an owner
+    # but then we couldn't test registration of first user
+    # so we trick a little
+    $schema->fk_checks_off_do(
+        sub {
+            my $organization = $schema->resultset('Organization')->create(
+                {
+                    name           => "TestOrganization",
+                    display_name   => "Test Organization",
+                    description_md => __FILE__,
+                    owner_id       => 9999,
+                }
+            );
 
-    $t->register_fails_like(
-        { %userdata_ok, username => uc $organization->name },
-        qr/username is not available/,
-        "organization name in uppercase"
+            $t->register_fails_like(
+                { %userdata_ok, username => $organization->name },
+                qr/username is not available/,
+                "organization name"
+            );
+
+            $t->register_fails_like(
+                { %userdata_ok, username => uc $organization->name },
+                qr/username is not available/,
+                "organization name in uppercase"
+            );
+
+            $organization->delete();
+        }
     );
 
     $t->register_ok( \%userdata_ok );

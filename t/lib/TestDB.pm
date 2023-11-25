@@ -5,6 +5,8 @@ use Test2::V0;
 use parent 'DBICx::TestDatabase';
 
 use Coocook::Script::Deploy;
+use Coocook::DeploymentHandler;
+use PerlX::Maybe;
 use Sub::Exporter -setup => { exports => [qw(install_ok upgrade_ok)] };
 use Test::Builder;
 
@@ -43,7 +45,8 @@ Returns C<$schema> again.
 sub execute_test_data {    # not 'insert_' because not all statements are INSERTs
     my ( $class, $schema, $filename ) = @_;
 
-    open my $fh, '<', $filename // 'share/test_data.sql';
+    open my $fh, '<', $filename // 'share/test_data.sql'
+      or die $!;
 
     my $continued_line = "";
 
@@ -94,12 +97,9 @@ sub execute_test_data {    # not 'insert_' because not all statements are INSERT
 sub install_ok {
     my ( $schema, $version, $name ) = @_;
 
-    my $dh = Coocook::Script::Deploy->new( _schema => $schema )->_dh;
+    my $dh = _build_dh( $schema, $version );
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
-
-    $version
-      and local *DBIx::Class::DeploymentHandler::to_version = sub { $version };
 
     ok $dh->install(), $name || "install version " . $dh->to_version;
 }
@@ -111,14 +111,24 @@ sub install_ok {
 sub upgrade_ok {
     my ( $schema, $version, $name ) = @_;
 
-    my $dh = Coocook::Script::Deploy->new( _schema => $schema )->_dh;
+    my $dh = _build_dh( $schema, $version );
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    $version
-      and local *DBIx::Class::DeploymentHandler::to_version = sub { $version };
-
     ok $dh->upgrade(), $name || "upgrade to version " . $dh->to_version;
+}
+
+sub _build_dh {
+    my ( $schema, $version ) = @_;
+
+    return Coocook::DeploymentHandler->new(
+        {
+            schema           => $schema,
+            script_directory => 'share/ddl',
+            databases        => [ $schema->storage->sqlt_type . "" ],    # stringification like in App::DH
+            maybe to_version => $version,
+        }
+    );
 }
 
 1;
