@@ -1,7 +1,7 @@
 [% title = "Organizations" %]
 
-<ul>
+<ul class="list-group">
 [% FOR organization IN organizations %]
-    <li>[% link_organization(organization, organization.url) %]</li>
+    <li class="list-group-item">[% link_organization(organization, organization.url) %]</li>
 [% END %]
 </ul>

@@ -52,8 +52,8 @@
 
 <p>Organization memberships:</p>
 
-<ul>
+<ul class="list-group">
 [% FOR membership IN organization_memberships %]
-    <li>[% link_organization(membership.organization, membership.organization.url) %] ([% membership.role %])</li>
+    <li class="list-group-item">[% link_organization(membership.organization, membership.organization.url) %] ([% membership.role %])</li>
 [% END %]
 </ul>

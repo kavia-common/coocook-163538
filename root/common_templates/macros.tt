@@ -52,11 +52,7 @@ END;
 
 MACRO link_organization(organization, url) BLOCK;
     THROW "no URL" UNLESS url ~%]
-    <a href="[% url %]" title="Show organization" class="list-group-item list-group-item-action">
-        <i class="material-icons">groups</i>
-        <span class="text-primary text-decoration-underline"> [% organization.display_name | html %]</span>
-    </a>
-    (<span class="organization">[% organization.name %]</span>)
+    <i class="material-icons">groups</i> <a href="[% url %]" title="Show organization">[% organization.display_name | html %]</a> (<span class="organization">[% organization.name %]</span>)
 [%~ END;
 
 MACRO link_user(user, url) BLOCK;

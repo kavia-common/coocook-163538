@@ -33,11 +33,11 @@
                 <h3 class="my-2">Member of the following organizations</h3>
             </div>
             <div class="card-body p-0">
-                <div class="list-group list-group-flush">
+                <ul class="list-group list-group-flush">
                     [% FOR organization IN organizations %]
-                    [% link_organization(organization, organization.url) %]
+                    <li class="list-group-item">[% link_organization(organization, organization.url) %]</li>
                     [% END %]
-                </div>
+                </ul>
             </div>
         </div>
     </div>
