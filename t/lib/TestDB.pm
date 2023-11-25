@@ -1,8 +1,7 @@
 package TestDB;
 
-use Test2::V0;
+use Coocook::Base;
 
-use experimental qw(signatures);
 use parent 'DBICx::TestDatabase';
 
 use Coocook::Script::Deploy;
@@ -10,6 +9,7 @@ use Coocook::DeploymentHandler;
 use PerlX::Maybe;
 use Sub::Exporter -setup => { exports => [qw(install_ok upgrade_ok)] };
 use Test::Builder;
+use Test2::V0;
 
 =head1 CLASS METHODS
 

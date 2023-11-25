@@ -1,6 +1,5 @@
+use Coocook::Base;
 use Test2::V0;
-
-use experimental qw(signatures);
 
 use Coocook::Model::Authorization;
 

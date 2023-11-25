@@ -2,9 +2,7 @@ package Coocook::Schema::Component::ProxyMethods;
 
 # ABSTRACT: call ResultSource or Schema methods by shorthand methods from Result[Set]
 
-use strict;
-use warnings;
-use experimental qw(signatures);
+use Coocook::Base;
 
 use DateTime;
 

@@ -1,5 +1,5 @@
+use Coocook::Base;
 use Test2::V0;
-use experimental qw(signatures);
 
 use Test2::Require::Module 'Test::PostgreSQL';
 use Test2::Require::Module 'DateTime::Format::Pg';

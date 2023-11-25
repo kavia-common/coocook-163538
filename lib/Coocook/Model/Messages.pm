@@ -1,8 +1,6 @@
 package Coocook::Model::Messages;
 
-use strict;
-use warnings;
-use experimental qw(signatures);
+use Coocook::Base;
 
 use Carp;
 

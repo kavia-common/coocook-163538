@@ -1,9 +1,6 @@
 package Coocook::Script::Role::HasSchema;
 
-use strict;
-use warnings;
-use experimental qw(signatures);
-
+use Coocook::Base;
 use Moose::Role;
 
 use Coocook::Schema;

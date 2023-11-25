@@ -2,10 +2,8 @@ package Coocook::Filter::SignificantDigits;
 
 # ABSTRACT: TT filter module to display numbers with 3 most significant digits
 
-use strict;
-use warnings;
+use Coocook::Base;
 
-use experimental qw(signatures);
 use parent 'Template::Plugin::Filter';
 
 use Scalar::Util 'looks_like_number';

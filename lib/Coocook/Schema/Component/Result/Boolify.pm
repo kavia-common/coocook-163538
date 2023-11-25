@@ -2,9 +2,7 @@ package Coocook::Schema::Component::Result::Boolify;
 
 # ABSTRACT: always save value for bool columns as 1 or 0
 
-use strict;
-use warnings;
-use experimental qw(signatures);
+use Coocook::Base;
 
 use parent 'DBIx::Class::FilterColumn';
 

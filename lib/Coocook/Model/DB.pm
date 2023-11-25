@@ -2,8 +2,8 @@ package Coocook::Model::DB;
 
 # ABSTRACT: adaptor class to provide Coocook::Schema namespace in Coocook app
 
+use Coocook::Base;
 use Moose;
-use experimental qw(signatures);
 use namespace::autoclean;
 
 extends 'Catalyst::Model::DBIC::Schema';

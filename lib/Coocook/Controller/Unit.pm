@@ -1,9 +1,9 @@
 package Coocook::Controller::Unit;
 
-use utf8;
-
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
+
 use Scalar::Util qw( looks_like_number weaken );
 
 BEGIN { extends 'Coocook::Controller' }

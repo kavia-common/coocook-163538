@@ -1,13 +1,11 @@
 package Coocook::Schema::Result::Organization;
 
+use Coocook::Base;
 use Moose;
-use experimental qw(signatures);
 use namespace::autoclean;
 
 use Coocook::Model::Token;
 use DateTime;
-
-use feature 'fc';    # Perl v5.16
 
 extends 'Coocook::Schema::Result';
 

@@ -1,7 +1,7 @@
 package Coocook::Schema::Result::Tag;
 
+use Coocook::Base;
 use Moose;
-use experimental qw(signatures);
 use namespace::autoclean;
 
 extends 'Coocook::Schema::Result';

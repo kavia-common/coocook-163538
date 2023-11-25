@@ -2,9 +2,7 @@ package Coocook::Model::Token;
 
 # ABSTRACT: handle hashed passwords or completely random tokens
 
-use strict;
-use warnings;
-use experimental qw(signatures);
+use Coocook::Base;
 
 our $SALT_BYTES         = 16;
 our $TOKEN_BYTES        = 16;

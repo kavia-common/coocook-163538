@@ -2,8 +2,8 @@ package Coocook::Helpers;
 
 # ABSTRACT: role with useful Controller helper methods as $c->my_helper(...)
 
+use Coocook::Base;
 use Moose::Role;
-use experimental qw(signatures);
 use namespace::autoclean;
 
 use Carp;

@@ -2,11 +2,7 @@
 
 # ABSTRACT: script for managing external dependencies downloaded from the internet
 
-use v5.24;
-use utf8;
-use warnings;
-use strict;
-use experimental qw(signatures);
+use Coocook::Base;
 
 use File::Basename;
 use File::Fetch;

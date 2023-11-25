@@ -1,7 +1,6 @@
 package Coocook::Controller::Article;
 
-use utf8;
-
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 

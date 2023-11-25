@@ -1,10 +1,10 @@
 package Coocook::Controller::Organization;
 
-use utf8;
-
-use Coocook::Util;
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
+
+use Coocook::Util;
 use PerlX::Maybe;
 
 BEGIN { extends 'Coocook::Controller' }

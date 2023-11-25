@@ -2,8 +2,8 @@ package Coocook::Schema;
 
 # ABSTRACT: DBIx::Class-based SQL database representation
 
+use Coocook::Base;
 use Moose;
-use experimental qw(signatures);
 use namespace::autoclean;
 
 use Carp;

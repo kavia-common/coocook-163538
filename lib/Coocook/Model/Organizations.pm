@@ -1,8 +1,7 @@
 package Coocook::Model::Organizations;
 
+use Coocook::Base;
 use Moose;
-use experimental qw(signatures);
-use feature 'fc';    # Perl v5.16
 
 use Carp;
 

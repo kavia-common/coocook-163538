@@ -2,8 +2,8 @@ package Coocook::Script::Deploy;
 
 # ABSTRACT: script for database maintenance based on App::DH
 
+use Coocook::Base;
 use Moose;
-use experimental qw(signatures);
 use namespace::autoclean;
 
 use Coocook::DeploymentHandler;

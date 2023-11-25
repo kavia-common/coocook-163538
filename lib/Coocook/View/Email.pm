@@ -2,9 +2,9 @@ package Coocook::View::Email;
 
 # ABSTRACT: create emails with TT templates and Email::Stuffer
 
+use Coocook::Base;
 use Moose;
 use MooseX::NonMoose;
-use experimental qw(signatures);
 use namespace::autoclean;
 
 use Email::Stuffer;

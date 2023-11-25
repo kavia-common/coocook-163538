@@ -2,14 +2,12 @@ package Coocook::Script::Passwd;
 
 # ABSTRACT: script for setting a new password for a user
 
+use Coocook::Base;
 use Moose;
-use experimental qw(signatures);
 use namespace::autoclean;
 
 use Coocook::Schema;
 use Term::ReadKey;
-
-use feature 'fc';    # Perl v5.16
 
 with 'MooseX::Getopt';
 

@@ -2,9 +2,7 @@ package Coocook::Model::Badge;
 
 # ABSTRACT: generator for SVG images of badges inspired by img.shields.io
 
-use strict;
-use warnings;
-use experimental qw(signatures);
+use Coocook::Base;
 
 use SVG;
 

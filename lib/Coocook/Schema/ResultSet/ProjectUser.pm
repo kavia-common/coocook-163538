@@ -1,7 +1,7 @@
 package Coocook::Schema::ResultSet::ProjectUser;
 
+use Coocook::Base;
 use Moose;
-use experimental qw(signatures);
 use namespace::autoclean;
 
 extends 'Coocook::Schema::ResultSet';

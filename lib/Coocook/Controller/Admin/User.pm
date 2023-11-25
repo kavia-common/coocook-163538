@@ -1,9 +1,8 @@
 package Coocook::Controller::Admin::User;
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
-
-use feature 'fc';    # Perl v5.16
 
 BEGIN { extends 'Coocook::Controller' }
 

@@ -1,7 +1,7 @@
 package Coocook::Schema::Result::Meal;
 
+use Coocook::Base;
 use Moose;
-use experimental qw(signatures);
 use namespace::autoclean;
 
 use JSON::MaybeXS;

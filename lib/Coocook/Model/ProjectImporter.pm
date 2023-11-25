@@ -2,12 +2,12 @@ package Coocook::Model::ProjectImporter;
 
 # ABSTRACT: business logic for importing data to a project from another
 
+use Coocook::Base;
 use Moose;
-use experimental qw(signatures);
+use MooseX::NonMoose;
 
 use Carp;
 use JSON::MaybeXS;    # also a dependency of Catalyst
-use MooseX::NonMoose;
 use Storable qw(dclone);
 
 extends 'Catalyst::Model';

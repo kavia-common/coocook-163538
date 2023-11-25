@@ -3,11 +3,9 @@ package Coocook;
 # ABSTRACT: Web application for collecting recipes and making food plans
 # VERSION
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
-
-use experimental qw(signatures);
-use utf8;
 
 use Catalyst::Runtime 5.80;
 

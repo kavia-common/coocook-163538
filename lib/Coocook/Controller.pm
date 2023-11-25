@@ -2,8 +2,8 @@ package Coocook::Controller;
 
 # ABSTRACT: base class for all controllers in Coocook
 
+use Coocook::Base;
 use Moose;
-use experimental qw(signatures);
 use namespace::autoclean;
 
 use Carp;

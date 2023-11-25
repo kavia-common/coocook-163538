@@ -1,10 +1,6 @@
 package Test::Coocook;
 
-use strict;
-use warnings;
-use experimental qw(signatures);
-
-use Test2::V0 ();    # with () this does NOT enable strict + warnings
+use Coocook::Base;
 
 use Carp;
 use Email::Sender::Simple;
@@ -12,6 +8,7 @@ use HTML::Meta::Robots;
 use JSON::MaybeXS;
 use Regexp::Common 'URI';
 use Scope::Guard qw< guard >;
+use Test2::V0    ();            # with () this does NOT enable strict + warnings
 use TestDB;
 use WWW::Mechanize::TreeBuilder;
 

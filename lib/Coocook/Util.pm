@@ -2,11 +2,7 @@ package Coocook::Util;
 
 # ABSTRACT: helper functions (not methods) for Coocook, independent from Catalyst or any class
 
-use strict;
-use warnings;
-
-use experimental qw(signatures);
-use feature 'fc';    # Perl v5.16
+use Coocook::Base;
 
 use Carp;
 

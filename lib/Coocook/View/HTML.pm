@@ -2,9 +2,9 @@ package Coocook::View::HTML;
 
 # ABSTRACT: view for Coocook to create HTML pages with Template Toolkit
 
+use Coocook::Base;
 use Moose;
 use MooseX::NonMoose;
-use experimental qw(signatures);
 use namespace::autoclean;
 
 extends 'Catalyst::View::TT';

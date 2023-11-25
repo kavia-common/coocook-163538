@@ -1,13 +1,10 @@
 package Coocook::Schema::Component::ResultSet::Blacklist;
 
-use strict;
-use warnings;
-use experimental qw(signatures);
-use feature 'fc';    # Perl v5.16
+# ABSTRACT: common methods for blacklist tables
+
+use Coocook::Base;
 
 use Crypt::Digest::SHA256 qw(sha256_b64);
-
-# ABSTRACT: common methods for blacklist tables
 
 =head1 METHODS
 

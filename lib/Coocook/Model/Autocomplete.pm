@@ -2,8 +2,8 @@ package Coocook::Model::Autocomplete;
 
 # ABSTRACT: provide data to autocomplete HTML input elements
 
+use Coocook::Base;
 use Moose;
-use experimental qw(signatures);
 
 extends 'Catalyst::Model';
 

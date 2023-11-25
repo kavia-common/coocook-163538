@@ -1,9 +1,7 @@
 package Coocook::Schema::ResultSet::User;
 
-use feature 'fc';
-
+use Coocook::Base;
 use Moose;
-use experimental qw(signatures);
 use namespace::autoclean;
 
 use Data::Validate::Email 'is_email';

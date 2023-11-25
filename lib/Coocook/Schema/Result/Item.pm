@@ -2,8 +2,8 @@ package Coocook::Schema::Result::Item;
 
 # ABSTRACT: each database row is 1 item of a purchase list and subsumes 1 or more dish ingredients
 
+use Coocook::Base;
 use Moose;
-use experimental qw(signatures);
 use namespace::autoclean;
 
 extends 'Coocook::Schema::Result';

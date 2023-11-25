@@ -1,9 +1,10 @@
 package Coocook::Controller::Print;
 
-use DateTime;
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
-use utf8;
+
+use DateTime;
 
 BEGIN { extends 'Coocook::Controller' }
 

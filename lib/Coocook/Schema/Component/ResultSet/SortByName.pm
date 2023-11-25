@@ -2,9 +2,7 @@ package Coocook::Schema::Component::ResultSet::SortByName;
 
 # ABSTRACT: provide simple $rs->sorted() with predefined sort order
 
-use strict;
-use warnings;
-use experimental qw(signatures);
+use Coocook::Base;
 
 sub sorted_by_columns { 'name' }
 

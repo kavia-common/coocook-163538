@@ -1,7 +1,7 @@
 package Coocook::Schema::ResultSet::Terms;
 
+use Coocook::Base;
 use Moose;
-use experimental qw(signatures);
 use namespace::autoclean;
 
 use DateTime;

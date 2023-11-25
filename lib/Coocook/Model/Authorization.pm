@@ -2,9 +2,7 @@ package Coocook::Model::Authorization;
 
 # ABSTRACT: validation of action requests by pre-defined roles
 
-use strict;
-use warnings;
-use experimental qw(signatures);
+use Coocook::Base;
 
 use Carp;
 

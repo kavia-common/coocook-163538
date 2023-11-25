@@ -1,14 +1,12 @@
 package Coocook::Schema::ResultSet::Project;
 
+use Coocook::Base;
 use Moose;
-use experimental qw(signatures);
 use namespace::autoclean;
 
 use DateTime;
 
 extends 'Coocook::Schema::ResultSet';
-
-use feature 'fc';    # Perl v5.16
 
 __PACKAGE__->load_components('+Coocook::Schema::Component::ResultSet::SortByName');
 

@@ -2,4 +2,4 @@ exclude = Subroutines::ProhibitSubroutinePrototypes TestingAndDebugging::Prohibi
 include = Miscellanea::ProhibitUnrestrictedNoCritic TestingAndDebugging::ProhibitProlongedStrictureOverride
 
 [TestingAndDebugging::RequireUseStrict]
-equivalent_modules = Test2::V0
+equivalent_modules = Coocook::Base Test2::V0

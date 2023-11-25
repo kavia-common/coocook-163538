@@ -2,11 +2,11 @@ package Coocook::Model::Plan;
 
 # ABSTRACT: business logic for plain data structures of project/day plans
 
+use Coocook::Base;
 use Moose;
-use experimental qw(signatures);
+use MooseX::NonMoose;
 
 use DateTime;
-use MooseX::NonMoose;
 use Scalar::Util 'weaken';
 
 __PACKAGE__->meta->make_immutable;

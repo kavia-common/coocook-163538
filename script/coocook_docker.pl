@@ -2,11 +2,7 @@
 
 # ABSTRACT: helper script to control the coocook instance inside a Dockerimage from the host OS
 
-use v5.30.0;
-use strict;
-use warnings;
-use experimental qw(signatures);
-use utf8;
+use Coocook::Base;
 use sigtrap qw/die normal-signals/;
 
 use Term::ANSIColor;
