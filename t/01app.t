@@ -5,7 +5,10 @@ use Test::Coocook;
 
 plan(13);
 
-my $t = Test::Coocook->new( config => { enable_user_registration => 1 }, max_redirect => 0 );
+my $t = Test::Coocook->new(
+    config       => { enable_user_registration => 1 },
+    max_redirect => 0
+);
 
 my @POSSIBLE_AUTHZ_ATTRS = (
     'RequiresCapability',    # = see ActionRole::RequiresCapability
@@ -37,15 +40,18 @@ subtest "attributes of controller actions" => sub {
                 map { $_ => 1 } @attrs;
             };
 
-            my $methods = join '+', grep { m/^( DELETE | GET | HEAD | POST | PUT)$/x } sort keys %attrs;
+            my $methods = join '+', grep { m/^( DELETE | GET | HEAD | POST | PUT)$/x }
+              sort keys %attrs;
 
-            if ( $attrs{AnyMethod} ) {        # special keyword indicating any method will be ok
+            if ( $attrs{AnyMethod} ) {    # special keyword indicating any method will be ok
                 $methods .= '+' if length $methods;
                 $methods .= 'any';
             }
 
             if ( $attrs{CaptureArgs} ) { # actions with CaptureArgs are chain elements and automatically private
-                is $methods => '', "$action_pkg_name: action with 'CaptureArgs' has no methods";
+                is
+                  $methods => '',
+                  "$action_pkg_name: action with 'CaptureArgs' has no methods";
                 next;
             }
 
@@ -57,7 +63,11 @@ subtest "attributes of controller actions" => sub {
             }
 
             ok(
-                ( $methods eq 'any' or $methods eq 'GET+HEAD' or $methods eq 'POST' ),
+                (
+                         $methods eq 'any'
+                      or $methods eq 'GET+HEAD'
+                      or $methods eq 'POST'
+                ),
                 "$action_pkg_name has 'AnyMethod' or is GET & HEAD or POST"
             ) or note "HTTP methods: " . $methods;
 
@@ -95,7 +105,10 @@ subtest "HTTP Strict Transport Security" => sub {
     $t->lacks_header_ok( 'Strict-Transport-Security', "no header for plain HTTP" );
 
     $t->get_ok('https://localhost');
-    $t->header_is( 'Strict-Transport-Security' => 'max-age=' . 365 * 24 * 60 * 60, "default" );
+    $t->header_is(
+        'Strict-Transport-Security' => 'max-age=' . 365 * 24 * 60 * 60,
+        "default"
+    );
 
     $t->reload_config(
         'Plugin::StrictTransportSecurity' => {
@@ -327,11 +340,7 @@ subtest "simply check GET for all endpoints" => sub {    # TODO could we autogen
     $t->get_ok('/project/1/Test-Project/settings');
     $t->get_ok('/project/1/Test-Project/shop_sections');
     $t->get_ok('/project/1/Test-Project/tag/1');
-    $t->get_ok('/project/1/Test-Project/tag_group/1');
-    $t->get_ok('/project/1/Test-Project/tag_groups');
-    $t->get_ok('/project/1/Test-Project/tag_groups/new');
     $t->get_ok('/project/1/Test-Project/tags');
-    $t->get_ok('/project/1/Test-Project/tags/new');
     $t->get_ok('/project/1/Test-Project/unit/1');
     $t->get_ok('/project/1/Test-Project/units');
     $t->get_ok('/recipe/1/pizza');

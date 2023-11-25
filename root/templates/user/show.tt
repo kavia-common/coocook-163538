@@ -19,14 +19,12 @@
                 <h3 class="my-2">Public projects owned by [% user_object.name %]</h3>
             </div>
             <div class="card-body p-0">
-                <div class="list-group list-group-flush">
+                <ul class="list-group list-group-flush">
                 [% FOR proj IN projects %]
-                    <div class="list-group-item list-group-item-action">
-                        [% link_project(proj) %]
-                    </div>
+                    <li class="list-group-item">[% link_project(proj) %]</li>
                 [% END %]
                 </div>
-            </div>
+            </ul>
         </div>
     </div>
     <div class="col-12 col-md-6">
@@ -36,9 +34,9 @@
             </div>
             <div class="card-body p-0">
                 <ul class="list-group list-group-flush">
-                    [% FOR organization IN organizations %]
+                [% FOR organization IN organizations %]
                     <li class="list-group-item">[% link_organization(organization) %]</li>
-                    [% END %]
+                [% END %]
                 </ul>
             </div>
         </div>
