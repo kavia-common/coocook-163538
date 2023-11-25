@@ -19,7 +19,7 @@ MACRO display_datetime(datetime, opts) BLOCK;
 END;
 
 MACRO display_project(project, opts) BLOCK; ~%]
-    <i class="material-icons [% opts.icon_class || 'md-18' %]">[% project.is_public ? 'public' : 'lock' %]</i>
+    <i class="material-icons [% opts.icon_class || 'md-18' %]">[% project.is_public ? 'public' : 'lock' %]</i>&thinsp;
     [% project.name | html;
 END;
 
