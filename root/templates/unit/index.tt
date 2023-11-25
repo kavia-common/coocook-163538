@@ -2,8 +2,6 @@
 
 js_push_template_path();
 
-USE NiceNumber;
-
 new = BLOCK %]
 <p>
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-unit-modal" title="Add new unit">
