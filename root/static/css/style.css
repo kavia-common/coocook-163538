@@ -326,14 +326,6 @@ button.dark-link:hover {
     background-color: var(--cc-green-dark);
 }
 
-.btn:focus,
-.btn-close:focus,
-select:focus,
-input:focus,
-textarea:focus {
-    box-shadow: none !important;
-}
-
 cc-autocomplete {
     --primary: var(--bs-primary);
     --light: var(--bs-light);
