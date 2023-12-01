@@ -1,5 +1,6 @@
 use Test2::V0;
 
+use Coocook::Base;
 use Coocook::Schema;
 
 use lib 't/lib';
@@ -42,39 +43,29 @@ subtest connection => sub {
     my %extra_attributes = ( on_connect_do => 'SELECT 1' );
 
     # same order as in https://metacpan.org/pod/DBIx::Class::Storage::DBI#connect_info
-    ok(
-        Coocook::Schema->connect(
-            'dbi:SQLite::memory:', 'user', 'password', \%dbi_attributes, \%extra_attributes
-        )
+    ok Coocook::Schema->connect( 'dbi:SQLite::memory:', 'user', 'password', \%dbi_attributes,
+        \%extra_attributes );
+
+    ok Coocook::Schema->connect(
+        sub { DBI->connect( 'dbi:SQLite::memory:', 'user', 'password', \%dbi_attributes ) },
+        \%extra_attributes );
+
+    ok Coocook::Schema->connect(
+        {
+            dsn      => 'dbi:SQLite::memory:',
+            user     => 'user',
+            password => 'password',
+            %dbi_attributes,
+            %extra_attributes
+        }
     );
 
-    ok(
-        Coocook::Schema->connect(
-            sub { DBI->connect( 'dbi:SQLite::memory:', 'user', 'password', \%dbi_attributes ) },
-            \%extra_attributes
-        )
-    );
-
-    ok(
-        Coocook::Schema->connect(
-            {
-                dsn      => 'dbi:SQLite::memory:',
-                user     => 'user',
-                password => 'password',
-                %dbi_attributes,
-                %extra_attributes
-            }
-        )
-    );
-
-    ok(
-        Coocook::Schema->connect(
-            {
-                dbh_maker => sub { DBI->connect('dbi:SQLite::memory:') },
-                %dbi_attributes,
-                %extra_attributes
-            }
-        )
+    ok Coocook::Schema->connect(
+        {
+            dbh_maker => sub { DBI->connect('dbi:SQLite::memory:') },
+            %dbi_attributes,
+            %extra_attributes
+        }
     );
 
     my $dbh = DBI->connect( 'dbi:SQLite::memory:', undef, undef, { RaiseError => 1 } );

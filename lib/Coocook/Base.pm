@@ -12,6 +12,7 @@ sub import {
     warnings->unimport(qw( experimental::signatures ));
 
     feature->import(qw( fc say signatures :5.24 ));
+    feature->unimport(qw( indirect ));
     utf8->import;
 }
 
