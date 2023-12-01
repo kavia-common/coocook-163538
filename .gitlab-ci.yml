@@ -14,13 +14,13 @@ lint:
     entrypoint: [""]    # override default entrypoint "git"
   cache: []
   script:
-    - echo "Listing any text files containing CR characters:"
+    - "# Listing any text files containing CR characters:"
     - sh -c "! git grep -IlP '\x0d'"
-    - echo "Listing any text files containing TAB characters:"
+    - "# Listing any text files containing TAB characters:"
     - sh -c "! git grep -IlP '\x09'"
-    - echo "Listing any text files with trailing whitespace:"
+    - "# Listing any text files with trailing whitespace:"
     - sh -c "! git grep -Il '[[:blank:]]$'"
-    - echo "Listing any text files without trailing newline (except external libs):"
+    - "# Listing any text files without trailing newline (except external libs):"
     - sh -c 'git grep -Il "" | grep -v ^root/static/lib/ | while read file; do test "$( tail -c1 "$file" )" && echo "$file"; done | tee >( cat >&2 ) | [ $(wc -c) -eq 0 ]'
 
 prove:
