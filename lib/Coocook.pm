@@ -1,13 +1,14 @@
 package Coocook;
 
 # ABSTRACT: Web application for collecting recipes and making food plans
-# VERSION
 
 use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 
 use Catalyst::Runtime 5.80;
+
+our $VERSION = 0.004;
 
 # Set flags and add plugins for the application.
 #
