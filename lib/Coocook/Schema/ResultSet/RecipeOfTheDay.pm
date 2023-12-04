@@ -1,5 +1,6 @@
 package Coocook::Schema::ResultSet::RecipeOfTheDay;
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 
@@ -19,9 +20,7 @@ C<today_rs> method would be required.
 
 =cut
 
-sub today {
-    my ( $self, %opts ) = @_;
-
+sub today ( $self, %opts ) {
     $self = $self->search( undef, { prefetch => 'recipe' } );
 
     my $date = $self->format_date_today;

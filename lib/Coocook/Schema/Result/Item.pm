@@ -2,6 +2,7 @@ package Coocook::Schema::Result::Item;
 
 # ABSTRACT: each database row is 1 item of a purchase list and subsumes 1 or more dish ingredients
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 
@@ -48,9 +49,7 @@ __PACKAGE__->has_many( ingredients => 'Coocook::Schema::Result::DishIngredient',
 
 __PACKAGE__->meta->make_immutable;
 
-sub convert {
-    my ( $self => $unit2 ) = @_;
-
+sub convert ( $self, $unit2 ) {
     $self->txn_do(
         sub {
             my $unit1 = $self->unit;
@@ -114,9 +113,7 @@ sub convert {
     );
 }
 
-sub update_from_ingredients {
-    my $self = shift;
-
+sub update_from_ingredients ($self) {
     my $item_value = 0;
 
     for my $ingredient ( $self->ingredients->all ) {

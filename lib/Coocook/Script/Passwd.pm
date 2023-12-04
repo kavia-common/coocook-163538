@@ -2,13 +2,12 @@ package Coocook::Script::Passwd;
 
 # ABSTRACT: script for setting a new password for a user
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 
 use Coocook::Schema;
 use Term::ReadKey;
-
-use feature 'fc';    # Perl v5.16
 
 with 'MooseX::Getopt';
 
@@ -34,9 +33,7 @@ has _readline => (
     },
 );
 
-sub run {
-    my $self = shift;
-
+sub run ($self) {
     my $user = $self->_schema->resultset('User')->find( { name_fc => fc( $self->username ) } )
       or die "No such user\n";
 
@@ -51,9 +48,7 @@ sub run {
       and printf "Successfully updated password for Coocook user '%s'\n", $user->name;
 }
 
-sub readline {
-    my ( $self, $prompt ) = @_;
-
+sub readline ( $self, $prompt ) {
     $prompt and print $prompt;
 
     Term::ReadKey::ReadMode('noecho');

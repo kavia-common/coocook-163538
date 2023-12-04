@@ -2,8 +2,7 @@ package Coocook::Schema::Component::ResultSet::ArticleOrUnit;
 
 # ABSTRACT: methods shared between ResultSet::Article and ResultSet::Unit
 
-use strict;
-use warnings;
+use Coocook::Base;
 
 =head2 in_use()
 

@@ -2,7 +2,9 @@ package Coocook::Script::Get;
 
 # ABSTRACT: script to print the response body to a GET request
 
+use Coocook::Base;
 use Moose;
+
 use Catalyst::Test 'Coocook';    # Catalyst::Test is part of Catalyst-Runtime
 use URI;
 
@@ -35,11 +37,10 @@ sub new_with_options {
     return $self;
 }
 
-sub run {
-    my $self = shift;
+sub run ($self) {
 
     # enable output of that error page for deployment config
-    $Coocook::Controller::Error::ENABLE_INTERNAL_SERVER_ERROR_PAGE = 1;
+    local $Coocook::Controller::Error::ENABLE_INTERNAL_SERVER_ERROR_PAGE = 1;
 
     my $uri = URI->new( $self->path );
     $uri->scheme('https');    # HTTPS is required

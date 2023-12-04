@@ -1,8 +1,5 @@
 package Coocook::Script::Role::HasDebug;
 
-use strict;
-use warnings;
-
 use Moose::Role;
 
 has debug => (

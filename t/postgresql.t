@@ -1,3 +1,4 @@
+use Coocook::Base;
 use Test2::V0;
 
 use Test2::Require::Module 'Test::PostgreSQL';
@@ -14,6 +15,8 @@ use lib 't/lib';
 use TestDB qw(install_ok upgrade_ok);
 use Test::Coocook;
 
+sub _schema_diff_like;    # declare name, implementation below
+
 my $FIRST_PGSQL_SCHEMA_VERSION = 21;
 
 plan tests => 3 + ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 9;
@@ -29,33 +32,30 @@ my $schema_from_deploy;    # initialized in loop
 
 $dbh->do('CREATE DATABASE upgrades');
 my $schema_from_upgrades = Coocook::Schema->connect( $psql->dsn( dbname => 'upgrades' ) );
-install_ok( $schema_from_upgrades, $FIRST_PGSQL_SCHEMA_VERSION );
+install_ok $schema_from_upgrades, $FIRST_PGSQL_SCHEMA_VERSION;
 
-ok(
-    TestDB->execute_test_data(
-        $schema_from_upgrades, "t/test_data_v${FIRST_PGSQL_SCHEMA_VERSION}_install.sql"
-    ),
-    "populate test data"
-);
+ok TestDB->execute_test_data(
+    $schema_from_upgrades, "t/test_data_v${FIRST_PGSQL_SCHEMA_VERSION}_install.sql"
+  ),
+  "populate test data";
 
 for my $version ( $FIRST_PGSQL_SCHEMA_VERSION + 1 .. $Coocook::Schema::VERSION ) {
     subtest "schema version $version" => sub {
         my $database = 'deploy' . $version;
         $dbh->do("CREATE DATABASE $database");
         $schema_from_deploy = Coocook::Schema->connect( $psql->dsn( dbname => $database ) );
-        install_ok( $schema_from_deploy, $version );
+        install_ok $schema_from_deploy, $version;
 
         if ( -f ( my $sql_file = "t/test_data_v${version}_upgrade.sql" ) ) {
-            ok(
-                TestDB->execute_test_data( $schema_from_upgrades, $sql_file ),
-                "populate additional test data for schema version $version"
-            );
+            ok
+              TestDB->execute_test_data( $schema_from_upgrades, $sql_file ),
+              "populate additional test data for schema version $version";
         }
 
-        upgrade_ok( $schema_from_upgrades, $version );
+        upgrade_ok $schema_from_upgrades, $version;
 
-        schema_diff_like( $schema_from_upgrades, $schema_from_deploy, {},
-            "schema from upgrade SQLs equals schema from deploy SQL" );
+        _schema_diff_like $schema_from_upgrades, $schema_from_deploy, {},
+          "schema from upgrade SQLs equals schema from deploy SQL";
     };
 }
 
@@ -88,9 +88,9 @@ $schema_from_upgrades->resultset($_)->delete() for qw(
 );
 
 # share/test_data.sql matches only current schema -> can only after upgrades
-ok( TestDB->execute_test_data($schema_from_dbic),     "Execute test data in DB from DBIx::Class" );
-ok( TestDB->execute_test_data($schema_from_deploy),   "Execute test data in DB from deploy SQL" );
-ok( TestDB->execute_test_data($schema_from_upgrades), "Execute test data in DB from upgrade SQLs" );
+ok TestDB->execute_test_data($schema_from_dbic),     "Execute test data in DB from DBIx::Class";
+ok TestDB->execute_test_data($schema_from_deploy),   "Execute test data in DB from deploy SQL";
+ok TestDB->execute_test_data($schema_from_upgrades), "Execute test data in DB from upgrade SQLs";
 
 note "Fixing Pgsql sequences after bulk insert";
 for my $source ( $schema_from_dbic->sources ) {
@@ -102,11 +102,9 @@ for my $source ( $schema_from_dbic->sources ) {
     if ( $result_source->has_column('id') ) {
         my $table = $result_source->name;
 
-        $schema_from_dbic->storage->dbh_do(
-            sub {
-                $_[1]->do(<<SQL) } );
-SELECT setval('${table}_id_seq', (SELECT MAX(id) FROM $table), true)
-SQL
+        $schema_from_dbic->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do(<<~SQL) } );
+        SELECT setval('${table}_id_seq', (SELECT MAX(id) FROM $table), true)
+        SQL
     }
 }
 
@@ -133,7 +131,9 @@ subtest "deleting projects" => sub {
 };
 
 # rename Pgsql schema to match SQLite schema name 'main'
-$schema_from_deploy->storage->dbh_do( sub { $_[1]->do('ALTER SCHEMA public RENAME TO main') } );
+$schema_from_deploy->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do(<<SQL) } );
+ALTER SCHEMA public RENAME TO main
+SQL
 
 my $sqlite_schema = TestDB->new();
 
@@ -142,57 +142,53 @@ SKIP: {
     $DBD::SQLite::VERSION < 1.71
       or skip "DBD::SQLite broke compatibility with 1.71_05";
 
-    schema_diff_like(
-        $schema_from_deploy,
-        $sqlite_schema,
-        hash {
-            field deleted_tables => [
-                'main.dbix_class_deploymenthandler_versions',    # not created by DBIC
-            ];
-            field modified_tables => hash {
-                my $lc2uc_id = { id => { old_type => 'integer', new_type => 'INTEGER' } };
+    _schema_diff_like $schema_from_deploy, $sqlite_schema, hash {
+        field deleted_tables => [
+            'main.dbix_class_deploymenthandler_versions',    # not created by DBIC
+        ];
+        field modified_tables => hash {
+            my $lc2uc_id = { id => { old_type => 'integer', new_type => 'INTEGER' } };
 
-                # SQLite PKs are deployed with uppercase 'id INTEGER PRIMARY KEY'
-                field 'main.' . $_ => { modified_columns => $lc2uc_id } for qw<
-                  articles
-                  blacklist_emails
-                  blacklist_usernames
-                  organizations
-                  projects
-                  purchase_lists
-                  recipes_of_the_day
-                  recipes
-                  shop_sections
-                  tag_groups
-                  tags
-                  terms
-                  units
-                  unit_conversions
-                  users
-                >;
+            # SQLite PKs are deployed with uppercase 'id INTEGER PRIMARY KEY'
+            field 'main.' . $_ => { modified_columns => $lc2uc_id } for qw<
+              articles
+              blacklist_emails
+              blacklist_usernames
+              organizations
+              projects
+              purchase_lists
+              recipes_of_the_day
+              recipes
+              shop_sections
+              tag_groups
+              tags
+              terms
+              units
+              unit_conversions
+              users
+            >;
 
-                # https://github.com/perlancar/perl-DBIx-Diff-Schema/issues/1
-                field 'main.items' => {
-                    added_columns    => ['offset'],
-                    deleted_columns  => ['"offset"'],
-                    modified_columns => $lc2uc_id,
-                };
-                field 'main.'
-                  . $_ => {
-                    added_columns    => ['position'],
-                    deleted_columns  => ['"position"'],
-                    modified_columns => $lc2uc_id,
-                  }
-                  for qw<
-                  dish_ingredients
-                  faqs
-                  recipe_ingredients
-                  meals
-                  dishes
-                  >;
+            # https://github.com/perlancar/perl-DBIx-Diff-Schema/issues/1
+            field 'main.items' => {
+                added_columns    => ['offset'],
+                deleted_columns  => ['"offset"'],
+                modified_columns => $lc2uc_id,
             };
-        }
-    );
+            field 'main.'
+              . $_ => {
+                added_columns    => ['position'],
+                deleted_columns  => ['"position"'],
+                modified_columns => $lc2uc_id,
+              }
+              for qw<
+              dish_ingredients
+              faqs
+              recipe_ingredients
+              meals
+              dishes
+              >;
+        };
+    };
 }
 
 # most important finding: CURRENT_TIMESTAMP is UTC in SQLite but local timezone in PostgreSQL
@@ -200,11 +196,9 @@ subtest "timestamps are stored in UTC" => sub {
     my $schema = $schema_from_dbic;
 
     # with Test::PostgreSQL the default timezone is UTC which makes bugs unnoticeable
-    $schema->storage->dbh_do(
-        sub {
-            $_[1]->do("SET TIME ZONE 'Pacific/Chatham'");    # weird timezone UTC+12:45
-        }
-    );
+    $schema->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do(<<~SQL) } );
+    SET TIME ZONE 'Pacific/Chatham' -- weird timezone UTC+12:45
+    SQL
 
     my $t = Test::Coocook->new(
         config => { enable_user_registration => 1 },
@@ -250,7 +244,7 @@ subtest "timestamps are stored in UTC" => sub {
 subtest "issue #266 order of meals/dishes" => sub {
     $dbh->do('CREATE DATABASE issue266');
     my $schema = Coocook::Schema->connect( $psql->dsn( dbname => 'issue266' ) );
-    install_ok( $schema, 24 );
+    install_ok $schema, 24;
 
     my $user = $schema->resultset('User')
       ->create( { name => '', password_hash => '', display_name => '', email_fc => '' } );
@@ -258,9 +252,7 @@ subtest "issue #266 order of meals/dishes" => sub {
     my $project = $user->create_related( owned_projects => { name => '', description => '' } );
 
     $schema->storage->dbh_do(
-        sub {
-            my ( undef, $dbh ) = @_;
-
+        sub ( $storage, $dbh ) {
             $dbh->do(<<~SQL) for qw( b c a );    # irregular order
             INSERT INTO meals (project_id,date,name,comment) VALUES (1,'2000-01-01', '$_','')
             SQL
@@ -270,7 +262,7 @@ subtest "issue #266 order of meals/dishes" => sub {
             SQL
         }
     );
-    upgrade_ok( $schema, 25 );
+    upgrade_ok $schema, 25;
     is [
         $schema->resultset('Meal')->search( undef, { order_by => 'position' } )->get_column('name')->all ]
       => [qw( a b c )],
@@ -289,8 +281,7 @@ for my $schema ( $schema_from_dbic, $schema_from_deploy, $schema_from_upgrades )
     $schema->storage->dbh->disconnect();
 }
 
-sub schema_diff_like {
-    my ( $schema1, $schema2, $expected_diff, $name ) = @_;
+sub _schema_diff_like ( $schema1, $schema2, $expected_diff, $name = undef ) {
 
     # TODO doesn't detect constraint changes, e.g. missing UNIQUEs
     my $diff = diff_db_schema( map { $_->storage->dbh } $schema1, $schema2 );

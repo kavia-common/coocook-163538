@@ -2,17 +2,14 @@ package Coocook::Filter::NumberSuffix;
 
 # ABSTRACT: TT filter module to display numbers with 3 most significant digits
 
-use strict;
-use warnings;
+use Coocook::Base;
 
 use parent 'Template::Plugin::Filter';
 
 use Coocook::Filter::SignificantDigits;
 use Scalar::Util 'looks_like_number';
 
-sub filter {
-    my ( $self, $number ) = @_;
-
+sub filter ( $self, $number ) {
     defined $number or return;
     length $number  or return "";
 

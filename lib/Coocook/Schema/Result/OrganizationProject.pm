@@ -1,5 +1,6 @@
 package Coocook::Schema::Result::OrganizationProject;
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 
@@ -24,10 +25,8 @@ __PACKAGE__->belongs_to( project => 'Coocook::Schema::Result::Project', 'project
 
 __PACKAGE__->has_many(
     other_projects_organizations => __PACKAGE__,
-    sub {    # conditions above simple equality must use coderefs
-             # https://metacpan.org/pod/DBIx::Class::Relationship::Base#Custom-join-conditions
-        my $args = shift;
-
+    sub ($args) {    # conditions above simple equality must use coderefs
+                     # https://metacpan.org/pod/DBIx::Class::Relationship::Base#Custom-join-conditions
         return {
             "$args->{foreign_alias}.project_id"      => { -ident => "$args->{self_alias}.project_id" },
             "$args->{foreign_alias}.organization_id" =>

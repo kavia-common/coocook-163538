@@ -1,9 +1,10 @@
 package Coocook::Controller::Print;
 
-use DateTime;
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
-use utf8;
+
+use DateTime;
 
 BEGIN { extends 'Coocook::Controller' }
 
@@ -36,7 +37,7 @@ sub day : GET HEAD Chained('/purchase_list/submenu') PathPart('print/day') Args(
     my $meals = $c->model('Plan')->day( $c->project, $dt );
 
     for my $meal (@$meals) {
-        for my $dish ( @{ $meal->{dishes} } ) {
+        for my $dish ( $meal->{dishes}->@* ) {
             $dish->{url} = $c->project_uri( '/dish/edit', $dish->{id} );
 
             if ( my $prep_meal = $dish->{prepare_at_meal} ) {
@@ -45,7 +46,7 @@ sub day : GET HEAD Chained('/purchase_list/submenu') PathPart('print/day') Args(
             }
         }
 
-        for my $dish ( @{ $meal->{prepared_dishes} } ) {
+        for my $dish ( $meal->{prepared_dishes}->@* ) {
             $dish->{url} ||= $c->project_uri( '/dish/edit', $dish->{id} );
 
             my $meal = $dish->{meal};

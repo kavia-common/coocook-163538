@@ -2,16 +2,16 @@ package Coocook::Model::Plan;
 
 # ABSTRACT: business logic for plain data structures of project/day plans
 
-use DateTime;
+use Coocook::Base;
 use Moose;
 use MooseX::NonMoose;
+
+use DateTime;
 use Scalar::Util 'weaken';
 
 __PACKAGE__->meta->make_immutable;
 
-sub day {
-    my ( $self, $project, $dt ) = @_;
-
+sub day ( $self, $project, $dt ) {
     my %meals;
     my @meals;
 
@@ -76,7 +76,7 @@ sub day {
                     };
                 }
 
-                push @{ $meals{ $dish->meal_id }{dishes} }, \%dish;
+                push $meals{ $dish->meal_id }{dishes}->@*, \%dish;
             }
 
             if ( my $prepare_at_meal = $dish->prepare_at_meal_id ) {
@@ -87,7 +87,7 @@ sub day {
                         date => $dish->meal->date,
                     };
 
-                    push @{ $meals{ $dish->prepare_at_meal->id }{prepared_dishes} }, \%dish;
+                    push $meals{ $dish->prepare_at_meal->id }{prepared_dishes}->@*, \%dish;
                 }
             }
         }
@@ -110,7 +110,7 @@ sub day {
         );
 
         while ( my $ingredient = $ingredients->next ) {
-            push @{ $dishes{ $ingredient->dish_id }{ingredients} },
+            push $dishes{ $ingredient->dish_id }{ingredients}->@*,
               {
                 prepare => $ingredient->format_bool( $ingredient->prepare ),
                 value   => $ingredient->value,
@@ -132,9 +132,7 @@ sub day {
     return \@meals;
 }
 
-sub project {
-    my ( $self, $project ) = @_;
-
+sub project ( $self, $project ) {
     my %days;
     my %meals;
 
@@ -147,7 +145,7 @@ sub project {
             meals => [],
         };
 
-        push @{ $day->{meals} },
+        push $day->{meals}->@*,
           $meals{ $meal->id } = $meal->as_hashref(
             date            => $day->{date},
             deletable       => !!$meal->deletable,
@@ -164,18 +162,16 @@ sub project {
 
         weaken $dish->{meal};
 
-        push @{ $dish->{meal}{dishes} }, $dish;
+        push $dish->{meal}{dishes}->@*, $dish;
 
         if ( my $prepare_meal_id = $dish->{prepare_at_meal_id} ) {
-            push @{ $meals{$prepare_meal_id}{prepared_dishes} }, $dish;
+            push $meals{$prepare_meal_id}{prepared_dishes}->@*, $dish;
         }
     }
     return [ @days{ sort keys %days } ];
 }
 
-sub project_for_meals_dishes_editor {
-    my ( $self, $project ) = @_;
-
+sub project_for_meals_dishes_editor ( $self, $project ) {
     my %days;
 
     my $meals = $project->meals;
@@ -189,14 +185,14 @@ sub project_for_meals_dishes_editor {
     return \%days;
 }
 
-sub resolve_meal_dish_path {
-    my ( $self, $project, $path ) = @_;
+sub resolve_meal_dish_path ( $self, $project, $path ) {
     if ( $path->{item_type} eq 'dish' ) {
         return $project->dishes->find( $path->{dish_id} );
     }
     elsif ( $path->{item_type} eq 'meal' ) {
         return $project->meals->find( $path->{meal_id} );
     }
+    die;
 }
 
 1;

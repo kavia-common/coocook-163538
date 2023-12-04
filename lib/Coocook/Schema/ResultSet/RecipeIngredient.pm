@@ -1,5 +1,6 @@
 package Coocook::Schema::ResultSet::RecipeIngredient;
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 
@@ -11,7 +12,7 @@ __PACKAGE__->load_components('+Coocook::Schema::Component::ResultSet::SortByName
 
 __PACKAGE__->meta->make_immutable;
 
-sub prepared     { shift->search( { -bool     => 'prepare' } ) }
-sub not_prepared { shift->search( { -not_bool => 'prepare' } ) }
+sub prepared     ($self) { $self->search( { -bool     => 'prepare' } ) }
+sub not_prepared ($self) { $self->search( { -not_bool => 'prepare' } ) }
 
 1;

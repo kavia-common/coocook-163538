@@ -1,5 +1,6 @@
 package Coocook::Schema::Result::DishIngredient;
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 
@@ -49,9 +50,7 @@ __PACKAGE__->belongs_to(
 
 __PACKAGE__->meta->make_immutable;
 
-sub assign_to_purchase_list {
-    my ( $self, $list ) = @_;
-
+sub assign_to_purchase_list ( $self, $list ) {
     my $item;
 
     $self->txn_do(
@@ -78,9 +77,7 @@ Returns boolish value indicating if there's an item that was updated
 
 =cut
 
-sub update_on_purchase_list {
-    my $self = shift;
-
+sub update_on_purchase_list ($self) {
     $self->txn_do(
         sub {
             my $item = $self->item or return;
@@ -98,9 +95,7 @@ Returns boolish value indicating if there's an item that was updated
 
 =cut
 
-sub remove_from_purchase_list {
-    my $self = shift;
-
+sub remove_from_purchase_list ($self) {
     $self->txn_do(
         sub {
             my $item = $self->item or return;
@@ -120,9 +115,7 @@ sub remove_from_purchase_list {
     return 1;
 }
 
-sub for_ingredients_editor {
-    my $self = shift;
-
+sub for_ingredients_editor ($self) {
     my $unit              = $self->unit;
     my @convertible_units = $self->article->units->search(
         {

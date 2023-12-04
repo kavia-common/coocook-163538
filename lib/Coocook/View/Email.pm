@@ -2,6 +2,7 @@ package Coocook::View::Email;
 
 # ABSTRACT: create emails with TT templates and Email::Stuffer
 
+use Coocook::Base;
 use Moose;
 use MooseX::NonMoose;
 use namespace::autoclean;
@@ -20,9 +21,7 @@ Catalyst View.
 
 =cut
 
-sub process {
-    my ( $self, $c ) = @_;
-
+sub process ( $self, $c, @args ) {
     my $stash = $c->stash->{email};
 
     # automatically set template filename based on action path

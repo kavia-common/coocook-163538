@@ -1,5 +1,6 @@
 package Coocook::Schema::ResultSet::ShopSection;
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 
@@ -9,9 +10,7 @@ __PACKAGE__->load_components('+Coocook::Schema::Component::ResultSet::SortByName
 
 __PACKAGE__->meta->make_immutable;
 
-sub with_article_count {
-    my $self = shift;
-
+sub with_article_count ($self) {
     return $self->search(
         undef,
         {

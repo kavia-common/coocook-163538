@@ -1,5 +1,6 @@
 package Coocook::Schema::Result::Unit;
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 
@@ -23,10 +24,8 @@ __PACKAGE__->belongs_to( project => 'Coocook::Schema::Result::Project', 'project
 # for doc see https://metacpan.org/pod/DBIx::Class::Relationship::Base#Custom-join-conditions
 __PACKAGE__->has_many(
     conversions => 'Coocook::Schema::Result::UnitConversion',
-    sub {    # custom relationship constraint required for OR condition
-        my $args = shift;
-
-        return [    # OR
+    sub ($args) {    # custom relationship constraint required for OR condition
+        return [     # OR
             "$args->{foreign_alias}.unit1_id" => { -ident => "$args->{self_alias}.id" },
             "$args->{foreign_alias}.unit2_id" => { -ident => "$args->{self_alias}.id" },
         ];
@@ -45,9 +44,7 @@ __PACKAGE__->has_many(
 
 __PACKAGE__->has_many(
     other_units => 'Coocook::Schema::Result::Unit',
-    sub {
-        my $args = shift;
-
+    sub ($args) {
         return {
             "$args->{foreign_alias}.id"         => { '!='   => { -ident => "$args->{self_alias}.id" } },
             "$args->{foreign_alias}.project_id" => { -ident => "$args->{self_alias}.project_id" },
@@ -94,9 +91,7 @@ __PACKAGE__->meta->make_immutable;
 
 # looks like a many_to_many() relationship shortcut
 # but needs to be implemented by hand because other unit can be unit1 or unit2
-sub convertible_into {
-    my $self = shift;
-
+sub convertible_into ($self) {
     return $self->other_units->search(
         [    # OR
             'conversions.unit1_id' => $self->id,
@@ -108,9 +103,7 @@ sub convertible_into {
     )->all;
 }
 
-sub find_conversion_into {
-    my ( $self, $unit_id ) = @_;
-
+sub find_conversion_into ( $self, $unit_id ) {
     return $self->result_source->schema->resultset('UnitConversion')->search(
         [    # OR
             {

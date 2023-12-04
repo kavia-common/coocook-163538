@@ -2,6 +2,7 @@ package Coocook::Script::Deploy;
 
 # ABSTRACT: script for database maintenance based on App::DH
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 
@@ -14,8 +15,7 @@ has '+schema' => ( default => 'Coocook::Schema' );
 
 sub _build_database { [qw< SQLite PostgreSQL >] }
 
-sub _build__dh {    # copy from App::DH
-    my ($self) = @_;
+sub _build__dh ($self) {    # copy from App::DH
     return Coocook::DeploymentHandler->new(    # adjusted to custom class
         {
             schema           => $self->_schema,

@@ -1,5 +1,6 @@
 package Coocook::Schema::ResultSet::Dish;
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 
@@ -7,9 +8,7 @@ extends 'Coocook::Schema::ResultSet';
 
 __PACKAGE__->meta->make_immutable;
 
-sub from_recipe {
-    my ( $self, $recipe, %args ) = @_;
-
+sub from_recipe ( $self, $recipe, %args ) {
     return $self->txn_do(
         sub {
             my $dish = $self->create(
@@ -44,11 +43,9 @@ sub from_recipe {
     );
 }
 
-sub sum_servings { shift->get_column('servings')->sum // 0 }
+sub sum_servings ($self) { $self->get_column('servings')->sum // 0 }
 
-sub in_past_or_today {
-    my $self = shift;
-
+sub in_past_or_today ($self) {
     return $self->search(
         {
             'meal.date' => { '<=' => $self->format_date_today },
@@ -59,9 +56,7 @@ sub in_past_or_today {
     );
 }
 
-sub in_future {
-    my $self = shift;
-
+sub in_future ($self) {
     return $self->search(
         {
             'meal.date' => { '>' => $self->format_date_today },
@@ -72,9 +67,7 @@ sub in_future {
     );
 }
 
-sub update_items_and_delete {
-    my $self = shift;
-
+sub update_items_and_delete ($self) {
     $self->txn_do(
         sub {
             $self->assert_no_sth;

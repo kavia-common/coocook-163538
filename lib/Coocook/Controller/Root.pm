@@ -74,24 +74,21 @@ sub auto : Private {
         }
     }
 
-    # TODO use hash slice
     $c->stash(
-        map { $_ => $c->config->{$_} }
-          qw<
-          date_format_short
-          date_format_long
-          datetime_format_short
-          datetime_format_long
-          donate_url
-          help_links
-          icon_type
-          icon_url
-          icon_urls
-          me_url
-          >
-    );
-
-    $c->stash(
+        $c->config->%{
+            qw<
+              date_format_short
+              date_format_long
+              datetime_format_short
+              datetime_format_long
+              donate_url
+              help_links
+              icon_type
+              icon_url
+              icon_urls
+              me_url
+            >
+        },
         css => [    # this comment makes perltidy not merge these lines
             '/lib/themed-bootstrap/themed' . ( $c->debug ? '.css' : '.min.css' ),
             '/css/material-design-icons.css',
@@ -106,7 +103,7 @@ sub auto : Private {
 
     for my $key (qw< css js >) {
         if ( my $config = $c->config->{$key} ) {
-            push @{ $c->stash->{$key} }, ref $config eq 'ARRAY' ? @$config : $config;
+            push $c->stash->{$key}->@*, ref $config eq 'ARRAY' ? @$config : $config;
         }
     }
 
@@ -291,7 +288,7 @@ Attempt to render a view, if needed.
 sub end : ActionClass('RenderView') {
     my ( $self, $c ) = @_;
 
-    for my $item ( @{ $c->stash->{submenu_items} } ) {
+    for my $item ( $c->stash->{submenu_items}->@* ) {
         next if $item->{forbidden};
         next if $item->{url};
 
@@ -317,7 +314,7 @@ sub end : ActionClass('RenderView') {
     }
 
     # remove subitems that have the 'forbidden' flag
-    @{ $c->stash->{submenu_items} } = grep { not $_->{forbidden} } @{ $c->stash->{submenu_items} };
+    $c->stash->{submenu_items}->@* = grep { not $_->{forbidden} } $c->stash->{submenu_items}->@*;
 
     {
         my $errors = $c->stash->{errors};

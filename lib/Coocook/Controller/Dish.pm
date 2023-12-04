@@ -92,7 +92,7 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
         delete_url         => $c->project_uri( '/dish/delete', $dish->id ),
     );
 
-    for my $ingredient ( @{ $c->stash->{ingredients} } ) {
+    for my $ingredient ( $c->stash->{ingredients}->@* ) {
         $ingredient->{reposition_url} = $c->project_uri( '/dish/reposition', $ingredient->{id} );
     }
 }

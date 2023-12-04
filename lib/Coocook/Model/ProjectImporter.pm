@@ -2,10 +2,12 @@ package Coocook::Model::ProjectImporter;
 
 # ABSTRACT: business logic for importing data to a project from another
 
-use Carp;
-use JSON::MaybeXS;    # also a dependency of Catalyst
+use Coocook::Base;
 use Moose;
 use MooseX::NonMoose;
+
+use Carp;
+use JSON::MaybeXS;    # also a dependency of Catalyst
 use Storable qw(dclone);
 
 extends 'Catalyst::Model';
@@ -16,32 +18,35 @@ my @internal_properties = (    # array of hashrefs with key 'key' instead of has
     {
         key    => 'units',
         name   => "Units",
-        import => sub { shift->units, { project_id => 'projects' } },
+        import => sub ($project) { $project->units, { project_id => 'projects' } },
     },
     {
         key        => 'unit_conversions',
         auto       => 1,
         depends_on => ['units'],
-        import     => sub { shift->unit_conversions_rs, { unit1_id => 'units', unit2_id => 'units' } },
+        import     =>
+          sub ($project) { $project->unit_conversions_rs, { unit1_id => 'units', unit2_id => 'units' } },
     },
     {
         key    => 'shop_sections',
         name   => "Shop Sections",
-        import => sub { shift->shop_sections },
+        import => sub ($project) { $project->shop_sections },
     },
     {
         key             => 'articles',
         name            => "Articles",
         soft_depends_on => ['shop_sections'],
-        import          =>
-          sub { shift->articles, { project_id => 'projects', shop_section_id => 'shop_sections?' } },
+        import          => sub ($project) {
+            $project->articles, { project_id => 'projects', shop_section_id => 'shop_sections?' };
+        },
     },
     {
         key        => 'articles_units',
         auto       => 1,
         depends_on => [ 'articles', 'units' ],
-        import     => sub {
-            shift->articles->search_related('articles_units'), { article_id => 'articles', unit_id => 'units' };
+        import     => sub ($project) {
+            $project->articles->search_related('articles_units'),
+              { article_id => 'articles', unit_id => 'units' };
         },
     },
     {
@@ -49,9 +54,9 @@ my @internal_properties = (    # array of hashrefs with key 'key' instead of has
         name       => "Recipes",
         depends_on => [ 'articles', 'units' ],
         import     => [
-            sub { shift->recipes },
-            sub {
-                shift->recipes->search_related('ingredients'),
+            sub ($project) { $project->recipes },
+            sub ($project) {
+                $project->recipes->search_related('ingredients'),
                   {
                     project_id => 'projects',
                     article_id => 'articles',
@@ -66,24 +71,24 @@ my @internal_properties = (    # array of hashrefs with key 'key' instead of has
         name      => "Tags and Tag Groups",
         conflicts => [ 'tags', 'tag_groups' ],
         import    => [
-            sub { shift->tag_groups },
-            sub { shift->tags, { project_id => 'projects', tag_group_id => 'tag_groups' } },
+            sub ($project) { $project->tag_groups },
+            sub ($project) { $project->tags, { project_id => 'projects', tag_group_id => 'tag_groups' } },
         ],
     },
     {
         key        => 'articles_tags',
         auto       => 1,
         depends_on => [ 'articles', 'tags' ],
-        import     => sub {
-            shift->articles->search_related('articles_tags'), { article_id => 'articles', tag_id => 'tags' };
+        import     => sub ($project) {
+            $project->articles->search_related('articles_tags'), { article_id => 'articles', tag_id => 'tags' };
         },
     },
     {
         key        => 'recipes_tags',
         auto       => 1,
         depends_on => [ 'recipes', 'tags' ],
-        import     => sub {
-            shift->recipes->search_related('recipes_tags'), { recipe_id => 'recipes', tag_id => 'tags' };
+        import     => sub ($project) {
+            $project->recipes->search_related('recipes_tags'), { recipe_id => 'recipes', tag_id => 'tags' };
         },
     },
 );
@@ -99,12 +104,12 @@ for my $property (@internal_properties) {
 
     $property->{$_} ||= [] for qw< depends_on dependency_of soft_depends_on soft_dependency_of >;
 
-    for ( @{ $property->{depends_on} } ) {
-        push @{ $internal_properties{$_}{dependency_of} }, $property->{key};
+    for ( $property->{depends_on}->@* ) {
+        push $internal_properties{$_}{dependency_of}->@*, $property->{key};
     }
 
-    for ( @{ $property->{soft_depends_on} } ) {
-        push @{ $internal_properties{$_}{soft_dependency_of} }, $property->{key};
+    for ( $property->{soft_depends_on}->@* ) {
+        push $internal_properties{$_}{soft_dependency_of}->@*, $property->{key};
     }
 }
 
@@ -120,7 +125,7 @@ for my $property (@public_properties) {
 
     # reduce lists to public properties
     for (qw< depends_on dependency_of >) {
-        $property->{$_} = [ grep { exists $public_properties{$_} } @{ $property->{$_} } ];
+        $property->{$_} = [ grep { exists $public_properties{$_} } $property->{$_}->@* ];
     }
 }
 
@@ -146,17 +151,15 @@ importable.
 
 =cut
 
-sub importable_properties   { shift->_importable_properties( 1,  @_ ) }
-sub unimportable_properties { shift->_importable_properties( '', @_ ) }
+sub importable_properties   ( $self, @args ) { $self->_importable_properties( 1,  @args ) }
+sub unimportable_properties ( $self, @args ) { $self->_importable_properties( '', @args ) }
 
-sub _importable_properties {
-    my ( $self, $shall_be_importable, $inventory, $properties ) = @_;
-
+sub _importable_properties ( $self, $shall_be_importable, $inventory, $properties = undef ) {
     my %unimportable;
 
     # begin with all properties with existing data
   PROPERTY: for my $property ( values %public_properties ) {
-        for my $conflict ( @{ $property->{conflicts} } ) {
+        for my $conflict ( $property->{conflicts}->@* ) {
             if ( $inventory->{$conflict} > 0 ) {
                 $unimportable{ $property->{key} } = 1;
 
@@ -199,11 +202,7 @@ Stores relevant error messages in C<@$errors> if given.
 
 =cut
 
-sub can_import_properties {
-    my ( $self, $project, $properties, $errors ) = @_;
-
-    $errors ||= [];
-
+sub can_import_properties ( $self, $project, $properties, $errors = [] ) {
     if ( @$properties == 0 ) {
         push @$errors, "No property selected";
         return '';
@@ -225,11 +224,8 @@ sub can_import_properties {
     return ( @$errors == 0 );
 }
 
-sub import_data {    # import() is used by 'use'
-    my ( $self, $source => $target, $properties ) = @_;
-
-    @_ == 4 or croak "import_data() needs 4 arguments";
-
+# import() is used by 'use'
+sub import_data ( $self, $source, $target, $properties ) {
     $source->id != $target->id
       or croak "source and target project can't be the same";
 
@@ -253,7 +249,7 @@ sub import_data {    # import() is used by 'use'
         sub {
             for my $property (@internal_properties) {
                 if ( $property->{auto} ) {    # auto: skip if not all dependencies requested
-                    grep { not $requested_props{$_} } @{ $property->{depends_on} }
+                    grep { not $requested_props{$_} } $property->{depends_on}->@*
                       and next;
                 }
                 else {                        # explicitly requested by key
@@ -266,7 +262,7 @@ sub import_data {    # import() is used by 'use'
                 # - has the 'auto' flag
                 my $is_dependency =
                   !!grep { $requested_props{$_} or $internal_properties{$_}{auto} }
-                  ( @{ $property->{dependency_of} }, @{ $property->{soft_dependency_of} } );
+                  ( $property->{dependency_of}->@*, $property->{soft_dependency_of}->@* );
 
                 # accept coderef or arrayref of coderefs
                 my @imports = map { ref eq 'ARRAY' ? @$_ : $_ } $property->{import};
@@ -302,9 +298,7 @@ sub import_data {    # import() is used by 'use'
                     my $hash_rs = $rs->hri;
 
                     # code that is used in both loop variants: update columns of $row following %translate
-                    my $translator = sub {
-                        my $row = shift;
-
+                    my $translator = sub ($row) {
                         while ( my ( $col => $rs_class ) = each %translate ) {
                             if ( defined $rs_class ) {
                                 if ( defined $row->{$col} ) {
@@ -347,9 +341,7 @@ sub import_data {    # import() is used by 'use'
     return 1;
 }
 
-sub _validate_properties {
-    my ( $self, $property_keys ) = @_;
-
+sub _validate_properties ( $self, $property_keys ) {
     ref $property_keys eq 'ARRAY'
       or croak "Expected arrayref of properties";
 
@@ -359,7 +351,7 @@ sub _validate_properties {
         my $property = $public_properties{$property_key}
           or croak "Unknown property: '$property_key'";
 
-        for my $dependency ( @{ $property->{depends_on} } ) {
+        for my $dependency ( $property->{depends_on}->@* ) {
             $property_keys{$dependency}
               or croak "$property_key requires $dependency";
         }

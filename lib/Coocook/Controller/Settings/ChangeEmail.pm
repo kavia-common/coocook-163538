@@ -1,8 +1,6 @@
 package Coocook::Controller::Settings::ChangeEmail;
 
-use feature 'fc';
-use utf8;
-
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 

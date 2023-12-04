@@ -1,3 +1,4 @@
+use Coocook::Base;
 use Test2::V0;
 
 use Coocook::Filter::NumberSuffix;
@@ -27,12 +28,10 @@ t( 12345678.9 => "12.3M" );
 t( 123456789  => "123M" );
 t( 1234567890 => "1234M" );
 
-sub t {
-    my ( $input, $expected, $name ) = @_;
-
+sub t ( $input, $expected, $name = "$input = '$expected'" ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     my $output = $filter->filter($input);
 
-    is $output => $expected, $name || "$input = '$expected'";
+    is $output => $expected, $name;
 }

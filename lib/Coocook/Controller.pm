@@ -2,16 +2,16 @@ package Coocook::Controller;
 
 # ABSTRACT: base class for all controllers in Coocook
 
-use Carp;
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
+
+use Carp;
 
 BEGIN { extends 'Catalyst::Controller' }
 
 # TODO is this the best way to apply action roles?
-sub COMPONENT {
-    my ( $class, $app, $args ) = @_;
-
+sub COMPONENT ( $class, $app, $args ) {
     $class->config(
         action_roles => [    #perltidy
             '~RequiresCapability',
@@ -21,12 +21,9 @@ sub COMPONENT {
     return $class->new( $app, $args );
 }
 
-around action_for => sub {
-    my $orig = shift;
-    my $self = shift;
-
-    my $action = $self->$orig(@_)
-      or croak "No such action: @_";
+around action_for => sub ( $orig, $self, $action_name ) {
+    my $action = $self->$orig($action_name)
+      or croak "No such action: $action_name";
 
     return $action;
 };

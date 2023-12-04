@@ -2,6 +2,7 @@ package Coocook::Model::DB;
 
 # ABSTRACT: adaptor class to provide Coocook::Schema namespace in Coocook app
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 
@@ -16,6 +17,6 @@ __PACKAGE__->config(
     schema_class => 'Coocook::Schema',
 );
 
-sub statistics { shift->schema->statistics(@_) }
+sub statistics ( $self, @args ) { $self->schema->statistics(@args) }
 
 1;

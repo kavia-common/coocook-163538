@@ -1,5 +1,6 @@
 package Coocook::Schema::ResultSet::Tag;
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 
@@ -7,15 +8,11 @@ extends 'Coocook::Schema::ResultSet';
 
 __PACKAGE__->load_components('+Coocook::Schema::Component::ResultSet::SortByName');
 
-sub joined {
-    my $self = shift;
-
+sub joined ($self) {
     return join " ", $self->get_column('name')->all;
 }
 
-sub from_names {
-    my ( $self, $str ) = @_;
-
+sub from_names ( $self, $str ) {
     my @names = split qr/\s+/, $str;
 
     return $self->search(
@@ -25,8 +22,7 @@ sub from_names {
     );
 }
 
-sub ungrouped {
-    my $self = shift;
+sub ungrouped ($self) {
     return $self->search( { $self->me('tag_group') => undef } );
 }
 

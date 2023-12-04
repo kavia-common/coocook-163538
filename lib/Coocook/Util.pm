@@ -2,10 +2,7 @@ package Coocook::Util;
 
 # ABSTRACT: helper functions (not methods) for Coocook, independent from Catalyst or any class
 
-use strict;
-use warnings;
-
-use feature 'fc';    # Perl v5.16
+use Coocook::Base;
 
 use Carp;
 
@@ -18,9 +15,7 @@ Most useful for building new URLs.
 
 =cut
 
-sub url_name {
-    my ($name) = @_;
-
+sub url_name ($name) {
     ( my $url_name = $name ) =~ s/\W+/-/g;
 
     return $url_name;
@@ -33,9 +28,7 @@ next to appropriate values. Useful for updating both rows in the database.
 
 =cut
 
-sub url_names_hashref {
-    my ($name) = @_;
-
+sub url_names_hashref ($name) {
     ( my $url_name = $name ) =~ s/\W+/-/g;
 
     return {
@@ -51,12 +44,7 @@ is a valid username or organization name.
 
 =cut
 
-sub username_valid {
-    my $username = shift;
-
-    defined $username
-      or croak "username not defined";
-
+sub username_valid ($username) {
     return $username =~ m/ \A [0-9a-zA-Z_]+ \z /x;
 }
 

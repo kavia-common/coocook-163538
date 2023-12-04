@@ -1,5 +1,6 @@
 package Coocook::Schema::Result::Recipe;
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 
@@ -66,14 +67,12 @@ __PACKAGE__->many_to_many( tags => recipes_tags => 'tag' );
 
 __PACKAGE__->meta->make_immutable;
 
-sub duplicate {
-    my ( $self, $args ) = @_;
-
+sub duplicate ( $self, $args ) {
     $args->{name} // die "no name defined in \$args";
 
     return $self->copy($args);
 }
 
-sub url_name { Coocook::Util::url_name( shift->name ) }
+sub url_name ($self) { Coocook::Util::url_name( $self->name ) }
 
 1;

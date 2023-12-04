@@ -1,8 +1,6 @@
 package Coocook::Script::Role::HasSchema;
 
-use strict;
-use warnings;
-
+use Coocook::Base;
 use Moose::Role;
 
 use Coocook::Schema;
@@ -21,9 +19,7 @@ has _schema => (
     builder => '_build__schema',
 );
 
-sub _build__schema {
-    my $self = shift;
-
+sub _build__schema ($self) {
     return Coocook::Schema->connect( $self->dsn );
 }
 

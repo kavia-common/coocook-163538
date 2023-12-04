@@ -1,13 +1,10 @@
 package Coocook::Schema::Component::ResultSet::Blacklist;
 
-use strict;
-use warnings;
+# ABSTRACT: common methods for blacklist tables
 
-use feature 'fc';    # Perl v5.16
+use Coocook::Base;
 
 use Crypt::Digest::SHA256 qw(sha256_b64);
-
-# ABSTRACT: common methods for blacklist tables
 
 =head1 METHODS
 
@@ -39,9 +36,7 @@ sub _add_value {
     return $self->create( { $value_col => $value, $type_col => $type, @_ } );
 }
 
-sub _is_value_ok {
-    my ( $self, $value ) = @_;
-
+sub _is_value_ok ( $self, $value ) {
     $value = fc $value;
 
     my $blacklist = $self->hri;

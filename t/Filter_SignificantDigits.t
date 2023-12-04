@@ -1,3 +1,4 @@
+use Coocook::Base;
 use Test2::V0;
 
 use Coocook::Filter::SignificantDigits;
@@ -30,12 +31,10 @@ todo 'sprintf("%f") cuts digits off this string--how to fix that?' => sub {
     t( 0.0000012345 => "0.00000123" );
 };
 
-sub t {
-    my ( $input, $expected, $name ) = @_;
-
+sub t ( $input, $expected, $name = "$input = '$expected'" ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     my $output = $filter->filter($input);
 
-    is $output => $expected, $name || "$input = '$expected'";
+    is $output => $expected, $name;
 }

@@ -2,7 +2,9 @@ package Coocook::Model::PurchaseList;
 
 # ABSTRACT: business logic for plain data structure of purchase list
 
+use Coocook::Base;
 use Moose;
+
 use Scalar::Util 'weaken';
 
 has list => (
@@ -23,9 +25,7 @@ has units => (
     default => sub { [] },
 );
 
-sub BUILD {
-    my $self = shift;
-
+sub BUILD ( $self, $args ) {
     my $list    = $self->list;
     my $project = $list->project;
 
@@ -77,7 +77,7 @@ sub BUILD {
         while ( my $dish = $dishes->next ) {
             $dish->{meal} = $meals{ $dish->{meal_id} } || die;
 
-            for my $ingredient ( @{ $ingredients_by_dish{ $dish->{id} } } ) {
+            for my $ingredient ( $ingredients_by_dish{ $dish->{id} }->@* ) {
                 $ingredient->{dish} = $dish;
             }
         }
@@ -130,7 +130,7 @@ sub BUILD {
             )->hri;
 
             while ( my $article_unit = $articles_units->next ) {
-                push @{ $units_per_article{ $article_unit->{article_id} } }, $article_unit->{unit_id};
+                push $units_per_article{ $article_unit->{article_id} }->@*, $article_unit->{unit_id};
             }
         }
 

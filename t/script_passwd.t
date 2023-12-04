@@ -1,3 +1,4 @@
+use Coocook::Base;
 use Test2::V0;
 
 our $USER;
@@ -20,11 +21,9 @@ my $schema = TestDB->new();
 
 my $user = $schema->resultset('User')->one_row;
 
-sub password_ok {
-    my ( $password, $name ) = @_;
-
+sub password_ok ( $password, $name = "user accepts password '$password'" ) {
     $user->discard_changes;
-    ok $user->check_password($password), $name || "user accepts password '$password'";
+    ok $user->check_password($password), $name;
 }
 
 ok my $app = Coocook::Script::Passwd->new(

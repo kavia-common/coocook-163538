@@ -1,5 +1,6 @@
 package Coocook::Schema::Result::ProjectUser;
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 
@@ -20,10 +21,8 @@ __PACKAGE__->belongs_to( user    => 'Coocook::Schema::Result::User',    'user_id
 
 __PACKAGE__->has_many(
     other_projects_users => __PACKAGE__,
-    sub {    # conditions above simple equality must use coderefs
-             # https://metacpan.org/pod/DBIx::Class::Relationship::Base#Custom-join-conditions
-        my $args = shift;
-
+    sub ($args) {    # conditions above simple equality must use coderefs
+                     # https://metacpan.org/pod/DBIx::Class::Relationship::Base#Custom-join-conditions
         return {
             "$args->{foreign_alias}.project_id" => { -ident => "$args->{self_alias}.project_id" },
             "$args->{foreign_alias}.user_id"    => { '!='   => { -ident => "$args->{self_alias}.user_id" } },
@@ -33,9 +32,7 @@ __PACKAGE__->has_many(
 
 __PACKAGE__->meta->make_immutable;
 
-sub make_owner {
-    my $self = shift;
-
+sub make_owner ($self) {
     $self->role eq 'owner'
       and return warn "project_user.role already 'owner'";
 

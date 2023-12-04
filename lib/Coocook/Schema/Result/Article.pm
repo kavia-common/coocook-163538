@@ -1,5 +1,6 @@
 package Coocook::Schema::Result::Article;
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 
@@ -66,21 +67,16 @@ __PACKAGE__->many_to_many( recipes => recipe_ingredients => 'recipe' );
 
 __PACKAGE__->meta->make_immutable;
 
-sub unit_ids_joined { # TODO move to ResultSet::Unit or optimize for non-cached 'units' relationship
-    my $self      = shift;
-    my $seperator = shift || ',';
-
+# TODO move to ResultSet::Unit or optimize for non-cached 'units' relationship
+sub unit_ids_joined ( $self, $seperator = ',' ) {
     return join $seperator, map { $_->id } $self->units;
 }
 
-sub units_in_use {
-    my $self = shift;
-
+sub units_in_use ($self) {
     return $self->units->in_use( { article_id => $self->id } );
 }
 
-sub tags_joined {
-    my $self = shift;
+sub tags_joined ($self) {
 
     # TODO implement with get_column if not prefetched
     return join " ", map { $_->name } $self->tags;

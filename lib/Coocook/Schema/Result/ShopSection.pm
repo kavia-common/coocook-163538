@@ -1,5 +1,6 @@
 package Coocook::Schema::Result::ShopSection;
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 
@@ -29,9 +30,7 @@ __PACKAGE__->has_many(
 
 __PACKAGE__->meta->make_immutable;
 
-sub deletable {
-    my $self = shift;
-
+sub deletable ($self) {
     if ( $self->has_column_loaded('article_count') ) {
         return $self->get_column('article_count') == 0;
     }

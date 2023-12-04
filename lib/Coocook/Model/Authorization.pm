@@ -2,8 +2,7 @@ package Coocook::Model::Authorization;
 
 # ABSTRACT: validation of action requests by pre-defined roles
 
-use strict;
-use warnings;
+use Coocook::Base;
 
 use Carp;
 
@@ -364,7 +363,7 @@ for my $rule (@rules) {
         }
     }
 
-    for my $capability ( @{ $rule->{grants_capabilities} } ) {
+    for my $capability ( $rule->{grants_capabilities}->@* ) {
         $capabilities{$capability}
           and die "capabilities can be granted by only 1 rule: '$capability'";
 
@@ -382,24 +381,18 @@ sub new {
     return $singleton ||= bless {}, __PACKAGE__;
 }
 
-sub capability_exists {
-    my ( $self, $capability ) = @_;
-
+sub capability_exists ( $self, $capability ) {
     return exists $capabilities{$capability};
 }
 
-sub capability_needs_input {
-    my ( $self, $capability ) = @_;
-
+sub capability_needs_input ( $self, $capability ) {
     my $rule = $capabilities{$capability}
       or croak "no such capability '$capability'";
 
-    return @{ $rule->{needs_input} };
+    return $rule->{needs_input}->@*;
 }
 
-sub has_capability {
-    my ( $self, $capability, $input ) = @_;
-
+sub has_capability ( $self, $capability, $input ) {
     my $rule = $capabilities{$capability}
       or croak "no such capability '$capability'";
 
@@ -407,13 +400,13 @@ sub has_capability {
       or croak "input must be hashref";
 
     # invalid call of caller doesn't pass hash keys
-    for my $key ( @{ $rule->{needs_input} }, 'user' ) {   # key 'user' is always required, even if undef
+    for my $key ( $rule->{needs_input}->@*, 'user' ) {    # key 'user' is always required, even if undef
         exists $input->{$key}
           or croak "missing input key '$key'";
     }
 
     # unauthorized request if required input isn't present
-    for my $key ( @{ $rule->{needs_input} } ) {
+    for my $key ( $rule->{needs_input}->@* ) {
         $input->{$key}
           or return;
     }

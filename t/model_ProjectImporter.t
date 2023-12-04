@@ -1,3 +1,4 @@
+use Coocook::Base;
 use Test2::V0;
 
 use Coocook::Model::ProjectImporter;
@@ -14,9 +15,7 @@ ok my $importer = Coocook::Model::ProjectImporter->new();
 
 # TODO this is probably implemented better somewhere on CPAN
 #      but I couldn't find it, even asked #perl-help on IRC
-sub _no_shared_references {
-    my ( $a, $b, $name ) = @_;
-
+sub _no_shared_references ( $a, $b, $name = undef ) {
     my ( %a, %b );
 
     # collect reference addresses
@@ -53,11 +52,11 @@ subtest properties => sub {
     is my $properties = $importer->properties => array { etc };
 
     my $depends_on = 0;
-    $depends_on += @{ $_->{depends_on} } for @$properties;
+    $depends_on += $_->{depends_on}->@* for @$properties;
     note "found $depends_on 'depends_on'";
 
     my $dependency_of = 0;
-    $dependency_of += @{ $_->{dependency_of} } for @$properties;
+    $dependency_of += $_->{dependency_of}->@* for @$properties;
     note "found $dependency_of 'dependency_of'";
 
     cmp_ok $depends_on, '>', 0, "found 'depends_on'";
@@ -169,7 +168,7 @@ subtest "complete import" => sub {
 
     my $records1 = $db->count(@imported);
 
-    my @all = map { $_->{key} } @{ $importer->properties };
+    my @all = map { $_->{key} } $importer->properties->@*;
     ok $importer->import_data( $source => $target, \@all );
 
     my $records2 = $db->count(@imported);

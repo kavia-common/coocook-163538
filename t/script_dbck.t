@@ -1,3 +1,4 @@
+use Coocook::Base;
 use Test2::V0;
 
 use Coocook;
@@ -21,7 +22,9 @@ ok no_warnings { $app->run }, "no warnings with test data";
 {
     $db->txn_begin;
 
-    $db->storage->dbh_do( sub { $_[1]->do('ALTER TABLE projects ADD COLUMN foobar integer') } );
+    $db->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do(<<~SQL) } );
+    ALTER TABLE projects ADD COLUMN foobar integer
+    SQL
 
     like warnings { $app->run } => [
         qr/table \W?projects\W?/,    #perldoc
@@ -41,18 +44,18 @@ ok no_warnings { $app->run }, "no warnings with test data";
 
     $db->resultset('Article')->find(1)->update( { project_id => 2 } );
 
-    is join( '', @{ warnings sub { $app->run } } ) => <<EOT, "Inconsistent project_id";
-Project IDs differ for Article row (id = 1): me.project = 2, shop_section.project = 1
-Project IDs differ for ArticleTag row (article_id = 1, tag_id = 1): article.project = 2, tag.project = 1
-Project IDs differ for ArticleUnit row (article_id = 1, unit_id = 1): article.project = 2, unit.project = 1
-Project IDs differ for ArticleUnit row (article_id = 1, unit_id = 2): article.project = 2, unit.project = 1
-Project IDs differ for DishIngredient row (id = 1): meal.project = 1, article.project = 2, unit.project = 1
-Project IDs differ for DishIngredient row (id = 4): meal.project = 1, article.project = 2, unit.project = 1
-Project IDs differ for DishIngredient row (id = 7): meal.project = 1, article.project = 2, unit.project = 1
-Project IDs differ for DishIngredient row (id = 11): meal.project = 1, article.project = 2, unit.project = 1
-Project IDs differ for Item row (id = 1): purchase_list.project = 1, unit.project = 1, article.project = 2
-Project IDs differ for RecipeIngredient row (id = 2): recipe.project = 1, article.project = 2, unit.project = 1
-EOT
+    is join( '', @{ warnings sub { $app->run } } ) => <<~EOT, "Inconsistent project_id";
+    Project IDs differ for Article row (id = 1): me.project = 2, shop_section.project = 1
+    Project IDs differ for ArticleTag row (article_id = 1, tag_id = 1): article.project = 2, tag.project = 1
+    Project IDs differ for ArticleUnit row (article_id = 1, unit_id = 1): article.project = 2, unit.project = 1
+    Project IDs differ for ArticleUnit row (article_id = 1, unit_id = 2): article.project = 2, unit.project = 1
+    Project IDs differ for DishIngredient row (id = 1): meal.project = 1, article.project = 2, unit.project = 1
+    Project IDs differ for DishIngredient row (id = 4): meal.project = 1, article.project = 2, unit.project = 1
+    Project IDs differ for DishIngredient row (id = 7): meal.project = 1, article.project = 2, unit.project = 1
+    Project IDs differ for DishIngredient row (id = 11): meal.project = 1, article.project = 2, unit.project = 1
+    Project IDs differ for Item row (id = 1): purchase_list.project = 1, unit.project = 1, article.project = 2
+    Project IDs differ for RecipeIngredient row (id = 2): recipe.project = 1, article.project = 2, unit.project = 1
+    EOT
 
     $db->txn_rollback;
 }
@@ -68,9 +71,17 @@ for my $rs ( sort keys %$cols ) {
 
         $db->txn_begin;
 
+        # set first row's value to empty string ''
         # can't use DBIC update() here because Component::Result::Boolify is too good
-        $db->storage->dbh_do(
-            sub { $_[1]->do("UPDATE $table SET $col='' WHERE id=(SELECT id FROM $table LIMIT 1)") } );
+        $db->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do(<<~SQL) } );
+        UPDATE $table
+        SET $col = ''
+        WHERE id = (
+            SELECT id
+            FROM $table
+            LIMIT 1
+        )
+        SQL
 
         like warning { $app->run } => qr/column \W?$col\W? .+ empty string ''/, "$col of '' in $rs";
 
@@ -79,8 +90,16 @@ for my $rs ( sort keys %$cols ) {
         if ( $col eq 'value' ) {
             $db->txn_begin;
 
-            $db->storage->dbh_do(
-                sub { $_[1]->do("UPDATE $table SET value='0,1' WHERE id=(SELECT id FROM $table LIMIT 1)") } );
+            # set first row's value to German number format '0,1'
+            $db->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do(<<~SQL) } );
+            UPDATE $table
+            SET value = '0,1'
+            WHERE id = (
+                SELECT id
+                FROM $table
+                LIMIT 1
+            )
+            SQL
 
             like warning { $app->run } => qr/($rs|$table) .+ number.format .+ '0,1'/x,
               "invalid number format '0,1' in $rs";

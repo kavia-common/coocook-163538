@@ -1,5 +1,6 @@
 package Coocook::Schema::ResultSet::Project;
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 
@@ -7,27 +8,19 @@ use DateTime;
 
 extends 'Coocook::Schema::ResultSet';
 
-use feature 'fc';    # Perl v5.16
-
 __PACKAGE__->load_components('+Coocook::Schema::Component::ResultSet::SortByName');
 
 __PACKAGE__->meta->make_immutable;
 
 sub sorted_by_columns { qw< url_name_fc name > }
 
-sub find_by_url_name {
-    my ( $self, $url_name ) = @_;
-
+sub find_by_url_name ( $self, $url_name ) {
     return $self->find( { url_name_fc => fc $url_name } );
 }
 
-sub not_archived { shift->search( { archived => undef } ) }
+sub not_archived ($self) { return $self->search( { archived => undef } ) }
 
-sub public {
-    my $self = shift;
-
-    return $self->search( { -bool => 'is_public' } );
-}
+sub public ($self) { return $self->search( { -bool => 'is_public' } ) }
 
 =head2 stale
 
@@ -36,9 +29,8 @@ Indicates that these can be archived.
 
 =cut
 
-sub stale {    # TODO maybe other name? "completed"? then also edit Result->is_stale
-    my ( $self, $pivot_date ) = @_;
-
+# TODO maybe other name? "completed"? then also edit Result->is_stale
+sub stale ( $self, $pivot_date = undef ) {
     my $cmp = { '>=' => $self->format_date( $pivot_date || DateTime->today ) };
 
     my @rs = (

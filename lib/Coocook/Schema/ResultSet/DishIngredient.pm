@@ -1,5 +1,6 @@
 package Coocook::Schema::ResultSet::DishIngredient;
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 
@@ -11,15 +12,11 @@ __PACKAGE__->load_components('+Coocook::Schema::Component::ResultSet::SortByName
 
 __PACKAGE__->meta->make_immutable;
 
-sub prepared {
-    my $self = shift;
-
+sub prepared ($self) {
     return $self->search( { -bool => $self->me('prepare') } );
 }
 
-sub unassigned {
-    my $self = shift;
-
+sub unassigned ($self) {
     return $self->search( { item_id => undef } );
 }
 

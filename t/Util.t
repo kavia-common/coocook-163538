@@ -17,7 +17,8 @@ is Coocook::Util::url_names_hashref($name) => {
 is $name => $original_name, "original value untouched";
 
 subtest username_valid => sub {
-    like dies { Coocook::Util::username_valid() } => qr/not defined/, "croaks for no argument";
+    like dies { Coocook::Util::username_valid() } => qr/Too few arguments for subroutine/,
+      "croaks for no argument";
 
     ok Coocook::Util::username_valid("foo"),    "valid username";
     ok !Coocook::Util::username_valid("foo!"),  "invalid char";

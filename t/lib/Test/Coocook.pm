@@ -1,9 +1,6 @@
 package Test::Coocook;
 
-use strict;
-use warnings;
-
-use Test2::V0 ();    # with () this does NOT enable strict + warnings
+use Coocook::Base;
 
 use Carp;
 use Email::Sender::Simple;
@@ -11,6 +8,7 @@ use HTML::Meta::Robots;
 use JSON::MaybeXS;
 use Regexp::Common 'URI';
 use Scope::Guard qw< guard >;
+use Test2::V0    ();            # with () this does NOT enable strict + warnings
 use TestDB;
 use WWW::Mechanize::TreeBuilder;
 
@@ -33,9 +31,7 @@ use parent 'Test::WWW::Mechanize::Catalyst';
 
 =cut
 
-sub new {
-    my ( $class, %args ) = @_;
-
+sub new ( $class, %args ) {
     defined( $args{deploy} ) && $args{schema}
       and croak "Can't use both arguments 'deploy' and 'schema'";
 
@@ -94,22 +90,17 @@ sub emails {
     return [ Email::Sender::Simple->default_transport->deliveries ];
 }
 
-sub clear_emails {
-    my $self = shift;
+sub clear_emails ($self) {
     $self->{coocook_checked_email_count} = 0;
     Email::Sender::Simple->default_transport->clear_deliveries;
 }
 
-sub shift_emails {
-    my $self = shift;
-    my $n    = shift || 1;
+sub shift_emails ( $self, $n = 1 ) {
     defined and $_ -= $n for $self->{coocook_checked_email_count};
     Email::Sender::Simple->default_transport->shift_deliveries for 1 .. $n;
 }
 
-sub email_count_is {
-    my ( $self, $count, $name ) = @_;
-
+sub email_count_is ( $self, $count, $name = undef ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     $self->{coocook_checked_email_count} = $count;
@@ -159,12 +150,10 @@ sub schema { shift->catalyst_app->model('DB')->schema(@_) }
 
 =cut
 
-sub register_ok {
-    my ( $self, $field_values, $name ) = @_;
-
+sub register_ok ( $self, $field_values, $name = "register" ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    Test2::V0::subtest $name || "register", sub {
+    Test2::V0::subtest $name, sub {
         $self->follow_link_ok( { text => 'Sign up' } );
 
         $self->submit_form_ok( { with_fields => $field_values },
@@ -175,12 +164,12 @@ sub register_ok {
     };
 }
 
-sub register_fails_like {
-    my ( $self, $field_values, $error_regex, $name ) = @_;
-
+sub register_fails_like ( $self, $field_values, $error_regex,
+    $name = "register fails like '$error_regex'" )
+{
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    Test2::V0::subtest $name || "register fails like '$error_regex'" => sub {
+    Test2::V0::subtest $name => sub {
         $self->follow_link_ok( { text => 'Sign up' } );
 
         $self->submit_form_fails( { with_fields => $field_values },
@@ -203,12 +192,12 @@ and calls C<get_ok()> on that URL.
 sub get_ok_email_link_like {
     my $self            = shift;
     my $regex           = shift;
-    my $name            = pop;
+    my $name            = pop || "GET link from first email";
     my $expected_status = pop;
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    Test2::V0::subtest $name || "GET link from first email", sub {
+    Test2::V0::subtest $name, sub {
         my $body = $self->_get_email_body();
 
         my @urls;
@@ -227,7 +216,7 @@ sub get_ok_email_link_like {
 
         if ($expected_status) {
             $self->get( $urls[0] );
-            $self->status_is(400);
+            $self->status_is($expected_status);
         }
         else {
             $self->get_ok( $urls[0] );
@@ -238,12 +227,8 @@ sub get_ok_email_link_like {
 sub email_like   { shift->_email_un_like( 1, @_ ) }
 sub email_unlike { shift->_email_un_like( 0, @_ ) }
 
-sub _email_un_like {
-    my ( $self, $like, $regex, $name ) = @_;
-
+sub _email_un_like ( $self, $like, $regex, $name = "first email like $regex" ) {
     local $Test::Builder::Level = $Test::Builder::Level + 2;
-
-    $name ||= "first email like $regex";
 
     my $body = $self->_get_email_body;
 
@@ -268,9 +253,7 @@ sub _email_un_like {
     }
 }
 
-sub _get_email_body {
-    my $self = shift;
-
+sub _get_email_body ($self) {
     my $emails = $self->emails;
 
     {
@@ -294,27 +277,21 @@ sub _get_email_body {
     return $email->get_body;
 }
 
-sub is_logged_in {
-    my ( $self, $name ) = @_;
-
+sub is_logged_in ( $self, $name = "client is logged in" ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    $self->text_contains( 'Settings', $name || "client is logged in" )
+    $self->text_contains( 'Settings', $name )
       or Test2::V0::note $self->text;
 }
 
-sub is_logged_out {
-    my ( $self, $name ) = @_;
-
+sub is_logged_out ( $self, $name = "client is logged out" ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    $self->text_like( qr/Sign [Ii]n/, $name || "client is logged out" )
+    $self->text_like( qr/Sign [Ii]n/, $name )
       or Test2::V0::note $self->text;
 }
 
-sub login {
-    my ( $self, $username, $password, %additional_fields ) = @_;
-
+sub login ( $self, $username, $password, %additional_fields ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     $self->follow_link_ok( { text => 'Sign in' } );
@@ -353,12 +330,10 @@ sub login_ok {
     };
 }
 
-sub login_fails {
-    my ( $self, $username, $password, $name ) = @_;
-
+sub login_fails ( $self, $username, $password, $name = "login with $username:$password fails" ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    Test2::V0::subtest $name || "login with $username:$password fails", sub {
+    Test2::V0::subtest $name, sub {
         $self->login( $username, $password );
 
         ( $self->text_like(qr/fail/) and $self->text_like(qr/Sign in/) )
@@ -366,20 +341,16 @@ sub login_fails {
     };
 }
 
-sub logout_ok {
-    my ( $self, $name ) = @_;
-
+sub logout_ok ( $self, $name = "click logout button" ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    $self->click_ok( 'logout', $name || "click logout button" );
+    $self->click_ok( 'logout', $name );
 }
 
-sub change_display_name_ok {
-    my ( $self, $display_name, $name ) = @_;
-
+sub change_display_name_ok ( $self, $display_name, $name = "change display name" ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    Test2::V0::subtest $name || "change display name", sub {
+    Test2::V0::subtest $name, sub {
         $self->follow_link_ok( { text => 'Settings' } );
 
         $self->submit_form_ok(
@@ -393,12 +364,10 @@ sub change_display_name_ok {
     };
 }
 
-sub request_recovery_link_ok {
-    my ( $self, $email, $name ) = @_;
-
+sub request_recovery_link_ok ( $self, $email, $name = "request recovery link for $email" ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    Test2::V0::subtest $name || "request recovery link for $email", sub {
+    Test2::V0::subtest $name, sub {
         my $logged_in = ( $self->text =~ m/Settings/ );
 
         if ($logged_in) {
@@ -424,12 +393,10 @@ sub request_recovery_link_ok {
     };
 }
 
-sub create_project_ok {
-    my ( $self, $fields, $name ) = @_;
-
+sub create_project_ok ( $self, $fields, $name = "create project '$fields->{name}'" ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    Test2::V0::subtest $name || "create project '$fields->{name}'", sub {
+    Test2::V0::subtest $name, sub {
         $self->get_ok('/');
 
         $self->submit_form_ok( { with_fields => $fields }, "submit create project form" );
@@ -442,9 +409,7 @@ sub create_project_ok {
 sub checkbox_is_on  { shift->_checkbox_is_on_off( 1, @_ ) }
 sub checkbox_is_off { shift->_checkbox_is_on_off( 0, @_ ) }
 
-sub _checkbox_is_on_off {
-    my ( $self, $expected, $input, $name ) = @_;
-
+sub _checkbox_is_on_off ( $self, $expected, $input, $name = undef ) {
     local $Test::Builder::Level = $Test::Builder::Level + 2;
 
     my $value = $self->value($input);
@@ -464,9 +429,8 @@ and compares value to the expected C<$value>.
 
 =cut
 
-sub input_has_value {
-    my ( $self, $input, $value, $name ) = @_;
-
+sub input_has_value ( $self, $input, $value, $name = "Input with name '$input' has value '$value'" )
+{
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     my @inputs = $self->find_all_inputs( name => $input );
@@ -474,29 +438,22 @@ sub input_has_value {
     @inputs == 1
       or croak "More than 1 input element";
 
-    Test2::V0::is(
-        $inputs[0]->value => $value,
-        $name || "Input with name '$input' has value '$value'"
-    ) or Test2::V0::note $self->content;
+    Test2::V0::is( $inputs[0]->value => $value, $name )
+      or Test2::V0::note $self->content;
 }
 
-sub json_is {
-    my ( $self, $expected, $name ) = @_;
-
+sub json_is ( $self, $expected, $name = "JSON in response content" ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
-
-    $name ||= "JSON in response content";
 
     my $json = decode_json $self->content;
     Test2::V0::is $json => $expected, $name;
 }
 
-sub redirect_is {
-    my ( $self, $url, $expected, $status, $name ) = @_;
-
+sub redirect_is ( $self, $url, $expected, $status, $name = "GET $url redirects $status $expected" )
+{
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    Test2::V0::subtest $name || "GET $url redirects $status $expected" => sub {
+    Test2::V0::subtest $name => sub {
         my $original_max_redirect = $self->max_redirect();
         $self->max_redirect(0);
 
@@ -508,20 +465,16 @@ sub redirect_is {
     };
 }
 
-sub reload_ok {
-    my $self = shift;
-
+sub reload_ok ($self) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     Test2::V0::ok $self->reload(), $self->base ? "reload " . $self->base : "reload";
 }
 
-sub robots_flags_ok {
-    my ( $self, $flags, $name ) = @_;
-
+sub robots_flags_ok ( $self, $flags,
+    $name = "Response contains 'robots' meta tag with specified flags" )
+{
     local $Test::Builder::Level = $Test::Builder::Level + 1;
-
-    $name ||= "Response contains 'robots' meta tag with specified flags";
 
     my $fail = sub {
         local $Test::Builder::Level = $Test::Builder::Level + 1;
@@ -538,7 +491,7 @@ sub robots_flags_ok {
     my $robots = HTML::Meta::Robots->new->parse($string);
 
     for ( sort keys %$flags ) {
-        my ( $flag => $expected ) = ( $_ => $flags->{$_} );
+        my ( $flag => $expected ) = $flags->%{$_};
 
         if ( $robots->$flag xor $expected ) {
             return $fail->(
@@ -552,9 +505,7 @@ sub robots_flags_ok {
     Test2::V0::pass $name;
 }
 
-sub status_is {
-    my ( $self, $expected, $name ) = @_;
-
+sub status_is ( $self, $expected, $name = undef ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     my $ok = Test2::V0::is $self->response->code => $expected,
@@ -572,18 +523,13 @@ sub status_is {
     return $ok;
 }
 
-sub status_like {
-    my ( $self, $expected, $name ) = @_;
-
+sub status_like ( $self, $expected, $name = "Response has status code like '$expected'" ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    Test2::V0::like $self->response->code => $expected,
-      $name || "Response has status code like '$expected'";
+    Test2::V0::like $self->response->code => $expected, $name;
 }
 
-sub submit_form_fails {
-    my ( $self, $params, $name ) = @_;
-
+sub submit_form_fails ( $self, $params, $name = undef ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     my $res = $self->submit_form(%$params);

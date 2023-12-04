@@ -1,5 +1,6 @@
 package Coocook::Schema::ResultSet::PurchaseList;
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 
@@ -10,9 +11,7 @@ sub sorted_by_columns { 'date', 'name' }
 
 __PACKAGE__->meta->make_immutable;
 
-sub with_item_count {
-    my $self = shift;
-
+sub with_item_count ($self) {
     return $self->search(
         undef,
         {

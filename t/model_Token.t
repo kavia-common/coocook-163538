@@ -6,15 +6,11 @@ plan(6);
 
 ok my $token = Coocook::Model::Token->new();
 
-isa_ok(
-    my $token2 = $token->new() => ['Coocook::Model::Token'],
-    "->new() on Token instance"
-);
+isa_ok my $token2 = $token->new() => ['Coocook::Model::Token'],
+  "->new() on Token instance";
 
-isa_ok(
-    $token->new() => ['Coocook::Model::Token'],
-    "->new on Token instance"
-);
+isa_ok $token->new() => ['Coocook::Model::Token'],
+  "->new on Token instance";
 
 like $token->to_base64 => qr/ ^ [a-zA-Z0-9-_]+ $ /x,
   "->to_base64 is URL safe";

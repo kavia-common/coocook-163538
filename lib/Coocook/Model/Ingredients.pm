@@ -2,7 +2,9 @@ package Coocook::Model::Ingredients;
 
 # ABSTRACT: business logic for plain data structures from Dish- or RecipeIngredients
 
+use Coocook::Base;
 use Moose;
+
 use Moose::Util::TypeConstraints;
 
 class_type 'Coocook::Schema::ResultSet::DishIngredient';
@@ -37,12 +39,7 @@ has project => (
     builder => 'build_project',
 );
 
-around BUILDARGS => sub {
-    my $orig  = shift;
-    my $class = shift;
-
-    my %args = @_;
-
+around BUILDARGS => sub ( $orig, $class, %args ) {
     if ( my $dish = delete $args{dish} ) {
         $args{project}     = $dish->project;
         $args{ingredients} = $dish->ingredients;
@@ -55,11 +52,9 @@ around BUILDARGS => sub {
     return $class->$orig(%args);
 };
 
-sub build_project { shift->ingredients->one_row->project }
+sub build_project ($self) { $self->ingredients->one_row->project }
 
-sub as_arrayref {
-    my $self = shift;
-
+sub as_arrayref ($self) {
     my ( $articles => $units ) = $self->project->articles_cached_units;
 
     my %articles = map { $_->id => $_ } @$articles;
@@ -89,9 +84,7 @@ sub as_arrayref {
     return \@ingredients;
 }
 
-sub for_ingredients_editor {
-    my $self = shift;
-
+sub for_ingredients_editor ($self) {
     my $ingredients = $self->as_arrayref;
 
     my @ingredients = map {

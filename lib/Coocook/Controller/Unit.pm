@@ -1,9 +1,9 @@
 package Coocook::Controller::Unit;
 
-use utf8;
-
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
+
 use Scalar::Util qw( looks_like_number weaken );
 
 BEGIN { extends 'Coocook::Controller' }
@@ -72,13 +72,13 @@ sub index : GET HEAD Chained('/project/base') PathPart('units') Args(0)
             my $unit1  = $units{ $conversion->{unit1_id} };
             my $unit2  = $units{ $conversion->{unit2_id} };
 
-            push @{ $unit1->{conversions} },
+            push $unit1->{conversions}->@*,
               {
                 factor => $factor,
                 unit   => $unit2,
               };
 
-            push @{ $unit2->{conversions} }, {
+            push $unit2->{conversions}->@*, {
                 factor => 1 / $factor,    # inverse
                 unit   => $unit1,
             };

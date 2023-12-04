@@ -1,5 +1,6 @@
 package Coocook::Schema::ResultSet::Recipe;
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 
@@ -9,9 +10,7 @@ __PACKAGE__->load_components('+Coocook::Schema::Component::ResultSet::SortByName
 
 __PACKAGE__->meta->make_immutable;
 
-sub public {
-    my $self = shift;
-
+sub public ($self) {
     return $self->search(
         {
             -bool => 'project.is_public',

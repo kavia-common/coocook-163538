@@ -2,7 +2,9 @@ package Coocook::Model::RecipeImporter;
 
 # ABSTRACT: business logic for importing a recipe into a different project
 
+use Coocook::Base;
 use Moose;
+
 use Carp;
 
 has project => (
@@ -42,42 +44,39 @@ for ( 'source', 'target' ) {
 
 __PACKAGE__->meta->make_immutable;
 
-sub _build_ingredients { return [ shift->recipe->ingredients_sorted->hri->all ] }
+sub _build_ingredients ($self) { return [ $self->recipe->ingredients_sorted->hri->all ] }
 
-sub _build_source_articles {
+sub _build_source_articles ($self) {
     return [
-        shift->recipe->ingredients->search_related( 'article', undef, { distinct => 1 } )->hri->all ];
+        $self->recipe->ingredients->search_related( 'article', undef, { distinct => 1 } )->hri->all ];
 }
 
-sub _build_source_units {
-    return [ shift->recipe->ingredients->search_related( 'unit', undef, { distinct => 1 } )->hri->all ];
+sub _build_source_units ($self) {
+    return [ $self->recipe->ingredients->search_related( 'unit', undef, { distinct => 1 } )->hri->all ];
 }
 
-sub _build_target_articles {
-    return [ shift->project->articles->search( undef, { order_by => 'name' } )->hri->all ];
+sub _build_target_articles ($self) {
+    return [ $self->project->articles->search( undef, { order_by => 'name' } )->hri->all ];
 }
 
-sub _build_target_units {
+sub _build_target_units ($self) {
     return [
-        shift->project->units->search( undef, { order_by => [ 'long_name', 'short_name' ] } )->hri->all ];
+        $self->project->units->search( undef, { order_by => [ 'long_name', 'short_name' ] } )->hri->all ];
 }
 
-sub BUILD {
-    my $self = shift;
+sub BUILD ( $self, $args ) {
 
     # link IDs in ingredients to source_(article|unit) hashrefs
-    my %articles = map { $_->{id} => $_ } @{ $self->source_articles };
-    my %units    = map { $_->{id} => $_ } @{ $self->source_units };
+    my %articles = map { $_->{id} => $_ } $self->source_articles->@*;
+    my %units    = map { $_->{id} => $_ } $self->source_units->@*;
 
-    for my $ingredient ( @{ $self->ingredients } ) {
+    for my $ingredient ( $self->ingredients->@* ) {
         $ingredient->{article} = $articles{ $ingredient->{article_id} };
         $ingredient->{unit}    = $units{ $ingredient->{unit_id} };
     }
 }
 
-sub identify_candidates {
-    my $self = shift;
-
+sub identify_candidates ($self) {
     my %rels = (
         articles => ['name'],
         units    => [ 'long_name', 'short_name' ],
@@ -90,7 +89,7 @@ sub identify_candidates {
 
         # index @$target_rows by all @$keys
         for my $key (@$keys) {
-            push @{ $target_rows{$key}{ $_->{$key} } }, $_ for @$target_rows;
+            push $target_rows{$key}{ $_->{$key} }->@*, $_ for @$target_rows;
         }
 
         my $source_method = "source_${rel}";
@@ -116,13 +115,11 @@ sub identify_candidates {
     return $self;
 }
 
-sub import_data {    # import() used by 'use'
-    my ( $self, %args ) = @_;
+sub import_data ( $self, %args ) {    # import() used by 'use'
+    my %ingredients = $args{ingredients}->%*;    # shallow copy
 
-    my %ingredients = %{ $args{ingredients} };    # shallow copy
-
-    my %articles = map { $_->{id} => $_ } @{ $self->target_articles };
-    my %units    = map { $_->{id} => $_ } @{ $self->target_units };
+    my %articles = map { $_->{id} => $_ } $self->target_articles->@*;
+    my %units    = map { $_->{id} => $_ } $self->target_units->@*;
 
     my $ingredients_rs = $self->recipe->ingredients;
 
@@ -138,7 +135,7 @@ sub import_data {    # import() used by 'use'
                 }
             );
 
-            for my $ingredient ( @{ $self->ingredients } ) {
+            for my $ingredient ( $self->ingredients->@* ) {
                 my $ingredient_id = $ingredient->{id};
 
                 my $mapping = delete $ingredients{$ingredient_id}

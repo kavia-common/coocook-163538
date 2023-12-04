@@ -2,8 +2,7 @@ package Coocook::Schema::Component::Result::Boolify;
 
 # ABSTRACT: always save value for bool columns as 1 or 0
 
-use strict;
-use warnings;
+use Coocook::Base;
 
 use parent 'DBIx::Class::FilterColumn';
 
@@ -20,9 +19,7 @@ sub register_column {
     return $class->next::method(@_);
 }
 
-sub to_bool {
-    my ( $self, $value ) = @_;
-
+sub to_bool ( $self, $value ) {
     return $value ? 1 : 0;
 }
 

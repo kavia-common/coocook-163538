@@ -1,5 +1,6 @@
 package Coocook::Schema::Result::Terms;
 
+use Coocook::Base;
 use Moose;
 use namespace::autoclean;
 
@@ -42,9 +43,7 @@ our $CMP_VALID_IN_PAST   = -1;
 our $CMP_VALID_TODAY     = 0;
 our $CMP_VALID_IN_FUTURE = +1;
 
-sub cmp_validity_today {
-    my $self = shift;
-
+sub cmp_validity_today ($self) {
     my $cmp = ( $self->valid_from <=> DateTime->today );
 
     if ( $cmp < 0 ) {    # valid_from is in the past
@@ -57,7 +56,7 @@ sub cmp_validity_today {
     else                { return $CMP_VALID_IN_FUTURE }
 }
 
-sub is_valid_today { shift->cmp_validity_today == $CMP_VALID_TODAY }
+sub is_valid_today ($self) { $self->cmp_validity_today == $CMP_VALID_TODAY }
 
 =head2 reasons_to_freeze
 
@@ -65,9 +64,7 @@ Returns a list of reasons why this row can not be edited.
 
 =cut
 
-sub reasons_to_freeze {
-    my $self = shift;
-
+sub reasons_to_freeze ($self) {
     if    ( $self->valid_from <= DateTime->today ) { return 'not_in_future' }
     elsif ( $self->terms_users->results_exist )    { return 'has_users' }
     else                                           { return () }
@@ -81,9 +78,7 @@ The list is definitely not empty if the row can't be deleted but might be incomp
 
 =cut
 
-sub reasons_to_keep {
-    my $self = shift;
-
+sub reasons_to_keep ($self) {
     return 'has_users'
       if $self->terms_users->results_exist;
 
@@ -107,7 +102,7 @@ Returns next valid terms. C<$offset> is +1 by default.
 
 =cut
 
-sub next { shift->neighbor( shift || 1 ) }
+sub next ( $self, $offset = 1 ) { $self->neighbor($offset) }
 
 =head2 previous($offset?)
 
@@ -115,7 +110,7 @@ Returns previous valid terms. C<$offset> might be positive or negative and is -1
 
 =cut
 
-sub previous { shift->neighbor( -1 * abs( shift || 1 ) ) }
+sub previous ( $self, $offset = 1 ) { $self->neighbor( -1 * abs($offset) ) }
 
 =encoding utf8
 
@@ -127,9 +122,7 @@ Positive C<$offset> means next terms.
 
 =cut
 
-sub neighbor {
-    my ( $self, $offset ) = @_;
-
+sub neighbor ( $self, $offset ) {
     return $self->neighbors($offset)->order($offset)->search( undef, { offset => abs($offset) - 1 } )
       ->one_row;
 }
@@ -144,9 +137,7 @@ depending on argument C<$direction> being negative/positive respectively.
 
 =cut
 
-sub neighbors {
-    my ( $self, $direction ) = @_;
-
+sub neighbors ( $self, $direction ) {
     defined $direction
       or croak "direction must be defined";
 
@@ -166,9 +157,7 @@ Returns last date when this revision of Terms is valid or C<undef> if no success
 
 =cut
 
-sub valid_until {
-    my $self = shift;
-
+sub valid_until ($self) {
     if ( my $next = $self->next ) {
         return $next->valid_from->clone->subtract( days => 1 );
     }

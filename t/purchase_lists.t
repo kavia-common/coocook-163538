@@ -1,3 +1,4 @@
+use Coocook::Base;
 use Test2::V0;
 
 use lib 't/lib';
@@ -5,9 +6,8 @@ use TestDB;
 
 my $db = TestDB->new;
 
-sub article_has_items {    # value + unit->short_name joined with space: "420g 42kg"
-    my ( $article, $expected, $name ) = @_;
-
+# value + unit->short_name joined with space: "420g 42kg"
+sub article_has_items ( $article, $expected, $name = undef ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     my @items;

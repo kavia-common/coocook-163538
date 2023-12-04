@@ -2,10 +2,7 @@
 
 # ABSTRACT: helper script to control the coocook instance inside a Dockerimage from the host OS
 
-use v5.30.0;
-use strict;
-use warnings;
-use utf8;
+use Coocook::Base;
 use sigtrap qw/die normal-signals/;
 
 use Term::ANSIColor;
@@ -92,72 +89,68 @@ else {
 
 }
 
-sub deploy {
-    my $flags = shift;
-
+sub deploy ($flags) {
     system "$dir/coocook_deploy.pl " . $flags;
 }
 
-sub server {
-    my $flags = shift || '';
-
+sub server ( $flags = '' ) {
     system "$dir/coocook_server.pl " . $flags;
 }
 
-sub error {
-    my $msg = shift;
-
+sub error ($msg) {
     return colored( 'ERROR:', 'red' ) . " $msg";
 }
 
-sub warning {
-    my $msg = shift;
-
+sub warning ($msg) {
     return colored( 'WARNING:', 'yellow' ) . " $msg";
 }
 
-sub usage {
-    my $command = shift;
-    my %help    = (
-        commands => qq{Usage:
-    $0 [command] [flags]
+sub usage ($command) {
+    my %help = (
+        commands => <<~EOT,
+        Usage:
+            $0 [command] [flags]
 
-    CLI Tool for managing Coocook instances.
+            CLI Tool for managing Coocook instances.
 
-    Commands:
+            Commands:
 
-    deploy            Manage the database of the Coocook instance
-    serve             Run the local development server
-    help              Display this and exit
-    help [command]    Display help for specific command
-    },
+            deploy            Manage the database of the Coocook instance
+            serve             Run the local development server
+            help              Display this and exit
+            help [command]    Display help for specific command
+        EOT
 
-        deploy => qq{Usage:
-    $0 deploy [flags]
+        deploy => <<~EOT,
+        Usage:
+            $0 deploy [flags]
 
-    Manage the database of the Coocook instance.
+            Manage the database of the Coocook instance.
 
-    flags:
+            flags:
 
-    -i --install    create new database
-    -u --upgrade    upgrade existing database to fit new schema
-    },
+            -i --install    create new database
+            -u --upgrade    upgrade existing database to fit new schema
+        EOT
 
-        serve => qq{Usage:
-    $0 serve [flags]
+        serve => <<~EOT,
+        Usage:
+            $0 serve [flags]
 
-    Run the local development server.
+            Run the local development server.
 
-    flags:
+            flags:
 
-    -d --debug      Enable debug output
-    -r --restart    Enable live reload when files are changed
-    },
-        help => qq{Usage:
-    $0 help [command]
+            -d --debug      Enable debug output
+            -r --restart    Enable live reload when files are changed
+        EOT
 
-    Display help for specific command.
-    },
+        help => <<~EOT,
+        Usage:
+            $0 help [command]
+
+            Display help for specific command.
+        EOT
     );
 
     defined $help{$command} or say error("$command is not a valid command for $0.") and exit(1);

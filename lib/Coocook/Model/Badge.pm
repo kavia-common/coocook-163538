@@ -2,14 +2,11 @@ package Coocook::Model::Badge;
 
 # ABSTRACT: generator for SVG images of badges inspired by img.shields.io
 
-use strict;
-use warnings;
+use Coocook::Base;
 
 use SVG;
 
-sub create_badge {
-    my ( $class, $text_left_content, $text_right_content, $other_color ) = @_;
-
+sub create_badge ( $class, $text_left_content, $text_right_content, $other_color ) {
     my $text_right_width = 7 * length($text_right_content) + 10;
 
     # create an SVG object
