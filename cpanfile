@@ -109,12 +109,13 @@ on 'test' => sub {
 };
 
 on 'develop' => sub {
-    requires "Perl::Tidy" => "== 20230912";    # when upgrading change "t/zz-perltidy.t" accordingly!
+    requires "Module::CPANfile";
+    requires "Perl::Tidy" => "== 20230912";
     requires "Sub::Override";
     requires "Test::Perl::Critic";
     requires "Test::PerlTidy";
 
-    recommends "CatalystX::LeakChecker";       # loaded if available
+    recommends "CatalystX::LeakChecker";    # loaded if available
     recommends "DBD::Pg";
     recommends "DateTime::Format::Pg";
 
