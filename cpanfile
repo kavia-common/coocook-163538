@@ -104,7 +104,7 @@ on 'test' => sub {
     requires "Time::HiRes";
     requires "WWW::Mechanize::TreeBuilder";
 
-    recommends "Test::PostgreSQL";
+    suggests "Test::PostgreSQL";
 };
 
 on 'develop' => sub {
