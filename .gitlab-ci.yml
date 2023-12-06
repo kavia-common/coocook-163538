@@ -42,6 +42,15 @@ perl-5.38:
     paths:
       - perl5/
 
+  services:
+    - name: postgres:bookworm
+
+  variables:
+    POSTGRES_PASSWORD: coocook    # for "postgres" setup
+    PGHOST:            postgres   # for DBD::Pg
+    PGUSER:            postgres
+    PGPASSWORD:        coocook
+
   before_script:
     # install coverage analyzer, install and activate local::lib
     - PERL5LIB=perl5/lib/perl5/ cpanm --notest --local-lib perl5/ -v Devel::Cover local::lib
