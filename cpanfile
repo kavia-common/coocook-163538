@@ -104,7 +104,6 @@ on 'test' => sub {
     requires "Time::HiRes";
     requires "WWW::Mechanize::TreeBuilder";
 
-    recommends "CPAN::Meta" => "2.120900";
     recommends "Test::PostgreSQL";
 };
 
