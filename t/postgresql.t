@@ -1,7 +1,7 @@
 use Coocook::Base;
 use Test2::V0;
 
-use Test2::Require::Module 'Test::PostgreSQL';
+use Test2::Require::Module 'DBD::Pg';
 use Test2::Require::Module 'DateTime::Format::Pg';
 
 use Coocook::Script::Deploy;
@@ -10,6 +10,51 @@ use Data::Dumper;
 use DBI;
 use DBIx::Diff::Schema qw(diff_db_schema);
 use Test::Builder;
+
+my $dsn;
+my $master_dbh;
+my @created_dbs;
+
+# supports two approaches for temporary PostgreSQL databases:
+# 1. try Test::PostgreSQL if installed and try to spin up temporary server
+# 2. try to connect to remote PostgreSQL server (only works if PG* env vars are set)
+BEGIN {
+    local $@ = undef;
+    my $psql = eval {
+        require Test::PostgreSQL;
+        Test::PostgreSQL->new();
+    };
+    note $@ if $@;
+
+    if ($psql) {
+        my $dbh = DBI->connect( $psql->dsn, undef, undef, { RaiseError => 1 } );
+        $dsn = sub ($db) {    # approach 1
+            $dbh->do(qq(CREATE DATABASE "$db"));
+            return $psql->dsn( dbname => $db );
+        };
+    }
+    else {
+        local $@ = undef;
+        $master_dbh = eval { DBI->connect( 'dbi:Pg:', undef, undef, { RaiseError => 1 } ) };
+        note $@ if $@;
+
+        if ($master_dbh) {
+            $dsn = sub ($db) {    # approach 2
+                $master_dbh->do(qq(CREATE DATABASE "$db"));
+                push @created_dbs, $db;
+                return "dbi:Pg:dbname=$db";
+            }
+        }
+    }
+
+    $dsn or skip_all "Neither Test::PostgreSQL nor remote PostgreSQL server available";
+}
+
+END {    # remove temporary databases
+    if ( $master_dbh and @created_dbs ) {
+        $master_dbh->do(qq(DROP DATABASE "$_")) for @created_dbs;
+    }
+}
 
 use lib 't/lib';
 use TestDB qw(install_ok upgrade_ok);
@@ -21,17 +66,12 @@ my $FIRST_PGSQL_SCHEMA_VERSION = 21;
 
 plan tests => 3 + ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 9;
 
-my $psql = Test::PostgreSQL->new();
-my $dbh  = DBI->connect( $psql->dsn );
-
-$dbh->do('CREATE DATABASE dbic');
-my $schema_from_dbic = Coocook::Schema->connect( $psql->dsn( dbname => 'dbic' ) );
+my $schema_from_dbic = Coocook::Schema->connect( $dsn->('dbic') );
 ok lives { $schema_from_dbic->deploy() }, "deploy with DBIx::Class";
 
 my $schema_from_deploy;    # initialized in loop
 
-$dbh->do('CREATE DATABASE upgrades');
-my $schema_from_upgrades = Coocook::Schema->connect( $psql->dsn( dbname => 'upgrades' ) );
+my $schema_from_upgrades = Coocook::Schema->connect( $dsn->('upgrades') );
 install_ok $schema_from_upgrades, $FIRST_PGSQL_SCHEMA_VERSION;
 
 ok TestDB->execute_test_data(
@@ -41,9 +81,7 @@ ok TestDB->execute_test_data(
 
 for my $version ( $FIRST_PGSQL_SCHEMA_VERSION + 1 .. $Coocook::Schema::VERSION ) {
     subtest "schema version $version" => sub {
-        my $database = 'deploy' . $version;
-        $dbh->do("CREATE DATABASE $database");
-        $schema_from_deploy = Coocook::Schema->connect( $psql->dsn( dbname => $database ) );
+        $schema_from_deploy = Coocook::Schema->connect( $dsn->( 'deploy' . $version ) );
         install_ok $schema_from_deploy, $version;
 
         if ( -f ( my $sql_file = "t/test_data_v${version}_upgrade.sql" ) ) {
@@ -242,8 +280,7 @@ subtest "timestamps are stored in UTC" => sub {
 };
 
 subtest "issue #266 order of meals/dishes" => sub {
-    $dbh->do('CREATE DATABASE issue266');
-    my $schema = Coocook::Schema->connect( $psql->dsn( dbname => 'issue266' ) );
+    my $schema = Coocook::Schema->connect( $dsn->('issue266') );
     install_ok $schema, 24;
 
     my $user = $schema->resultset('User')
