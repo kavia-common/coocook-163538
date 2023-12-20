@@ -28,7 +28,11 @@
 
     <ul class="list-unstyled d-flex flex-wrap gap-3">
     [% FOR proj IN my_projects; # don't overwrite $project! %]
-        <li>[% link_project(proj, {class=>'item-box text-white', icon_class=>' '}) %]</li>
+        <li>
+            <a href="[% proj.url %]" class="item-box text-white text-decoration-none">
+                [% display_project(proj, {icon_class=>' '}) %]
+            </a>
+        </li>
     [% END %]
     </ul>
 
@@ -43,7 +47,11 @@
     [% ELSE %]
     <ul class="list-unstyled d-flex flex-wrap gap-3">
     [% FOR proj IN other_projects; # don't overwrite $project! %]
-        <li>[% link_project(proj, {class=>'item-box text-white', icon_class=>' '}) %]</li>
+        <li>
+            <a href="[% proj.url %]" class="item-box text-white text-decoration-none">
+                [% display_project(proj, {icon_class=>' '}) %]
+            </a>
+        </li>
     [% END %]
     </ul>
     [% END %]

@@ -57,18 +57,19 @@ END;
 
 MACRO link_organization(organization) BLOCK;
     THROW "no URL" UNLESS organization.url ~%]
-    <i class="material-icons">groups</i> <a href="[% organization.url %]" title="Show organization">[% organization.display_name | html %]</a>
+    <i class="material-icons">groups</i>&thinsp;<a href="[% organization.url %]" title="Show organization">[% organization.display_name | html %]</a>
     (<span class="organization">[% organization.name %]</span>)
 [%~ END;
 
 MACRO link_user(user) BLOCK;
     THROW "no user URL" UNLESS user.url ~%]
-    <i class="material-icons">person</i> <a href="[% user.url %]" title="Show user profile">[% user.display_name | html %]</a> (<span class="username">[% user.name %]</span>)
+    <i class="material-icons">person</i>&thinsp;<a href="[% user.url %]" title="Show user profile">[% user.display_name | html %]</a> (<span class="username">[% user.name %]</span>)
 [%~ END;
 
 MACRO link_project(project, opts) BLOCK;
     THROW "no project URL" UNLESS project.url || opts.url ~%]
-    <a href="[% opts.url || project.url %]" class="[% opts.class %]">[% display_project(project, opts) %]</a>
+    <i class="material-icons [% opts.icon_class || 'md-18' %]">[% project.is_public ? 'public' : 'lock' %]</i>&thinsp;
+    <a href="[% opts.url || project.url %]" class="[% opts.class %]">[% project.name | html %]</a>
 [%~ END;
 
 MACRO numerus(number, singular, plural, opts) BLOCK; # apply correct grammatical number

@@ -45,13 +45,14 @@
         <div class="card-header"><h3 class="my-2">Visibility</h3></div>
 
     <div class="card-body">
-        <p>Project is: <strong>[% project.is_public ? 'public' : '<i class="material-icons md-18">lock</i> private' %]</strong></p>
-
-[% IF NOT project.is_public %]
+        <p>Project is: <strong>
+            <i class="material-icons md-18">[% project.is_public ? 'public</i> public' : 'lock</i> private' %]
+        </strong></p>
+        [% IF NOT project.is_public %]
         <input type="hidden" name="public" value="on">
-[% END %]
+        [% END %]
         <button type="submit" class="btn btn-primary mb-3">
-            [% project.is_public ? 'Make <i class="material-icons md-18">lock</i> private' : 'Make public' %]
+            Make <i class="material-icons md-18">[% project.is_public ? 'lock</i> private' : 'public</i> public' %]
         </button>
         <p>
             Public projects can be viewed by anyone, even without logging in
