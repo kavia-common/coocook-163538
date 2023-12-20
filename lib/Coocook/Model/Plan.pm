@@ -8,6 +8,7 @@ use MooseX::NonMoose;
 
 use DateTime;
 use Scalar::Util 'weaken';
+use Carp;
 
 __PACKAGE__->meta->make_immutable;
 
@@ -196,9 +197,9 @@ sub resolve_meal_dish_path ( $self, $project, $path ) {
     die;
 }
 
-sub meals_have_same_name_and_date {
-    my ( $self, $project, $pathA, $pathB ) = @_;
-    if ( $pathA->{item_type} ne 'meal' || $pathB->{item_type} ne 'meal' ) { return 0 }
+sub meals_have_same_name_and_date ( $self, $project, $pathA, $pathB ) {
+    $pathA->{item_type} ne 'meal' or croak '$pathA does not refer to a meal.';
+    $pathB->{item_type} ne 'meal' or croak '$pathB does not refer to a meal.';
 
     return $project->meals->find( $pathA->{meal_id} )->name eq
       $project->meals->find( $pathB->{meal_id} );
