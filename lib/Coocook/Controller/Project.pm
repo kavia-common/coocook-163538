@@ -268,13 +268,13 @@ sub move_meal_or_dish_ajax : POST Chained('submenu') PathPart('move_meal_dish') 
         && $target_path->{item_type} eq 'meal' )
     {
         if ( $moved->name eq $target->name ) {
-            $c->response->status(500);
             $c->stash->{json_data} = {
                 error => {
                     message => 'Multiple meals with the same name and date are not allowed.',
                     code    => 'UNQMEAL'
                 }
             };
+            $c->response->status(400);
             return;
         }
         $moved->move_to_group( { project_id => $project->id, date => $target->date }, $target->position );
