@@ -1,8 +1,9 @@
 package Coocook::Controller::Meal;
 
-use Try::Tiny;
 use Moose;
 use namespace::autoclean;
+
+use Try::Tiny;
 
 BEGIN { extends 'Coocook::Controller' }
 
