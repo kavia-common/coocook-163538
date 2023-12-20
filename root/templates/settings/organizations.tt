@@ -6,12 +6,18 @@
     <ul class="list-group mb-3">
     [% FOR organization_user IN organizations_users;
         organization = organization_user.organization %]
-        <li class="list-group-item">
-            [% link_organization(organization_user.organization) %] ([% organization_user.role %])
+        <li class="list-group-item d-flex gap-3 justify-content-between align-items-center flex-wrap parent">
+            <span>[% link_organization(organization_user.organization) %] ([% organization_user.role %])</span>
         [% IF organization_user.leave_url %]
-            <form class="inline" method="post" action="[% organization_user.leave_url %]">
-                <input type="submit" value="Leave organization" class="btn btn-primary">
+            <form class="action-btn" method="post" action="[% organization_user.leave_url %]">
+                <button type="submit" class="btn btn-outline-danger">
+                    <i class="material-icons">logout</i>&thinsp;Leave organization
+                </button>
             </form>
+        [% ELSE %]
+            <button class="btn btn-outline-danger action-btn" title="You are the owner of this organization" disabled style="pointer-events:auto;cursor:default">
+                <i class="material-icons">logout</i>&thinsp;Leave organization
+            </button>
         [% END %]
         </li>
     [% END %]
@@ -22,7 +28,7 @@
 
 <form method="post" action="[% create_organization_url %]">
     <div class="card">
-        <div class="card-header"><h3 class="my-2">Create a new user organization</h3></div>
+        <div class="card-header"><h3 class="my-2">Create a new organization</h3></div>
 
         <div class="card-body">
             <div class="mb-3">You can pool users in organizations and grant organizations permissions on projects.
@@ -30,7 +36,7 @@
 
                 <div class="row g-3 align-items-center">
                     <div class="col-auto">
-                        <input type="text" name="name" placeholder="organization name" pattern="[A-Za-z0-9_]+" value="[% last_input.name %]" class="form-control">
+                        <input type="text" name="name" placeholder="Organization name" pattern="[A-Za-z0-9_]+" value="[% last_input.name %]" class="form-control" required>
                     </div>
                     <div class="col-auto">
                         <input type="submit" name="create" value="Create organization" class="btn btn-primary">

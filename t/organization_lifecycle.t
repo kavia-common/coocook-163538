@@ -36,7 +36,7 @@ $t->text_lacks( my $display_name = 'Test Orga' );
 $t->submit_form_ok( { with_fields => { display_name => $display_name } } );
 $t->text_contains("Organization $display_name");
 
-$t->follow_link_ok( { text => 'Manage memberships' } );
+$t->follow_link_ok( { text => 'manage_accounts Manage memberships' } );
 
 $t->submit_form_ok(
     { form_id => 'add-member', with_fields => { name => 'other', role => 'member' } } );
