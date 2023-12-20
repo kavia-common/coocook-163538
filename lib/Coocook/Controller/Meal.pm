@@ -56,13 +56,15 @@ sub update : POST Chained('base') Does(~Ajax) Args(0) RequiresCapability('edit_p
         return;
     };
 
-    if ( $new_date and not $new_date->delta_days( $c->stash->{meal}->date )->is_zero ) {
-        my $found_duplicate_meal = $c->project->meals->search(
+    if ( $new_date
+        and not $new_date->delta_days( $c->stash->{meal}->date )->is_zero )
+    {
+        my $found_duplicate_meal = $c->project->meals->results_exist(
             {
                 name => $c->req->body_data->{name},
                 date => $new_date,
             }
-        ) != 0;
+        );
         if ($found_duplicate_meal) {
             $c->res->status(400);
             $c->stash->{json_data} = {
