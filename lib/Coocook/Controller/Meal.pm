@@ -42,7 +42,28 @@ sub base : Chained('/project/base') PathPart('meals') CaptureArgs(1) {
 
 sub update : POST Chained('base') Does(~Ajax) Args(0) RequiresCapability('edit_project') {
     my ( $self, $c, $id ) = @_;
-    my $new_date = $c->req->body_data->{date};
+    my $new_date;
+    try {
+        $new_date = $c->req->body_data->{date};
+    }
+    catch {
+        $c->res->status(400);
+        $c->stash->{json_data} = {
+            error => {
+                message => "Invalid JSON body."
+            }
+        };
+        return;
+    };
+    unless ($new_date) {
+        $c->res->status(400);
+        $c->stash->{json_data} = {
+            error => {
+                message => "Missing 'date' property."
+            }
+        };
+        return;
+    }
     try {
         $new_date = $c->project->parse_date($new_date);
     }
@@ -56,9 +77,7 @@ sub update : POST Chained('base') Does(~Ajax) Args(0) RequiresCapability('edit_p
         return;
     };
 
-    if ( $new_date
-        and not $new_date->delta_days( $c->stash->{meal}->date )->is_zero )
-    {
+    if ( not $new_date->delta_days( $c->stash->{meal}->date )->is_zero ) {
         my $found_duplicate_meal = $c->project->meals->results_exist(
             {
                 name => $c->req->body_data->{name},
