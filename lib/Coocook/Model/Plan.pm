@@ -125,7 +125,8 @@ sub day ( $self, $project, $dt ) {
                 comment => $ingredient->comment,
               };
 
-            $ingredient->prepare and $dishes{ $ingredient->dish_id }{has_prepared_ingredients} = 1;
+            $ingredient->prepare
+              and $dishes{ $ingredient->dish_id }{has_prepared_ingredients} = 1;
         }
     }
 
