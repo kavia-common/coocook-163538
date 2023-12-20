@@ -210,12 +210,12 @@ sub get_project_plan_ajax : GET HEAD Chained('submenu') PathPart('project_plan')
     };
 }
 
-=head2 I<move_meal_or_dish_ajax()>
+=head2 move_meal_or_dish_ajax()
 
-Move a L<Meal> before or after another L<Meal> or move a L<Dish> to another L<Meal> or before or after
-another L<Dish>.
+Move a Meal before or after another Meal or move a Dish to another Meal or before or after
+another Dish.
 
-=head3 ERRORS
+=head3 Errors
 
 =over 4
 
