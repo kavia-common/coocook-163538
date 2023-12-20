@@ -42,9 +42,9 @@ sub base : Chained('/project/base') PathPart('meals') CaptureArgs(1) {
 
 sub update : POST Chained('base') Does(~Ajax) Args(0) RequiresCapability('edit_project') {
     my ( $self, $c, $id ) = @_;
-    my $new_date;
+    my $new_date = $c->req->body_data->{date};
     try {
-        $new_date = $c->req->body_data->{date} && $c->project->parse_date( $c->req->body_data->{date} );
+        $new_date = $c->project->parse_date($new_date);
     }
     catch {
         $c->res->status(400);
