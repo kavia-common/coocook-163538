@@ -8,6 +8,7 @@ use MooseX::NonMoose;
 
 use DateTime;
 use Scalar::Util 'weaken';
+use Carp;
 
 __PACKAGE__->meta->make_immutable;
 
@@ -125,7 +126,8 @@ sub day ( $self, $project, $dt ) {
                 comment => $ingredient->comment,
               };
 
-            $ingredient->prepare and $dishes{ $ingredient->dish_id }{has_prepared_ingredients} = 1;
+            $ingredient->prepare
+              and $dishes{ $ingredient->dish_id }{has_prepared_ingredients} = 1;
         }
     }
 
@@ -193,6 +195,14 @@ sub resolve_meal_dish_path ( $self, $project, $path ) {
         return $project->meals->find( $path->{meal_id} );
     }
     die;
+}
+
+sub meals_have_same_name_and_date ( $self, $project, $pathA, $pathB ) {
+    $pathA->{item_type} ne 'meal' or croak '$pathA does not refer to a meal.';
+    $pathB->{item_type} ne 'meal' or croak '$pathB does not refer to a meal.';
+
+    return $project->meals->find( $pathA->{meal_id} )->name eq
+      $project->meals->find( $pathB->{meal_id} );
 }
 
 1;

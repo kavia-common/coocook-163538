@@ -178,7 +178,6 @@ sub edit : GET HEAD Chained('submenu') PathPart('edit') Args(0) RequiresCapabili
                 createMealURL     => $c->project_uri('/meal/create')->as_string,
                 createDishURL     => $c->project_uri('/dish/create')->as_string,
                 dishFromRecipeURL => $c->project_uri('/dish/from_recipe')->as_string,
-                updateMealURL     => $c->project_uri('/meal/create')->as_string,
             }
         ),
     );
@@ -211,6 +210,23 @@ sub get_project_plan_ajax : GET HEAD Chained('submenu') PathPart('project_plan')
     };
 }
 
+=head2 move_meal_or_dish_ajax()
+
+Move a Meal before or after another Meal or move a Dish to another Meal or before or after
+another Dish.
+
+=head3 Errors
+
+=over 4
+
+=item UNQMEAL
+The name of a meal should be unique per day. For this reason, this method throws an error when it tries
+to move a meal with a name which already exists on the target date.
+
+=back
+
+=cut
+
 sub move_meal_or_dish_ajax : POST Chained('submenu') PathPart('move_meal_dish') Args(0) Does(~Ajax)
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
@@ -231,29 +247,53 @@ sub move_meal_or_dish_ajax : POST Chained('submenu') PathPart('move_meal_dish') 
     return $c->stash->{json_data} = { error => { message => 'Invalid target_path' } }
       unless ( defined $target );
 
-    if ( $source_path->{item_type} eq 'dish' && $target_path->{item_type} eq 'dish' ) {
+    if (   $source_path->{item_type} eq 'dish'
+        && $target_path->{item_type} eq 'dish' )
+    {
         $moved->move_to_group( { meal_id => $target->meal->id }, $target->position );
     }
-    elsif ( $source_path->{item_type} eq 'dish' && $target_path->{item_type} eq 'meal' ) {
+    elsif ($source_path->{item_type} eq 'dish'
+        && $target_path->{item_type} eq 'meal' )
+    {
         $moved->move_to_group( { meal_id => $target->id }, $direction eq "over" ? 1 : undef );
     }
-    elsif ( $source_path->{item_type} eq 'meal' && $target_path->{item_type} eq 'dish' ) {
-        $c->stash->{json_data} = { error => { message => 'Cannot move meal on dish.' } };
+    elsif ($source_path->{item_type} eq 'meal'
+        && $target_path->{item_type} eq 'dish' )
+    {
+        $c->stash->{json_data} =
+          { error => { message => 'Cannot move meal on dish.' } };
         return;
     }
-    elsif ( $source_path->{item_type} eq 'meal' && $target_path->{item_type} eq 'meal' ) {
+    elsif ($source_path->{item_type} eq 'meal'
+        && $target_path->{item_type} eq 'meal' )
+    {
+        if ( $moved->name eq $target->name ) {
+            $c->stash->{json_data} = {
+                error => {
+                    message => 'Multiple meals with the same name and date are not allowed.',
+                    code    => 'UNQMEAL'
+                }
+            };
+            $c->response->status(400);
+            return;
+        }
         $moved->move_to_group( { project_id => $project->id, date => $target->date }, $target->position );
     }
 
     $moved = $moved->for_meals_dishes_editor;
     if ( $source_path->{item_type} eq 'dish' ) {
-        $moved->{delete_url} = $c->project_uri( '/dish/delete_ajax', $moved->{id} )->as_string;
-        $moved->{update_url} = $c->project_uri( '/dish/update_ajax', $moved->{id} )->as_string;
+        $moved->{delete_url} =
+          $c->project_uri( '/dish/delete_ajax', $moved->{id} )->as_string;
+        $moved->{update_url} =
+          $c->project_uri( '/dish/update_ajax', $moved->{id} )->as_string;
     }
     elsif ( $source_path->{item_type} eq 'meal' ) {
-        $moved->{delete_dishes_url} = $c->project_uri( '/meal/delete_dishes', $moved->{id} )->as_string;
-        $moved->{delete_url}        = $c->project_uri( '/meal/delete',        $moved->{id} )->as_string;
-        $moved->{update_url}        = $c->project_uri( '/meal/update',        $moved->{id} )->as_string;
+        $moved->{delete_dishes_url} =
+          $c->project_uri( '/meal/delete_dishes', $moved->{id} )->as_string;
+        $moved->{delete_url} =
+          $c->project_uri( '/meal/delete', $moved->{id} )->as_string;
+        $moved->{update_url} =
+          $c->project_uri( '/meal/update', $moved->{id} )->as_string;
     }
     $c->stash->{json_data} = $moved;
 }

@@ -3,6 +3,8 @@ package Coocook::Controller::Meal;
 use Moose;
 use namespace::autoclean;
 
+use Try::Tiny;
+
 BEGIN { extends 'Coocook::Controller' }
 
 =head1 NAME
@@ -40,9 +42,62 @@ sub base : Chained('/project/base') PathPart('meals') CaptureArgs(1) {
 
 sub update : POST Chained('base') Does(~Ajax) Args(0) RequiresCapability('edit_project') {
     my ( $self, $c, $id ) = @_;
+    my $new_date;
+    try {
+        $new_date = $c->req->body_data->{date};
+    }
+    catch {
+        $c->res->status(400);
+        $c->stash->{json_data} = {
+            error => {
+                message => "Invalid JSON body."
+            }
+        };
+        return;
+    };
+    unless ($new_date) {
+        $c->res->status(400);
+        $c->stash->{json_data} = {
+            error => {
+                message => "Missing 'date' property."
+            }
+        };
+        return;
+    }
+    try {
+        $new_date = $c->project->parse_date($new_date);
+    }
+    catch {
+        $c->res->status(400);
+        $c->stash->{json_data} = {
+            error => {
+                message => "Cannot parse 'date' property: invalid date string."
+            }
+        };
+        return;
+    };
+
+    if ( not $new_date->delta_days( $c->stash->{meal}->date )->is_zero ) {
+        my $found_duplicate_meal = $c->project->meals->results_exist(
+            {
+                name => $c->req->body_data->{name},
+                date => $new_date,
+            }
+        );
+        if ($found_duplicate_meal) {
+            $c->res->status(400);
+            $c->stash->{json_data} = {
+                error => {
+                    message => "Cannot create meal with same name on same date."
+                }
+            };
+            return;
+        }
+    }
 
     $c->stash->{meal}->update(
         {
+            date    => $new_date,
             name    => $c->req->body_data->{name},
             comment => $c->req->body_data->{comment},
         }
