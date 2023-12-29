@@ -1,48 +1,57 @@
-[% escape_title( 'Recipe', recipe.name ) %]
-[% css.push('/css/print.css') %]
+[% escape_title( 'Recipe', recipe.name );
+
+js_push_template_path();
+css.push('/css/print.css') %]
+
+<button class="btn btn-primary my-3 material-icons" onclick="print()" title="Print">print</button>
 
 <div class="content-box">
-[% IF project_url %]
-    <p>
-        from project <a href="[% project_url %]">[% recipe.project.name | html %]</a>
-     [% IF import_url %]
-        <form method="get" action="[% import_url %]" class="inline no-print">
-            <input type="submit" value="Import" title="Import this recipe into one of your projects" class="btn btn-primary">
-        </form>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <p class="m-0">
+        [% IF project_url %]
+            from project <a href="[% project_url %]">[% recipe.project.name | html %]</a>
+        [% ELSE %]
+            from a private project
+        [% END %]
+            <span class="print">for [% numerus(servings, 'serving', 'servings') %]</span>
         </p>
-
-        <p class="print">for [% numerus(servings, 'serving', 'servings') %]
+    [% IF import_url %]
+        <form method="get" action="[% import_url %]" class="no-print">
+            <button type="submit" title="Import this recipe into one of your projects" class="btn btn-primary">Import&thinsp;<i class="material-icons">east</i></button>
+        </form>
     [% END %]
-    </p>
-[% ELSE %]
-    <p>from a private project</p>
-[% END %]
+    </div>
 
-<form method="get" action="" class="no-print">
-    <div class="row g-3 align-items-center mb-3">
-        <div class="col-auto">
-            <label for="servings" class="col-form-label">Servings:</label>
+    <form method="get" action="" class="no-print">
+        <div class="row g-3 align-items-center mb-3">
+            <div class="col-auto">
+                <label for="servings" class="col-form-label">Servings:</label>
+            </div>
+            <div class="col-auto" style="width:100px;">
+                <input type="number" name="servings" id="servings" min="1" value="[% servings %]" class="form-control">
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary"><i class="material-icons">calculate</i>&thinsp;Show</button>
+            </div>
         </div>
-        <div class="col-auto" style="width:100px;">
-            <input type="number" name="servings" id="servings" min="1" value="[% servings %]" class="form-control">
-        </div>
+    </form>
+
+    <div class="row">
+        <div class="col-auto">Tags:</div>
         <div class="col-auto">
-            <input type="submit" value="Show" class="btn btn-primary">
+            <ul class="list-unstyled d-flex flex-wrap gap-2 m-0">
+            [% FOR tag IN recipe.tags %]
+                <li>
+                    <span class="badge rounded-pill bg-secondary">[% tag.name | html %]</span>
+                </li>
+            [% END %]
+            </ul>
         </div>
     </div>
-</form>
-
-<div>Tags:
-<ul class="list-unstyled d-flex flex-wrap m-0">
-[% FOR tag IN recipe.tags %]
-    <li><span class="badge rounded-pill bg-secondary">[% tag.name | html %]</span></li>
-[% END %]
-</ul>
-</div>
 </div>
 
 [% BLOCK ingredients_table;
-    IF ingredients.size %]
+IF ingredients.size %]
 <table class="table">
     <thead>
         <tr>
@@ -52,16 +61,16 @@
         </tr>
     </thead>
     <tbody>
-[% FOR ingredient IN ingredients %]
+    [% FOR ingredient IN ingredients %]
         <tr>
             <td>[% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %]</td>
             <td>[% ingredient.article.name | html %]</td>
             <td>[% ingredient.comment | html %]</td>
         </tr>
-[% END %]
+    [% END %]
     </tbody>
 </table>
-    [% END;
+[% END;
 END %]
 
 [% USE Markdown %]
@@ -80,9 +89,9 @@ END %]
 <div class="card my-4">
     <div class="card-header"><h3 class="my-2">Description</h3></div>
     <div class="card-body">
-[% PROCESS ingredients_table ingredients=not_prepared_ingredients %]
+    [% PROCESS ingredients_table ingredients=not_prepared_ingredients %]
 
-[% recipe.description | markdown %]
+    [% recipe.description | markdown %]
     </div>
 </div>
 
