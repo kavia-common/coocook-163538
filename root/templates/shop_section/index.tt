@@ -1,6 +1,16 @@
 [% title = "Shop sections";
 
-js_push_template_path() %]
+js_push_template_path();
+
+BLOCK new_section %]
+<tr>
+    <td colspan="3">
+        <div class="d-grid">
+            <button class="btn btn-outline-primary material-icons" data-bs-toggle="modal" data-bs-target="#add-section">add</button>
+        </div>
+    </td>
+</tr>
+[% END %]
 
 <table class="table table-striped align-middle">
     <thead>
@@ -11,13 +21,14 @@ js_push_template_path() %]
         </tr>
     </thead>
     <tbody>
-        [% FOREACH section IN shop_sections %]
-        <tr>
+        [% IF shop_sections.size > 5; PROCESS new_section; END;
+        FOREACH section IN shop_sections %]
+        <tr class="parent">
             <td>[% section.name | html %]</td>
             <td>[% section.article_count %]</td>
             <td>
-                <div class="d-flex">
-                    <button class="btn btn-outline-dark btn-sm btn-quad update" title="Rename shop section" data-url="[% section.update_url %]" data-name="[% section.name | html %]"  data-bs-toggle="modal" data-bs-target="#updateSection">
+                <div class="d-flex gap-1 action-btn">
+                    <button class="btn btn-outline-dark btn-sm btn-quad update" title="Rename shop section" data-url="[% section.update_url %]" data-name="[% section.name | html %]" data-bs-toggle="modal" data-bs-target="#update-section">
                         <i class="material-icons">edit</i>
                     </button>
                     [% IF section.delete_url %]
@@ -26,27 +37,26 @@ js_push_template_path() %]
                             <i class="material-icons">delete_forever</i>
                         </button>
                     </form>
+                    [% ELSE %]
+                    <button type="submit" class="btn btn-outline-danger btn-sm btn-quad" title="[% numerus(section.article_count, "article", "articles") %] are assigned to this shop section" disabled style="pointer-events:auto;cursor:default">
+                        <i class="material-icons">delete_forever</i>
+                    </button>
                     [% END %]
                 </div>
             </td>
         </tr>
-        [% END %]
-        <tr>
-            <td colspan="3">
-                <div class="d-grid">
-                    <button class="btn btn-outline-primary material-icons" data-bs-toggle="modal" data-bs-target="#addSection">add</button>
-                </div>
-            </td>
-        </tr>
+        [% END;
+        PROCESS new_section %]
+
     </tbody>
 </table>
 
-<form id="update-section" method="post" action="">
-    <div class="modal fade" id="updateSection" tabindex="-1" aria-labelledby="updateSectionLabel" aria-hidden="true">
+<form id="update-section-form" method="post" action="">
+    <div class="modal fade" id="update-section" tabindex="-1" aria-labelledby="update-section-label" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="updateSectionLabel">Rename shop section <i id="section-name"></i></h5>
+                    <h5 class="modal-title" id="update-section-label">Rename shop section <i id="section-name"></i></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -64,11 +74,11 @@ js_push_template_path() %]
 </form>
 
 <form method="post" action="[% create_url %]">
-    <div class="modal fade" id="addSection" tabindex="-1" aria-labelledby="addSectionLabel" aria-hidden="true">
+    <div class="modal fade" id="add-section" tabindex="-1" aria-labelledby="add-section-label" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addSectionLabel">Create shop section</h5>
+                    <h5 class="modal-title" id="add-section-label">Create shop section</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
