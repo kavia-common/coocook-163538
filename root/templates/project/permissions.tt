@@ -86,7 +86,7 @@ has_admin = 0 %]
         <form method="post" action="[% add_permission_url %]" id="add-member">
             <div class="mb-2">
                 <label for="user" class="form-label">User/Organization</label>
-                <cc-autocomplete id="user" endpoint='{"url": "/autocomplete/organizations_users"}' render="renderUserOrgOption" filter="filterUserOrg" input-name="id" msg-func="alertMessage" invalid='["Please select an user or organization", "danger", false, "add-perm-msg"]'></cc-autocomplete>
+                <cc-autocomplete id="user" endpoint='{"url": "/autocomplete/organizations_users"}' render="renderUserOrgOption" filter="filterUserOrg" input-name="id" msg-func="alertMessage" invalid='["Please select an user or organization", "danger", false, "add-perm-msg"]' static-base-uri="[% uri_for_static('/') %]"></cc-autocomplete>
             </div>
             <div class="mb-2">
                 <label for="role" class="form-label">Role</label>

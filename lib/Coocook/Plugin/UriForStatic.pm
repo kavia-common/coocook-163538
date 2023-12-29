@@ -33,7 +33,7 @@ sub uri_for_static {
     my ($path) = @_;
 
     # TODO relative paths not implemented yet
-    ( ref($path) eq '' and $path =~ m{ ^ / [^/] }x )
+    ( ref($path) eq '' and $path =~ m{^/} )
       or croak "First argument must to uri_for_static must be string with absolute path, not '$_[0]'";
 
     if ( my $base_uri = $c->config->{static_base_uri} ) {
