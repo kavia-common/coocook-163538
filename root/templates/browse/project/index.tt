@@ -10,9 +10,9 @@ END %]
         This list also includes private projects which you have access to,
         indicated by the <i class="material-icons">lock</i> symbol.
 [% ELSE %]
-        These are only <em>public</em> recipes.
+        These are only <em>public</em> projects.
         <a class="alert-link hov-under" href="[% login_url %]">Sign in</a>
-        to view private recipes, too.
+        to view private projects, too.
 [% END %]
     </p>
 </div>
