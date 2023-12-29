@@ -1,6 +1,8 @@
-[% title = "Recipes" %]
+[% title = "Recipes" ;
 
-[% new = BLOCK %]
+js_push_template_path();
+
+new = BLOCK %]
 <p>
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-recipe-modal" title="Add new recipe">
         <i class="material-icons">add</i> New recipe
@@ -20,17 +22,19 @@
     </thead>
     <tbody>
     [% FOR recipe IN recipes %]
-        <tr>
+        <tr class="parent">
             <td><a href="[% recipe.edit_url %]">[% recipe.name | html %]</a></td>
-            <td class="d-flex gap-2">
-                <button onclick="setDuplicateFormValues('[% recipe.duplicate_url %]', '[% recipe.name %]');" class="btn btn-outline-dark btn-sm btn-quad" data-bs-toggle="modal" data-bs-target="#duplicate-recipe-modal" data-bs-toggle="tooltip" data-bs-placement="top" title='Duplicate [% recipe.name %]'>
-                    <i class="material-icons">file_copy</i>
-                </button>
-                <form class="inline" method="post" action="[% recipe.delete_url %]">
-                    <button class="btn btn-outline-danger btn-sm btn-quad" type="submit" value="Delete">
-                        <i class="material-icons">delete_forever</i>
+            <td>
+                <div class="d-flex gap-2 action-btn">
+                    <button onclick="setDuplicateFormValues('[% recipe.duplicate_url %]', '[% recipe.name %]');" class="btn btn-outline-dark btn-sm btn-quad" data-bs-toggle="modal" data-bs-target="#duplicate-recipe-modal" data-bs-toggle="tooltip" data-bs-placement="top" title='Duplicate [% recipe.name %]'>
+                        <i class="material-icons">file_copy</i>
                     </button>
-                </form>
+                    <form class="inline" method="post" action="[% recipe.delete_url %]">
+                        <button class="btn btn-outline-danger btn-sm btn-quad" type="submit" value="Delete">
+                            <i class="material-icons">delete_forever</i>
+                        </button>
+                    </form>
+                </div>
             </td>
         </tr>
     [% END %]
@@ -44,8 +48,8 @@
     Like dishes each recipe is a list of ingredients together with cooking instructions.
 [% END %]
 
-<form method="post" id="dublicateForm" action="">
-    <div class="modal fade" id="dublicateRecipeModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+<form method="post" id="duplicate-form" action="">
+    <div class="modal fade" id="duplicate-recipe-modal" tabindex="-1" aria-labelledby="duplicate-modal-label" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

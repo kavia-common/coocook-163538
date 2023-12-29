@@ -35,8 +35,6 @@ sub recipes : Chained('/project/base') PathPart('recipes') RequiresCapability('v
     }
 
     $c->stash( recipes => \@recipes );
-
-    push @{ $c->stash->{js} }, '/js/recipe/recipe.js';
 }
 
 =head2 index
