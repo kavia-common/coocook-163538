@@ -46,7 +46,7 @@ js_push_template_path();
             </thead>
             [% FOREACH item IN section.items %]
             <tbody>
-                <tr>
+                <tr id="item-[% item.id %]">
                     [% rowspan = item.ingredients.size;
                     IF item.offset !=0;
                     rowspan = rowspan + 1;
