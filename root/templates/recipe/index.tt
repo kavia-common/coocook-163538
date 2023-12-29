@@ -15,7 +15,7 @@ new = BLOCK %]
 
 <table class="table">
     <thead>
-        <tr>
+        <tr class="sticky-top">
             <th scope="col">Recipe</th>
             <th scope="col" class="btn-icon-2"></th>
         </tr>

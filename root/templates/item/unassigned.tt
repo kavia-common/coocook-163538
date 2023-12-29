@@ -3,7 +3,7 @@
 <form method="post" action="[% assign_url %]">
 <table id="items" class="table table-striped table-hover align-middle">
     <thead>
-        <tr>
+        <tr class="sticky-top">
             <th>Ingredient</th>
             <th>Assign to purchase list</th>
         </tr>

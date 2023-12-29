@@ -14,7 +14,7 @@ BLOCK new_list %]
 
 <table class="table table-striped align-middle">
     <thead>
-        <tr>
+        <tr class="sticky-top">
             <th>Date</th>
             <th>Name</th>
             <th>Items</th>

@@ -54,7 +54,7 @@ css.push('/css/print.css') %]
 IF ingredients.size %]
 <table class="table">
     <thead>
-        <tr>
+        <tr class="sticky-top">
             <th scope="col">Amount</th>
             <th scope="col">Article</th>
             <th scope="col">Comment</th>

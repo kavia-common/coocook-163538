@@ -12,7 +12,7 @@ new = BLOCK %]
 
 <table class="table">
     <thead>
-        <tr class="sticky-top bg-white border-bottom" style="z-index:1011;">
+        <tr class="sticky-top">
             <th>Unit</th>
             <th>Conversions</th>
             <th class="btn-icon-1"></th>

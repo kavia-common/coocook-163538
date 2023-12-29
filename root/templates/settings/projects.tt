@@ -3,9 +3,9 @@
 [% IF projects.size > 0 %]
 <p>These are all projects that you own or that you have permissions for.</p>
 
-<table class="table">
+<table class="table table-striped">
     <thead>
-        <tr>
+        <tr class="sticky-top">
             <th title="Archived projects" scope="col"><i class="material-icons">folder</i></th>
             <th scope="col">Name</th>
             <th scope="col">Your role</th>

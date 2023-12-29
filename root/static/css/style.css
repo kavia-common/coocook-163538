@@ -241,6 +241,11 @@ form th {
     text-align: left;
 }
 
+table tr.sticky-top {
+    background-color: var(--bs-body-bg);
+    z-index: 1011;
+}
+
 table td input[type="checkbox"]:first-child:last-child {
     /* center single checkbox in table column */
     display: block;

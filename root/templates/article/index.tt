@@ -6,7 +6,7 @@
 
 <table class="table">
     <thead>
-        <tr>
+        <tr class="sticky-top">
             <th scope="col">Name</th>
             <th scope="col">Comment</th>
             <th scope="col">Preorder in advance</th>

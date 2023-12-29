@@ -1,8 +1,8 @@
 [% title = "Projects" %]
 
-<table>
+<table class="table table-striped">
 <thead>
-    <tr>
+    <tr class="sticky-top">
         <th title="Archived projects"><i class="material-icons">folder</i></th>
         <th title="Private projects"><i class="material-icons">lock</i></th>
         <th>Project</th>

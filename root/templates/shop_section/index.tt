@@ -14,7 +14,7 @@ BLOCK new_section %]
 
 <table class="table table-striped align-middle">
     <thead>
-        <tr>
+        <tr class="sticky-top">
             <th>Name</th>
             <th>Number of Articles</th>
             <th class="btn-icon-2"></th>

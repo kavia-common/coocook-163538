@@ -1,8 +1,8 @@
 [% title = "Users" %]
 
-<table>
+<table class="table table-striped">
 <thead>
-    <tr>
+    <tr class="sticky-top">
         <th>Name</th>
         <th>Admin Comment</th>
         <th>Owned projects</th>

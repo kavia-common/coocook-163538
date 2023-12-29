@@ -7,7 +7,7 @@ has_admin = 0 %]
 
 <table class="table">
     <thead>
-        <tr>
+        <tr class="sticky-top">
             <th scope="col">User/Organization</th>
             <th scope="col">Role</th>
             <th scope="col" class="btn-icon-1"></th>
