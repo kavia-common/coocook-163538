@@ -6,7 +6,7 @@ use Coocook::Base;
 use Moose::Role;
 use namespace::autoclean;
 
-before execute => sub ( $self, $controller, $c ) {
+before execute => sub ( $self, $controller, $c, @args ) {
     $c->stash( current_view => 'JSON' );
 };
 
