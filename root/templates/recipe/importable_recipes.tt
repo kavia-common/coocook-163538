@@ -17,7 +17,7 @@
         <td>
             <form method="get" action="[% recipe.import_url %]" class="inline">
                 <button type="submit" title="Import" class="btn btn-primary">
-                    <i class="material-icons">cloud_download</i> Import
+                    <i class="material-icons">east</i>&thinsp;Import
                 </button>
             </form>
         </td>

@@ -6,7 +6,7 @@
         <i class="material-icons">add</i> New recipe
     </button>
     <a class="btn btn-secondary" href="[% import_recipe_url %]" title="Import recipe">
-        <i class="material-icons">cloud_download</i> Import recipe
+        <i class="material-icons">east</i>&thinsp;Import recipe
     </a>
 </p>
 [% END; new %]

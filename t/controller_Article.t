@@ -10,7 +10,7 @@ my $t = Test::Coocook->new();
 $t->get('/');
 $t->login_ok( 'john_doe', 'P@ssw0rd' );
 
-$t->follow_link_ok( { text => 'Test Project' } );
+$t->follow_link_ok( { text => 'public Test Project' } );
 $t->follow_link_ok( { text => 'Articles' } );
 
 $t->follow_link_ok( { text => 'add New article' } );
