@@ -3,33 +3,22 @@
 [% IF recipes.size == 0 %]
 <p>No recipes to import</p>
 [% ELSE %]
-<table class="table striped align-middle">
-    <thead>
-        <tr>
-            <th style="width:130px;"></th>
-            <th>Recipe</th>
-            <th>Source</th>
-        </tr>
-    </thead>
-    <tbody>
-    [% FOR recipe IN recipes %]
-    <tr>
-        <td>
-            <form method="get" action="[% recipe.import_url %]" class="inline">
-                <button type="submit" title="Import" class="btn btn-primary">
-                    <i class="material-icons">east</i>&thinsp;Import
-                </button>
-            </form>
-        </td>
-        <td>
+<ul class="list-group">
+[% FOR recipe IN recipes %]
+    <li class="list-group-item d-flex gap-3 justify-content-between align-items-center parent">
+        <div>
             <a href="[% recipe.url %]">[% recipe.name | html %]</a>
-        </td>
-        <td>
-            [% link_project(recipe.project) %]
+            from [% link_project(recipe.project) %]
             by [% link_user(recipe.project.owner) %]
-        </td>
-    </tr>
-    [% END %]
-    </tbody>
-</table>
+        </div>
+        [% IF recipe.import_url %]
+        <form method="get" action="[% recipe.import_url %]" class="action-btn">
+            <button type="submit" title="Import this recipe into project &quot;[% project.name | html %]&quot;" class="btn btn-primary">
+                <i class="material-icons">east</i>&thinsp;Import
+            </button>
+        </form>
+        [% END %]
+    </li>
+[% END %]
+</ul>
 [% END %]
