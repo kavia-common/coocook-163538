@@ -199,10 +199,17 @@ sub project_uri {
     my $project = $c->stash->{project}
       or croak "Missing 'project' in stash";
 
-    # if last argument is hashref that's the \%query_values argument
-    my @query = ref $_[-1] eq 'HASH' ? pop @_ : ();
+    my $fragment = ref $_[-1] eq 'SCALAR' ? pop @_ : undef;
 
-    return $c->uri_for_action( $action, [ $project->id, $project->url_name, @_ ], @query );
+    # if last argument is hashref that's the \%query_values argument
+    my $query = ref $_[-1] eq 'HASH' ? pop @_ : undef;
+
+    return $c->uri_for_action(
+        $action,
+        [ $project->id, $project->url_name, @_ ],
+        $query    || (),
+        $fragment || ()
+    );
 }
 
 sub project ($c) { $c->stash->{project} }

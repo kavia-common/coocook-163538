@@ -104,7 +104,8 @@ sub convert : POST Chained('/project/base') PathPart('items/convert') Args(1)
 
     $item->convert($unit);
 
-    $c->response->redirect( $c->project_uri( '/purchase_list/edit', $item->purchase_list_id ) );
+    $c->response->redirect(
+        $c->project_uri( '/purchase_list/edit', $item->purchase_list_id, \( 'item-' . $item_id ) ) );
 }
 
 sub update_offset : POST Chained('/project/base') PathPart('items/update_offset') Args(1)
@@ -128,7 +129,8 @@ sub update_offset : POST Chained('/project/base') PathPart('items/update_offset'
     }
     else { die 'Code broken' }
 
-    $c->response->redirect( $c->project_uri( '/purchase_list/edit', $item->purchase_list_id ) );
+    $c->response->redirect(
+        $c->project_uri( '/purchase_list/edit', $item->purchase_list_id, \( 'item-' . $item_id ) ) );
 }
 
 __PACKAGE__->meta->make_immutable;
