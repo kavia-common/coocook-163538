@@ -8,7 +8,7 @@ END %]
     <p class="m-0">
 [% IF user %]
         This list also includes private projects which you have access to,
-        indicated by the 🔒 symbol.
+        indicated by the <i class="material-icons">lock</i> symbol.
 [% ELSE %]
         These are only <em>public</em> recipes.
         <a class="alert-link hov-under" href="[% login_url %]">Sign in</a>
@@ -17,9 +17,9 @@ END %]
     </p>
 </div>
 
-<ul>
+<ul class="list-group my-3">
 [% FOR proj IN projects; # don't overwrite $project! %]
-    <li>[% link_project(proj) %]</li>
+    <li class="list-group-item">[% link_project(proj) %]</li>
 [% END %]
 </ul>
 
