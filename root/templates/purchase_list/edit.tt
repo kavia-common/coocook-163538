@@ -173,13 +173,13 @@ js_push_template_path();
                     <th class="amount-dish-meal">
                         <div class="d-flex flex-wrap" style="column-gap:1rem;">
                             <span>
-                                <i class="material-icons md-18">straighten</i> Amounts
+                                <i class="material-icons md-18">scale</i> Amounts
                             </span>
                             <span>
                                 <i class="material-icons md-18">restaurant</i> Dishes
                             </span>
                             <span>
-                                <i class="material-icons md-18">calendar_today</i> Meals
+                                <i class="material-icons md-18">calendar_month</i> Meals
                             </span>
                         </div>
                     </th>
@@ -226,7 +226,7 @@ js_push_template_path();
                     <td class="small-font amount-dish-meal">
                         <div class="d-flex flex-wrap">
                             <span class="amount">
-                                <i class="material-icons md-18">straighten</i>
+                                <i class="material-icons md-18">scale</i>
                                 [% display_value_unit( ingredient.value, ingredient.unit, {print=>1} ) %]
                                 [% IF ingredient.comment.length %]<i>([% ingredient.comment | html %])</i>[% END %]
                             </span>
@@ -236,7 +236,7 @@ js_push_template_path();
                                 [% IF ingredient.dish.comment.length %]<i>([% ingredient.dish.comment | html %])</i>[% END %]
                             </span>
                             <span class="meal">
-                                <i class="material-icons md-18">calendar_today</i>
+                                <i class="material-icons md-18">calendar_month</i>
                                 [% ingredient.dish.meal.name | html %]
                                 [% IF ingredient.dish.meal.comment.length %]<i>([% ingredient.dish.meal.comment | html %])</i>[% END %]
                             </span>
