@@ -16,7 +16,19 @@
         min-width: unset;
     }
 
-    thead th {
-        font-weight: normal;
+    th.amount-dish-servings-meal,
+    td.amount-dish-servings-meal {
+        border-right: none;
+    }
+
+    th.date,
+    td.date {
+        border-left: none;
+    }
+
+    td.amount-dish-servings-meal .dish,
+    td.amount-dish-servings-meal .servings,
+    td.amount-dish-servings-meal .meal {
+        margin-left: 1em;
     }
 }

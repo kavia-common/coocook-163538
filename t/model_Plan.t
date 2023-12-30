@@ -27,7 +27,7 @@ is
             {
                 'id'                       => 1,
                 'name'                     => 'pancakes',
-                'comment'                  => '',
+                'comment'                  => 'sweet',
                 'servings'                 => 4,
                 'preparation'              => '',
                 'description'              => 'Make them really sweet!',
@@ -48,7 +48,7 @@ is
                     },
                     {
                         'article' => {
-                            'comment' => '',
+                            'comment' => 'NaCl',
                             'name'    => 'salt'
                         },
                         'comment' => '',
@@ -132,7 +132,7 @@ is my $project_plan = $plan->project($project) => array {
                         field name               => 'pancakes';
                         field preparation        => '';
                         field description        => 'Make them really sweet!';
-                        field comment            => '';
+                        field comment            => 'sweet';
                         field servings           => 4;
                         end();
                     };

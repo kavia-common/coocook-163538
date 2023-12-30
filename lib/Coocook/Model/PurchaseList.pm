@@ -13,13 +13,7 @@ has list => (
     required => 1,
 );
 
-has shop_sections => (
-    is      => 'rw',
-    isa     => 'ArrayRef',
-    default => sub { [] },
-);
-
-has units => (
+has [qw( articles dishes shop_sections units )] => (
     is      => 'rw',
     isa     => 'ArrayRef',
     default => sub { [] },
@@ -42,12 +36,15 @@ sub BUILD ( $self, $args ) {
     for my $item ( values %items ) {
         $item->{article}     = $articles{ $item->{article_id} };
         $item->{unit}        = $units{ $item->{unit_id} };
+        $item->{total}       = $item->{value} + $item->{offset};
         $item->{ingredients} = [];
 
         push @{ $items_per_section{ $item->{article}{shop_section_id} || '' } }, $item;
     }
 
-    {    # add ingredients to each item
+    my @dishes;    # TODO maybe remove block scope
+
+    {              # add ingredients to each item
         my %ingredients_by_dish;
 
         my $ingredients = $list->items->search_related('ingredients')->hri;
@@ -63,9 +60,9 @@ sub BUILD ( $self, $args ) {
               );
         }
 
-        my $dishes =
+        @dishes =
           $list->items->search_related('ingredients')->search_related( 'dish', undef, { distinct => 1 } )
-          ->hri;
+          ->hri->all;
 
         my %meals = map { $_->{id} => $_ }
           $project->meals->hri->all;    # fetch all meals is probably more efficient than complex query
@@ -74,7 +71,7 @@ sub BUILD ( $self, $args ) {
             $meal->{date} = $project->parse_date( $meal->{date} );
         }
 
-        while ( my $dish = $dishes->next ) {
+        for my $dish (@dishes) {
             $dish->{meal} = $meals{ $dish->{meal_id} } || die;
 
             for my $ingredient ( $ingredients_by_dish{ $dish->{id} }->@* ) {
@@ -177,6 +174,8 @@ sub BUILD ( $self, $args ) {
         } @$items;
     }
 
+    $self->articles( [ values %articles ] );
+    $self->dishes( \@dishes );
     $self->units( [ values %units ] );
     $self->shop_sections( \@sections );
 }

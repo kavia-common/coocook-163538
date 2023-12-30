@@ -6,7 +6,7 @@
     }
 
     .print {
-        display: unset !important;
+        display: revert !important;
     }
 
     button,
@@ -59,12 +59,6 @@
 
     tfoot {
         display: table-footer-group;
-    }
-
-    p,
-    div,
-    table {
-        font-size: 12px;
     }
 
     .comment {

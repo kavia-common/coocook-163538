@@ -92,6 +92,14 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
         units    => $list->units,
     );
 
+    for my $article ( $list->articles->@* ) {
+        $article->{url} = $c->project_uri( '/article/edit', $article->{id} );
+    }
+
+    for my $dish ( $list->dishes->@* ) {
+        $dish->{url} = $c->project_uri( '/dish/edit', $dish->{id} );
+    }
+
     $c->has_capability('edit_project')
       or return;
 
@@ -111,7 +119,7 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
             # 5 <- 5.1 -> 6
             # 5 <- 5.9 -> 6
             # 5 <- 6   -> 7
-            my $value = $item->{value} + $item->{offset};
+            my $value = $item->{total};
             $item->{next_higher_value} = int($value) + 1;
 
             $value == int($value) and $value--;
