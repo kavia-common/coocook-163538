@@ -117,6 +117,8 @@ INSERT INTO "purchase_lists"
 (id, project_id,          name,         date) VALUES
 ( 1,          1, 'all at once', '1999-12-31');
 
+UPDATE "projects" SET default_purchase_list_id = 1 WHERE id = 1;
+
 INSERT INTO "items"
 (id, purchase_list_id, value, "offset", unit_id, article_id, purchased,              comment) VALUES
 ( 1,                1,  1000,      0.0,       1,          1,     FALSE,                   ''),

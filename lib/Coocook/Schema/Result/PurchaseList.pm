@@ -27,6 +27,27 @@ __PACKAGE__->has_many(
 __PACKAGE__->many_to_many( articles => items => 'article' );
 __PACKAGE__->many_to_many( units    => items => 'unit' );
 
+__PACKAGE__->has_many(
+    other_purchase_lists => __PACKAGE__,
+    sub ($args) {
+        return {
+            "$args->{foreign_alias}.id"         => { '!='   => { -ident => "$args->{self_alias}.id" } },
+            "$args->{foreign_alias}.project_id" => { -ident => "$args->{self_alias}.project_id" },
+        };
+    }
+);
+
 __PACKAGE__->meta->make_immutable;
+
+sub is_default ($self) {
+    if ( $self->has_column_loaded('is_default') ) {    # extra column from RS->with_is_default()
+        return $self->get_column('is_default');
+    }
+    else {
+        return (
+            ( $self->project->default_purchase_list_id // die 'project has no default_purchase_list_id' ) ==
+              $self->id );
+    }
+}
 
 1;

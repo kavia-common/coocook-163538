@@ -23,7 +23,8 @@ __PACKAGE__->add_columns(
         default_value => \'CURRENT_TIMESTAMP',
         set_on_create => 1,
     },
-    archived => { data_type => 'timestamp without time zone', is_nullable => 1 },
+    archived                 => { data_type => 'timestamp without time zone', is_nullable => 1 },
+    default_purchase_list_id => { data_type => 'integer',                     is_nullable => 1 },
 );
 
 __PACKAGE__->set_primary_key('id');
@@ -49,6 +50,22 @@ __PACKAGE__->has_many( shop_sections  => 'Coocook::Schema::Result::ShopSection',
 __PACKAGE__->has_many( tags           => 'Coocook::Schema::Result::Tag',          'project_id' );
 __PACKAGE__->has_many( tag_groups     => 'Coocook::Schema::Result::TagGroup',     'project_id' );
 __PACKAGE__->has_many( units          => 'Coocook::Schema::Result::Unit',         'project_id' );
+
+__PACKAGE__->belongs_to(
+    default_purchase_list => 'Coocook::Schema::Result::PurchaseList',
+    'default_purchase_list_id'
+);
+
+__PACKAGE__->has_many(    # all of this project’s purchase lists except the default one
+    non_default_purchase_lists => 'Coocook::Schema::Result::PurchaseList',
+    sub ($args) {
+        return {
+            "$args->{foreign_alias}.project_id" => { -ident => "$args->{self_alias}.id" },
+            "$args->{foreign_alias}.id"         =>
+              { '!=' => { -ident => "$args->{self_alias}.default_purchase_list_id" } },
+        };
+    }
+);
 
 # don't need to check conversions_to because all units belong to project anyway
 __PACKAGE__->many_to_many( unit_conversions => units => 'conversions_from' );
