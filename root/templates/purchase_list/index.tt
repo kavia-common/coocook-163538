@@ -18,7 +18,7 @@ BLOCK new_list %]
             <th>Date</th>
             <th>Name</th>
             <th>Items</th>
-            <th class="btn-icon-2"></th>
+            <th class="btn-icon-3"></th>
         </tr>
     </thead>
     <tbody>
@@ -38,7 +38,18 @@ BLOCK new_list %]
                     <button class="btn btn-outline-dark btn-sm btn-quad update-trigger" title="Rename purchase list" data-url="[% list.update_url %]" data-name="[% list.name | html %]" data-bs-toggle="modal" data-bs-target="#updateList">
                         <i class="material-icons">edit</i>
                     </button>
-                    [% IF list.delete_url;
+                    [% IF list.make_default_url %]
+                    <form action="[% list.make_default_url %]" method="post">
+                        <button type="submit" class="btn btn-outline-dark btn-sm btn-quad" title="Make purchase list the default purchase list">
+                            <i class="material-icons">shopping_cart_checkout</i>
+                        </button>
+                    </form>
+                    [% ELSE %]
+                    <button class="btn btn-outline-dark btn-sm btn-quad tt-disabled-btn" title="Is already the default purchase list" disabled >
+                        <i class="material-icons">shopping_cart_checkout</i>
+                    </button>
+                    [% END;
+                    IF list.delete_url;
                     IF is_in_use %]
                     <button class="btn btn-outline-danger btn-sm btn-quad delete-trigger" title="Delete purchase list" data-url="[% list.delete_url %]" data-name="[% list.name | html %]" data-count="[% list.item_count %]"  data-bs-toggle="modal" data-bs-target="#delete-list">
                         <i class="material-icons">delete_forever</i>
@@ -51,7 +62,7 @@ BLOCK new_list %]
                     </form>
                     [% END;
                     ELSE %]
-                    <button type="submit" class="btn btn-outline-danger btn-sm btn-quad tt-disabled-btn" title="Default purchase list can't be deleted." disabled >
+                    <button class="btn btn-outline-danger btn-sm btn-quad tt-disabled-btn" title="Default purchase list can't be deleted" disabled >
                         <i class="material-icons">delete_forever</i>
                     </button>
                     [% END %]

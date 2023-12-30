@@ -371,7 +371,7 @@ cc-autocomplete {
 }
 
 .tt-disabled-btn {
-    pointer-events: auto;
+    pointer-events: auto !important;
     cursor: default;
 }
 
