@@ -3,6 +3,7 @@ package Coocook::Controller::PurchaseList;
 use Coocook::Base qw(Moose);
 
 use DateTime;
+use JSON::MaybeXS qw/to_json/;
 
 BEGIN { extends 'Coocook::Controller' }
 
@@ -126,6 +127,8 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
             $item->{next_lower_value} = int($value);
         }
     }
+
+    $c->stash( lists_json => to_json( [ $c->stash->{lists}->hri->all ] ) );
 }
 
 sub move_items_ingredients : POST Chained('base') Args(0) RequiresCapability('edit_project') {
