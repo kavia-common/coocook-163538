@@ -22,4 +22,9 @@ $t->content_like(
     "HTML contains JSON list of purchase lists"
 );
 
+$t->max_redirect(0);
+ok $t->post('/project/1/Test-Project/purchase_list/1/make_default');
+$t->status_is(302);
+$t->header_is( Location => 'https://localhost/project/1/Test-Project/purchase_lists' );
+
 $t->post_ok('/project/1/Test-Project/purchase_list/1/move_items_ingredients');

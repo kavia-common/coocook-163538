@@ -41,7 +41,8 @@ sub index : GET HEAD Chained('submenu') PathPart('purchase_lists') Args(0)
   RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
 
-    my $lists = $c->project->purchase_lists;
+    my $project = $c->project;
+    my $lists   = $project->purchase_lists;
 
     my $today    = DateTime->today;
     my $min_date = $today;
@@ -60,12 +61,19 @@ sub index : GET HEAD Chained('submenu') PathPart('purchase_lists') Args(0)
 
     my @lists = $lists->sorted->with_item_count->hri->all;
 
+    my $i = 0;
+
     for my $list (@lists) {
-        $list->{date} = $lists->parse_date( $list->{date} );
+        $list->{date}       = $lists->parse_date( $list->{date} );
+        $list->{is_default} = !$i;                                   # TODO mocked flag
 
         $list->{edit_url}   = $c->project_uri( $self->action_for('edit'),   $list->{id} );
         $list->{update_url} = $c->project_uri( $self->action_for('update'), $list->{id} );
         $list->{delete_url} = $c->project_uri( $self->action_for('delete'), $list->{id} );
+        $list->{make_default_url} =
+          $i ? $c->project_uri( $self->action_for('make_default'), $list->{id} ) : undef;
+
+        $i++;
     }
 
     $c->stash(
@@ -129,6 +137,13 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
     }
 
     $c->stash( lists_json => to_json( [ $c->stash->{lists}->hri->all ] ) );
+}
+
+sub make_default : POST Chained('base') Args(0) RequiresCapability('edit_project') {
+    my ( $self, $c ) = @_;
+
+    $c->messages->warn("NOT IMPLEMENTED");
+    $c->detach('redirect');
 }
 
 sub move_items_ingredients : POST Chained('base') Args(0) RequiresCapability('edit_project') {
