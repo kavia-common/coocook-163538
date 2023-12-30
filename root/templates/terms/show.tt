@@ -1,14 +1,29 @@
 [% title = "Terms" %]
 
+<div class="d-flex align-items-center gap-3 my-3">
 [% IF previous_url %]
-    <a href="[% previous_url %]">previous</a>
-[% END %]
-[% IF next_url %]
-    <a href="[% next_url %]">next</a>
+    <a href="[% previous_url %]" class="btn btn-primary btn-sm btn-quad" title="Previous terms">
+        <i class="material-icons">chevron_left</i>
+    </a>
+[% ELSE %]
+    <span class="btn btn-primary disabled btn-sm btn-quad" title="Previous terms">
+        <i class="material-icons">chevron_left</i>
+    </span>
 [% END %]
 
-<p>valid from [% display_date( terms.valid_from,  {html=>1} );
+<p class="m-0">valid from [% display_date( terms.valid_from,  {html=>1} );
      ' until ' _ display_date( terms.valid_until, {html=>1} ) IF terms.valid_until %]</p>
+
+[% IF next_url %]
+    <a href="[% next_url %]" class="btn btn-primary btn-sm btn-quad" title="Next terms">
+        <i class="material-icons">chevron_right</i>
+    </a>
+[% ELSE %]
+    <span class="btn btn-primary disabled btn-sm btn-quad" title="Next terms">
+        <i class="material-icons">chevron_right</i>
+    </span>
+[% END %]
+</div>
 
 [% USE Markdown;
 terms.content_md | $Markdown %]

@@ -17,11 +17,11 @@ sub index : GET HEAD Chained('/project/submenu') PathPart('permissions') Args(0)
 
         while ( my $organization_project = $organizations_projects->next ) {
             push @permissions, {
-                role             => $organization_project->role,
-                sort_key         => $organization_project->organization->name_fc,
-                organization     => $organization_project->organization,
-                organization_url =>
-                  $c->uri_for_action( '/organization/show', [ $organization_project->organization->name ] ),
+                role         => $organization_project->role,
+                sort_key     => $organization_project->organization->name_fc,
+                organization => $organization_project->organization->as_hashref(
+                    url => $c->uri_for_action( '/organization/show', [ $organization_project->organization->name ] ),
+                ),
 
                 edit_url => $c->has_capability(
                     edit_organization_permission => { permission => $organization_project, role => 'viewer' }
@@ -44,8 +44,9 @@ sub index : GET HEAD Chained('/project/submenu') PathPart('permissions') Args(0)
             push @permissions, {
                 role     => $project_user->role,
                 sort_key => $project_user->user->name_fc,
-                user     => $project_user->user,
-                user_url => $c->uri_for_action( '/user/show', [ $project_user->user->name ] ),
+                user     => $project_user->user->as_hashref(
+                    url => $c->uri_for_action( '/user/show', [ $project_user->user->name ] ),
+                ),
 
                 edit_url =>
                   $c->has_capability( edit_user_permission => { permission => $project_user, role => 'viewer' } )

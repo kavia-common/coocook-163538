@@ -24,7 +24,7 @@ Catalyst Controller.
 
 =cut
 
-sub day : GET HEAD Chained('/purchase_list/submenu') PathPart('print/day') Args(3)
+sub day : GET HEAD Chained('/project/base') PathPart('print/day') Args(3)
   RequiresCapability('view_project') {
     my ( $self, $c, $year, $month, $day ) = @_;
 

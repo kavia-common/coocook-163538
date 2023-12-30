@@ -3,7 +3,7 @@ use Test2::V0;
 use lib 't/lib';
 use TestDB;
 
-plan(4);
+plan(5);
 
 subtest "ResultSet::Unit->in_use()" => sub {
     my $db = TestDB->new;
@@ -28,6 +28,31 @@ subtest "ResultSet::Unit->in_use()" => sub {
 };
 
 my $db = TestDB->new;
+
+subtest "ResultSet::Unit->with_number_of_ingredients_items" => sub {
+    ok my @units = $db->resultset('Unit')->with_number_of_ingredients_items->hri->all;
+
+    like \@units => bag {
+        item hash {
+            field id                           => 1;
+            field number_of_dish_ingredients   => 5;
+            field number_of_recipe_ingredients => 2;
+            field number_of_items              => 2;
+        };
+        item hash {
+            field id                           => 2;
+            field number_of_dish_ingredients   => 3;
+            field number_of_recipe_ingredients => 1;
+            field number_of_items              => 0;
+        };
+        item hash {
+            field id                           => 3;
+            field number_of_dish_ingredients   => 3;
+            field number_of_recipe_ingredients => 1;
+            field number_of_items              => 0;
+        };
+    };
+};
 
 my $kg = $db->resultset('Unit')->find( { short_name => 'kg' } );
 

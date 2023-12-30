@@ -50,7 +50,7 @@ IF dish.ingredients.size;
 has_prep = "f" %]
 <table class="table">
     <thead>
-        <tr>
+        <tr class="sticky-stacked sticky-top">
             <th>Amount</th>
             <th>Article</th>
         </tr>

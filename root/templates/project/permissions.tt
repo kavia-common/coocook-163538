@@ -7,10 +7,10 @@ has_admin = 0 %]
 
 <table class="table">
     <thead>
-        <tr>
+        <tr class="sticky-top">
             <th scope="col">User/Organization</th>
             <th scope="col">Role</th>
-            <th scope="col">Actions</th>
+            <th scope="col" class="btn-icon-1"></th>
         </tr>
     </thead>
     <tbody>
@@ -18,9 +18,9 @@ has_admin = 0 %]
         <tr>
             <td>
     [% IF permission.organization;
-        link_organization(permission.organization, permission.organization_url);
+        link_organization(permission.organization);
     ELSIF permission.user;
-        link_user(permission.user, permission.user_url);
+        link_user(permission.user);
     ELSE;
         THROW undef "permissions neither organization nor user";
     END %]
@@ -86,7 +86,7 @@ has_admin = 0 %]
         <form method="post" action="[% add_permission_url %]" id="add-member">
             <div class="mb-2">
                 <label for="user" class="form-label">User/Organization</label>
-                <cc-autocomplete id="user" endpoint='{"url": "/autocomplete/organizations_users"}' render="renderUserOrgOption" filter="filterUserOrg" input-name="id" msg-func="alertMessage" invalid='["Please select an user or organization", "danger", false, "add-perm-msg"]'></cc-autocomplete>
+                <cc-autocomplete id="user" endpoint='{"url": "/autocomplete/organizations_users"}' render="renderUserOrgOption" filter="filterUserOrg" input-name="id" msg-func="alertMessage" invalid='["Please select an user or organization", "danger", false, "add-perm-msg"]' static-base-uri="[% uri_for_static('/') %]"></cc-autocomplete>
             </div>
             <div class="mb-2">
                 <label for="role" class="form-label">Role</label>

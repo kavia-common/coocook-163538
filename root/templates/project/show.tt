@@ -9,11 +9,11 @@ IF project.archived;
     [% IF can_unarchive %]
     <form id="unarchive" method="post" action="[% project_urls.unarchive %]"></form>
     <p class="m-0">
-        📁 This project is archived (read-only). You can
+        <i class="material-icons">folder</i> This project is archived (read-only). You can
         <button class="alert-link" type="submit" form="unarchive">unarchive this project</button>
     </p>
     [% ELSE %]
-    <p class="m-0">📁 This project has been archived.</p>
+    <p class="m-0"><i class="material-icons">folder</i> This project has been archived.</p>
     [% END %]
 </div>
 [% ELSIF can_edit %]
@@ -46,7 +46,7 @@ IF project.archived;
         show_donate_infobox = 1 %]
         <form class="d-inline" method="post" action="[% project_urls.archive %]">
             This project is stale (all meals and purchase lists in are in the past).
-            You can <button class="alert-link" type="submit">📁 archive this project</button>
+            You can <button class="alert-link" type="submit"><i class="material-icons">folder</i> archive this project</button>
         </form>
     [% ELSE;
         show_donate_infobox = 1 %]
@@ -66,7 +66,7 @@ IF project.archived;
 
 <table id="overview" class="table">
 <thead>
-    <tr>
+    <tr class="sticky-top">
         <th scope="col">Day</th>
         <th scope="col">Meal</th>
         <th scope="col">Dishes</th>

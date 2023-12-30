@@ -87,9 +87,10 @@ sub organizations : GET HEAD Chained('base') Args(0) RequiresCapability('view_us
         my $organization      = $_->organization;
 
         $_ = $organization_user->as_hashref(
-            organization     => $organization,
-            organization_url => $c->uri_for_action( '/organization/show', [ $organization->name ] ),
-            leave_url        => $c->uri_for_action_if_permitted(
+            organization => $organization->as_hashref(
+                url => $c->uri_for_action( '/organization/show', [ $organization->name ] ),
+            ),
+            leave_url => $c->uri_for_action_if_permitted(
                 '/organization/leave',
                 { organization => $organization },
                 [ $organization->name ]

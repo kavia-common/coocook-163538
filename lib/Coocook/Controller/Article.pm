@@ -30,7 +30,7 @@ sub index : GET HEAD Chained('/project/base') PathPart('articles') Args(0)
         my $edit_action   = $self->action_for('edit');
         my $delete_action = $self->action_for('delete');
 
-        my %shop_sections = map { $_->id => $_ } $c->stash->{shop_sections}->@*;
+        my %shop_sections = map { $_->{id} => $_ } $c->stash->{shop_sections}->@*;
 
         my $articles = $c->project->articles->sorted->hri;
 
@@ -88,17 +88,12 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
 
     my $article = $c->stash->{article};
 
-    $c->forward('fetch_project_data');
+    $c->forward( 'fetch_project_data', [$article] );
     $c->forward('dishes_recipes');
 
-    my $units        = $article->units;
-    my $units_in_use = $article->units_in_use;
+    my $units = $article->units;
 
-    $c->stash(
-        submit_url     => $c->project_uri( $self->action_for('update'), $article->id ),
-        selected_units => { map { $_ => 1 } $units->get_column('id')->all },
-        units_in_use   => { map { $_ => 1 } $units_in_use->get_column('id')->all },
-    );
+    $c->stash( submit_url => $c->project_uri( $self->action_for('update'), $article->id ) );
 }
 
 =head1 CRUD ENDPOINTS
@@ -142,16 +137,30 @@ sub delete : POST Chained('base') Args(0) RequiresCapability('edit_project') {
 =cut
 
 sub fetch_project_data : Private {
-    my ( $self, $c ) = @_;
+    my ( $self, $c, $article ) = @_;
+
+    my $units = $c->project->units;
+
+    if ($article) {
+        $units = $units->with_number_of_ingredients_items( { article_id => $article->id } );
+
+    }
 
     $c->stash(
         default_shelf_life_days   => 7,
         default_preorder_servings => 10,
         default_preorder_workdays => 3,
-        shop_sections             => [ $c->project->shop_sections->sorted->all ],
-        units                     => [ $c->project->units->sorted->all ],
-
+        shop_sections             => [ $c->project->shop_sections->sorted->hri->all ],
+        units                     => [ $units->sorted->hri->all ],
     );
+
+    if ($article) {
+        my %selected_units = map { $_ => undef } $article->units->get_column('id')->all;
+
+        for my $unit ( $c->stash->{units}->@* ) {
+            $unit->{selected} = exists $selected_units{ $unit->{id} };
+        }
+    }
 }
 
 =head2 dishes_recipes()
@@ -220,14 +229,18 @@ sub update_or_insert : Private {
     if ( !defined $name or $name !~ m/\S/ ) {
         $c->messages->error("Name must not be empty");
 
-        $c->redirect_detach( $c->project_uri( '/article/edit', $article->id ) );
+        $c->redirect_detach(
+            $c->project_uri(
+                $article->in_storage
+                ? ( $self->action_for('edit') => $article->id )
+                : $self->action_for('new_article')
+            )
+        );
     }
 
     my @tags = $c->project->tags->from_names( $c->req->params->get('tags') )->only_id_col->all;
 
     my $articles_units = $article->articles_units;
-
-    my @units_in_use = $article->units_in_use->get_column('id')->all;
 
     my %selected_units = map { $_ => 1 } my @selected_units = $c->req->params->get_all('units');
     my %all_units      = map { $_ => 1 } my @all_units      = $c->project->units->get_column('id')->all;
@@ -236,11 +249,6 @@ sub update_or_insert : Private {
     for my $sent_id (@selected_units) {
         $all_units{$sent_id}
           or $c->detach( '/error/bad_request', ["Your browser sent an invalid unit ID."] );
-    }
-
-    for my $id (@units_in_use) { # this isn't input verification, the HTML form doesn't allow to do this
-        $selected_units{$id}
-          or $c->detach( '/error/bad_request', ["You’ve deselected a unit that is in use."] );
     }
 
     my @units_to_remove = grep { not $selected_units{$_} } @current_units;

@@ -2,6 +2,9 @@ package Coocook::Controller::Tag;
 
 use Moose;
 use namespace::autoclean;
+use PerlX::Maybe;
+
+use JSON::MaybeXS ();
 
 BEGIN { extends 'Coocook::Controller' }
 
@@ -15,27 +18,12 @@ Catalyst Controller.
 
 =head1 METHODS
 
-=cut
-
-sub submenu : Chained('/project/base') PathPart('') CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-
-    $c->stash(
-        submenu_items => [
-            { text => "All tags",       action => 'tag/index' },
-            { text => "Add tag",        action => 'tag/new_tag' },
-            { text => "All tag groups", action => 'tag/index_tag_group' },
-            { text => "Add tag group",  action => 'tag/new_tag_group' },
-        ],
-    );
-}
-
 =head2 index
 
 =cut
 
-sub index : GET HEAD Chained('submenu') PathPart('tags') Args(0) RequiresCapability('view_project')
-{
+sub index : GET HEAD Chained('/project/base') PathPart('tags') Args(0)
+  RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
 
     my $groups = $c->project->tag_groups;
@@ -44,7 +32,9 @@ sub index : GET HEAD Chained('submenu') PathPart('tags') Args(0) RequiresCapabil
     my %groups = map { $_->{id} => $_ } @groups;
 
     for my $group (@groups) {
-        $group->{tags} = [];
+        $group->{tags}       = [];
+        $group->{delete_url} = $c->project_uri( $self->action_for('delete_group'), $group->{id} );
+        $group->{update_url} = $c->project_uri( $self->action_for('update_group'), $group->{id} );
     }
 
     my $other_tags = [];
@@ -55,53 +45,32 @@ sub index : GET HEAD Chained('submenu') PathPart('tags') Args(0) RequiresCapabil
         while ( my $tag = $tags->next ) {
             $tag->{edit_url} = $c->project_uri( $self->action_for('edit'), $tag->{id} );
 
-            push @{ $tag->{tag_group} ? $groups{ $tag->{tag_group} }{tags} || die : $other_tags }, $tag;
+            push @{ $tag->{tag_group_id} ? $groups{ $tag->{tag_group_id} }{tags} || die : $other_tags }, $tag;
         }
     }
 
+    my @existing_tag_names       = $c->project->tags->get_column('name')->all;
+    my @existing_tag_group_names = $c->project->tag_groups->get_column('name')->all;
+
     $c->stash(
-        groups     => \@groups,
-        other_tags => $other_tags,
+        groups                        => \@groups,
+        other_tags                    => $other_tags,
+        create_url                    => $c->project_uri( $self->action_for('create') ),
+        tag_groups                    => [ $c->project->tag_groups->sorted->hri->all ],
+        create_group_url              => $c->project_uri( $self->action_for('create_group') ),
+        existing_tag_names_json       => JSON::MaybeXS->new->encode( \@existing_tag_names ),
+        existing_tag_group_names_json => JSON::MaybeXS->new->encode( \@existing_tag_group_names ),
     );
 }
 
-sub new_tag : GET HEAD Chained('submenu') PathPart('tags/new') Args(0)
+sub tag : Chained('/project/base') PathPart('tag') CaptureArgs(1)
   RequiresCapability('view_project') {
-    my ( $self, $c, $id ) = @_;
-
-    $c->stash(
-        create_url => $c->project_uri( $self->action_for('create') ),
-        tag_groups => [ $c->project->tag_groups->sorted->hri->all ],
-    );
-}
-
-sub index_tag_group : GET HEAD Chained('submenu') PathPart('tag_groups') Args(0)
-  RequiresCapability('view_project') {
-    my ( $self, $c, $id ) = @_;
-
-    my @groups = $c->project->tag_groups->sorted->hri->all;
-
-    for my $group (@groups) {
-        $group->{url} = $c->project_uri( $self->action_for('edit_group'), $group->{id} );
-    }
-
-    $c->stash( tag_groups => \@groups );
-}
-
-sub new_tag_group : GET HEAD Chained('submenu') PathPart('tag_groups/new') Args(0)
-  RequiresCapability('view_project') {
-    my ( $self, $c, $id ) = @_;
-
-    $c->stash( create_url => $c->project_uri( $self->action_for('create_group') ) );
-}
-
-sub tag : Chained('submenu') PathPart('tag') CaptureArgs(1) RequiresCapability('view_project') {
     my ( $self, $c, $id ) = @_;
 
     $c->stash( tag => $c->project->tags->find($id) || $c->detach('/error/not_found') );
 }
 
-sub tag_group : Chained('submenu') PathPart('tag_group') CaptureArgs(1)
+sub tag_group : Chained('/project/base') PathPart('tag_group') CaptureArgs(1)
   RequiresCapability('view_project') {
     my ( $self, $c, $id ) = @_;
 
@@ -134,26 +103,8 @@ sub edit : GET HEAD Chained('tag') PathPart('') Args(0) RequiresCapability('view
 
     $c->stash(
         update_url => $c->project_uri( $self->action_for('update'), $tag->id ),
-        delete_url => $tag->deletable ? $c->project_uri( $self->action_for('delete'), $tag->id ) : undef,
-    );
-}
-
-sub edit_group : GET HEAD Chained('tag_group') PathPart('') Args(0)
-  RequiresCapability('view_project') {
-    my ( $self, $c ) = @_;
-
-    my $group = $c->stash->{tag_group};
-
-    my @tags = $group->tags->hri->all;
-
-    for my $tag (@tags) {
-        $tag->{url} = $c->project_uri( $self->action_for('edit'), $tag->{id} );
-    }
-
-    $c->stash(
-        tags       => \@tags,
-        update_url => $c->project_uri( $self->action_for('update_group'), $group->id ),
-        delete_url => $c->project_uri( $self->action_for('delete_group'), $group->id ),
+        delete_url => $c->project_uri( $self->action_for('delete'), $tag->id ),
+        is_in_use  => $tag->is_in_use,
     );
 }
 
@@ -161,7 +112,6 @@ sub delete : POST Chained('tag') Args(0) RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
     my $tag = $c->stash->{tag};
-    $tag->deletable or die "Not deletable";
     $tag->delete;
     $c->forward('redirect');
 }
@@ -187,8 +137,9 @@ sub create : POST Chained('/project/base') PathPart('tags/create') Args(0)
 
     my $tag = $c->project->create_related(
         tags => {
-            tag_group => $group,
-            name      => $c->req->params->get('name'),
+            maybe
+              tag_group => $group,
+            name => $c->req->params->get('name'),
         }
     );
     $c->forward('redirect');

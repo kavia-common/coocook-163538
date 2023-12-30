@@ -4,6 +4,12 @@ package Coocook::Schema::Component::ResultSet::ArticleOrUnit;
 
 use Coocook::Base;
 
+my @relationships = qw<
+  dish_ingredients
+  recipe_ingredients
+  items
+>;
+
 =head2 in_use()
 
 Returns a new resultset with articles/units which have any of
@@ -15,16 +21,32 @@ dish ingredients, recipe ingredients or purchase list items.
 sub in_use {
     my $self = shift;
 
-    my @relationships = qw<
-      dish_ingredients
-      recipe_ingredients
-      items
-    >;
-
     return $self->search(
         [    # OR
             map { $self->correlate($_)->search(@_)->results_exist_as_query } @relationships
         ]
+    );
+}
+
+=head2 with_number_of_ingredients_items()
+
+Returns a new resultset with 3 virtual columns with
+an integer showing the number of dish ingredients,
+recipe ingredients and purchase list items that use
+this article/unit.
+
+=cut
+
+sub with_number_of_ingredients_items {
+    my $self = shift;
+
+    return $self->search(
+        undef,
+        {
+            '+columns' => {
+                map { 'number_of_' . $_ => $self->correlate($_)->search(@_)->count_rs->as_query } @relationships
+            }
+        }
     );
 }
 

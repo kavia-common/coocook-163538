@@ -1,64 +1,106 @@
 [% escape_title( 'Organization', organization.display_name ) %]
 
-<p>Name: 👥 [% organization.name %]</p>
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="mb-2 form-floating">
+            <input class="form-control" value="[% organization.name %]" placeholder="Organization name" readonly>
+            <label>Organization name</label>
+        </div>
+        [% IF update_url %]
+        <form method="post" action="[% update_url %]">
+            <div class="mb-2 form-floating">
+                <input id="display_name" class="form-control" type="text" name="display_name" value="[% organization.display_name | html %]">
+                <label for="display_name">Display name</label>
+            </div>
+            <input type="submit" value="Change display name" class="btn btn-primary">
+        </form>
+        [% ELSE %]
+        <div class="mb-2 form-floating">
+            <input class="form-control" value="[% organization.display_name %]" placeholder="Display name" readonly>
+            <label>Display name</label>
+        </div>
+        [% END %]
+    </div>
+</div>
 
-[% IF update_url %]
-<form class="inline" method="post" action="[% update_url %]">
-<p>
-    Display name:
-    <input type="text" name="display_name" value="[% organization.display_name | html %]">
-    <input type="submit" value="Update">
-</p>
-</form>
+<div class="card mb-4">
+    <div class="card-header">
+        <h3 class="my-2">Description</h3>
+    </div>
+    <div class="card-body">
+        [% IF update_url %]
+        <form method="post" action="[% update_url %]">
+            <div class="row mb-2">
+                <div class="col-sm-6 mb-sm-0 mb-2">
+                    <textarea class="form-control with-markdown-preview" name="description_md" rows="10">[% organization.description_md | html %]</textarea>
+                </div>
+            </div>
+            <input type="submit" value="Update description" class="btn btn-primary">
+        </form>
+        [% ELSE %]
+        [% USE Markdown; organization.description_md | markdown %]
+        [% END %]
+    </div>
+</div>
 
-<h3>Description</h3>
-<form method="post" action="[% update_url %]">
-    <div class="row mb-2">
-        <div class="col-sm-6 mb-sm-0 mb-2">
-            <textarea class="form-control with-markdown-preview" name="description_md" rows="10">[% organization.description_md | html %]</textarea>
+<div class="row g-4 mb-4">
+    <div class="col-12 col-md-6">
+        <div class="card">
+            <div class="card-header d-flex gap-3 justify-content-between align-items-center flex-wrap">
+                <h3 class="my-2">Members</h3>
+                [% IF members_url %]
+                    <a href="[% members_url %]"  class="btn btn-primary">
+                        <i class="material-icons">manage_accounts</i>&thinsp;Manage memberships
+                    </a>
+                [% ELSE %]
+                    <span class="btn btn-primary disabled">
+                        <i class="material-icons">manage_accounts</i>&thinsp;Manage memberships
+                    </span>
+                [% END %]
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    [% FOREACH org_user IN organizations_users %]
+                    <li class="list-group-item">[% link_user(org_user.user) %] ([% org_user.role %])</li>
+                    [% END %]
+                </ul>
+            </div>
         </div>
     </div>
-    <p><input type="submit" value="Update"></p>
-</form>
-[% ELSE %]
-    <p>Display name: [% organization.display_name | html %]</p>
 
-    <h3>Description</h3>
-    [% USE Markdown; organization.description_md | markdown %]
-[% END %]
-
-<h3>Members</h3>
-
-[% IF members_url %]
-<a href="[% members_url %]">Manage memberships</a>
-[% END %]
-
-<ul>
-[% FOR organization_user IN organizations_users %]
-    <li>[% link_user(organization_user.user, organization_user.user_url) %] ([% organization_user.role %])</li>
-[% END %]
-</ul>
-
-<h3>Projects</h3>
-
-[% IF organizations_projects.empty %]
-    <p>None visible.</p>
-[% ELSE %]
-<ul>
-    [% FOR organization_project IN organizations_projects %]
-    <li><a href="[% organization_project.project.url %]">[% '🔒' UNLESS organization_project.project.is_public; organization_project.project.name | html %]</a> ([% organization_project.role %])</li>
-    [% END %]
-</ul>
-[% END %]
+    <div class="col-12 col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="my-2">Projects</h3>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    [% IF organizations_projects.size == 0 %]
+                    <li class="list-group-item">None visible</li>
+                    [% ELSE;
+                    FOREACH org_proj IN organizations_projects %]
+                    <li class="list-group-item">
+                        [% link_project(org_proj.project) %] ([% org_proj.role %])</li>
+                    </li>
+                    [% END; END %]
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 
 [% IF delete_url %]
-<h3>Delete organization</h3>
-
-<p>Deleting an organization also removes all memberships and the organization’s permissions on projects.</p>
-
-<form name="delete" method="post" action="[% delete_url %]">
-    <input type="submit" value="Delete organization">
-</form>
+<div class="card mb-4">
+    <div class="card-header">
+        <h3 class="my-2">Delete organization</h3>
+    </div>
+    <div class="card-body">
+        <p>Deleting an organization also removes all memberships and the organization’s permissions on projects.</p>
+        <form name="delete" method="post" action="[% delete_url %]">
+            <input type="submit" value="Delete organization" class="btn btn-danger">
+        </form>
+    </div>
+</div>
 [% END %]
 
 [% WRAPPER includes/infobox.tt %]

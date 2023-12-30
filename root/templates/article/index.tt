@@ -1,38 +1,52 @@
 [% title = "Articles" %]
 
 [% new = BLOCK %]
-<p><a href="[% new_url %]">New article</a></p>
+<p><a class="btn btn-primary" href="[% new_url %]"><i class="material-icons">add</i>&thinsp;New article</a></p>
 [% END; new %]
 
-<table>
+<table class="table">
     <thead>
-        <tr>
-            <th>Name</th>
-            <th>Comment</th>
-            <th>Preorder in advance</th>
-            <th>Shelf Life</th>
-            <th>Shop Section</th>
-            <th>Units</th>
-            <th>Tags</th>
-            <th>Actions</th>
+        <tr class="sticky-top">
+            <th scope="col">Name</th>
+            <th scope="col">Comment</th>
+            <th scope="col">Preorder in advance</th>
+            <th scope="col">Shelf Life</th>
+            <th scope="col">Shop Section</th>
+            <th scope="col">
+                Suggested Units
+                <i class="material-icons md-18" style="color:rgb(251, 220, 53)">star</i>
+            </th>
+            <th scope="col">Tags</th>
+            <th scope="col" class="btn-icon-1"></th>
         </tr>
     </thead>
     <tbody>
 [% FOR article IN articles %]
-        <tr>
+        <tr class="parent">
             <td><a href="[% article.edit_url %]">[% article.name | html %]</a></td>
             <td>[% article.comment | html %]</td>
             <td>[% IF article.preorder_workdays.defined AND article.preorder_servings.defined; article.preorder_workdays %] days if ≥[% article.preorder_servings %] servings[% END %]</td>
             <td>[% IF article.shelf_life_days.defined; article.shelf_life_days _ ' days'; ELSE; '<em>unknown</em>'; END %]</td>
-            <td>[% IF article.shop_section; article.shop_section.name | html; ELSE; '<em>none</em>'; END %]</td>
-            <td>[% FOR u IN article.units; display_unit(u, {html=>1}); ' '; END %]</td>
+            <td>[% IF article.shop_section; article.shop_section.name | html; END %]</td>
+            <td>
+    [% FOR u IN article.units;
+        display_unit(u, {html=>1});
+        ', ' UNLESS loop.last;
+    END %]
+            </td>
             <td>[% article.tags_joined %]</td>
             <td>
-    [% IF article.delete_url %]
-                <form method="post" action="[% article.delete_url %]" class="inline">
-                    <input type="submit" value="Delete" title="Delete [% article.name | html %]">
+            [% IF article.delete_url %]
+                <form method="post" action="[% article.delete_url %]" class="action-btn">
+                    <button class="btn btn-outline-danger btn-sm btn-quad" type="submit" title="Delete [% article.name | html %]">
+                        <i class="material-icons">delete_forever</i>
+                    </button>
                 </form>
-    [% END %]
+            [% ELSE %]
+                <button class="btn btn-outline-danger btn-sm btn-quad action-btn" disabled title="This article is used in dishes/recipes" style="pointer-events:auto;cursor:default">
+                    <i class="material-icons">delete_forever</i>
+                </button>
+            [% END %]
             </td>
         </tr>
 [% END %]
@@ -48,6 +62,6 @@
 
 <p>
     <i class="material-icons">lightbulb</i> Pro tip:
-    Optional details like preferred units, known shelf life or shop section
+    Optional details like suggested units, known shelf life or shop section
     are helpful when using articles in recipes/dishes and purchase lists.
 [% END %]

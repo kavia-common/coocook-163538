@@ -21,7 +21,7 @@ $t->text_lacks($private_project);
 $t->text_contains('pizza');
 $t->text_lacks($private_recipe);
 
-$t->follow_link_ok( { text => 'Test Project' } );
+$t->follow_link_ok( { text => 'public Test Project' } );
 $t->base_is('https://localhost/project/1/Test-Project');
 
 $t->back();

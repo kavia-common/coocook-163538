@@ -20,7 +20,7 @@ IF import_url %]<form id="import"method="get" action="[% import_url %]"></form>[
         IF import_url %]
         <div class="btn-group col-xxl-3 col-md-4 col-sm-6">
             <button type="submit" class="btn btn-secondary" form="import" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Import this recipe into another one of your projects">
-                <i class="material-icons ">import_export</i> Import into another project
+                Import into another project&thinsp;<i class="material-icons ">east</i>
             </button>
         </div>
         [% END %]

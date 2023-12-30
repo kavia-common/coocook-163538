@@ -61,19 +61,6 @@ footer a:focus,
 }
 
 /*===========================================================================
-  align material icons vertical: https://stackoverflow.com/questions/56171473/different-material-icons-styles-do-not-align
-  ===========================================================================*/
-i.material-icons,
-i.material-icons-outlined {
-    vertical-align: middle;
-    position: relative;
-}
-
-.material-icons.md-36 {
-    font-size: 36px;
-}
-
-/*===========================================================================
   markdown preview
   ===========================================================================*/
 .row .markdown-preview {
@@ -192,6 +179,7 @@ header h1 {
 .btn-outline-primary:hover,
 .btn-outline-primary:focus {
     color: var(--bs-light);
+    background-color: var(--bs-primary);
 }
 
 .btn-secondary,
@@ -205,6 +193,7 @@ header h1 {
 .btn-outline-secondary:hover,
 .btn-outline-secondary:focus {
     color: var(--bs-light);
+    background-color: var(--bs-secondary);
 }
 
 .anchor {
@@ -250,6 +239,11 @@ li.checkbox {
 
 form th {
     text-align: left;
+}
+
+table tr.sticky-top {
+    background-color: var(--bs-body-bg);
+    z-index: 1011;
 }
 
 table td input[type="checkbox"]:first-child:last-child {
@@ -361,6 +355,19 @@ cc-autocomplete {
 
 .print {
     display: none;
+}
+
+/* Show/hide action buttons on hover/no hover */
+.parent:hover .action-btn {
+    visibility: visible;
+}
+
+.parent .action-btn {
+    visibility: hidden;
+}
+
+.unit-table:not(:nth-child(2)) {
+    border-width: 0;
 }
 
 /******** footer part ********/

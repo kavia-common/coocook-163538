@@ -1,10 +1,10 @@
 [% title = "Projects" %]
 
-<table>
+<table class="table table-striped">
 <thead>
-    <tr>
-        <th>📁</th>
-        <th>🔒</th>
+    <tr class="sticky-top">
+        <th title="Archived projects"><i class="material-icons">folder</i></th>
+        <th title="Private projects"><i class="material-icons">lock</i></th>
         <th>Project</th>
         <th>Created</th>
         <th>Owner</th>
@@ -13,11 +13,11 @@
 <tbody>
 [% FOR proj IN projects %]
     <tr>
-        <td>[% '📁' IF proj.archived %]</td>
-        <td>[% '🔒' UNLESS proj.is_public %]</td>
+        <td>[% '<i class="material-icons">folder</i>' IF proj.archived %]</td>
+        <td>[% '<i class="material-icons">lock</i>' UNLESS proj.is_public %]</td>
         <td><a href="[% proj.url %]">[% proj.name | html %]</a></td>
         <td>[% proj.created %]</td>
-        <td>[% link_user(proj.owner, proj.owner.url) %]</td>
+        <td>[% link_user(proj.owner) %]</td>
     </tr>
 [% END %]
 </tbody>

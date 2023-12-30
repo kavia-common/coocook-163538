@@ -1,10 +1,20 @@
 [% title = "Purchase lists";
 
-js_push_template_path() %]
+js_push_template_path();
+
+BLOCK new_list %]
+<tr>
+    <td colspan="4">
+        <div class="d-grid">
+            <button class="btn btn-outline-primary material-icons" data-bs-toggle="modal" data-bs-target="#addList">add</button>
+        </div>
+    </td>
+</tr>
+[% END %]
 
 <table class="table table-striped align-middle">
     <thead>
-        <tr>
+        <tr class="sticky-top">
             <th>Date</th>
             <th>Name</th>
             <th>Items</th>
@@ -12,13 +22,14 @@ js_push_template_path() %]
         </tr>
     </thead>
     <tbody>
-    [% FOR list IN lists %]
-        <tr>
+        [% IF lists.size > 5; PROCESS new_list; END;
+        FOR list IN lists %]
+        <tr class="parent">
             <td>[% display_date(list.date, {html=>1}) %]</td>
             <td><a href="[% list.edit_url %]">[% list.name | html %]</a></td>
             <td>[% list.item_count %]</td>
             <td>
-                <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between action-btn">
                     <button class="btn btn-outline-dark btn-sm btn-quad update" title="Rename purchase list" data-url="[% list.update_url %]" data-name="[% list.name | html %]"  data-bs-toggle="modal" data-bs-target="#updateList">
                         <i class="material-icons">edit</i>
                     </button>
@@ -30,14 +41,8 @@ js_push_template_path() %]
                 </div>
             </td>
         </tr>
-    [% END %]
-        <tr>
-            <td colspan="4">
-                <div class="d-grid">
-                    <button class="btn btn-outline-primary material-icons" data-bs-toggle="modal" data-bs-target="#addList">add</button>
-                </div>
-            </td>
-        </tr>
+        [% END;
+        PROCESS new_list %]
     </tbody>
 </table>
 

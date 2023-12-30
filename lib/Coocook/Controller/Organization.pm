@@ -80,9 +80,11 @@ sub show : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
     for (@organizations_users) {
         my $organization_user = $_;
 
-        $_ = $organization_user->as_hashref( user => $organization_user->user );
-
-        $_->{user_url} = $c->uri_for_action( '/user/show', [ $organization_user->user->name ] );
+        $_ = $organization_user->as_hashref(
+            user => $organization_user->user->as_hashref(
+                url => $c->uri_for_action( '/user/show', [ $organization_user->user->name ] ),
+            ),
+        );
     }
 
     my @organizations_projects;

@@ -18,6 +18,11 @@ MACRO display_datetime(datetime, opts) BLOCK;
     datetime.strftime( opts.short ? datetime_format_short : datetime_format_long );
 END;
 
+MACRO display_project(project, opts) BLOCK; ~%]
+    <i class="material-icons [% opts.icon_class || 'md-18' %]">[% project.is_public ? 'public' : 'lock' %]</i>&thinsp;
+    [% project.name | html;
+END;
+
 MACRO display_unit(unit, opts) BLOCK;
     IF opts.html ~%]
         <abbr title="[% unit.long_name | html %]">[% unit.short_name | html %]</abbr>
@@ -32,12 +37,12 @@ MACRO display_unit(unit, opts) BLOCK;
 END;
 
 MACRO display_value(value, opts) BLOCK;
-    '−' IF value < 0; # non-ASCII minus https://www.compart.com/de/unicode/U+2212
+    '−' IF value < 0;    # > non-ASCII minus https://www.compart.com/de/unicode/U+2212
     IF opts.force_sign;
         '±' IF value == 0;
         '+' IF value > 0;
     END;
-    IF value < 0;
+    IF value < 0;    # > heal broken syntax highlighting
         value = 0 - value;
     END;
     USE SignificantDigits;
@@ -50,15 +55,21 @@ MACRO display_value_unit(value, unit, opts) BLOCK;
     display_unit(unit, opts);
 END;
 
-MACRO link_organization(organization, url) BLOCK;
-    THROW "no URL" UNLESS url;
-    # the font we use has no glyph for groups as of December 2020 ~%]
-    👥 <a href="[% url %]" title="Show organiztion">[% organization.display_name | html %]</a> (<span class="organization">[% organization.name %]</span>)
+MACRO link_organization(organization) BLOCK;
+    THROW "no URL" UNLESS organization.url ~%]
+    <i class="material-icons">groups</i>&thinsp;<a href="[% organization.url %]" title="Show organization">[% organization.display_name | html %]</a>
+    (<span class="organization">[% organization.name %]</span>)
 [%~ END;
 
-MACRO link_user(user, url) BLOCK;
-    THROW "no URL" UNLESS url ~%]
-    👤 <a href="[% url %]" title="Show user profile">[% user.display_name | html %]</a> (<span class="username">[% user.name %]</span>)
+MACRO link_user(user) BLOCK;
+    THROW "no user URL" UNLESS user.url ~%]
+    <i class="material-icons">person</i>&thinsp;<a href="[% user.url %]" title="Show user profile">[% user.display_name | html %]</a> (<span class="username">[% user.name %]</span>)
+[%~ END;
+
+MACRO link_project(project, opts) BLOCK;
+    THROW "no project URL" UNLESS project.url || opts.url ~%]
+    <i class="material-icons [% opts.icon_class || 'md-18' %]">[% project.is_public ? 'public' : 'lock' %]</i>&thinsp;
+    <a href="[% opts.url || project.url %]" class="[% opts.class %]">[% project.name | html %]</a>
 [%~ END;
 
 MACRO numerus(number, singular, plural, opts) BLOCK; # apply correct grammatical number

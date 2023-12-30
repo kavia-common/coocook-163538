@@ -1,34 +1,47 @@
 [% escape_title( 'User', user_object.display_name ) %]
 
-[% IF my_settings_url %]
-    <p><a href="[% my_settings_url %]">Edit your profile</a></p>
-[% END %]
+<p>
+    [% IF my_settings_url %]
+    <a href="[% my_settings_url %]" class="btn btn-outline-primary"><i class="material-icons">edit</i> Edit your profile</a>
+    [% END %]
 
-[% IF profile_admin_url %]
-    <p><a href="[% profile_admin_url %]">View profile as admin</a></p>
-[% END %]
+    [% IF profile_admin_url %]
+    <a href="[% profile_admin_url %]" class="btn btn-outline-secondary"><i class="material-icons">supervisor_account</i> View profile as admin</a>
+    [% END %]
+</p>
 
-<p>Username: [% user_object.name %]</p>
+<p class="text-muted small">Registered: [% display_date(user_object.created) %]</p>
 
-<p>Registered: [% display_date(user_object.created) %]</p>
-
-<p>Public projects owned by [% user_object.name %]:</p>
-
-<ul>
-[% FOR proj IN projects %]
-    <li>
-        <a href="[% proj.url %]">[% proj.name | html %]</a>
-    </li>
-[% END %]
-</ul>
-
-<p>Member of the following organizations:</p>
-
-<ul>
-[% FOR organization IN organizations %]
-    <li>[% link_organization(organization, organization.url) %]</li>
-[% END %]
-</ul>
+<div class="row g-3">
+    <div class="col-12 col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="my-2">Public projects owned by [% user_object.name %]</h3>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                [% FOR proj IN projects %]
+                    <li class="list-group-item">[% link_project(proj) %]</li>
+                [% END %]
+                </div>
+            </ul>
+        </div>
+    </div>
+    <div class="col-12 col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="my-2">Member of the following organizations</h3>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                [% FOR organization IN organizations %]
+                    <li class="list-group-item">[% link_organization(organization) %]</li>
+                [% END %]
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 
 [% WRAPPER includes/infobox.tt %]
     User profiles are visible to every user logged in on [% name %].

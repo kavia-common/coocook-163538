@@ -3,11 +3,10 @@
 [% IF projects.size > 0 %]
 <p>These are all projects that you own or that you have permissions for.</p>
 
-<table class="table">
+<table class="table table-striped">
     <thead>
-        <tr>
-            <th title="Archived projects" scope="col">📁</th>
-            <th title="Private projects" scope="col">🔒</th>
+        <tr class="sticky-top">
+            <th title="Archived projects" scope="col"><i class="material-icons">folder</i></th>
             <th scope="col">Name</th>
             <th scope="col">Your role</th>
             <th scope="col">Created</th>
@@ -16,9 +15,8 @@
     <tbody>
 [% FOR proj IN projects %]
         <tr>
-            <td[%  proj.archived  ? ' title="Project is archived.">📁' : '>' %]</td>
-            <td[% !proj.is_public ? ' title="Project is private." >🔒' : '>' %]</td>
-            <td><a href="[% proj.url %]">[% proj.name | html %]</a></td>
+            <td[%  proj.archived  ? ' title="Project is archived."><i class="material-icons">folder</i>' : '>' %]</td>
+            <td>[% link_project(proj) %]</td>
             <td>[% IF proj.role == 'owner' %]<strong>owner</strong>[% ELSE; proj.role; END %]</td>
             <td>[% display_datetime(proj.created, {short=>1}) %] UTC</td>
         </tr>

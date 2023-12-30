@@ -11,52 +11,51 @@ has_admin = 0 %]
     </div>
 </div>
 
-<div class="table-responsive my-3">
-    <table class="table align-middle m-0" style="min-width:510px;">
-        <thead>
-            <tr>
-                <th>User</th>
-                <th>Role</th>
-                <th class="btn-icon-2">Actions</th>
-        </thead>
-        <tbody>
-        [% FOR g_u IN organizations_users %]
-            <tr>
-                <td>[% link_user(g_u.user, g_u.user_url) %]</td>
-                <td>
-                [% IF g_u.edit_url %]
-                    <form class="input-group" method="post" action="[% g_u.edit_url %]" style="width:150px">
-                        <select class="form-select form-select-sm" name="role">
-                        [% FOR role IN roles %]
-                            <option value="[% role %]" [% 'selected' IF g_u.role == role %]>[% role %]</option>
-                        [% END %]
-                        </select>
-                        <button class="btn btn-outline-secondary btn-sm material-icons" type="submit" title="Update role">done</button>
+<table class="table align-middle m-0">
+    <thead>
+        <tr class="sticky-stacked sticky-top">
+            <th>User</th>
+            <th>Role</th>
+            <th class="btn-icon-2">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    [% FOR o_u IN organizations_users %]
+        <tr>
+            <td>[% link_user(o_u.user) %]</td>
+            <td>
+            [% IF o_u.edit_url %]
+                <form class="input-group" method="post" action="[% o_u.edit_url %]" style="width:150px">
+                    <select class="form-select form-select-sm" name="role">
+                    [% FOR role IN roles %]
+                        <option value="[% role %]" [% 'selected' IF o_u.role == role %]>[% role %]</option>
+                    [% END %]
+                    </select>
+                    <button class="btn btn-outline-secondary btn-sm material-icons" type="submit" title="Update role">done</button>
+                </form>
+            [% ELSE %]
+                <span class="px-2">[% o_u.role %]</span>
+            [% END %]
+            </td>
+            <td>
+                <div class="d-flex justify-content-end">
+                [% IF o_u.transfer_ownership_url;
+                    has_admin = 1 %]
+                    <form name="transfer-ownership" method="post" action="[% o_u.transfer_ownership_url %]">
+                        <button class="btn btn-outline-secondary btn-sm btn-quad material-icons" type="submit" title="Transfer ownership">sync_alt</button>
                     </form>
-                [% ELSE %]
-                    <span class="px-2">[% g_u.role %]</span>
                 [% END %]
-                </td>
-                <td>
-                    <div class="d-flex justify-content-end">
-                    [% IF g_u.transfer_ownership_url;
-                        has_admin = 1 %]
-                        <form name="transfer-ownership" method="post" action="[% g_u.transfer_ownership_url %]">
-                            <button class="btn btn-outline-secondary btn-sm btn-quad material-icons" type="submit" title="Transfer ownership">sync_alt</button>
-                        </form>
-                    [% END %]
-                    [% IF g_u.remove_url %]
-                        <form class="ms-2" method="post" action="[% g_u.remove_url %]">
-                            <button class="btn btn-outline-danger btn-sm btn-quad material-icons" type="submit" title="Remove">delete_forever</button>
-                        </form>
-                    [% END %]
-                    </div>
-                </td>
-            </tr>
-        [% END %]
-        </tbody>
-    </table>
-</div>
+                [% IF o_u.remove_url %]
+                    <form class="ms-2" method="post" action="[% o_u.remove_url %]">
+                        <button class="btn btn-outline-danger btn-sm btn-quad material-icons" type="submit" title="Remove">delete_forever</button>
+                    </form>
+                [% END %]
+                </div>
+            </td>
+        </tr>
+    [% END %]
+    </tbody>
+</table>
 
 [% IF has_admin == 0 %]
 <div class="alert alert-light">
@@ -76,7 +75,7 @@ has_admin = 0 %]
         <form method="post" action="[% add_url %]" id="add-member">
             <div class="mb-2">
                 <label for="user" class="form-label">User</label>
-                <cc-autocomplete id="user" endpoint='{"url": "/autocomplete/users"}' render="renderUserOption" filter="filterUser" input-name="name" msg-func="alertMessage" invalid='["Please select an user", "danger", false, "add-member-msg"]'></cc-autocomplete>
+                <cc-autocomplete id="user" endpoint='{"url": "/autocomplete/users"}' render="renderUserOption" filter="filterUser" input-name="name" msg-func="alertMessage" invalid='["Please select an user", "danger", false, "add-member-msg"]' static-base-uri="[% uri_for_static('/') %]"></cc-autocomplete>
                 <input class="delete-by-autocomplete-js" required name="name" type="text">
             </div>
             <div class="mb-2">

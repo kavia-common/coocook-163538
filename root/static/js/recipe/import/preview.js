@@ -1,9 +1,7 @@
 (() => {
     const existingRecipeNames = getJsonData("existing-recipe-names");
 
-    const articleElemList = document.querySelectorAll(
-        "form#import table td.article select"
-    );
+    const articleElemList = document.querySelectorAll("#import select.article");
     articleElemList.forEach((articleElem) => {
         articleElem.onchange = () => {
             let selectedArticleElem =
@@ -11,7 +9,7 @@
 
             let unitElem = articleElem
                 .closest("tr")
-                .querySelector("td.unit select");
+                .querySelector("select.unit");
             let unitOptionElems = unitElem.options;
 
             if (!selectedArticleElem.value) {
@@ -42,22 +40,25 @@
     });
 
     // check uniqueness of recipe name
-    const nameInputElem = document.querySelector(
-        'form#import input[name="name"]'
-    );
+    const nameInputElem = document.querySelector('#import input[name="name"]');
     nameInputElem.addEventListener("input", () => {
         let name = nameInputElem.value;
 
-        nameInputElem.setCustomValidity(
-            existingRecipeNames.indexOf(name) == -1
-                ? ""
-                : "This recipe name already exists in this project"
-        );
+        if (existingRecipeNames.indexOf(name) === -1) {
+            nameInputElem.setCustomValidity("");
+            nameInputElem.classList.remove("is-invalid");
+        } else {
+            nameInputElem.setCustomValidity(
+                "This recipe name already exists in this project"
+            );
+            nameInputElem.classList.add("is-invalid");
+        }
+        nameInputElem.reportValidity();
     });
 
     // skip checkboxes
     const checkboxElemList = document.querySelectorAll(
-        'form#import table td.import input[type="checkbox"]'
+        "#import .should-import"
     );
     checkboxElemList.forEach((checkboxElem) => {
         checkboxElem.onchange = () => {
