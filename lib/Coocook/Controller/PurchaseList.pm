@@ -128,6 +128,18 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
     }
 }
 
+sub move_items_ingredients : POST Chained('base') Args(0) RequiresCapability('edit_project') {
+    my ( $self, $c ) = @_;
+
+    my $list = $c->stash->{list};
+
+    $c->stash(
+        template => 'purchase_list/edit.tt',
+        wrapper  => undef,
+    );
+    $c->detach('edit');
+}
+
 sub remove_ingredient : POST Chained('/project/base') PathPart('purchase_list/remove_ingredient')
   Args(1) RequiresCapability('edit_project') {
     my ( $self, $c, $ingredient_id ) = @_;
