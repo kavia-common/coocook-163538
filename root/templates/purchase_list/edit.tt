@@ -5,6 +5,7 @@ html_title = html_title _ ' for ' _ display_date(list.date, {html=>1});
 
 css.push('/css/print.css');
 css_push_template_path();
+js_push_template_path();
 %]
 
 <button class="btn btn-primary my-3 material-icons" onclick="print()" title="Print">print</button>
@@ -47,6 +48,7 @@ css_push_template_path();
                        rowspan = 1;
                     END %]
                     <td class="item-amount" rowspan="[% rowspan %]">
+                        <input type="checkbox" id="move-item-[% item.id %]">
                     [% IF item.update_offset_url %]
                         <datalist id="values-[% loop.count %]">
                             <option value="[% item.total %]">
@@ -97,7 +99,10 @@ css_push_template_path();
                 </tr>
                 <tr class="parent">
                         [% END %]
-                    <td class="amount text-end text-nowrap">[% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %]</td>
+                    <td class="amount text-end text-nowrap">
+                        <input type="checkbox" id="move-ingredient-[% ingredient.id %]">
+                        [% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %]
+                    </td>
                     <td class="comment">[% IF ingredient.comment.length; '('; ingredient.comment | html; ')'; END %]</td>
                     <td class="dish">
                         <a href="[% ingredient.dish.url %]">[% ingredient.dish.name | html %]</a>
