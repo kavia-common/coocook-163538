@@ -370,6 +370,11 @@ cc-autocomplete {
     border-width: 0;
 }
 
+.tt-disabled-btn {
+    pointer-events: auto;
+    cursor: default;
+}
+
 /******** footer part ********/
 footer {
     width: 100%;
