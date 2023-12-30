@@ -26,17 +26,6 @@ js_push_template_path();
 
     <div class="mb-2 table-responsive">
         <table class="table align-middle pl-editor no-print">
-            <colgroup>
-                <col style="width:25%">
-                <col style="width:10%">
-                <col>
-                <col style="width:15%">
-                <col style="width:10%">
-                <col>
-                <col style="width:10%">
-                <col>
-                <col class="btn-icon-1">
-            </colgroup>
             <thead>
                 <tr>
                     <th>Amount</th>
@@ -45,7 +34,7 @@ js_push_template_path();
                     <th>Dishes</th>
                     <th>Servings</th>
                     <th colspan="2">Meals</th>
-                    <th></th>
+                    <th class="btn-icon-1"></th>
                 </tr>
             </thead>
             <tbody>
@@ -109,7 +98,7 @@ js_push_template_path();
                 </tr>
                 <tr>
                         [% END %]
-                    <td class="amount" style="text-align:right;">[% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %]</td>
+                    <td class="amount text-end text-nowrap">[% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %]</td>
                     <td class="comment">[% IF ingredient.comment.length; '('; ingredient.comment | html; ')'; END %]</td>
                     <td class="dish">
                         <a href="[% ingredient.dish.url %]">[% ingredient.dish.name | html %]</a>
@@ -126,7 +115,7 @@ js_push_template_path();
                             <span class="comment">([% ingredient.dish.meal.comment | html %])</span>
                         [% END %]
                     </td>
-                    <td class="date" style="text-align:center;">[% ingredient.dish.meal.date.strftime('%a, %F') %]</td>
+                    <td class="date text-center text-nowrap">[% ingredient.dish.meal.date.strftime('%a, %F') %]</td>
                     <td>
                         [% IF ingredient.remove_url %]
                         <form method="post" action="[% ingredient.remove_url %]">
@@ -252,7 +241,7 @@ js_push_template_path();
                             </span>
                         </div>
                     </td>
-                    <td class="small-font date text-end">[% ingredient.dish.meal.date.strftime('%a, %F') %]</th>
+                    <td class="small-font date text-end text-nowrap">[% ingredient.dish.meal.date.strftime('%a, %F') %]</th>
                 </tr>
                     [% END %]
 
