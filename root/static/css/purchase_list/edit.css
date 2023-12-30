@@ -16,8 +16,8 @@
         min-width: unset;
     }
 
-    th.amount-dish-meal,
-    td.amount-dish-meal {
+    th.amount-dish-servings-meal,
+    td.amount-dish-servings-meal {
         border-right: none;
     }
 
@@ -26,8 +26,9 @@
         border-left: none;
     }
 
-    td.amount-dish-meal .dish,
-    td.amount-dish-meal .meal {
+    td.amount-dish-servings-meal .dish,
+    td.amount-dish-servings-meal .servings,
+    td.amount-dish-servings-meal .meal {
         margin-left: 1em;
     }
 }

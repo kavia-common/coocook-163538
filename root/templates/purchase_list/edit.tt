@@ -32,6 +32,7 @@ js_push_template_path();
                 <col>
                 <col style="width:15%">
                 <col style="width:10%">
+                <col>
                 <col style="width:10%">
                 <col>
                 <col class="btn-icon-1">
@@ -42,6 +43,7 @@ js_push_template_path();
                     <th>Article</th>
                     <th colspan="2">Amounts</th>
                     <th>Dishes</th>
+                    <th>Servings</th>
                     <th colspan="2">Meals</th>
                     <th></th>
                 </tr>
@@ -116,6 +118,7 @@ js_push_template_path();
                             <span class="comment">([% ingredient.dish.comment | html %])</span>
                         [% END %]
                     </td>
+                    <td class="servings">[% ingredient.dish.servings %]</td>
                     <td class="meal">
                         [% ingredient.dish.meal.name | html;
                         IF ingredient.dish.meal.comment.length %]
@@ -142,7 +145,7 @@ js_push_template_path();
                         [% display_value_unit( item.offset, item.unit, {html=>1, force_sign=>1} ) %]
                     </td>
                     <td></td>
-                    <td class="rounding" colspan="3">
+                    <td class="rounding" colspan="4">
                         <i>rounding difference</i>
                     </td>
                     <td>
@@ -170,13 +173,16 @@ js_push_template_path();
                 <tr>
                     <th>Amount</th>
                     <th>Article</th>
-                    <th class="amount-dish-meal">
+                    <th class="amount-dish-servings-meal">
                         <div class="d-flex flex-wrap" style="column-gap:1rem;">
                             <span>
                                 <i class="material-icons md-18">scale</i> Amounts
                             </span>
                             <span>
                                 <i class="material-icons md-18">restaurant</i> Dishes
+                            </span>
+                            <span>
+                                <i class="material-icons md-18">soup_kitchen</i> Servings
                             </span>
                             <span>
                                 <i class="material-icons md-18">calendar_month</i> Meals
@@ -223,7 +229,7 @@ js_push_template_path();
                 </tr>
                 <tr>
                         [% END %]
-                    <td class="small-font amount-dish-meal">
+                    <td class="small-font amount-dish-servings-meal">
                         <div class="d-flex flex-wrap">
                             <span class="amount">
                                 <i class="material-icons md-18">scale</i>
@@ -234,6 +240,10 @@ js_push_template_path();
                                 <i class="material-icons md-18">restaurant</i>
                                 [% ingredient.dish.name | html %]
                                 [% IF ingredient.dish.comment.length %]<i>([% ingredient.dish.comment | html %])</i>[% END %]
+                            </span>
+                            <span class="servings">
+                                <i class="material-icons md-18">soup_kitchen</i>
+                                [% ingredient.dish.servings %]
                             </span>
                             <span class="meal">
                                 <i class="material-icons md-18">calendar_month</i>
