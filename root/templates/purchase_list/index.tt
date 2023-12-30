@@ -18,7 +18,7 @@ BLOCK new_list %]
             <th>Date</th>
             <th>Name</th>
             <th>Items</th>
-            <th class="btn-icon-3"></th>
+            <th class="btn-icon-[% lists.size <= 1 ? 2 : 3 %]"></th>
         </tr>
     </thead>
     <tbody>
@@ -28,9 +28,9 @@ BLOCK new_list %]
         <tr class="parent">
             <td>[% display_date(list.date, {html=>1}) %]</td>
             <td>
-                <i class="material-icons"[% IF list.is_default; ' title="Is the default purchase list">add_'; ELSE; '>'; END %]shopping_cart</i>&thinsp;
+                <i class="material-icons"[% IF lists.size > 1 AND list.is_default; ' title="Is the default purchase list">add_'; ELSE; '>'; END %]shopping_cart</i>&thinsp;
                 <a href="[% list.edit_url %]">[% list.name | html %]</a>
-                [% IF list.is_default; '(default)'; END %]
+                [% IF lists.size > 1 AND list.is_default; '(default)'; END %]
             </td>
             <td>[% list.item_count %]</td>
             <td>
@@ -39,17 +39,19 @@ BLOCK new_list %]
                         <i class="material-icons">edit</i>
                     </button>
 
-                    [% IF list.make_default_url %]
+                    [% IF lists.size > 1;
+                        IF list.make_default_url %]
                     <form action="[% list.make_default_url %]" method="post">
                         <button type="submit" class="btn btn-outline-dark btn-sm btn-quad" title="Make purchase list the default purchase list">
                             <i class="material-icons">shopping_cart_checkout</i>
                         </button>
                     </form>
-                    [% ELSE %]
+                        [% ELSE %]
                     <button class="btn btn-outline-dark btn-sm btn-quad tt-disabled-btn" title="Is already the default purchase list" disabled >
                         <i class="material-icons">shopping_cart_checkout</i>
                     </button>
-                    [% END;
+                        [% END;
+                    END;
 
                     IF list.delete_url;
                         IF is_in_use %]
@@ -80,6 +82,8 @@ BLOCK new_list %]
 [% WRAPPER includes/infobox.tt %]
     <em>Purchase lists</em> contain all articles that need to be sourced to prepare the planned meals.
     Sort them into multiple lists for different purchase dates or stores.
+    <br>
+    If there are multiple lists, new items get assigned to the project’s <em>default purchase list</em>.
 </p>
 
 <p>
