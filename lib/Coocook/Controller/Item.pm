@@ -92,34 +92,37 @@ sub assign : POST Chained('/project/base') PathPart('items/unassigned') Args(0)
     $c->response->redirect( $c->project_uri( $self->action_for('unassigned') ) );
 }
 
-sub convert : POST Chained('/project/base') PathPart('items/convert') Args(1)
-  RequiresCapability('edit_project') {
+sub base : Chained('/project/base') PathPart('items') CaptureArgs(1) {
     my ( $self, $c, $item_id ) = @_;
 
-    my $item = $c->project->purchase_lists->search_related('items')->find($item_id)
-      || $c->detach('/error/not_found');
+    $c->stash( item => $c->project->purchase_lists->search_related('items')->find($item_id)
+          || $c->detach('/error/not_found') );
+
+}
+
+sub convert : POST Chained('base') Args(0) RequiresCapability('edit_project') {
+    my ( $self, $c ) = @_;
 
     my $unit = $c->project->units->find( $c->req->params->get('unit') )
       || $c->detach('/error/not_found');
 
+    my $item = $c->stash->{item};
     $item->convert($unit);
 
     $c->response->redirect(
-        $c->project_uri( '/purchase_list/edit', $item->purchase_list_id, \( 'item-' . $item_id ) ) );
+        $c->project_uri( '/purchase_list/edit', $item->purchase_list_id, \( 'item-' . $item->id ) ) );
 }
 
-sub update_offset : POST Chained('/project/base') PathPart('items/update_offset') Args(1)
-  RequiresCapability('edit_project') {
-    my ( $self, $c, $item_id ) = @_;
-
-    my $item = $c->project->purchase_lists->search_related('items')->find($item_id)
-      || $c->detach('/error/not_found');
+sub update_offset : POST Chained('base') Args(0) RequiresCapability('edit_project') {
+    my ( $self, $c ) = @_;
 
     my $total  = $c->req->params->get('total');
     my $offset = $c->req->params->get('offset');
 
     ( defined $total xor defined $offset )
       or $c->detach( '/error/bad_request', [] );
+
+    my $item = $c->stash->{item};
 
     if ( defined $total ) {
         $item->update( { offset => $total - $item->value } );
@@ -130,7 +133,7 @@ sub update_offset : POST Chained('/project/base') PathPart('items/update_offset'
     else { die 'Code broken' }
 
     $c->response->redirect(
-        $c->project_uri( '/purchase_list/edit', $item->purchase_list_id, \( 'item-' . $item_id ) ) );
+        $c->project_uri( '/purchase_list/edit', $item->purchase_list_id, \( 'item-' . $item->id ) ) );
 }
 
 __PACKAGE__->meta->make_immutable;
