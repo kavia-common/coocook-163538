@@ -7,5 +7,6 @@
     "[perl]": {
         "editor.formatOnSave": true,
         "editor.defaultFormatter": "sfodje.perltidy"
-    }
+    },
+    "perltidy.profile": "${workspaceFolder}/.perltidyrc"
 }
