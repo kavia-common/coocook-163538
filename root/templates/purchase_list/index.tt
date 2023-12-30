@@ -27,7 +27,11 @@ BLOCK new_list %]
         is_in_use = list.item_count > 0 %]
         <tr class="parent">
             <td>[% display_date(list.date, {html=>1}) %]</td>
-            <td><a href="[% list.edit_url %]">[% list.name | html %]</a></td>
+            <td>
+                <i class="material-icons"[% IF list.is_default; ' title="Is the default purchase list">add_'; ELSE; '>'; END %]shopping_cart</i>&thinsp;
+                <a href="[% list.edit_url %]">[% list.name | html %]</a>
+                [% IF list.is_default; '(default)'; END %]
+            </td>
             <td>[% list.item_count %]</td>
             <td>
                 <div class="d-flex justify-content-between action-btn">
