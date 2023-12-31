@@ -111,7 +111,7 @@ js_push_template_path();
                             <span class="comment">([% ingredient.dish.comment | html %])</span>
                         [% END %]
                     </td>
-                    <td class="servings">[% ingredient.dish.servings %]</td>
+                    <td class="servings text-end">[% ingredient.dish.servings %]</td>
                     <td class="meal">
                         [% ingredient.dish.meal.name | html;
                         IF ingredient.dish.meal.comment.length %]
@@ -129,8 +129,8 @@ js_push_template_path();
                         </form>
                         [% END %]
                     </td>
-                </tr>
                     [% END %]
+                </tr>
 
                     [% IF item.offset %]
                 <tr class="parent">
@@ -246,8 +246,8 @@ js_push_template_path();
                         </div>
                     </td>
                     <td class="small-font date text-end text-nowrap">[% ingredient.dish.meal.date.strftime('%a, %F') %]</th>
-                </tr>
                     [% END %]
+                </tr>
 
                     [% IF item.offset %]
                 <tr>
