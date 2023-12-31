@@ -10,7 +10,7 @@ use DateTime;
 use DBIx::Class::Helpers::Util qw< normalize_connect_info >;
 use Scope::Guard               qw(guard);
 
-our $VERSION = 27;    # version of schema definition, not software version!
+our $VERSION = 28;    # version of schema definition, not software version!
 
 extends 'DBIx::Class::Schema::Config';
 
