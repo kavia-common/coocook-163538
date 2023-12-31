@@ -9,7 +9,14 @@ js_push_template_path();
 %]
 
 <button class="btn btn-primary my-3 material-icons" onclick="print()" title="Print">print</button>
+<button id="move-btn" class="btn btn-primary my-3 d-none" title="Move selected items/ingredients to different purchase list"  data-bs-toggle="modal" data-bs-target="#move-items">
+    <i class="material-icons">drive_file_move</i>&thinsp;Move to other purchase list
+</button>
+<button id="move-btn-disabled" class="btn btn-primary my-3 tt-disabled-btn" title="No items/ingredients selected to move" disabled>
+    <i class="material-icons">drive_file_move</i>&thinsp;Move to other purchase list
+</button>
 
+<div id="list-container">
 [% IF sections.size == 0 %]
 <p>Currently no items assigned</p>
 [% END %]
@@ -265,7 +272,37 @@ js_push_template_path();
     </div>
 </div>
 [% END %]
+</div>
 
 [% INCLUDE includes/infobox_donate.tt %]
 
 <script id="purchase-lists" type="application/json">[% lists_json | html %]</script>
+
+<form id="move-items-form">
+    <div class="modal fade" id="move-items" tabindex="-1" aria-labelledby="move-items-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="move-items-label">Move item/ingredients to other purchase list</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating">
+                        <select id="move-items-target" class="form-control" placeholder="Target purchase list">
+                            <option value="">---</option>
+                        </select>
+                        <label for="move-items-target" class="form-label">Target purchase list</label>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-secondary btn-sm" title="Cancel" data-bs-dismiss="modal">
+                        <i class="material-icons">close</i>&thinsp;Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-sm" title="Move items/ingredients to selected purchase list">
+                        <i class="material-icons">drive_file_move</i>&thinsp;Move to selected purchase list
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

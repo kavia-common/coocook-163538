@@ -1,5 +1,44 @@
-const purchaseLists = getJsonData("purchase-lists");
+const moveBtn = document.getElementById("move-btn");
+const moveBtnDisabled = document.getElementById("move-btn-disabled");
+const moveItemsForm = document.getElementById("move-items-form");
+const messages = document.getElementById("messages");
+const moveModal = document.getElementById("move-items");
+const select = document.getElementById("move-items-target");
+const purchaseLists = getJsonData("purchase-lists").sort((a, b) => {
+    a < b ? -1 : a > b ? 1 : 0;
+});
+const currentPurchaseListId = parseInt(location.pathname.split("/").pop());
 let SKIP = false;
+
+function showMessage(msg, type) {
+    const msgElem = document.createElement("div");
+    msgElem.className = `alert alert-${type}`;
+    msgElem.innerHTML = msg;
+
+    messages.append(msgElem);
+    setTimeout(() => {
+        msgElem.remove();
+    }, 5_000);
+}
+
+function buildPurchaseListOptions() {
+    for (const pl of purchaseLists) {
+        if (pl.id === currentPurchaseListId) continue;
+        const option = document.createElement("option");
+        option.value = pl.id;
+        option.innerText = `${pl.date} ${pl.name}`;
+        select.append(option);
+    }
+
+    select.setCustomValidity("Please select a target purchase list");
+    select.addEventListener("input", () => {
+        if (select.value === "") {
+            select.setCustomValidity("Please select a target purchase list");
+        } else {
+            select.setCustomValidity("");
+        }
+    });
+}
 
 function handleChangeItem(e) {
     if (SKIP) return;
@@ -12,6 +51,7 @@ function handleChangeItem(e) {
         ingredient.checked = e.target.checked;
     }
     SKIP = false;
+    checkDisabled();
 }
 
 function handleChangeIngredient(e) {
@@ -41,6 +81,7 @@ function handleChangeIngredient(e) {
         }
     }
     SKIP = false;
+    checkDisabled();
 }
 
 function init() {
@@ -56,6 +97,85 @@ function init() {
     for (const ingredient of ingredients) {
         ingredient.addEventListener("click", handleChangeIngredient);
     }
+
+    checkDisabled();
+}
+
+function checkDisabled() {
+    const items = Array.from(
+        document.querySelectorAll(`input[id^="move-item"]`)
+    ).concat(
+        Array.from(document.querySelectorAll(`input[id^="move-ingredient"]`))
+    );
+
+    let selected = false;
+    for (const item of items) {
+        if (item.checked) {
+            selected = true;
+            break;
+        }
+    }
+
+    if (selected) {
+        moveBtn.classList.remove("d-none");
+        moveBtnDisabled.classList.add("d-none");
+    } else {
+        moveBtn.classList.add("d-none");
+        moveBtnDisabled.classList.remove("d-none");
+    }
 }
 
 init();
+buildPurchaseListOptions();
+
+moveModal.addEventListener("shown.bs.modal", () => select.focus());
+moveModal.addEventListener("hidden.bs.modal", () => {
+    select.value = "";
+    select.setCustomValidity("Please select a target purchase list");
+});
+
+moveItemsForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const select = document.getElementById("move-items-target");
+    const items = document.querySelectorAll(`input[id^="move-item"]:checked`);
+    const ingredients = document.querySelectorAll(
+        `input[id^="move-ingredient"]:checked`
+    );
+    const data = `target_purchase_list=${select.value}${Array.from(items)
+        .map((elem) => `&item=${elem.id.split("-").pop()}`)
+        .join("")}${Array.from(ingredients)
+        .map((elem) => `&ingredient=${elem.id.split("-").pop()}`)
+        .join("")}`;
+    const url =
+        location.pathname +
+        (location.pathname.endsWith("/") ? "" : "/") +
+        "move_items_ingredients";
+    const res = await fetch(url, {
+        method: "post",
+        headers: {
+            Accept: "text/html",
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: data,
+    });
+
+    if (!res.ok) {
+        showMessage(
+            "An error occured during moving the selected items/ingredients",
+            "danger"
+        );
+    } else {
+        const htmlRes = document.createElement("div");
+        htmlRes.innerHTML = await res.text();
+
+        document.getElementById("list-container").innerHTML =
+            htmlRes.querySelector("#list-container")?.innerHTML ?? "";
+        showMessage(
+            "Successfully moved the selected items/ingredients",
+            "success"
+        );
+        init();
+    }
+
+    bootstrap.Modal.getInstance(document.getElementById("move-items")).hide();
+});

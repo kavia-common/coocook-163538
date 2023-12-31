@@ -196,6 +196,11 @@ header h1 {
     background-color: var(--bs-secondary);
 }
 
+.btn-primary:disabled,
+.btn-primary.disabled {
+    color: var(--bs-light);
+}
+
 .anchor {
     opacity: 0;
     color: grey;
