@@ -59,21 +59,16 @@ sub index : GET HEAD Chained('submenu') PathPart('purchase_lists') Args(0)
         $date->add( days => 1 );
     };
 
-    my @lists = $lists->sorted->with_item_count->hri->all;
-
-    my $i = 0;
+    my @lists = $lists->sorted->with_is_default->with_item_count->hri->all;
 
     for my $list (@lists) {
-        $list->{date}       = $lists->parse_date( $list->{date} );
-        $list->{is_default} = !$i;                                   # TODO mocked flag
+        $list->{date} = $lists->parse_date( $list->{date} );
 
         $list->{edit_url}   = $c->project_uri( $self->action_for('edit'),   $list->{id} );
         $list->{update_url} = $c->project_uri( $self->action_for('update'), $list->{id} );
         $list->{delete_url} = $c->project_uri( $self->action_for('delete'), $list->{id} );
         $list->{make_default_url} =
-          $i ? $c->project_uri( $self->action_for('make_default'), $list->{id} ) : undef;
-
-        $i++;
+          !$list->{is_default} ? $c->project_uri( $self->action_for('make_default'), $list->{id} ) : undef;
     }
 
     $c->stash(
