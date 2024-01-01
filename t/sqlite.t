@@ -21,7 +21,7 @@ sub _schema_eq;    # declare name, implementation is below
 # older than version 13.
 my %SCHEMA_VERSIONS_WITH_DIFFERENCES = map { $_ => 1 } ( 3 .. 5, 7 .. 12 );
 
-plan tests => 2 + ( $Coocook::Schema::VERSION - 1 ) + 4;
+plan tests => 2 + ( $Coocook::Schema::VERSION - 1 ) + 5;
 
 my $schema_from_code = TestDB->new();
 my $schema_from_deploy;
@@ -74,6 +74,20 @@ _schema_eq
 _schema_eq
   $schema_from_upgrades => $schema_from_code,
   "schema from upgrade SQLs and schema from Coocook::Schema code are equal";
+
+is [
+    $schema_from_upgrades->resultset('Project')->search(
+        undef,
+        {
+            columns  => [qw( id default_purchase_list_id )],
+            order_by => 'id'
+        }
+    )->hri->all
+] => array {
+    item hash { field id => 1; field default_purchase_list_id => 1 };
+    end();
+},
+  "default values from migration for default_purchase_list_id";
 
 {
     my $unit_conversions = $schema_from_upgrades->resultset('UnitConversion')

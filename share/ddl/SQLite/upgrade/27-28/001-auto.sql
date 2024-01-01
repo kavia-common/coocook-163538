@@ -40,6 +40,19 @@ CREATE UNIQUE INDEX projects_url_name ON projects (url_name);
 ;
 CREATE UNIQUE INDEX projects_url_name_fc ON projects (url_name_fc);
 
+-- assign default purchase lists:
+-- 1. list with most items
+-- 2. list with earliest date
+UPDATE projects
+SET default_purchase_list_id = (
+    SELECT id FROM purchase_lists
+    WHERE project_id = projects.id
+    ORDER BY
+        (SELECT COUNT(*) FROM items WHERE purchase_list_id = purchase_lists.id) DESC,
+        date ASC
+    LIMIT 1
+);
+
 ;
 
 COMMIT;

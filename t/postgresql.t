@@ -65,7 +65,7 @@ sub _schema_diff_like;    # declare name, implementation below
 
 my $FIRST_PGSQL_SCHEMA_VERSION = 21;
 
-plan tests => 3 + ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 10;
+plan tests => 3 + ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 11;
 
 my $schema_from_dbic = Coocook::Schema->connect( $dsn->('dbic') );
 ok lives { $schema_from_dbic->deploy() }, "deploy with DBIx::Class";
@@ -108,6 +108,21 @@ for my $version ( $FIRST_PGSQL_SCHEMA_VERSION + 1 .. $Coocook::Schema::VERSION )
       ],
       "unit_conversions created from old quantity data by migration";
 }
+
+is [
+    $schema_from_upgrades->resultset('Project')->search(
+        undef,
+        {
+            columns  => [qw( id default_purchase_list_id )],
+            order_by => 'id'
+        }
+    )->hri->all
+] => array {
+    item hash { field id => 1; field default_purchase_list_id => 1 };
+    item hash { field id => 2; field default_purchase_list_id => undef };
+    end();
+},
+  "default values from migration for default_purchase_list_id";
 
 note "Deleting original test data ...";
 $schema_from_upgrades->resultset($_)->delete() for qw(
