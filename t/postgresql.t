@@ -174,12 +174,13 @@ $schema_from_deploy->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do(<<SQL) }
 ALTER SCHEMA public RENAME TO main
 SQL
 
-my $sqlite_schema = TestDB->new();
-
 SKIP: {
     # https://metacpan.org/release/ISHIGAKI/DBD-SQLite-1.72/source/Changes#L14
+    require DBD::SQLite;
     $DBD::SQLite::VERSION < 1.71
       or skip "DBD::SQLite broke compatibility with 1.71_05";
+
+    my $sqlite_schema = TestDB->new();
 
     _schema_diff_like $schema_from_deploy, $sqlite_schema, hash {
         field deleted_tables => [
