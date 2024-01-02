@@ -6,7 +6,7 @@ use warnings;
 use parent 'DBIx::Class::DeploymentHandler';
 
 use File::Spec;
-use Sub::Name;
+use Sub::Util qw(set_subname);
 
 sub new {
     my ( $self, $args ) = @_;
@@ -32,7 +32,7 @@ sub upgrade {
       or return $self->next::method(@_);
 
     # next::method() doesn't work without subname() inside a coderef
-    my $orig = subname __PACKAGE__ . '::upgrade' => sub { $self->next::method(@_) };
+    my $orig = set_subname __PACKAGE__ . '::upgrade' => sub { $self->next::method(@_) };
 
     # DBIC::DeploymentHandler wraps our upgrade SQLs in txn_do().
     # In SQLite disabling the pragma 'foreign_keys' inside this transaction

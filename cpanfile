@@ -61,7 +61,7 @@ requires "SQL::Translator::Producer::SQLite";
 requires "SVG";
 requires "Scalar::Util";
 requires "Storable";
-requires "Sub::Name";
+requires "Sub::Util";
 requires "Template" => "2.29";
 requires "Template::Plugin::Filter";
 requires "Template::Plugin::Markdown";
