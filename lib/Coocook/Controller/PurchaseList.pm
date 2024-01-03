@@ -119,7 +119,7 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
         }
     }
 
-    my @lists = $c->stash->{lists}->hri->all;
+    my @lists = $c->stash->{lists}->search( undef, { order_by => [ 'date', 'name' ] } )->hri->all;
     $c->stash(
         lists      => \@lists,
         lists_json => to_json( \@lists ),
