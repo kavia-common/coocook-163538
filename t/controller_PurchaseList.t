@@ -3,7 +3,7 @@ use Test2::V0;
 use lib 't/lib';
 use Test::Coocook;
 
-plan(7);
+plan(8);
 
 my $t = Test::Coocook->new();
 
@@ -41,4 +41,4 @@ $t->post_ok(
         target_purchase_list => $target_purchase_list->id,
     }
 );
-note $t->text;
+$t->content_lacks( '<body', "HTML snippet, not whole page" );

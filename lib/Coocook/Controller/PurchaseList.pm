@@ -174,8 +174,8 @@ sub move_items_ingredients : POST Chained('base') Args(0) RequiresCapability('ed
     );
 
     $c->stash(
-        template => 'purchase_list/edit.tt',
-        wrapper  => undef,
+        current_view => 'HTML::Snippet',
+        template     => 'purchase_list/edit.tt',
     );
     $c->detach('edit');
 }

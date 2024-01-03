@@ -216,13 +216,15 @@ __PACKAGE__->config(
         ],
     },
 
-    'View::HTML' => {
-        INCLUDE_PATH => [
-            __PACKAGE__->path_to(qw< root custom_templates >),    # allow overriding with custom files
-            __PACKAGE__->path_to(qw< root templates >),
-            __PACKAGE__->path_to(qw< root common_templates >),
-        ],
-    },
+    map( {
+            $_ => {
+                INCLUDE_PATH => [
+                    __PACKAGE__->path_to(qw< root custom_templates >),    # allow overriding with custom files
+                    __PACKAGE__->path_to(qw< root templates >),
+                    __PACKAGE__->path_to(qw< root common_templates >),
+                ],
+            }
+    } ( 'View::HTML', 'View::HTML::Snippet' ) ),
 );
 
 # Start the application
