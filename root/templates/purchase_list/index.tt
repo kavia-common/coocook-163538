@@ -150,7 +150,15 @@ BLOCK new_list %]
                 </div>
                 <div class="modal-body">
                     Do you really want to delete this purchase list?
-                    On this list <span id="delete-list-count"></span>. Which will then be moved to the default purchase list.
+                    On this list <span id="delete-list-count"></span>.
+                    [% IF lists.size > 1 %]
+                    Which will then be moved to the default purchase list
+                    [% FOREACH list IN lists;
+                        IF list.is_default;
+                            list.name; ' on '; display_date(list.date, {html=>1});
+                        END;
+                    END; %].
+                    [% END %]
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-secondary btn-sm" title="Cancel" data-bs-dismiss="modal">
