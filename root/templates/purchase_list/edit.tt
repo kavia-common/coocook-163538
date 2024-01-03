@@ -5,16 +5,19 @@ html_title = html_title _ ' for ' _ display_date(list.date, {html=>1});
 
 css.push('/css/print.css');
 css_push_template_path();
-js_push_template_path();
-%]
+IF lists.size > 1;
+    js_push_template_path();
+END %]
 
 <button class="btn btn-primary my-3 material-icons" onclick="print()" title="Print">print</button>
+[% IF lists.size > 1 %]
 <button id="move-btn" class="btn btn-primary my-3 d-none" title="Move selected items/ingredients to different purchase list"  data-bs-toggle="modal" data-bs-target="#move-items">
     <i class="material-icons">drive_file_move</i>&thinsp;Move to other purchase list
 </button>
 <button id="move-btn-disabled" class="btn btn-primary my-3 tt-disabled-btn" title="No items/ingredients selected to move" disabled>
     <i class="material-icons">drive_file_move</i>&thinsp;Move to other purchase list
 </button>
+[% END %]
 
 <div id="list-container">
 [% IF sections.size == 0 %]
@@ -55,8 +58,10 @@ js_push_template_path();
                        rowspan = 1;
                     END %]
                     <td class="item-amount" rowspan="[% rowspan %]">
+                    [% IF lists.size %]
                         <input type="checkbox" id="move-item-[% item.id %]">
-                    [% IF item.update_offset_url %]
+                    [% END;
+                    IF item.update_offset_url %]
                         <datalist id="values-[% loop.count %]">
                             <option value="[% item.total %]">
                             <option value="[% item.next_higher_value %]">
@@ -96,19 +101,20 @@ js_push_template_path();
                         <span class="comment">([% item.article.comment | html %])</span>
                     [% END %]
                     </td>
-
+                    <td colspan="7" class="p-0 border-0">
                     [% IF item.ingredients.empty %]
-                    <td colspan="6">No ingredients. This might be caused by a software bug.</td>
-                </tr>
+                        No ingredients. This might be caused by a software bug.
                     [% END %]
-                    [% FOREACH ingredient IN item.ingredients %]
-                        [% UNLESS loop.first %]
+                    </td>
                 </tr>
+
+                    [% FOREACH ingredient IN item.ingredients %]
                 <tr class="parent">
-                        [% END %]
                     <td class="amount text-end text-nowrap">
+                        [% IF lists.size > 1 %]
                         <input type="checkbox" id="move-ingredient-[% ingredient.id %]">
-                        [% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %]
+                        [% END;
+                        display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %]
                     </td>
                     <td class="comment">[% IF ingredient.comment.length; '('; ingredient.comment | html; ')'; END %]</td>
                     <td class="dish">
@@ -128,7 +134,7 @@ js_push_template_path();
                     </td>
                     <td class="date text-center text-nowrap">[% ingredient.dish.meal.date.strftime('%a, %F') %]</td>
                     <td>
-                        [% IF ingredient.remove_url %]
+                        [% IF ingredient.remove_url && lists.size > 1 %]
                         <form method="post" action="[% ingredient.remove_url %]" class="action-btn">
                             <button type="submit" class="btn btn-outline-danger btn-sm btn-quad" title="Remove from purchase list">
                                 <i class="material-icons">delete_forever</i>

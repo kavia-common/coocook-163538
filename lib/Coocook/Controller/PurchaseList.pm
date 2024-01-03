@@ -131,7 +131,11 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
         }
     }
 
-    $c->stash( lists_json => to_json( [ $c->stash->{lists}->hri->all ] ) );
+    my @lists = $c->stash->{lists}->hri->all;
+    $c->stash(
+        lists      => \@lists,
+        lists_json => to_json( \@lists ),
+    );
 }
 
 sub make_default : POST Chained('base') Args(0) RequiresCapability('edit_project') {

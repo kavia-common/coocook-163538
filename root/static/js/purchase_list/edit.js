@@ -4,9 +4,15 @@ const moveItemsForm = document.getElementById("move-items-form");
 const messages = document.getElementById("messages");
 const moveModal = document.getElementById("move-items");
 const select = document.getElementById("move-items-target");
-const purchaseLists = getJsonData("purchase-lists").sort((a, b) => {
-    a < b ? -1 : a > b ? 1 : 0;
-});
+const purchaseLists = (() => {
+    try {
+        return getJsonData("purchase-lists").sort((a, b) => {
+            a < b ? -1 : a > b ? 1 : 0;
+        });
+    } catch {
+        return [];
+    }
+})();
 const currentPurchaseListId = parseInt(location.pathname.split("/").pop());
 let SKIP = false;
 
