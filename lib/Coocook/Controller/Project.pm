@@ -83,17 +83,16 @@ sub base : Chained('/base') PathPart('project') CaptureArgs(2) {
 
     $c->stash(
         project_urls => {
-            project          => $c->project_uri('/project/show'),
-            edit             => $c->project_uri('/project/edit'),
-            recipes          => $c->project_uri('/recipe/index'),
-            articles         => $c->project_uri('/article/index'),
-            tags             => $c->project_uri('/tag/index'),
-            unassigned_items => $c->project_uri('/item/unassigned'),
-            purchase_lists   => $c->project_uri('/purchase_list/index'),
-            shop_sections    => $c->project_uri('/shop_section/index'),
-            units            => $c->project_uri('/unit/index'),
-            archive          => $c->project_uri('/project/archive'),
-            unarchive        => $c->project_uri('/project/unarchive'),
+            project        => $c->project_uri('/project/show'),
+            edit           => $c->project_uri('/project/edit'),
+            recipes        => $c->project_uri('/recipe/index'),
+            articles       => $c->project_uri('/article/index'),
+            tags           => $c->project_uri('/tag/index'),
+            purchase_lists => $c->project_uri('/purchase_list/index'),
+            shop_sections  => $c->project_uri('/shop_section/index'),
+            units          => $c->project_uri('/unit/index'),
+            archive        => $c->project_uri('/project/archive'),
+            unarchive      => $c->project_uri('/project/unarchive'),
         },
     );
 
@@ -118,6 +117,7 @@ sub submenu : Chained('base') PathPart('') CaptureArgs(0) {
             { text => "Show project",   action => 'project/show' },
             { text => "Meals & Dishes", action => 'project/edit' },
             { text => "Permissions",    action => 'permission/index' },
+            { text => "Shop sections",  action => 'shop_section/index' },
             { text => "Settings",       action => 'project/settings' },
         ],
     );

@@ -3,7 +3,7 @@ use Test2::V0;
 use lib 't/lib';
 use Test::Coocook;
 
-plan(6);
+plan(2);
 
 my $t = Test::Coocook->new();
 
@@ -14,38 +14,11 @@ $t->schema->resultset('PurchaseList')
 $t->get('/');
 $t->login_ok( 'john_doe', 'P@ssw0rd' );
 
-$t->get_ok('https://localhost/project/1/Test-Project/items/unassigned');
-$t->content_contains('https://localhost/project/1/Test-Project/dish/1');
-
-subtest "send invalid list ID" => sub {
-    $t->submit_form_fails(
-        {
-            with_fields => {
-                assign2 => 1,      # valid but should not be executed
-                assign5 => 999,    # invalid -> error 400
-            },
-            strict_forms => 0,     # no option with value 999 exists
-        },
-        "assign first item to list 1, 2nd item to inexistent list"
-    );
-
-    $t->get_ok('/project/1/Test-Project/items/unassigned');
-    $t->content_contains( 'assign2', "item wasn't assigned by errornous request" );
-};
-
-subtest "successfully assign items" => sub {
-    $t->get_ok('/project/1/Test-Project/items/unassigned');
-
-    $t->submit_form_ok(
-        {
-            with_fields => { assign2 => 1 },
-        },
-        "assign first item to purchase list 1"
-    );
-
-    $t->get_ok('/project/1/Test-Project/items/unassigned');
-    $t->content_lacks( 'assign2', "item was assigned" );
-};
+{    # TODO maybe this could be done via HTML
+    my $ingredient = $t->schema->resultset('DishIngredient')->find(2);
+    my $list       = $t->schema->resultset('PurchaseList')->find(1);
+    $ingredient->assign_to_purchase_list($list);
+}
 
 subtest "change item total" => sub {
     $t->get_ok('/project/1/Test-Project/purchase_list/1');

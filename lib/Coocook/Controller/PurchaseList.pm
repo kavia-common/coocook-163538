@@ -21,23 +21,11 @@ Catalyst Controller.
 
 =cut
 
-sub submenu : Chained('/project/base') PathPart('') CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-
-    $c->stash(
-        submenu_items => [
-            { text => "Purchase lists",   action => 'purchase_list/index' },
-            { text => "Unassigned items", action => 'item/unassigned' },
-            { text => "Shop sections",    action => 'shop_section/index' },
-        ]
-    );
-}
-
 =head2 index
 
 =cut
 
-sub index : GET HEAD Chained('submenu') PathPart('purchase_lists') Args(0)
+sub index : GET HEAD Chained('/project/base') PathPart('purchase_lists') Args(0)
   RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
 
@@ -79,7 +67,7 @@ sub index : GET HEAD Chained('submenu') PathPart('purchase_lists') Args(0)
     );
 }
 
-sub base : Chained('submenu') PathPart('purchase_list') CaptureArgs(1) {
+sub base : Chained('/project/base') PathPart('purchase_list') CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 
     $c->stash( lists => my $lists = $c->project->purchase_lists );
