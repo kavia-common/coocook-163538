@@ -19,7 +19,7 @@ END %]
 </button>
 [% END %]
 
-<div id="list-container">
+<div id="list-container" [% IF lists.size > 1; 'class="editable"'; END %]>
 [% IF sections.size == 0 %]
 <p>Currently no items assigned</p>
 [% END %]
@@ -35,7 +35,7 @@ END %]
     </div>
 
     <div class="mb-2 table-responsive">
-        <table class="table align-middle pl-editor no-print">
+        <table class="table align-middle pl-editor no-print[% IF lists.size > 1; ' table-hover'; END %]">
             <thead>
                 <tr>
                     <th>Amount</th>
@@ -50,7 +50,7 @@ END %]
             [% FOREACH item IN section.items %]
             <tbody class="purchase-list-table">
                 <tr id="item-[% item.id %]" class="parent">
-                    [% rowspan = item.ingredients.size;
+                    [% rowspan = item.ingredients.size + 1;
                     IF item.offset != 0;
                         rowspan = rowspan + 1;
                     END;
@@ -58,8 +58,8 @@ END %]
                        rowspan = 1;
                     END %]
                     <td class="item-amount" rowspan="[% rowspan %]">
-                    [% IF lists.size %]
-                        <input type="checkbox" id="move-item-[% item.id %]">
+                    [% IF lists.size > 1 %]
+                        <input type="checkbox" id="move-item-[% item.id %]" class="d-none">
                     [% END;
                     IF item.update_offset_url %]
                         <datalist id="values-[% loop.count %]">
@@ -67,7 +67,7 @@ END %]
                             <option value="[% item.next_higher_value %]">
                             <option value="[% item.next_lower_value%]">
                         </datalist>
-                        <form class="d-flex justify-content-between" name="total" method="post" action="[% item.update_offset_url %]">
+                        <form class="d-flex justify-content-between" name="total" method="post" action="[% item.update_offset_url %]" onsubmit="e=>{console.log(e);e.stopPropagation()}">
                             <div class="input-group flex-nowrap">
                             [% IF item.offset %]<span class="input-group-text px-1">ca.</span>[% END %]
                                 <input id="total" class="form-control" type="number" min="0" step="any" name="total" list="values-[% loop.count %]" value="[% item.total %]">
@@ -83,7 +83,7 @@ END %]
                     END;
 
                     IF item.convert_url AND item.convertible_into.size %]
-                        <form class="d-flex flex-wrap justify-content-end border rounded my-1 w-100 pl-form" name="convert" method="post" action="[% item.convert_url %]" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Click on one of the units, to convert the displayed value to this unit">
+                        <form class="d-flex flex-wrap justify-content-end border border-secondary rounded my-1 w-100 pl-form" name="convert" method="post" action="[% item.convert_url %]" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Click on one of the units, to convert the displayed value to this unit">
                         [% FOREACH unit IN item.convertible_into %]
                             <button class="btn btn-outline-secondary btn-sm m-1" type="submit" name="unit" value="[% unit.id %]">[% unit.short_name | html %]</button>
                         [% END %]
@@ -112,7 +112,7 @@ END %]
                 <tr class="parent">
                     <td class="amount text-end text-nowrap">
                         [% IF lists.size > 1 %]
-                        <input type="checkbox" id="move-ingredient-[% ingredient.id %]">
+                        <input type="checkbox" id="move-ingredient-[% ingredient.id %]" class="d-none">
                         [% END;
                         display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %]
                     </td>
@@ -134,7 +134,7 @@ END %]
                     </td>
                     <td class="date text-center text-nowrap">[% ingredient.dish.meal.date.strftime('%a, %F') %]</td>
                     <td>
-                        [% IF ingredient.remove_url && lists.size > 1 %]
+                        [% IF ingredient.remove_url && lists.size > 1 && not list.is_default %]
                         <form method="post" action="[% ingredient.remove_url %]" class="action-btn">
                             <button type="submit" class="btn btn-outline-danger btn-sm btn-quad" title="Remove from purchase list">
                                 <i class="material-icons">delete_forever</i>

@@ -56,6 +56,10 @@ function handleChangeItem(e) {
     for (const ingredient of containerIngredients) {
         ingredient.checked = e.target.checked;
     }
+    for (const row of container.querySelectorAll("tr")) {
+        row.classList[e.target.checked ? "add" : "remove"]("selected");
+    }
+
     SKIP = false;
     checkDisabled();
 }
@@ -71,6 +75,8 @@ function handleChangeIngredient(e) {
 
     if (!e.target.checked) {
         containerItem.checked = false;
+        containerItem.parentElement.parentElement.classList.remove("selected");
+        e.target.parentElement.parentElement.classList.remove("selected");
     } else {
         let all = true;
         for (const ingredient of containerIngredients) {
@@ -84,7 +90,9 @@ function handleChangeIngredient(e) {
         }
         if (all) {
             containerItem.checked = true;
+            containerItem.parentElement.parentElement.classList.add("selected");
         }
+        e.target.parentElement.parentElement.classList.add("selected");
     }
     SKIP = false;
     checkDisabled();
@@ -96,12 +104,41 @@ function init() {
         `input[id^="move-ingredient"]`
     );
 
+    const itemRows = document.querySelectorAll("tbody tr.parent:first-child");
+    const ingredientRows = document.querySelectorAll(
+        "tbody tr.parent:not(:first-child)"
+    );
+
     for (const item of items) {
         item.addEventListener("click", handleChangeItem);
+        if (item.checked) {
+            item.parentElement.parentElement.classList.add("selected");
+        }
     }
 
     for (const ingredient of ingredients) {
         ingredient.addEventListener("click", handleChangeIngredient);
+        if (ingredient.checked) {
+            ingredient.parentElement.parentElement.classList.add("selected");
+        }
+    }
+
+    for (const itemRow of itemRows) {
+        itemRow.addEventListener("click", (e) => {
+            e.currentTarget.querySelector(`input[id^="move-item"]`).click();
+        });
+    }
+
+    for (const ingredientRow of ingredientRows) {
+        ingredientRow.addEventListener("click", (e) => {
+            e.currentTarget
+                .querySelector(`input[id^="move-ingredient"]`)
+                .click();
+        });
+    }
+
+    for (const form of document.querySelectorAll("#list-container form")) {
+        form.addEventListener("click", (e) => e.stopPropagation());
     }
 
     checkDisabled();

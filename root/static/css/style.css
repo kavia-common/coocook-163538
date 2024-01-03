@@ -383,6 +383,15 @@ cc-autocomplete {
     cursor: default;
 }
 
+.purchase-list-table .selected {
+    --bs-table-accent-bg: var(--bs-table-striped-bg);
+    color: var(--bs-table-striped-color);
+}
+
+.editable .purchase-list-table {
+    cursor: pointer;
+}
+
 /******** footer part ********/
 footer {
     width: 100%;
