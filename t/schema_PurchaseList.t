@@ -1,6 +1,6 @@
 use Test2::V0;
 
-plan(4);
+plan(5);
 
 use lib 't/lib';
 use TestDB qw(txn_do_and_rollback);
@@ -85,4 +85,13 @@ subtest is_default => txn_do_and_rollback $db => sub {
 
     is $cached[0]->is_default => T(), "cached true still works";
     is $cached[1]->is_default => F(), "cached false still works";
+};
+
+subtest make_default => sub {
+    my $list1 = $rs->find(1);
+    my $list2 = $rs->find(2);
+
+    ok $list1->is_default;
+    is $list2->make_default => exact_ref($list2);
+    ok $list2->is_default;
 };

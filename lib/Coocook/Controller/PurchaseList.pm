@@ -129,7 +129,15 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
 sub make_default : POST Chained('base') Args(0) RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
-    $c->messages->warn("NOT IMPLEMENTED");
+    my $list = $c->stash->{list};
+
+    if ( $list->is_default ) {
+        $c->messages->info("Purchase list is already the project’s default purchase list.");
+    }
+    else {
+        $list->make_default();
+    }
+
     $c->detach('redirect');
 }
 

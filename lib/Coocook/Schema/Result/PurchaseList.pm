@@ -50,4 +50,10 @@ sub is_default ($self) {
     }
 }
 
+sub make_default ($self) {
+    $self->project->update( { default_purchase_list_id => $self->id } );
+
+    return $self;
+}
+
 1;
