@@ -144,7 +144,34 @@ sub make_default : POST Chained('base') Args(0) RequiresCapability('edit_project
 sub move_items_ingredients : POST Chained('base') Args(0) RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
-    my $list = $c->stash->{list};
+    my $source_list = $c->stash->{list};
+
+    my $target_list_id = $c->req->params->get('target_purchase_list')
+      or $c->detach( '/error/bad_request', ["No target_list_id"] );
+
+    my $target_list = $source_list->other_purchase_lists->find($target_list_id)
+      or $c->detach( '/error/bad_request', ["Target purchase list not found"] );
+
+    my ( @items, @ingredients );
+
+    for ( [ item => $source_list->items => \@items ],
+        [ ingredient => $source_list->ingredients_rs, \@ingredients ] )
+    {
+        my ( $key, $rs, $arrayref ) = @$_;
+
+        my @values = $c->req->params->get_all($key);
+
+        @$arrayref = $rs->search( { $rs->me('id') => { -in => \@values } } )->all;
+
+        @$arrayref == @values
+          or $c->detach( '/error/bad_request', ["Invalid list of $key IDs"] );
+    }
+
+    $source_list->move_items_ingredients(
+        target_purchase_lists => $target_list,
+        items                 => \@items,
+        ingredients           => \@ingredients,
+    );
 
     $c->stash(
         template => 'purchase_list/edit.tt',

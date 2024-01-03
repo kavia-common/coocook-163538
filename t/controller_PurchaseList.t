@@ -3,7 +3,7 @@ use Test2::V0;
 use lib 't/lib';
 use Test::Coocook;
 
-plan(4);
+plan(7);
 
 my $t = Test::Coocook->new();
 
@@ -27,4 +27,18 @@ ok $t->post('/project/1/Test-Project/purchase_list/1/make_default');
 $t->status_is(302);
 $t->header_is( Location => 'https://localhost/project/1/Test-Project/purchase_lists' );
 
-$t->post_ok('/project/1/Test-Project/purchase_list/1/move_items_ingredients');
+my $target_purchase_list = $t->schema->resultset('PurchaseList')->create(
+    {
+        project_id => 1,
+        date       => '2000-01-01',
+        name       => __FILE__,
+    }
+);
+
+$t->post_ok(
+    '/project/1/Test-Project/purchase_list/1/move_items_ingredients',
+    {
+        target_purchase_list => $target_purchase_list->id,
+    }
+);
+note $t->text;

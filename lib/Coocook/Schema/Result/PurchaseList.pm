@@ -24,8 +24,9 @@ __PACKAGE__->has_many(
     'purchase_list_id'
 );
 
-__PACKAGE__->many_to_many( articles => items => 'article' );
-__PACKAGE__->many_to_many( units    => items => 'unit' );
+__PACKAGE__->many_to_many( ingredients => items => 'ingredients' );
+__PACKAGE__->many_to_many( articles    => items => 'article' );
+__PACKAGE__->many_to_many( units       => items => 'unit' );
 
 __PACKAGE__->has_many(
     other_purchase_lists => __PACKAGE__,
@@ -54,6 +55,10 @@ sub make_default ($self) {
     $self->project->update( { default_purchase_list_id => $self->id } );
 
     return $self;
+}
+
+sub move_items_ingredients ( $self, %args ) {
+    warn "NOT IMPLEMENTED";
 }
 
 1;
