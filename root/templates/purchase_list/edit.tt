@@ -17,6 +17,12 @@ js_push_template_path() IF lists.size > 1;
     <i class="material-icons">drive_file_move</i>&thinsp;Move items/ingredients to other purchase list
 </button>
 [% END %]
+<button id="assign-btn" class="btn btn-primary my-3 d-none" title="Assign selected articles to a shop section"  data-bs-toggle="modal" data-bs-target="#assign-items">
+    <i class="material-icons">move_to_inbox</i>&thinsp;Assign articles to shop section
+</button>
+<button id="assign-btn-disabled" class="btn btn-primary my-3 tt-disabled-btn" title="No articles selected to assign" disabled>
+    <i class="material-icons">move_to_inbox</i>&thinsp;Assign articles to shop section
+</button>
 
 <div id="list-container" class="[% 'editable' IF lists.size > 1 %]">
 [% INCLUDE purchase_list/_edit_table.tt %]

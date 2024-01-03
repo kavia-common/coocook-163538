@@ -1,12 +1,17 @@
 const moveBtn = document.getElementById("move-btn");
 const moveBtnDisabled = document.getElementById("move-btn-disabled");
 const moveItemsForm = document.getElementById("move-items-form");
+
+const assignBtn = document.getElementById("assign-btn");
+const assignBtnDisabled = document.getElementById("assign-btn-disabled");
+
 const messages = document.getElementById("messages");
 const moveModal = document.getElementById("move-items");
 const select = document.getElementById("move-items-target");
 const currentPurchaseListId = parseInt(location.pathname.split("/").pop());
 
 const purchaseLists = getJsonData("purchase-lists");
+let shopSections = getJsonData("shop-sections");
 
 let SKIP = false;
 
@@ -150,12 +155,12 @@ function checkDisabled() {
         `input[id^="move-ingredient"]:checked`
     ).length;
 
-    let selected = false;
-    for (const item of items) {
-        if (item.checked) {
-            selected = true;
-            break;
-        }
+    if (items > 0) {
+        assignBtn?.classList.remove("d-none");
+        assignBtnDisabled?.classList.add("d-none");
+    } else {
+        assignBtn?.classList.add("d-none");
+        assignBtnDisabled?.classList.remove("d-none");
     }
 
     if (items > 0 || ingredients > 0) {
