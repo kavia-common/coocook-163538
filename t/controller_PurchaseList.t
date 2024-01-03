@@ -3,7 +3,7 @@ use Test2::V0;
 use lib 't/lib';
 use Test::Coocook;
 
-plan(25);
+plan(26);
 
 my $t = Test::Coocook->new();
 
@@ -20,6 +20,16 @@ $t->content_like(
         \Q</script>\E
     }x,
     "HTML contains JSON list of purchase lists"
+);
+$t->content_like(
+    qr{
+        \Q<script id="shop-sections" type="application/json">\E
+        \[ \{
+        .+    # list content
+        \} \]
+        \Q</script>\E
+    }x,
+    "HTML contains JSON list of shop sections"
 );
 
 $t->get_ok('/project/1/Test-Project/purchase_lists');

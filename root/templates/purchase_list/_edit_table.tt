@@ -256,3 +256,4 @@
     </div>
 </div>
 [% END %]
+<script id="shop-sections" type="application/json">[% sections_json | html %]</script>
