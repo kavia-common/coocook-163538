@@ -4,8 +4,10 @@ const moveItemsForm = document.getElementById("move-items-form");
 const messages = document.getElementById("messages");
 const moveModal = document.getElementById("move-items");
 const select = document.getElementById("move-items-target");
-const purchaseLists = getJsonData("purchase-lists");
 const currentPurchaseListId = parseInt(location.pathname.split("/").pop());
+
+const purchaseLists = getJsonData("purchase-lists");
+
 let SKIP = false;
 
 function showMessage(msg, type) {
@@ -69,6 +71,7 @@ function handleChangeIngredient(e) {
         containerItem.checked = false;
         containerItem.parentElement.parentElement.classList.remove("selected");
         e.target.parentElement.parentElement.classList.remove("selected");
+        container.querySelector(".rounding")?.classList.remove("selected");
     } else {
         let all = true;
         for (const ingredient of containerIngredients) {
@@ -82,6 +85,7 @@ function handleChangeIngredient(e) {
         }
         if (all) {
             containerItem.checked = true;
+            container.querySelector(".rounding")?.classList.add("selected");
             containerItem.parentElement.parentElement.classList.add("selected");
         }
         e.target.parentElement.parentElement.classList.add("selected");
@@ -98,7 +102,7 @@ function init() {
 
     const itemRows = document.querySelectorAll("tbody tr.parent:first-child");
     const ingredientRows = document.querySelectorAll(
-        "tbody tr.parent:not(:first-child)"
+        "tbody tr.parent:not(:first-child, .rounding)"
     );
 
     for (const item of items) {
@@ -121,12 +125,14 @@ function init() {
         });
     }
 
-    for (const ingredientRow of ingredientRows) {
-        ingredientRow.addEventListener("click", (e) => {
-            e.currentTarget
-                .querySelector(`input[id^="move-ingredient"]`)
-                .click();
-        });
+    if (purchaseLists.length > 1) {
+        for (const ingredientRow of ingredientRows) {
+            ingredientRow.addEventListener("click", (e) => {
+                e.currentTarget
+                    .querySelector(`input[id^="move-ingredient"]`)
+                    .click();
+            });
+        }
     }
 
     for (const form of document.querySelectorAll("#list-container form")) {
@@ -137,11 +143,12 @@ function init() {
 }
 
 function checkDisabled() {
-    const items = Array.from(
-        document.querySelectorAll(`input[id^="move-item"]`)
-    ).concat(
-        Array.from(document.querySelectorAll(`input[id^="move-ingredient"]`))
-    );
+    const items = document.querySelectorAll(
+        `input[id^="move-item"]:checked`
+    ).length;
+    const ingredients = document.querySelectorAll(
+        `input[id^="move-ingredient"]:checked`
+    ).length;
 
     let selected = false;
     for (const item of items) {
@@ -151,12 +158,12 @@ function checkDisabled() {
         }
     }
 
-    if (selected) {
-        moveBtn.classList.remove("d-none");
-        moveBtnDisabled.classList.add("d-none");
+    if (items > 0 || ingredients > 0) {
+        moveBtn?.classList.remove("d-none");
+        moveBtnDisabled?.classList.add("d-none");
     } else {
-        moveBtn.classList.add("d-none");
-        moveBtnDisabled.classList.remove("d-none");
+        moveBtn?.classList.add("d-none");
+        moveBtnDisabled?.classList.remove("d-none");
     }
 }
 

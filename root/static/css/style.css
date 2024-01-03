@@ -388,8 +388,12 @@ cc-autocomplete {
     color: var(--bs-table-striped-color);
 }
 
-.editable .purchase-list-table {
+.editable .purchase-list-table tr:not(.rounding, .no-hover) {
     cursor: pointer;
+}
+
+.table-hover tbody .no-hover:hover * {
+    --bs-table-accent-bg: transparent;
 }
 
 /******** footer part ********/
