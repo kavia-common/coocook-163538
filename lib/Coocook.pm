@@ -161,6 +161,12 @@ __PACKAGE__->config(
         'DisableParam',                                  # disable old, unsafe interface to request params
     ],
 
+    maybe ignore_frontend_proxy => $ENV{COOCOOK_IGNORE_FRONTEND_PROXY},
+
+    maybe using_frontend_proxy => $ENV{COOCOOK_USING_FRONTEND_PROXY},
+
+    maybe using_frontend_proxy_path => $ENV{COOCOOK_USING_FRONTEND_PROXY_PATH},
+
     'Model::DB' => {
         connect_info => {                                # env vars similar to those from DBI.pm:
             dsn =>                                       # referrs to dbic.yaml because of Schema::Config
