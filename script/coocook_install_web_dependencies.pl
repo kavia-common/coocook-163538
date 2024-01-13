@@ -2,6 +2,11 @@
 
 # ABSTRACT: script for managing external dependencies downloaded from the internet
 
+use strict;
+use warnings;
+
+use FindBin '$Bin';
+use lib "$Bin/../lib";
 use Coocook::Base;
 
 use File::Basename;

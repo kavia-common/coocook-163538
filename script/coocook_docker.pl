@@ -2,7 +2,13 @@
 
 # ABSTRACT: helper script to control the coocook instance inside a Dockerimage from the host OS
 
+use strict;
+use warnings;
+
+use FindBin '$Bin';
+use lib "$Bin/../lib";
 use Coocook::Base;
+
 use sigtrap qw/die normal-signals/;
 
 use Term::ANSIColor;
