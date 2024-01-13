@@ -7,6 +7,7 @@ use Moose;
 use namespace::autoclean;
 
 use Catalyst::Runtime 5.80;
+use PerlX::Maybe;
 
 our $VERSION = 0.004;
 
@@ -160,9 +161,21 @@ __PACKAGE__->config(
         'DisableParam',                                  # disable old, unsafe interface to request params
     ],
 
+    maybe ignore_frontend_proxy => $ENV{COOCOOK_IGNORE_FRONTEND_PROXY},
+
+    maybe using_frontend_proxy => $ENV{COOCOOK_USING_FRONTEND_PROXY},
+
+    maybe using_frontend_proxy_path => $ENV{COOCOOK_USING_FRONTEND_PROXY_PATH},
+
     'Model::DB' => {
-        connect_info => {
-            dsn => 'development',                        # referrs to dbic.yaml
+        connect_info => {                                # env vars similar to those from DBI.pm:
+            dsn =>                                       # referrs to dbic.yaml because of Schema::Config
+              $ENV{COOCOOK_DSN}                          # like DBI_DSN
+              || 'development',
+
+            maybe user => $ENV{COOCOOK_USER},            # like DBI_USER
+
+            maybe password => $ENV{COOCOOK_PASS},        # like DBI_PASS
         },
     },
 
@@ -218,12 +231,21 @@ __PACKAGE__->setup();
 sub setup_finalize {
     my $self = shift;
 
-    my $return = $self->next::method(@_);
+    my $config = $self->config;
 
-    $self->config->{email_sender_name} ||= $self->config->{name};
+    $config->{email_sender_name} ||= $config->{name};
 
-    $self->config->{content_security_policy} //= sub {
-        if ( my $static_uri = $self->config->{static_base_uri} ) {
+    if ( defined( my $static_base_uri = $ENV{COOCOOK_STATIC_BASE_URI} ) ) {
+        if ( length $static_base_uri ) {
+            $config->{static_base_uri} = $static_base_uri;
+        }
+        else {
+            delete $config->{static_base_uri};
+        }
+    }
+
+    $config->{content_security_policy} //= sub {
+        if ( my $static_uri = $config->{static_base_uri} ) {
             return qq(connect-src 'self'; img-src data: $static_uri; font-src $static_uri;);
         }
 
@@ -231,7 +253,7 @@ sub setup_finalize {
       }
       ->();
 
-    return $return;
+    return $self->next::method(@_);
 }
 
 =head1 SEE ALSO

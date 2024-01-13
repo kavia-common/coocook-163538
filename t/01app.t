@@ -126,19 +126,37 @@ subtest "HTTP Strict Transport Security" => sub {
 };
 
 subtest "static URIs" => sub {
+    delete local $ENV{COOCOOK_STATIC_BASE_URI};
     $t->get('/');
-    $t->content_contains('https://localhost/static/css/style.css');
+    $t->content_contains( 'https://localhost/static/css/style.css', "no value set" );
 
     is $t->catalyst_app->uri_for_static( '/foo', 42, { key => 'value' }, \'fragment' ) =>
-      '/static/foo/42?key=value#fragment';
+      '/static/foo/42?key=value#fragment',
+      "complex uri_for() args";
 
-    my $guard = $t->local_config_guard( static_base_uri => 'https://coocook-cdn.example/' );
+    local $ENV{COOCOOK_STATIC_BASE_URI} = 'http://from-env';
+    $t->reload_config();
     $t->get('/');
-    $t->content_contains('https://coocook-cdn.example/css/style.css');
+    $t->content_contains( 'http://from-env/css/style.css', "from env" );
+
+    $t->reload_config( static_base_uri => 'http://from-config' );
+    $t->get('/');
+    $t->content_contains( 'http://from-env/css/style.css', "env overrides config" );
+
+    local $ENV{COOCOOK_STATIC_BASE_URI} = '';
+    $t->reload_config( static_base_uri => 'http://from-config' );
+    $t->get('/');
+    $t->content_contains( 'https://localhost/static/css/style.css',
+        "env can disable value from config" );
+
+    delete local $ENV{COOCOOK_STATIC_BASE_URI};
+    $t->reload_config( static_base_uri => 'http://from-config' );
+    $t->get('/');
+    $t->content_contains( 'http://from-config/css/style.css', "from config" );
 
     $t->reload_config( static_base_uri => 'scheme://user@host:1234/path/' );
     $t->get('/');
-    $t->content_contains('scheme://user@host:1234/path/css/style.css');
+    $t->content_contains( 'scheme://user@host:1234/path/css/style.css', "complex value" );
 };
 
 subtest content_security_policy => sub {
@@ -260,17 +278,33 @@ subtest favicons => sub {
     $t->content_lacks('<link.+icon');
 
     $t->reload_config(
-        icon_url  => 'alpha.ico',
         icon_type => 'image/x-icon',
+        icon_url  => '/alpha.ico',
         icon_urls => {
-            ''      => 'beta.png',
-            '72x72' => '72.png',
+            ''      => '/beta.png',
+            '72x72' => 'https://example/72.png',    # absolute URL
         },
     );
     $t->reload_ok();
-    $t->content_contains(q{<link rel="icon" type="image/x-icon" href="alpha.ico">});
-    $t->content_contains(q{<link rel="apple-touch-icon-precomposed"  href="beta.png">});
-    $t->content_contains(q{<link rel="apple-touch-icon-precomposed" sizes="72x72" href="72.png">});
+    $t->content_contains(q{<link rel="icon" type="image/x-icon" href="https://localhost/alpha.ico">});
+    $t->content_contains(q{<link rel="apple-touch-icon"  href="https://localhost/beta.png">});
+    $t->content_contains(q{<link rel="apple-touch-icon" sizes="72x72" href="https://example/72.png">});
+
+    my $guard = $t->local_config_guard( icon_url => 'no scheme or root slash' );
+
+    # Test2::Tools::Exception doesn't catch server side errors here.
+    # workaround stolen from
+    # https://github.com/perl-catalyst/catalyst-runtime/blob/master/t/data_handler.t
+    my $stderr;
+    {
+        local *STDERR;
+        open( STDERR, ">", \$stderr ) or die "Can't open STDERR: $!";
+        $t->get('/');
+    }
+    like
+      $stderr => qr/absolute URI/,
+      "error string that is not absolute URI or absolute path";
+    $t->status_is(500);
 };
 
 subtest "canonical URLs" => sub {

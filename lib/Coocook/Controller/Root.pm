@@ -4,6 +4,7 @@ use Moose;
 use namespace::autoclean;
 
 use HTML::Meta::Robots;
+use URI;
 
 # BEGIN-block necessary to make method attributes work
 BEGIN { extends 'Coocook::Controller' }
@@ -74,6 +75,30 @@ sub auto : Private {
         }
     }
 
+    my $icon_url  = $c->config->{icon_url};
+    my %icon_urls = %{ $c->config->{icon_urls} || {} };
+
+    # Generate URIs from absolute paths interpreted relative to project root.
+    # This MUST NOT use uri_for_static() because the static files are served
+    # by a frontend web server or CDN that's only fed with the main repo.
+    # For customization you'll do:
+    # - configure path for 'icon_url'
+    # - upload icon files to custom server dir
+    # - configure 'extra_static_paths' to serve custom dir as well
+    # This way Plugin::Static::Simple can serve custom files. This does also
+    # work locally for testing without a static_base_uri.
+    for ( $icon_url // (), values %icon_urls ) {
+        if (m{^/}) {    # absolute path -> generate URI
+            $_ = $c->uri_for($_);
+            next;
+        }
+
+        my $uri = URI->new($_);
+        if ( $uri->scheme ) { next }    # already absolute URI
+
+        die "Neither absolute URI nor absolute path: '$_'";
+    }
+
     $c->stash(
         $c->config->%{
             qw<
@@ -84,17 +109,17 @@ sub auto : Private {
               donate_url
               help_links
               icon_type
-              icon_url
-              icon_urls
               me_url
             >
         },
-        css => [    # this comment makes perltidy not merge these lines
+        icon_url  => $icon_url,
+        icon_urls => \%icon_urls,
+        css       => [              # this comment makes perltidy not merge these lines
             '/lib/themed-bootstrap/themed' . ( $c->debug ? '.css' : '.min.css' ),
             '/css/material-design-icons.css',
             '/css/style.css',
         ],
-        js => [     # this comment makes perltidy not merge these lines
+        js => [                     # this comment makes perltidy not merge these lines
             '/lib/bootstrap/dist/js/bootstrap.bundle' . ( $c->debug ? '.js' : '.min.js' ),
             '/lib/marked/marked.min.js',
             '/js/script.js',
@@ -103,7 +128,7 @@ sub auto : Private {
 
     for my $key (qw< css js >) {
         if ( my $config = $c->config->{$key} ) {
-            push $c->stash->{$key}->@*, ref $config eq 'ARRAY' ? @$config : $config;
+            push $c->stash->{$key}->@*, map { $c->uri_for($_) } ref $config eq 'ARRAY' ? @$config : $config;
         }
     }
 

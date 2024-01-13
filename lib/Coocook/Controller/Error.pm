@@ -5,7 +5,7 @@ use namespace::autoclean;
 
 BEGIN { extends 'Coocook::Controller' }
 
-our $ENABLE_INTERNAL_SERVER_ERROR_PAGE;
+our $ENABLE_INTERNAL_SERVER_ERROR_PAGE //= $ENV{COOCOOK_ENABLE_INTERNAL_SERVER_ERROR_PAGE};
 
 sub bad_request : Private {
     my ( $self, $c, $error ) = @_;

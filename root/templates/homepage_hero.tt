@@ -1,0 +1,11 @@
+<section class="bg-primary">
+    <div class="container-md py-5 text-white d-flex justify-content-center align-items-center gap-5">
+        <div id="hero-text" class="text-center">
+            <h1 class="fw-bolder">[% name %]</h1>
+            <p class="fw-bold">Because meal planning can also be simple</p>
+            <p class="mt-5">Here you can browse <a class="text-white" href="[% recipes_url %]">public recipes</a>.</p>
+            <p>To begin your own project,<br><a href="[% register_url %]" class="text-white">register your personal account</a> or <a href="[% login_url %]" class="text-white">sign in</a>.</p>
+        </div>
+        <div id="hero-img"></div>
+    </div>
+</section>
