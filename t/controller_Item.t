@@ -7,6 +7,10 @@ plan(6);
 
 my $t = Test::Coocook->new();
 
+# the project needs >=2 purchase lists to move ingredients
+$t->schema->resultset('PurchaseList')
+  ->create( { project_id => 1, date => '2000-01-01', name => __FILE__ } );
+
 $t->get('/');
 $t->login_ok( 'john_doe', 'P@ssw0rd' );
 
