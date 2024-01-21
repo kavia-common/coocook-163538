@@ -206,6 +206,8 @@ $t->login_fails( 'test', 'invalid' );    # wrong password
 $t->login_fails( 'test2', 's3cr3t' );    # not verified
 
 {
+    my $guard = $t->local_config_guard( login_sleep_secs => 1 );
+
     my $t1 = time();
     $t->login_ok( 'test', 's3cr3t' );
     my $t2 = time();

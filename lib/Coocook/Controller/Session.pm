@@ -36,7 +36,7 @@ sub post_login : POST Chained('/base') PathPart('login') Args(0) Public {
     # ALWAYS SLEEP EVEN IF CREDENTIALS ARE CORRECT!
     # Otherwise a client can assume failure if the request
     # is not answered in 0.x seconds ...
-    sleep 1;
+    sleep $c->config->{login_sleep_secs} // die "invalid config key";    # might be 0
 
     my $user = $c->authenticate(
         {

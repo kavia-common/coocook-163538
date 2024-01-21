@@ -35,7 +35,7 @@ sub new ( $class, %args ) {
     defined( $args{deploy} ) && $args{schema}
       and croak "Can't use both arguments 'deploy' and 'schema'";
 
-    my $config = delete $args{config};
+    my $config = delete $args{config} || {};
     my $schema = delete $args{schema};
 
     my $deploy    = delete $args{deploy}    // 1;
@@ -55,8 +55,9 @@ sub new ( $class, %args ) {
 
     $self->catalyst_app->model('DB')->schema->storage( $schema->storage );
 
-    $config
-      and $self->reload_config($config);
+    $config->{login_sleep_secs} //= 0;    # disable default value in test suite for speed
+
+    $self->reload_config($config);
 
     # for `findnodes` method, which can find HTML elements with XPath
     WWW::Mechanize::TreeBuilder->meta->apply( $self, tree_class => 'HTML::TreeBuilder::XPath' );

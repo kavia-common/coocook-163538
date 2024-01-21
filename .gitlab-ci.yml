@@ -4,16 +4,25 @@ stages:
   - prove
 
 
-# https://stackoverflow.com/a/65864572/
-.no-duplicate-pipelines: &no-duplicate-pipelines
-  if: $CI_COMMIT_BRANCH && $CI_PIPELINE_SOURCE == "push" && $CI_OPEN_MERGE_REQUESTS
-  when: never    # do not run branch push pipelines when a MR is already open on the branch
+default:
+  interruptible: true    # allow new pushes to cancel running pipelines
+
+
+# do not run pipelines for MRs additionally to branch pipelines
+.no-merge-request-pipelines: &no-merge-request-pipelines
+  if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+  when: never
+
+
+.manual: &manual
+  - when: manual
+    allow_failure: true    # do not block pipeline
 
 
 lint:
   stage: lint
   rules:    # some rule required if any other job has 'rules:'
-    - *no-duplicate-pipelines
+    - *no-merge-request-pipelines
     - when: on_success    # GitLab default
   image:
     name: alpine/git:latest
@@ -29,55 +38,65 @@ lint:
     - sh -c 'git grep -Il "" | grep -v ^root/static/lib/ | while read file; do test "$( tail -c1 "$file" )" && echo "$file"; done | tee >( cat >&2 ) | [ $(wc -c) -eq 0 ]'
 
 
-# latest supported Perl version
-perl-5.38:
+.make-test:
   stage: prove
-  rules:    # some rule required if any other job has 'rules:'
-    - *no-duplicate-pipelines
-    - when: on_success    # GitLab default
-
-  image: perl:5.38
+  image: perl:$PERL_VERSION
   cache:
-    key: perl-5.38-local-lib-shared-between-all-branches
-    paths:
-      - perl5/
-
+    key: perl-$PERL_VERSION-local-lib-shared-between-all-branches
+    paths: [perl5/]
+    unprotect: true    # share between protected/unprotected branches
   before_script:
-    # provide PostgreSQL binaries for Test::PostgreSQL
-    - DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install --yes postgresql
-
-    # install coverage analyzer, install and activate local::lib
-    - PERL5LIB=perl5/lib/perl5/ cpanm --notest --local-lib perl5/ -v Devel::Cover local::lib
+    # install and activate local::lib, possibly also install Devel::Cover
+    - 'PERL5LIB=perl5/lib/perl5/ cpanm --notest --local-lib perl5/ local::lib $( [ -n "$INSTALL_DEVEL_COVER" ] && echo Devel::Cover )'
     - 'eval "$( perl -Iperl5/lib/perl5/ -Mlocal::lib=perl5/ )"'
 
     # install our dependencies
-    - cpanm --notest --installdeps --with-configure --with-develop --with-recommends .
-
-  script:
-    - perl Makefile.PL
-    - AUTHOR_TESTING=1 cover -ignore_re ^perl5/ -ignore_re SHSchema -make 'make TEST_VERBOSE=1' -test
-
-  coverage: '/^Total .+ (\d+\.\d+)$/'
-
-
-# minimal supported Perl version
-# (basically the same as perl-5.38 but without author testing or code coverage)
-perl-5.32:
-  stage: prove
-  rules:
-    - *no-duplicate-pipelines
-    - if: $CI_COMMIT_REF_NAME == "master"
-    - when: manual
-      allow_failure: true    # do not block pipeline
-  image: perl:5.32
-  cache:
-    key: perl-5.32-local-lib-shared-between-all-branches
-    paths: [perl5/]
-  before_script:
-    - PERL5LIB=perl5/lib/perl5/ cpanm --notest --local-lib perl5/ -v local::lib
-    - 'eval "$( perl -Iperl5/lib/perl5/ -Mlocal::lib=perl5/ )"'
-    - cpanm --notest --installdeps --with-configure .
+    - 'cpanm --notest --installdeps --with-configure $( [ -n "$AUTHOR_TESTING" ] && echo --with-develop --with-recommends ) .'
   script:
     - perl Makefile.PL
     - make
-    - make test
+    - make test TEST_VERBOSE=1
+
+
+# minimal supported Perl version (without author testing/coverage, only for master)
+perl-5.32:
+  extends: .make-test
+  rules:
+    - *no-merge-request-pipelines
+    - if: $CI_COMMIT_REF_NAME == "master"
+    - *manual
+  variables:
+    PERL_VERSION: '5.32'
+
+
+# latest supported Perl version (without coverage, not for master)
+perl-5.38:
+  extends: .make-test
+  rules:
+    - *no-merge-request-pipelines
+    - if: $CI_COMMIT_REF_NAME != "master"
+    - *manual
+  services:
+    - name: postgres:bookworm
+  variables:
+    AUTHOR_TESTING: '1'
+    PERL_VERSION: '5.38'
+    POSTGRES_PASSWORD: coocook    # for "postgres" setup
+    PGHOST:            postgres   # for DBD::Pg
+    PGUSER:            postgres
+    PGPASSWORD:        coocook
+
+
+# latest supported Perl version
+perl-5.38+coverage:
+  extends: perl-5.38
+  rules:    # some rule required if any other job has 'rules:'
+    - *no-merge-request-pipelines
+    - if: $CI_COMMIT_REF_NAME == "master"
+    - *manual
+  variables:
+    INSTALL_DEVEL_COVER: '1'
+  script:
+    - perl Makefile.PL
+    - AUTHOR_TESTING=1 cover -ignore_re ^perl5/ -ignore_re SHSchema -make 'make TEST_VERBOSE=1' -test
+  coverage: '/^Total .+ (\d+\.\d+)$/'
