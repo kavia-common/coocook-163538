@@ -55,7 +55,7 @@ lint:
   script:
     - perl Makefile.PL
     - make
-    - make test
+    - make test TEST_VERBOSE=1
 
 
 # minimal supported Perl version (without author testing/coverage, only for master)
