@@ -8,16 +8,16 @@ default:
   interruptible: true    # allow new pushes to cancel running pipelines
 
 
-# https://stackoverflow.com/a/65864572/
-.no-duplicate-pipelines: &no-duplicate-pipelines
-  if: $CI_COMMIT_BRANCH && $CI_PIPELINE_SOURCE == "push" && $CI_OPEN_MERGE_REQUESTS
-  when: never    # do not run branch push pipelines when a MR is already open on the branch
+# do not run pipelines for MRs additionally to branch pipelines
+.no-merge-request-pipelines: &no-merge-request-pipelines
+  if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+  when: never
 
 
 lint:
   stage: lint
   rules:    # some rule required if any other job has 'rules:'
-    - *no-duplicate-pipelines
+    - *no-merge-request-pipelines
     - when: on_success    # GitLab default
   image:
     name: alpine/git:latest
@@ -38,7 +38,7 @@ lint:
 perl-5.32:
   stage: prove
   rules:
-    - *no-duplicate-pipelines
+    - *no-merge-request-pipelines
     - if: $CI_COMMIT_REF_NAME == "master"
     - when: manual
       allow_failure: true    # do not block pipeline
@@ -60,7 +60,7 @@ perl-5.32:
 perl-5.38:
   stage: prove
   rules:    # some rule required if any other job has 'rules:'
-    - *no-duplicate-pipelines
+    - *no-merge-request-pipelines
     - when: on_success    # GitLab default
 
   image: perl:5.38
