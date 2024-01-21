@@ -2,8 +2,8 @@ on 'configure' => sub {
     requires "ExtUtils::MakeMaker::CPANfile";
 };
 
-requires "perl" => "v5.32.0";
-requires "namespace::autoclean";
+requires "perl" => "v5.32";
+recommends "perl" => "v5.38";
 
 requires "App::DH";
 requires "Carp";
@@ -55,6 +55,7 @@ requires "Moose::Role";
 requires "Moose::Util::TypeConstraints";
 requires "MooseX::Getopt";
 requires "MooseX::NonMoose";
+requires "namespace::autoclean";
 requires "Net::SSLeay";
 requires "PerlX::Maybe";
 requires "SQL::Translator::Producer::SQLite";
