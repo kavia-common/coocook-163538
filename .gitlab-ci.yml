@@ -4,6 +4,10 @@ stages:
   - prove
 
 
+default:
+  interruptible: true    # allow new pushes to cancel running pipelines
+
+
 # https://stackoverflow.com/a/65864572/
 .no-duplicate-pipelines: &no-duplicate-pipelines
   if: $CI_COMMIT_BRANCH && $CI_PIPELINE_SOURCE == "push" && $CI_OPEN_MERGE_REQUESTS
