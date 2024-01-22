@@ -1,7 +1,6 @@
 package Coocook::Controller::Root;
 
-use Moose;
-use namespace::autoclean;
+use Coocook::Base qw(Moose);
 
 use HTML::Meta::Robots;
 use URI;

@@ -1,8 +1,6 @@
 package Coocook::Schema::Result::Project;
 
-use Coocook::Base;
-use Moose;
-use namespace::autoclean;
+use Coocook::Base qw(Moose);
 
 use Carp;
 use Coocook::Util;

@@ -2,9 +2,7 @@ package Coocook::Controller;
 
 # ABSTRACT: base class for all controllers in Coocook
 
-use Coocook::Base;
-use Moose;
-use namespace::autoclean;
+use Coocook::Base qw(Moose);
 
 use Carp;
 

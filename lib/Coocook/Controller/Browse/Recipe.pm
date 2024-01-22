@@ -1,7 +1,6 @@
 package Coocook::Controller::Browse::Recipe;
 
-use Moose;
-use namespace::autoclean;
+use Coocook::Base qw(Moose);
 
 use Coocook::Util;
 use Scalar::Util qw(looks_like_number);

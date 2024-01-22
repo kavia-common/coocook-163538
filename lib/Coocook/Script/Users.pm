@@ -2,9 +2,7 @@ package Coocook::Script::Users;
 
 # ABSTRACT: script for exporting a list of users
 
-use Coocook::Base;
-use Moose;
-use namespace::autoclean;
+use Coocook::Base qw(Moose);
 
 use open OUT => ':locale';    # respect locale setting of STDOUT (terminal)
 

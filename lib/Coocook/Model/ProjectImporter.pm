@@ -2,8 +2,7 @@ package Coocook::Model::ProjectImporter;
 
 # ABSTRACT: business logic for importing data to a project from another
 
-use Coocook::Base;
-use Moose;
+use Coocook::Base qw(Moose);
 use MooseX::NonMoose;
 
 use Carp;

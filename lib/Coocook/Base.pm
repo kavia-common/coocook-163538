@@ -4,11 +4,33 @@ package Coocook::Base;
 
 use strict;
 use warnings;
-use feature ();
+no warnings qw(experimental::signatures);
+use feature qw(signatures);
 
-sub import {
-    strict->import;
-    warnings->import;
+use Carp;
+
+sub import ( $class, @features ) {
+    my $moose;
+
+    for (@features) {
+        my %features = ( Moose => sub { $moose = 1 } );
+        my $croak    = sub { croak "Invalid feature for " . __PACKAGE__ };
+
+        ( $features{$_} || $croak )->();
+    }
+
+    if ($moose) {
+        require Moose;
+        require namespace::autoclean;
+
+        Moose->import( { into => caller() } );
+        namespace::autoclean->import;
+    }
+    else {
+        strict->import;
+        warnings->import;
+    }
+
     warnings->unimport(qw( experimental::signatures ));
 
     feature->import(qw( fc say signatures :5.32 ));

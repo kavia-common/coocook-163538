@@ -2,9 +2,7 @@ package Coocook::Script::Dbck;
 
 # ABSTRACT: script for checking the database integrity just like `fsck` checks filesystems
 
-use Coocook::Base;
-use Moose;
-use namespace::autoclean;
+use Coocook::Base qw(Moose);
 use open ':locale';
 
 use Coocook::Schema;

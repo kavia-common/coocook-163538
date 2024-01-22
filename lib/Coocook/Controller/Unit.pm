@@ -1,8 +1,6 @@
 package Coocook::Controller::Unit;
 
-use Coocook::Base;
-use Moose;
-use namespace::autoclean;
+use Coocook::Base qw(Moose);
 
 use Scalar::Util qw( looks_like_number weaken );
 

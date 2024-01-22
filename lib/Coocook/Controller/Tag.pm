@@ -1,10 +1,9 @@
 package Coocook::Controller::Tag;
 
-use Moose;
-use namespace::autoclean;
-use PerlX::Maybe;
+use Coocook::Base qw(Moose);
 
 use JSON::MaybeXS ();
+use PerlX::Maybe;
 
 BEGIN { extends 'Coocook::Controller' }
 

@@ -1,7 +1,6 @@
 package Coocook::Schema::ResultSet::Organization;
 
-use Moose;
-use namespace::autoclean;
+use Coocook::Base qw(Moose);
 
 extends 'Coocook::Schema::ResultSet';
 

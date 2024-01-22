@@ -1,7 +1,6 @@
 package Coocook::Controller::Recipe::Import;
 
-use Moose;
-use namespace::autoclean;
+use Coocook::Base qw(Moose);
 
 use JSON::MaybeXS ();
 

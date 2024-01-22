@@ -2,8 +2,7 @@ package Coocook::Script::Get;
 
 # ABSTRACT: script to print the response body to a GET request
 
-use Coocook::Base;
-use Moose;
+use Coocook::Base qw(Moose);
 
 use Catalyst::Test 'Coocook';    # Catalyst::Test is part of Catalyst-Runtime
 use URI;

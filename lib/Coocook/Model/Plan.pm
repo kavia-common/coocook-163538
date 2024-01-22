@@ -2,8 +2,7 @@ package Coocook::Model::Plan;
 
 # ABSTRACT: business logic for plain data structures of project/day plans
 
-use Coocook::Base;
-use Moose;
+use Coocook::Base qw(Moose);
 
 use DateTime;
 use Scalar::Util 'weaken';
