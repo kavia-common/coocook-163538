@@ -80,7 +80,8 @@ sub import ( $class, @packages ) {
 
     if ($uses_moose) {
         $DEBUG and warn "namespace::autoclean->import()";
-        namespace::autoclean->import;
+        require namespace::autoclean;
+        namespace::autoclean->import( -cleanee => scalar(caller) );
     }
     else {
         strict->import;
