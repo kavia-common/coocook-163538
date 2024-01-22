@@ -15,6 +15,7 @@ our $DEBUG //= $ENV{COOCOOK_BASE_DEBUG};
 my %needs_into_caller = map { $_ => 1 } qw(
   Moose
   Moose::Role
+  Moose::Util::TypeConstraints
   MooseX::NonMoose
 );
 
