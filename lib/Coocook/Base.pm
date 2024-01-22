@@ -8,36 +8,38 @@ no warnings qw(experimental::signatures);
 use feature qw(signatures);
 
 use Carp;
+use Module::Load;
 
-sub import ( $class, @features ) {
-    my $moose;
-    my $moose_role;
-    my $moosex_nonmoose;
+our $DEBUG //= $ENV{COOCOOK_BASE_DEBUG};
 
-    for (@features) {
-        my %features = (
-            'Moose'            => sub { $moose           = 1 },
-            'Moose::Role'      => sub { $moose_role      = 1 },
-            'MooseX::NonMoose' => sub { $moosex_nonmoose = 1 },
-        );
-        my $croak = sub { croak "Invalid feature for " . __PACKAGE__ };
+my %needs_into_caller = map { $_ => 1 } qw(
+  Moose
+  Moose::Role
+  MooseX::NonMoose
+);
 
-        ( $features{$_} || $croak )->();
-    }
+sub import ( $class, @packages ) {
+    my $uses_moose;
 
-    if ( $moose or $moose_role or $moosex_nonmoose ) {
-        require Moose;
-        require MooseX::NonMoose if $moosex_nonmoose;
-        require namespace::autoclean;
+    for (@packages) {
+        if (/Moose/) {
+            $uses_moose = 1;
+        }
 
-        if ($moose_role) {
-            require Moose::Role;
-            Moose::Role->import( { into => caller() } );
+        load $_;
+
+        if ( $needs_into_caller{$_} ) {
+            $DEBUG and warn sprintf "${_}->import( { into => %s } )", (caller)[0];
+            $_->import( { into => caller() } );
         }
         else {
-            Moose->import( { into => caller() } );
+            $DEBUG and warn "${_}->import()";
+            $_->import();
         }
-        MooseX::NonMoose->import( { into => caller() } ) if $moosex_nonmoose;
+    }
+
+    if ($uses_moose) {
+        $DEBUG and warn "namespace::autoclean->import()";
         namespace::autoclean->import;
     }
     else {
@@ -45,6 +47,7 @@ sub import ( $class, @features ) {
         warnings->import;
     }
 
+    # this must be done after import of @packages like Moose
     warnings->unimport(qw( experimental::signatures ));
 
     feature->import(qw( fc say signatures :5.32 ));
