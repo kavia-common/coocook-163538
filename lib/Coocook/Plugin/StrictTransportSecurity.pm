@@ -2,8 +2,7 @@ package Coocook::Plugin::StrictTransportSecurity;
 
 # ABSTRACT: Catalyst plugin to set HTTP Strict Transport Security header
 
-use Coocook::Base;
-use Moose::Role;
+use Coocook::Base qw(Moose::Role);
 
 after prepare_action => sub ($c) {
     my $config = $c->config->{'Plugin::StrictTransportSecurity'} || {};

@@ -2,10 +2,9 @@ package Coocook::ActionRole::RequiresCapability;
 
 # ABSTRACT: role for controller action to assert Model::Authz grants capability
 
-use Coocook::Base;
+use Coocook::Base qw(Moose::Role);
+
 use Coocook::Model::Authorization;
-use Moose::Role;
-use namespace::autoclean;
 
 after BUILD => sub ( $class, $args ) {
     if ( my $capabilities = $args->{attributes}{RequiresCapability} ) {

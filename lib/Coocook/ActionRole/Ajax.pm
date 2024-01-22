@@ -2,9 +2,7 @@ package Coocook::ActionRole::Ajax;
 
 # ABSTRACT: role for controller actions that respond with JSON and require a Session
 
-use Coocook::Base;
-use Moose::Role;
-use namespace::autoclean;
+use Coocook::Base qw(Moose::Role);
 
 before execute => sub ( $self, $controller, $c, @args ) {
     $c->stash( current_view => 'JSON' );

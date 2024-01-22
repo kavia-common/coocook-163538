@@ -1,6 +1,6 @@
 package Coocook::Script::Role::HasDebug;
 
-use Moose::Role;
+use Coocook::Base qw(Moose::Role);
 
 has debug => (
     is            => 'rw',
