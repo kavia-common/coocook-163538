@@ -12,30 +12,21 @@ use Module::Load;
 
 our $DEBUG //= $ENV{COOCOOK_BASE_DEBUG};
 
-my %needs_into_caller = map { $_ => 1 } qw(
-  Moose
-  Moose::Role
-  Moose::Util::TypeConstraints
-  MooseX::NonMoose
-);
-
 sub import ( $class, @packages ) {
     my $uses_moose;
 
-    for (@packages) {
-        if (/Moose/) {
+    for my $package (@packages) {
+        load $package;
+
+        if ( $package =~ m/Moose/ ) {    # Moose modules need this quirk
             $uses_moose = 1;
-        }
 
-        load $_;
-
-        if ( $needs_into_caller{$_} ) {
-            $DEBUG and warn sprintf "${_}->import( { into => %s } )", (caller)[0];
-            $_->import( { into => caller() } );
+            $DEBUG and warn sprintf "$package->import( { into => %s } )", (caller)[0];
+            $package->import( { into => caller() } );
         }
         else {
-            $DEBUG and warn "${_}->import()";
-            $_->import();
+            $DEBUG and warn "$package->import()";
+            $package->import();
         }
     }
 
