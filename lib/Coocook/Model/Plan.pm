@@ -4,7 +4,6 @@ package Coocook::Model::Plan;
 
 use Coocook::Base;
 use Moose;
-use MooseX::NonMoose;
 
 use DateTime;
 use Scalar::Util 'weaken';
