@@ -2,7 +2,7 @@ package Coocook::Schema::Result;
 
 # ABSTRACT: base class for all Result classes
 
-use Coocook::Base qw(Moose);
+use Coocook::Base qw( Moose MooseX::NonMoose );
 
 extends 'DBIx::Class::Core';
 

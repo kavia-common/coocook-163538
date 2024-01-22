@@ -11,19 +11,25 @@ use Carp;
 
 sub import ( $class, @features ) {
     my $moose;
+    my $moosex_nonmoose;
 
     for (@features) {
-        my %features = ( Moose => sub { $moose = 1 } );
-        my $croak    = sub { croak "Invalid feature for " . __PACKAGE__ };
+        my %features = (
+            'Moose'            => sub { $moose           = 1 },
+            'MooseX::NonMoose' => sub { $moosex_nonmoose = 1 },
+        );
+        my $croak = sub { croak "Invalid feature for " . __PACKAGE__ };
 
         ( $features{$_} || $croak )->();
     }
 
-    if ($moose) {
+    if ( $moose or $moosex_nonmoose ) {
         require Moose;
+        require MooseX::NonMoose if $moosex_nonmoose;
         require namespace::autoclean;
 
         Moose->import( { into => caller() } );
+        MooseX::NonMoose->import( { into => caller() } ) if $moosex_nonmoose;
         namespace::autoclean->import;
     }
     else {

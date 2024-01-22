@@ -2,7 +2,7 @@ package Coocook::View::Email::TT;
 
 # ABSTRACT: helper view for Coocook::View::Email to render TT templates
 
-use Coocook::Base qw(Moose);
+use Coocook::Base qw( Moose MooseX::NonMoose );
 
 extends 'Catalyst::View::TT';
 
