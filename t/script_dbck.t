@@ -38,7 +38,7 @@ txn_do_and_rollback $db, sub {
 txn_do_and_rollback $db, sub {
     $db->resultset('Article')->find(1)->update( { project_id => 2 } );
 
-    is join( '', @{ warnings sub { $app->run } } ) => <<~EOT, "Inconsistent project_id";
+    is warnings { $app->run } => [ split /\n\K/, <<~EOT], "Inconsistent project_id";
     Project IDs differ for Article row (id = 1): me.project = 2, shop_section.project = 1
     Project IDs differ for ArticleTag row (article_id = 1, tag_id = 1): article.project = 2, tag.project = 1
     Project IDs differ for ArticleUnit row (article_id = 1, unit_id = 1): article.project = 2, unit.project = 1
