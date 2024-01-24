@@ -9,7 +9,7 @@ use lib 't/lib/';
 use TestDB qw(txn_do_and_rollback);
 use Test::Coocook;    # makes Coocook::Script::Dbck not read real config files
 
-plan(19);
+plan(20);
 
 my $db = TestDB->new();
 
@@ -118,4 +118,13 @@ txn_do_and_rollback $db, sub {
 
     like warning { $app->run } => qr/unit1_id.+unit2_id/,
       "unit_conversions: unit1_id must be lower than unit2_id (relationship normalization)";
+};
+
+txn_do_and_rollback $db, sub {
+    my $purchase_list = $db->resultset('PurchaseList')->find(1);
+    $purchase_list->items->delete();
+    $purchase_list->update( { project_id => 2 } );
+
+    like warning { $app->run } => qr/default_purchase_list/,
+      "project's default purchase list belongs to other project";
 };

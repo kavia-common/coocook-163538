@@ -96,6 +96,7 @@ sub check_relationships ($self) {
         { DishIngredient   => [ { dish => 'meal' }, qw< article unit  > ] },
         { DishTag          => [ { dish => 'meal' }, qw< tag  > ] },
         { Item             => [qw< purchase_list unit article  >] },
+        { Project          => [qw< me default_purchase_list >] },
         { RecipeIngredient => [qw< recipe article unit >] },
         { RecipeTag        => [qw< recipe tag >] },
         { Tag              => [qw< me tag_group >] },
@@ -115,12 +116,21 @@ sub check_relationships ($self) {
 
         my @tables = map { ref $_ ? values %$_ : $_ } @$joins;
 
+        # tables except table 'projects' (its 'id' is already in @pk_cols)
+        my @tables_except_projects = grep { not( $rs_class eq 'Project' and $_ eq 'me' ) } @tables;
+
         $rs = $rs->search(
             undef,
             {
                 columns => {
-                    ( map { $_              => $_ } @pk_cols ),                   # id             => id
-                    ( map { $_ . '_project' => $_ . '.project_id' } @tables ),    # recipe_project => recipe.project_id
+                    (
+                        map { $_ => $_ }    # id => id
+                          @pk_cols
+                    ),
+                    (
+                        map { $_ . '_project' => $_ . '.project_id' }    # recipe_project => recipe.project_id
+                          @tables_except_projects
+                    ),
                 },
                 join => [ grep { $_ ne 'me' } @$joins ],
             }
@@ -139,12 +149,16 @@ sub check_relationships ($self) {
                 $rel eq $master_rel
                   and next;
 
-                my $val = $row->{ $rel . '_project' } // next;
+                my $val =
+                  ( $rs_class eq 'Project' and $rel eq 'me' )
+                  ? $row->{id}
+                  : ( $row->{ $rel . '_project' } // next );
 
                 if ( $val != $project_id ) {
                     warn sprintf "Project IDs differ for %s row (%s): %s\n", $rs_class,
                       join( ", ", map { "$_ = " . $row->{$_} } @pk_cols ),
-                      join( ", ", map { $_ . ".project = " . ( $row->{ $_ . '_project' } // "undef" ) } @tables );
+                      join( ", ",
+                        map { $_ . ".project = " . ( $row->{ $_ . '_project' } // "NULL" ) } @tables_except_projects );
 
                     next ROW;
                 }
