@@ -1,7 +1,6 @@
 package Coocook::Model::Organizations;
 
-use Coocook::Base;
-use Moose;
+use Coocook::Base qw(Moose);
 
 use Carp;
 

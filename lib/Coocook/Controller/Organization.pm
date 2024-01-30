@@ -1,8 +1,6 @@
 package Coocook::Controller::Organization;
 
-use Coocook::Base;
-use Moose;
-use namespace::autoclean;
+use Coocook::Base qw(Moose);
 
 use Coocook::Util;
 use PerlX::Maybe;

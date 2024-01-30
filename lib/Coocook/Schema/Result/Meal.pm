@@ -1,8 +1,6 @@
 package Coocook::Schema::Result::Meal;
 
-use Coocook::Base;
-use Moose;
-use namespace::autoclean;
+use Coocook::Base qw(Moose);
 
 use JSON::MaybeXS;
 

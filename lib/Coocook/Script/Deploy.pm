@@ -2,9 +2,7 @@ package Coocook::Script::Deploy;
 
 # ABSTRACT: script for database maintenance based on App::DH
 
-use Coocook::Base;
-use Moose;
-use namespace::autoclean;
+use Coocook::Base qw(Moose);
 
 use Coocook::DeploymentHandler;
 use PerlX::Maybe;

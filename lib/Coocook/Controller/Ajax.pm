@@ -2,9 +2,9 @@ package Coocook::Controller::Ajax;
 
 # ABSTRACT: base class for all controllers in Coocook
 
+use Coocook::Base qw(Moose);
+
 use Carp;
-use Moose;
-use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller' }
 

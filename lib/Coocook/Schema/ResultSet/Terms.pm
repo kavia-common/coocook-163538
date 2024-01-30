@@ -1,8 +1,6 @@
 package Coocook::Schema::ResultSet::Terms;
 
-use Coocook::Base;
-use Moose;
-use namespace::autoclean;
+use Coocook::Base qw(Moose);
 
 use DateTime;
 

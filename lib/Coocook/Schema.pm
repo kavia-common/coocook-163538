@@ -2,9 +2,7 @@ package Coocook::Schema;
 
 # ABSTRACT: DBIx::Class-based SQL database representation
 
-use Coocook::Base;
-use Moose;
-use namespace::autoclean;
+use Coocook::Base qw(Moose);
 
 use Carp;
 use Clone;    # indirect dependency required for connection()

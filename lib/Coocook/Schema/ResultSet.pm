@@ -2,10 +2,7 @@ package Coocook::Schema::ResultSet;
 
 # ABSTRACT: base class for all ResultSet classes
 
-use Coocook::Base;
-use Moose;
-use MooseX::NonMoose;
-use namespace::autoclean;
+use Coocook::Base qw( Moose MooseX::NonMoose );
 
 use Carp;
 

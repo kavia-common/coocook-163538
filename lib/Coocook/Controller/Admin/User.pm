@@ -1,8 +1,6 @@
 package Coocook::Controller::Admin::User;
 
-use Coocook::Base;
-use Moose;
-use namespace::autoclean;
+use Coocook::Base qw(Moose);
 
 BEGIN { extends 'Coocook::Controller' }
 

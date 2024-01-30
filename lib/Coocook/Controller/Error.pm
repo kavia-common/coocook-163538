@@ -1,7 +1,6 @@
 package Coocook::Controller::Error;
 
-use Moose;
-use namespace::autoclean;
+use Coocook::Base qw(Moose);
 
 BEGIN { extends 'Coocook::Controller' }
 

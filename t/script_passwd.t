@@ -1,5 +1,5 @@
 use Coocook::Base;
-use Test2::V0;
+use Test2::V0 -no_warnings => 1;
 
 our $USER;
 BEGIN { $USER = $ENV{USER} ||= 'coocook_test_user' }

@@ -1,7 +1,6 @@
 package Coocook::Script::Role::HasSchema;
 
-use Coocook::Base;
-use Moose::Role;
+use Coocook::Base qw(Moose::Role);
 
 use Coocook::Schema;
 

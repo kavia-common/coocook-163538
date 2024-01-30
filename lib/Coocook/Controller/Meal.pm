@@ -1,7 +1,6 @@
 package Coocook::Controller::Meal;
 
-use Moose;
-use namespace::autoclean;
+use Coocook::Base qw(Moose);
 
 use Try::Tiny;
 

@@ -2,10 +2,7 @@ package Coocook::Model::Ingredients;
 
 # ABSTRACT: business logic for plain data structures from Dish- or RecipeIngredients
 
-use Coocook::Base;
-use Moose;
-
-use Moose::Util::TypeConstraints;
+use Coocook::Base qw( Moose Moose::Util::TypeConstraints );
 
 class_type 'Coocook::Schema::ResultSet::DishIngredient';
 class_type 'Coocook::Schema::ResultSet::RecipeIngredient';

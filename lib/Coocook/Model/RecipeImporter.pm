@@ -2,8 +2,7 @@ package Coocook::Model::RecipeImporter;
 
 # ABSTRACT: business logic for importing a recipe into a different project
 
-use Coocook::Base;
-use Moose;
+use Coocook::Base qw(Moose);
 
 use Carp;
 

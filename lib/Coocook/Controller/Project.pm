@@ -1,8 +1,8 @@
 package Coocook::Controller::Project;
 
+use Coocook::Base qw(Moose);
+
 use DateTime;
-use Moose;
-use namespace::autoclean;
 use JSON::MaybeXS qw/to_json/;
 
 BEGIN { extends 'Coocook::Controller' }

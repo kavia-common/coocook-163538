@@ -1,8 +1,8 @@
 package Coocook::Controller::Email::ChangeEmail;
 
+use Coocook::Base qw(Moose);
+
 use DateTime;
-use Moose;
-use namespace::autoclean;
 
 BEGIN { extends 'Coocook::Controller' }
 

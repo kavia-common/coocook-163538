@@ -2,8 +2,7 @@ package Coocook::Model::PurchaseList;
 
 # ABSTRACT: business logic for plain data structure of purchase list
 
-use Coocook::Base;
-use Moose;
+use Coocook::Base qw(Moose);
 
 use Scalar::Util 'weaken';
 

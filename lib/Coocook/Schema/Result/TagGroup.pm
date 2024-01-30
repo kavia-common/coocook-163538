@@ -1,8 +1,6 @@
 package Coocook::Schema::Result::TagGroup;
 
-use Coocook::Base;
-use Moose;
-use namespace::autoclean;
+use Coocook::Base qw(Moose);
 
 extends 'Coocook::Schema::Result';
 

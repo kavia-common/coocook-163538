@@ -2,9 +2,7 @@ package Coocook::Script::Cron;
 
 # ABSTRACT: script to be executed regularly by cron for routine tasks
 
-use Coocook::Base;
-use Moose;
-use namespace::autoclean;
+use Coocook::Base qw(Moose);
 use open ':locale';
 
 with 'Coocook::Script::Role::HasDebug';

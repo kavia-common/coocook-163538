@@ -2,9 +2,7 @@ package Coocook::Script::Passwd;
 
 # ABSTRACT: script for setting a new password for a user
 
-use Coocook::Base;
-use Moose;
-use namespace::autoclean;
+use Coocook::Base qw(Moose);
 
 use Coocook::Schema;
 use Term::ReadKey;

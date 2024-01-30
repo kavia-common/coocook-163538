@@ -2,9 +2,7 @@ package Coocook::Helpers;
 
 # ABSTRACT: role with useful Controller helper methods as $c->my_helper(...)
 
-use Coocook::Base;
-use Moose::Role;
-use namespace::autoclean;
+use Coocook::Base qw(Moose::Role);
 
 use Carp;
 use Scalar::Util qw< blessed >;
