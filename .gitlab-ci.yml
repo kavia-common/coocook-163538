@@ -92,6 +92,14 @@ perl-5.38:
     PGPASSWORD:        coocook
 
 
+# latest supported Perl version with CATALYST_DEBUG=1 (without coverage, only for master)
+perl-5.38+CATALYST_DEBUG:
+  extends: perl-5.38
+  rules: *only-master
+  variables:
+    CATALYST_DEBUG: 1
+
+
 # latest supported Perl version with coverage (only for master)
 perl-5.38+coverage:
   extends: perl-5.38
