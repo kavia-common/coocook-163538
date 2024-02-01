@@ -7,7 +7,7 @@ plan(9);
 
 my $t = Test::Coocook->new;
 
-$t->get_ok('/recipes');
+$t->get_ok('https://localhost/recipes');
 $t->follow_link_ok( { text => 'pizza' } );
 $t->base_is('https://localhost/recipe/1/pizza');
 

@@ -13,7 +13,7 @@ $t->schema->resultset('Project')->results_exist( { name => my $private_project =
 $t->schema->resultset('Recipe')->results_exist( { name => my $private_recipe = 'rice pudding' } )
   or die "test broken";
 
-$t->get_ok('/');
+$t->get_ok('https://localhost/');
 
 $t->text_contains('Test Project');
 $t->text_lacks($private_project);

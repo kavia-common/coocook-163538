@@ -203,7 +203,7 @@ sub get_ok_email_link_like {
 
         my @urls;
 
-        while ( $body =~ m/$RE{URI}{HTTP}{ -scheme => 'https' }{-keep}/g ) {
+        while ( $body =~ m/$RE{URI}{HTTP}{ -scheme => 'https?' }{-keep}/g ) {
             my $url = $1;    # can't match in list context because RE has groups
 
             $url =~ $regex
