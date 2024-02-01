@@ -274,7 +274,7 @@ $t->logout_ok();
       or die "failed to delete session cookie";
 }
 
-$t->get_ok('/login');
+$t->get_ok('https://localhost/login');
 
 is $t->cookie_jar->get_cookies( $t->base, 'username' ) => 'test',
   "'username' cookie contains username 'test'";
@@ -373,7 +373,7 @@ subtest "password recovery marks email address verified" => sub {
 $t->login_ok( 'test', 'new, nice & shiny' );
 
 subtest "redirects after login/logout" => sub {
-    $t->get_ok('/about');
+    $t->get_ok('https://localhost/about');
 
     $t->logout_ok();
 
@@ -393,13 +393,13 @@ subtest "redirects after login/logout" => sub {
 };
 
 subtest "refreshing login page after logging in other browser tab" => sub {
-    $t->get_ok('/login?redirect=/statistics');
+    $t->get_ok('https://localhost/login?redirect=/statistics');
 
     $t->base_is( 'https://localhost/statistics', "client is redirected immediately" );
 };
 
 subtest "refreshing register page after logging in other browser tab" => sub {
-    $t->get_ok('/register?redirect=/statistics');
+    $t->get_ok('https://localhost/register?redirect=/statistics');
 
     $t->base_is( 'https://localhost/statistics', "client is redirected immediately" );
 };
@@ -407,7 +407,7 @@ subtest "refreshing register page after logging in other browser tab" => sub {
 subtest "malicious redirects are filtered on logout" => sub {
     $t->is_logged_in();
 
-    $t->post('/logout?redirect=https://malicious.example/');
+    $t->post('https://localhost/logout?redirect=https://malicious.example/');
     $t->base_is( 'https://localhost/', "client is redirected to /" );
 
     $t->is_logged_out("... but client is logged out anyway");
@@ -415,7 +415,7 @@ subtest "malicious redirects are filtered on logout" => sub {
 
 subtest "malicious redirects are filtered on login" => sub {
     $t->post(
-        '/login?redirect=https://malicious.example/',
+        'https://localhost/login?redirect=https://malicious.example/',
         { username => 'test', password => 'new, nice & shiny' }
     );
     $t->base_is( 'https://localhost/', "client is redirected to /" );

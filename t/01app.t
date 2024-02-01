@@ -82,6 +82,8 @@ subtest "attributes of controller actions" => sub {
 };
 
 subtest "GET http://... redirects to HTTPS" => sub {
+    $t->catalyst_app->debug and skip_all "Catalyst debug mode is active";
+
     $t->redirect_is(
         'http://localhost/' => 'https://localhost/',
         301    # moved permanently

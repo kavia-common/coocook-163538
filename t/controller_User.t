@@ -5,7 +5,7 @@ use Test::Coocook;
 
 my $t = Test::Coocook->new;
 
-$t->get_ok('/user/john_doe');
+$t->get_ok('https://localhost/user/john_doe');
 $t->base_is('https://localhost/login?redirect=%2Fuser%2Fjohn_doe');
 $t->robots_flags_ok( { index => 0 } );
 

@@ -26,7 +26,7 @@ $t->schema->resultset('Recipe')->create(
     }
 );
 
-$t->get_ok('/project/2/Other-Project/recipes/import/1');
+$t->get_ok('https://localhost/project/2/Other-Project/recipes/import/1');
 
 $t->login_ok( 'john_doe', 'P@ssw0rd' );
 

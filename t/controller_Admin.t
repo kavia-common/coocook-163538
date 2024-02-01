@@ -21,7 +21,7 @@ my $t = Test::Coocook->new;
 
 my $anonymous_ua = $t->clone();
 
-$t->get_ok('/');
+$t->get_ok('https://localhost/');
 $t->login_ok( 'john_doe', 'P@ssw0rd' );
 
 for my $page (@admin_pages) {
