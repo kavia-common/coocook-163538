@@ -197,10 +197,11 @@ sub add_ingredient : POST PathPart('ingredients/create') Chained('project_base')
     my ( $self, $c ) = @_;
 
     my $dish_or_recipe = $c->stash->{dish_or_recipe};
+    my $project        = $c->stash->{project};
+    my $ingredient     = $c->req->body_data->{ingredient};
 
-    my $project = $c->stash->{project};
+    my $txn_scope_guard = $c->model('DB')->txn_scope_guard;
 
-    my $ingredient = $c->req->body_data->{ingredient};
     my $existing_article;
     if ( defined $ingredient->{article}->{name} ) {
         $existing_article = $project->articles->find( { name => $ingredient->{article}->{name} } );
@@ -286,6 +287,8 @@ sub add_ingredient : POST PathPart('ingredients/create') Chained('project_base')
     # => we don't need to anything because $article_id and $unit_id have already the right values
 
     $dish_or_recipe->create_related( ingredients => \%new_ingredient );
+
+    $txn_scope_guard->commit;
 
     $c->stash->{json_data} = { success => 1 };
 }
