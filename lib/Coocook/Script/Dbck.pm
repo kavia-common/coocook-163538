@@ -33,6 +33,7 @@ sub run ($self) {
     $self->check_fc_values();
     $self->check_url_name_values();
     $self->check_unit_conversions_values();
+    $self->check_missing_default_purchase_lists();
 }
 
 sub check_schema ($self) {
@@ -239,6 +240,24 @@ sub check_unit_conversions_values ($self) {
 
     if ( $count > 0 ) {
         warn sprintf "%i rows in unit_conversions not normalized: unit1_id > unit2_id\n", $count;
+    }
+}
+
+sub check_missing_default_purchase_lists ($self) {
+    my $projects = $self->_schema->resultset('Project');
+
+    $projects = $projects->search(
+        {
+            -and => [
+                { default_purchase_list_id => undef },
+                $projects->correlate('purchase_lists')->results_exist_as_query,
+            ]
+        }
+    );
+
+    while ( my $project = $projects->next ) {
+        warn sprintf "Project %i has purchase list(s) but its default_purchase_list_id is NULL",
+          $project->id;
     }
 }
 

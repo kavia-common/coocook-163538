@@ -9,7 +9,7 @@ use lib 't/lib/';
 use TestDB qw(txn_do_and_rollback);
 use Test::Coocook;    # makes Coocook::Script::Dbck not read real config files
 
-plan(20);
+plan(21);
 
 my $db = TestDB->new();
 
@@ -25,7 +25,7 @@ txn_do_and_rollback $db, sub {
     SQL
 
     like warnings { $app->run } => [
-        qr/table \W?projects\W?/,    #perldoc
+        qr/table \W?projects\W?/,    #perltidy
         qr/<<</,
         qr/CREATE TABLE/,
         qr/---/,
@@ -124,7 +124,20 @@ txn_do_and_rollback $db, sub {
     my $purchase_list = $db->resultset('PurchaseList')->find(1);
     $purchase_list->items->delete();
     $purchase_list->update( { project_id => 2 } );
+    $purchase_list->project->update( { default_purchase_list_id => 1 } );
 
     like warning { $app->run } => qr/default_purchase_list/,
       "project's default purchase list belongs to other project";
 };
+
+subtest "projects with purchase lists but without default_purchase_list",
+  txn_do_and_rollback $db => sub {
+    my $project = $db->resultset('Project')->find(1);
+    $project->update( { default_purchase_list_id => undef } );
+
+    like warning { $app->run } => qr/default[ _]purchase[ _]list/, "warns";
+
+    $project->purchase_lists->delete();
+
+    ok !warns { $app->run }, "doesn't warn without purchase lists";
+  };
