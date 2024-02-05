@@ -19,25 +19,23 @@ $app->_schema($db);
 
 ok no_warnings { $app->run }, "no warnings with test data";
 
-{
-    $db->txn_begin;
+$db->txn_do_and_rollback(
+    sub {
+        $db->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do(<<~SQL) } );
+        ALTER TABLE projects ADD COLUMN foobar integer
+        SQL
 
-    $db->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do(<<~SQL) } );
-    ALTER TABLE projects ADD COLUMN foobar integer
-    SQL
-
-    like warnings { $app->run } => [
-        qr/table \W?projects\W?/,    #perldoc
-        qr/<<</,
-        qr/CREATE TABLE/,
-        qr/---/,
-        qr/CREATE TABLE/,
-        qr/>>>/,
-      ],
-      "Error about table schema";
-
-    $db->txn_rollback;
-}
+        like warnings { $app->run } => [
+            qr/table \W?projects\W?/,    #perldoc
+            qr/<<</,
+            qr/CREATE TABLE/,
+            qr/---/,
+            qr/CREATE TABLE/,
+            qr/>>>/,
+          ],
+          "Error about table schema";
+    }
+);
 
 {
     $db->txn_begin;

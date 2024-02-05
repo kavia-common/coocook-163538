@@ -94,6 +94,12 @@ sub count ( $self, @sources ) {
     return $records;
 }
 
+=head2 statistics()
+
+Returns a hashref with numbers for site-global statistics.
+
+=cut
+
 sub statistics ($self) {
     return {
         dishes_served   => $self->resultset('Dish')->in_past_or_today->sum_servings,
@@ -103,6 +109,21 @@ sub statistics ($self) {
         users           => $self->resultset('User')->count,
         organizations   => $self->resultset('Organization')->count,
     };
+}
+
+=head2 txn_do_and_rollback( sub { ... }, @coderef_args? )
+
+Takes a coderef like L<DBIx::Class::Schema/txn_do> but B<always> does
+a rollback after running the code. Useful for unit tests which
+need to temporarily modify the database for test cases.
+
+=cut
+
+sub txn_do_and_rollback ( $self, $coderef, @coderef_args ) {
+    $self->txn_begin();
+    my @return = $coderef->(@coderef_args);
+    $self->txn_rollback();
+    return @return;
 }
 
 =head1 PostgreSQL-specific Methods
