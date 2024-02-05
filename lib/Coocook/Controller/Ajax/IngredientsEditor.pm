@@ -55,7 +55,7 @@ sub update_ingredient : POST PathPart('ingredients/update') Chained('project_bas
     $ingrDB->update(
         {
             value   => $ingredient->{value},
-            unit_id => $ingredient->{current_unit}->{id},
+            unit_id => $ingredient->{current_unit}{id},
             comment => $ingredient->{comment},
         }
     );
@@ -198,56 +198,55 @@ sub add_ingredient : POST PathPart('ingredients/create') Chained('project_base')
 
     my $dish_or_recipe = $c->stash->{dish_or_recipe};
     my $project        = $c->stash->{project};
-    my $ingredient     = $c->req->body_data->{ingredient};
+    my $properties     = $c->req->body_data->{ingredient};
 
     my $txn_scope_guard = $c->model('DB')->txn_scope_guard;
 
     my $existing_article;
-    if ( defined $ingredient->{article}->{name} ) {
-        $existing_article = $project->articles->find( { name => $ingredient->{article}->{name} } );
+    if ( defined $properties->{article}{name} ) {
+        $existing_article = $project->articles->find( { name => $properties->{article}{name} } );
     }
-    elsif ( defined $ingredient->{article}->{id} ) {
+    elsif ( defined $properties->{article}{id} ) {
+        $existing_article = $project->articles->find( { id => $properties->{article}{id} } );
+    }
 
-        $existing_article = $project->articles->find( { id => $ingredient->{article}->{id} } );
-    }
     my $existing_unit;
-    if ( defined $ingredient->{unit}->{name} ) {
+    if ( defined $properties->{unit}{name} ) {
         $existing_unit = $project->units->search(
-            [ { short_name => $ingredient->{unit}->{name} }, { long_name => $ingredient->{unit}->{name} } ] )
-          ->one_row;
+            [    # OR
+                { short_name => $properties->{unit}{name} },
+                { long_name  => $properties->{unit}{name} },
+            ]
+        )->one_row;
     }
-    elsif ( defined $ingredient->{unit}->{id} ) {
-
-        $existing_unit = $project->units->find( { id => $ingredient->{unit}->{id} } );
+    elsif ( defined $properties->{unit}{id} ) {
+        $existing_unit = $project->units->find( { id => $properties->{unit}{id} } );
     }
 
     my %new_ingredient = (
         article_id => $existing_article && $existing_article->id,
         unit_id    => $existing_unit    && $existing_unit->id,
-        comment    => $ingredient->{comment},
-        value      => $ingredient->{amount},
-        prepare    => $ingredient->{prepare},
+        value      => $properties->{amount},
+        $properties->%{qw( comment prepare )},
     );
 
     # 4 general cases
     # unit and article don't exist
     if (    !$existing_article
         and !$existing_unit
-        and defined $ingredient->{article}->{name}
-        and defined $ingredient->{unit}->{name} )
-    {
-
-        # create both and connect them
+        and defined $properties->{article}{name}
+        and defined $properties->{unit}{name} )
+    {    # create both and connect them
         $new_ingredient{article_id} = $project->articles->create(
             {
-                name    => $ingredient->{article}->{name},
+                name    => $properties->{article}{name},
                 comment => '',
             },
         )->id;
         my $unit = $project->units->create(
             {
-                short_name => $ingredient->{unit}->{name},
-                long_name  => $ingredient->{unit}->{name},
+                short_name => $properties->{unit}{name},
+                long_name  => $properties->{unit}{name},
             }
         );
         $unit->create_related(
@@ -257,12 +256,10 @@ sub add_ingredient : POST PathPart('ingredients/create') Chained('project_base')
         );
         $new_ingredient{unit_id} = $unit->id;
     }
-    elsif ( !$existing_article and defined $existing_unit ) {
-
-        # create article and connect unit to it
+    elsif ( !$existing_article and defined $existing_unit ) {    # create article and connect unit to it
         $new_ingredient{article_id} = $project->articles->create(
             {
-                name    => $ingredient->{article}->{name},
+                name    => $properties->{article}{name},
                 comment => '',
             }
         )->id;
@@ -272,19 +269,17 @@ sub add_ingredient : POST PathPart('ingredients/create') Chained('project_base')
             }
         );
     }
-    elsif ( defined $existing_article and !$existing_unit ) {
-
-        # create unit and connect it to the ingredient, but not the article
+    elsif ( defined $existing_article and !$existing_unit )
+    {    # create unit and connect it to the ingredient, but not the article
         $new_ingredient{unit_id} = $project->units->create(
             {
-                short_name => $ingredient->{unit}->{name},
-                long_name  => $ingredient->{unit}->{name},
+                short_name => $properties->{unit}{name},
+                long_name  => $properties->{unit}{name},
             }
         )->id;
     }
-
-    # last case: both exist and just a ingredient must be created with the ids of the articles
-    # => we don't need to anything because $article_id and $unit_id have already the right values
+    else { }    # both exist and just a ingredient must be created with the IDs of the articles
+                # -> we don't need to anything because $article_id and $unit_id are already set
 
     $dish_or_recipe->create_related( ingredients => \%new_ingredient );
 
