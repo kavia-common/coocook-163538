@@ -224,8 +224,11 @@ sub add_ingredient : POST PathPart('ingredients/create') Chained('project_base')
           || $project->units->create( { short_name => $name, long_name => $name } );
     }
 
-    ( $article and $unit )
-      or $c->detach('/error/bad_request');
+    if ( !$article or !$unit ) {
+        $c->response->status(400);
+        $c->stash->{json_data} = { success => 0 };
+        return;
+    }
 
     if ( not $article->in_storage ) {
         $article->set_columns( { comment => '' } );
