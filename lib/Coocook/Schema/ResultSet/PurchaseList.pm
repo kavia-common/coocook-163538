@@ -35,11 +35,11 @@ sub with_is_default ($self) {
     );
 }
 
-sub with_item_count ($self) {
+sub with_items_count ($self) {
     return $self->search(
         undef,
         {
-            '+columns' => { item_count => $self->correlate('items')->count_rs->as_query },
+            '+columns' => { items_count => $self->correlate('items')->count_rs->as_query },
         }
     );
 }

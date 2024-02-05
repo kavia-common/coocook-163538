@@ -42,29 +42,29 @@ is [ $rs->with_is_default->hri->all ] => array {
 },
   "ResultSet::PurchaseList->with_is_default()";
 
-is [ $rs->with_item_count->hri->all ] => array {
+is [ $rs->with_items_count->hri->all ] => array {
     item hash {
-        field id         => 1;
-        field item_count => 2;
+        field id          => 1;
+        field items_count => 2;
         etc();
     };
     item hash {
-        field id         => 2;
-        field item_count => 0;
+        field id          => 2;
+        field items_count => 0;
         etc();
     };
     item hash {
-        field id         => 3;
-        field item_count => 0;
+        field id          => 3;
+        field items_count => 0;
         etc();
     };
     item hash {
-        field id         => 4;
-        field item_count => 0;
+        field id          => 4;
+        field items_count => 0;
         etc();
     };
 },
-  "ResultSet::PurchaseList->with_item_count()";
+  "ResultSet::PurchaseList->with_items_count()";
 
 subtest is_default => txn_do_and_rollback $db => sub {
     my @cached     = $rs->with_is_default->all;

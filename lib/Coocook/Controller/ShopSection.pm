@@ -26,13 +26,13 @@ sub index : GET HEAD Chained('/project/base') PathPart('shop_sections') Args(0)
   RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
 
-    my @shop_sections = $c->project->shop_sections->with_article_count->sorted->hri->all;
+    my @shop_sections = $c->project->shop_sections->with_articles_count->sorted->hri->all;
 
     for my $section (@shop_sections) {
         $section->{update_url} = $c->project_uri( $self->action_for('update'), $section->{id} );
 
         $section->{delete_url} = $c->project_uri( $self->action_for('delete'), $section->{id} )
-          unless $section->{article_count} > 0;
+          unless $section->{articles_count} > 0;
     }
 
     $c->stash(

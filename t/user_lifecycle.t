@@ -90,7 +90,7 @@ $t->robots_flags_ok( { index => 0 } );
     );
 
     $t->register_ok( \%userdata_ok );
-    $t->email_count_is(1);
+    $t->emails_count_is(1);
 
     my $user1 = $schema->resultset('User')->find( { name => 'test' } );
 
@@ -147,7 +147,7 @@ $t->robots_flags_ok( { index => 0 } );
         $user1->update( { token_expires => $user1->format_datetime_now } );
 
         $t->register_ok( \%userdata_ok );
-        $t->email_count_is(3);
+        $t->emails_count_is(3);
     };
 }
 
@@ -181,7 +181,7 @@ $t->register_ok(
     }
 );
 
-$t->email_count_is(2);
+$t->emails_count_is(2);
 
 $t->email_like(qr/Hi test2/);
 $t->email_like(qr/Please verify/);

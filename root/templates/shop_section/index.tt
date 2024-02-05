@@ -25,7 +25,7 @@ BLOCK new_section %]
         FOREACH section IN shop_sections %]
         <tr class="parent">
             <td>[% section.name | html %]</td>
-            <td>[% section.article_count %]</td>
+            <td>[% section.articles_count %]</td>
             <td>
                 <div class="d-flex gap-1 action-btn">
                     <button class="btn btn-outline-dark btn-sm btn-quad update" title="Rename shop section" data-url="[% section.update_url %]" data-name="[% section.name | html %]" data-bs-toggle="modal" data-bs-target="#update-section">
@@ -38,7 +38,7 @@ BLOCK new_section %]
                         </button>
                     </form>
                     [% ELSE %]
-                    <button type="submit" class="btn btn-outline-danger btn-sm btn-quad" title="[% numerus(section.article_count, "article", "articles") %] are assigned to this shop section" disabled style="pointer-events:auto;cursor:default">
+                    <button type="submit" class="btn btn-outline-danger btn-sm btn-quad" title="[% numerus(section.articles_count, "article", "articles") %] are assigned to this shop section" disabled style="pointer-events:auto;cursor:default">
                         <i class="material-icons">delete_forever</i>
                     </button>
                     [% END %]
