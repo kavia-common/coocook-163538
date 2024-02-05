@@ -202,86 +202,44 @@ sub add_ingredient : POST PathPart('ingredients/create') Chained('project_base')
 
     my $txn_scope_guard = $c->model('DB')->txn_scope_guard;
 
-    my $existing_article;
-    if ( defined $properties->{article}{name} ) {
-        $existing_article = $project->articles->find( { name => $properties->{article}{name} } );
+    my ( $article, $unit );
+
+    if ( defined( my $id = $properties->{article}{id} ) ) {
+        $article = $project->articles->find($id);
     }
-    elsif ( defined $properties->{article}{id} ) {
-        $existing_article = $project->articles->find( { id => $properties->{article}{id} } );
+    elsif ( defined( my $name = $properties->{article}{name} ) ) {
+        $article = $project->articles->find_or_new( { name => $name } );
     }
 
-    my $existing_unit;
-    if ( defined $properties->{unit}{name} ) {
-        $existing_unit = $project->units->search(
+    if ( defined( my $id = $properties->{unit}{id} ) ) {
+        $unit = $project->units->find($id);
+    }
+    elsif ( defined( my $name = $properties->{unit}{name} ) ) {
+        $unit = $project->units->search(
             [    # OR
-                { short_name => $properties->{unit}{name} },
-                { long_name  => $properties->{unit}{name} },
+                { short_name => $name },
+                { long_name  => $name },
             ]
-        )->one_row;
-    }
-    elsif ( defined $properties->{unit}{id} ) {
-        $existing_unit = $project->units->find( { id => $properties->{unit}{id} } );
+          )->one_row
+          || $project->units->create( { short_name => $name, long_name => $name } );
     }
 
-    my %new_ingredient = (
-        article_id => $existing_article && $existing_article->id,
-        unit_id    => $existing_unit    && $existing_unit->id,
-        value      => $properties->{amount},
-        $properties->%{qw( comment prepare )},
+    ( $article and $unit )
+      or $c->detach('/error/bad_request');
+
+    if ( not $article->in_storage ) {
+        $article->set_columns( { comment => '' } );
+        $article->create_related( articles_units => { unit => $unit } );
+    }
+
+    $dish_or_recipe->create_related(
+        ingredients => {
+            article_id => $article->id,
+            unit_id    => $unit->id,
+            value      => $properties->{amount},    # TODO https://gitlab.com/coocook/web-components/-/issues/54
+            $properties->%{qw( comment prepare )},
+        }
     );
-
-    # 4 general cases
-    # unit and article don't exist
-    if (    !$existing_article
-        and !$existing_unit
-        and defined $properties->{article}{name}
-        and defined $properties->{unit}{name} )
-    {    # create both and connect them
-        $new_ingredient{article_id} = $project->articles->create(
-            {
-                name    => $properties->{article}{name},
-                comment => '',
-            },
-        )->id;
-        my $unit = $project->units->create(
-            {
-                short_name => $properties->{unit}{name},
-                long_name  => $properties->{unit}{name},
-            }
-        );
-        $unit->create_related(
-            articles_units => {
-                article_id => $new_ingredient{article_id},
-            }
-        );
-        $new_ingredient{unit_id} = $unit->id;
-    }
-    elsif ( !$existing_article and defined $existing_unit ) {    # create article and connect unit to it
-        $new_ingredient{article_id} = $project->articles->create(
-            {
-                name    => $properties->{article}{name},
-                comment => '',
-            }
-        )->id;
-        $existing_unit->create_related(
-            articles_units => {
-                article_id => $new_ingredient{article_id},
-            }
-        );
-    }
-    elsif ( defined $existing_article and !$existing_unit )
-    {    # create unit and connect it to the ingredient, but not the article
-        $new_ingredient{unit_id} = $project->units->create(
-            {
-                short_name => $properties->{unit}{name},
-                long_name  => $properties->{unit}{name},
-            }
-        )->id;
-    }
-    else { }    # both exist and just a ingredient must be created with the IDs of the articles
-                # -> we don't need to anything because $article_id and $unit_id are already set
-
-    $dish_or_recipe->create_related( ingredients => \%new_ingredient );
 
     $txn_scope_guard->commit;
 
