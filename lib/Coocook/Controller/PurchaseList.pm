@@ -234,7 +234,14 @@ sub update : POST Chained('base') Args(0) RequiresCapability('edit_project') {
     }
 
     $list->name($name);
-    $list->update_or_insert();
+    $list->txn_do(
+        sub {
+            $list->update_or_insert();
+
+            defined $c->project->default_purchase_list_id
+              or $c->project->update( { default_purchase_list_id => $list->id } );
+        }
+    );
 
     $c->detach('redirect');
 }
