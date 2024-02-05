@@ -25,13 +25,15 @@ INSERT INTO "organizations_users"
 INSERT INTO "projects"
 (id,            name,        url_name,     url_name_fc,      description, is_public, owner_id,           created, archived) VALUES
 ( 1,  'Test Project',  'Test-Project',  'test-project',  'Test Project.',      TRUE,        1, CURRENT_TIMESTAMP,     NULL),
-( 2, 'Other Project', 'Other-Project', 'other-project', 'Other Project.',     FALSE,        1, CURRENT_TIMESTAMP,     NULL);
+( 2,  'Side Project',  'Side-Project',  'side-project',  'Side Project.',     FALSE,        1, CURRENT_TIMESTAMP,     NULL),
+( 3, 'Other Project', 'Other-Project', 'other-project', 'Other Project.',     FALSE,        2, CURRENT_TIMESTAMP,     NULL);
 
 INSERT INTO "projects_users"
 (project_id, user_id,     role) VALUES
 (         1,       1,  'owner'),
 (         1,       2, 'editor'),
-(         2,       1,  'owner');
+(         2,       1,  'owner'),
+(         3,       2,  'owner');
 
 INSERT INTO "shop_sections"
 (id, project_id,              name) VALUES

@@ -225,7 +225,7 @@ subtest "robots meta tag" => sub {
     };
 
     subtest "under simulation of fatal mistake in permission" => sub {
-        $t->get('/project/2/Other-Project');
+        $t->get('/project/3/Other-Project');
         $t->status_is(302);    # actually the login page
 
         note "manipulating Model::Authorization ...";

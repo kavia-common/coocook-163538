@@ -26,7 +26,7 @@ $t->schema->resultset('Recipe')->create(
     }
 );
 
-$t->get_ok('https://localhost/project/2/Other-Project/recipes/import/1');
+$t->get_ok('https://localhost/project/2/Side-Project/recipes/import/1');
 
 $t->login_ok( 'john_doe', 'P@ssw0rd' );
 
@@ -43,9 +43,9 @@ $t->content_contains( 'Spätzle über Bratklößchen', "Unicode characters encod
 $t->form_id('import') || die;
 $t->submit_form_ok( { button => 'import' } );
 
-$t->base_like(qr{ ^https://localhost/project/2/Other-Project/recipe/ \d+ $ }x);
+$t->base_like(qr{ ^https://localhost/project/2/Side-Project/recipe/ \d+ $ }x);
 
-$t->get_ok('/project/2/Other-Project/recipes/import/1');    # again
+$t->get_ok('/project/2/Side-Project/recipes/import/1');    # again
 
 $t->form_id('import') || die;
 $t->submit_form_ok( { button => 'import' } );
