@@ -47,9 +47,11 @@ BLOCK new_list %]
                         </button>
                     </form>
                         [% ELSE %]
-                    <button class="btn btn-outline-dark btn-sm btn-quad tt-disabled-btn" title="Is already the default purchase list" disabled >
-                        <i class="material-icons">shopping_cart_checkout</i>
-                    </button>
+                    <span data-bs-toggle="tooltip" data-bs-title="Is already the default purchase list">
+                        <button class="btn btn-outline-dark btn-sm btn-quad tt-disabled-btn" disabled>
+                            <i class="material-icons">shopping_cart_checkout</i>
+                        </button>
+                    </span>
                         [% END;
                     END;
 
