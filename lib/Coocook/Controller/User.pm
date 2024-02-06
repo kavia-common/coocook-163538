@@ -103,14 +103,23 @@ sub post_register : POST Chained('/base') PathPart('register') Args(0) Public {
     $c->user_registration_enabled
       or $c->detach('/error/forbidden');
 
-    my $username = $c->req->params->get('username');    # use key 'username' just like login form
-    my $password = $c->req->params->get('password');
-    my $email_fc = fc $c->req->params->get('email');
-    my $url      = $c->req->params->get('url');
+    my $username  = $c->req->params->get('username');    # use key 'username' just like login form
+    my $password  = $c->req->params->get('password');
+    my $password2 = $c->req->params->get('password2');
+    my $email     = $c->req->params->get('email');
+    my $url       = $c->req->params->get('url');
+
+    {
+        my @required_fields = (
+            $username, $password, $password2, $email, $c->config->{captcha}{use_hidden_input} ? $url : (),
+        );
+
+        if ( grep { not defined } @required_fields ) {
+            $c->detach('/error/bad_request');
+        }
+    }
 
     my @errors;
-
-    my $users = $c->model('DB::User');
 
     if ( length $username == 0 ) {
         push @errors, "username must not be empty";
@@ -118,7 +127,7 @@ sub post_register : POST Chained('/base') PathPart('register') Args(0) Public {
     elsif ( not Coocook::Util::username_valid($username) ) {
         push @errors, "username must not contain other characters than 0-9, a-z, A-Z or _.";
     }
-    elsif ( not $users->name_available($username) ) {
+    elsif ( not $c->model('DB::User')->name_available($username) ) {
         push @errors, "username is not available";
     }
 
@@ -126,10 +135,12 @@ sub post_register : POST Chained('/base') PathPart('register') Args(0) Public {
         push @errors, "password must not be empty";
     }
     else {
-        if ( $password ne $c->req->params->get('password2') ) {
+        if ( $password ne $password2 ) {
             push @errors, "passwords don’t match";
         }
     }
+
+    my $email_fc = fc $email;
 
     $c->model('DB::User')->email_valid_and_available($email_fc)
       or push @errors, "email address is invalid or already taken";
@@ -176,7 +187,7 @@ sub post_register : POST Chained('/base') PathPart('register') Args(0) Public {
             template   => 'user/register.tt',
             last_input => {
                 username => $username,
-                email    => $email_fc,
+                email    => $email,
                 url      => $url,
             },
         );
