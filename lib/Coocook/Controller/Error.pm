@@ -9,15 +9,20 @@ our $ENABLE_INTERNAL_SERVER_ERROR_PAGE //= $ENV{COOCOOK_ENABLE_INTERNAL_SERVER_E
 sub bad_request : Private {
     my ( $self, $c, $error ) = @_;
 
-    $error
-      and $c->messages->error($error);
-
     $c->response->status(400);
 
-    $c->stash(
-        template => 'error/bad_request.tt',    # set explicitly to allow $c->detach('/error/bad_request')
-        method   => $c->req->method,
-    );
+    if ( ( $c->stash->{current_view} // '' ) eq 'JSON' ) {
+        $error and $c->stash( json_data => { error => $error } );
+    }
+    else {
+        $error
+          and $c->messages->error($error);
+
+        $c->stash(
+            template => 'error/bad_request.tt',    # set explicitly to allow $c->detach('/error/bad_request')
+            method   => $c->req->method,
+        );
+    }
 }
 
 sub forbidden : Private {

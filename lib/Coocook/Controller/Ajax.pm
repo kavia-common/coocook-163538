@@ -6,15 +6,13 @@ use Coocook::Base qw(Moose);
 
 BEGIN { extends 'Coocook::Controller' }
 
-__PACKAGE__->config( '+action_roles' => ['~Ajax'] );
+sub begin : Private {    # overrides Controller::Root->begin()
+    my ( $self, $c ) = @_;
 
-# DO NOT PLACE ENDPOINT METHODS HERE
-# because other controller directly
-# inherit from this class.
-#
-# If this controller should ever hold
-# endpoint methods, change inheritance
-# to a seperate common base class.
+    $c->stash( current_view => 'JSON' );
+}
+
+sub end : ActionClass('RenderView') { }    # overrides Controller::Root->end()
 
 __PACKAGE__->meta->make_immutable;
 
