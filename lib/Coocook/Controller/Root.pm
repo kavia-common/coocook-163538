@@ -14,38 +14,7 @@ __PACKAGE__->config( namespace => '' );
 
 =head1 METHODS
 
-=head2 index
-
-The root page (/)
-
 =cut
-
-sub base : Chained('/') PathPart('') CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-
-    if ( not $c->req->secure ) {
-        if ( $c->debug ) {
-            $c->log->warn("Not redirecting to HTTPS in debug mode");
-        }
-        elsif ( $c->req->uri->port == 3000 and $c->req->uri->host eq 'localhost' ) {
-            $c->log->warn("Not redirecting to HTTPS on development port localhost:3000");
-        }
-        else {
-            my $method = $c->req->method;
-
-            if ( $method eq 'GET' or $method eq 'HEAD' ) {
-                my $uri = $c->req->uri->clone;
-                $uri->scheme('https');
-                $c->redirect_detach( $uri, 301 );
-            }
-            else {
-                # TODO is this the best to do?
-                $c->detach( '/error/bad_request',
-                    ["Sending $method data through HTTP without encryption is not allowed."] );
-            }
-        }
-    }
-}
 
 # 1. The most specific begin() method is run first.
 #
@@ -198,6 +167,12 @@ sub auto : Private {
     return 1;    # important
 }
 
+=head2 index
+
+The root page (/)
+
+=cut
+
 sub index : GET HEAD Chained('/base') PathPart('') Args(0) Public {
     my ( $self, $c ) = @_;
 
@@ -217,6 +192,33 @@ sub index : GET HEAD Chained('/base') PathPart('') Args(0) Public {
     $c->stash( recipes_of_the_day => \@recipes_of_the_day );
 
     $c->detach( $c->has_capability('view_dashboard') ? 'dashboard' : 'homepage' );
+}
+
+sub base : Chained('/') PathPart('') CaptureArgs(0) {
+    my ( $self, $c ) = @_;
+
+    if ( not $c->req->secure ) {
+        if ( $c->debug ) {
+            $c->log->warn("Not redirecting to HTTPS in debug mode");
+        }
+        elsif ( $c->req->uri->port == 3000 and $c->req->uri->host eq 'localhost' ) {
+            $c->log->warn("Not redirecting to HTTPS on development port localhost:3000");
+        }
+        else {
+            my $method = $c->req->method;
+
+            if ( $method eq 'GET' or $method eq 'HEAD' ) {
+                my $uri = $c->req->uri->clone;
+                $uri->scheme('https');
+                $c->redirect_detach( $uri, 301 );
+            }
+            else {
+                # TODO is this the best to do?
+                $c->detach( '/error/bad_request',
+                    ["Sending $method data through HTTP without encryption is not allowed."] );
+            }
+        }
+    }
 }
 
 sub homepage : Private {
