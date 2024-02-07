@@ -18,8 +18,7 @@ Catalyst Controller.
 
 =cut
 
-sub project_base : Chained('/project/base') PathPart('') CaptureArgs(2)
-  RequiresCapability('view_project') {
+sub base : Chained('/project/base') PathPart('') CaptureArgs(2) {
     my ( $self, $c, $dish_or_recipe, $dish_or_recipe_id ) = @_;
 
     return $c->detach('/error/not_found')
@@ -30,7 +29,7 @@ sub project_base : Chained('/project/base') PathPart('') CaptureArgs(2)
           || $c->detach('/error/not_found') );
 }
 
-sub get_all_ingredients : GET PathPart('ingredients') HEAD Chained('project_base')
+sub get_all_ingredients : GET HEAD Chained('base') PathPart('ingredients')
   RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
 
@@ -43,7 +42,7 @@ sub get_all_ingredients : GET PathPart('ingredients') HEAD Chained('project_base
       or die 'Error when converting ingredients to IngredientsEditor format.';
 }
 
-sub update_ingredient : POST PathPart('ingredients/update') Chained('project_base')
+sub update_ingredient : POST Chained('base') PathPart('ingredients/update')
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
     my $json       = $c->req->body_data;
@@ -63,7 +62,7 @@ sub update_ingredient : POST PathPart('ingredients/update') Chained('project_bas
     $c->stash->{json_data} = { id => $ingrDB->id };
 }
 
-sub prepend_ingredient : POST PathPart('ingredients/prepend') Chained('project_base')
+sub prepend_ingredient : POST Chained('base') PathPart('ingredients/prepend')
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
@@ -86,7 +85,7 @@ sub prepend_ingredient : POST PathPart('ingredients/prepend') Chained('project_b
     $c->stash->{json_data} = { success => 1 };
 }
 
-sub append_ingredient : POST PathPart('ingredients/append') Chained('project_base')
+sub append_ingredient : POST Chained('base') PathPart('ingredients/append')
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
@@ -109,7 +108,7 @@ sub append_ingredient : POST PathPart('ingredients/append') Chained('project_bas
     $c->stash->{json_data} = { success => 1 };
 }
 
-sub move_ingredient : POST PathPart('ingredients/move') Chained('project_base')
+sub move_ingredient : POST Chained('base') PathPart('ingredients/move')
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
@@ -151,7 +150,7 @@ sub move_ingredient : POST PathPart('ingredients/move') Chained('project_base')
     $c->stash->{json_data} = { success => 1 };
 }
 
-sub delete_ingredient : POST PathPart('ingredients/delete') Chained('project_base')
+sub delete_ingredient : POST Chained('base') PathPart('ingredients/delete')
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
     my $json = $c->req->body_data;
@@ -164,16 +163,15 @@ sub delete_ingredient : POST PathPart('ingredients/delete') Chained('project_bas
     $c->stash->{json_data} = { id => $ingrDB->id };
 }
 
-sub all_articles : GET HEAD PathPart('articles') Chained('project_base')
-  RequiresCapability('view_project') {
+sub all_articles : GET HEAD Chained('base') PathPart('articles') RequiresCapability('view_project')
+{
     my ( $self, $c ) = @_;
     my $project = $c->stash->{project};
     $c->stash->{json_data} =
       [ $project->articles->search( undef, { columns => [ 'id', 'name', 'comment' ] } )->hri->all ];
 }
 
-sub all_units : GET HEAD PathPart('units') Chained('project_base')
-  RequiresCapability('view_project') {
+sub all_units : GET HEAD Chained('base') PathPart('units') RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
     my $project = $c->stash->{project};
     $c->stash->{json_data} = [
@@ -192,7 +190,7 @@ sub all_units : GET HEAD PathPart('units') Chained('project_base')
     ];
 }
 
-sub add_ingredient : POST PathPart('ingredients/create') Chained('project_base')
+sub add_ingredient : POST Chained('base') PathPart('ingredients/create')
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
