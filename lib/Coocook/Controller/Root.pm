@@ -47,17 +47,11 @@ sub base : Chained('/') PathPart('') CaptureArgs(0) {
     }
 }
 
+# 1. The most specific begin() method is run first.
+#
+# This method is for default HTML output and
+# can be overriden by a more specific begin() method.
 sub begin : Private {
-    my ( $self, $c ) = @_;
-
-    $c->stash(
-        name     => $c->config->{name},
-        user     => $c->user,
-        user_url => $c->user ? $c->uri_for_action( '/user/show', [ $c->user->name ] ) : undef,
-    );
-}
-
-sub auto : Private {
     my ( $self, $c ) = @_;
 
     # TODO distinguish GET and POST requests
@@ -98,7 +92,7 @@ sub auto : Private {
         die "Neither absolute URI nor absolute path: '$_'";
     }
 
-    $c->stash(
+    $c->stash(                          # copy values from config to stash
         $c->config->%{
             qw<
               date_format_short
@@ -135,12 +129,13 @@ sub auto : Private {
         $c->stash( about_title => $about );
     }
 
-    $c->stash(
+    $c->stash(    # provide URLs
         homepage_url   => $c->uri_for_action('/index'),
         recipes_url    => $c->uri_for_action('/browse/recipe/index'),
         projects_url   => $c->uri_for_action('/browse/project/index'),
         statistics_url => $c->uri_for_action('/statistics'),
         about_url      => $c->uri_for_action('/about'),
+        user_url       => $c->user ? $c->uri_for_action( '/user/show', [ $c->user->name ] ) : undef,
     );
 
     if ( my $base = $c->config->{canonical_url_base} ) {
@@ -189,6 +184,16 @@ sub auto : Private {
     if ( $c->model('DB::Terms')->results_exist ) {
         $c->stash( terms_url => $c->uri_for_action('/terms/index') );
     }
+}
+
+# 2. After begin() all auto() methods are run from least to most specific
+#    as long as they return a true value.
+#
+# This is the setup for EVERY request in ALL action of our app.
+sub auto : Private {
+    my ( $self, $c ) = @_;
+
+    $c->stash( user => $c->user );
 
     return 1;    # important
 }
@@ -309,6 +314,10 @@ Attempt to render a view, if needed.
 
 =cut
 
+# At last most specific end() is run.
+#
+# This method is for default HTML output and
+# can be overriden by a more specific end() method.
 sub end : ActionClass('RenderView') {
     my ( $self, $c ) = @_;
 

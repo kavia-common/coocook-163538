@@ -6,7 +6,7 @@ use DateTime;
 
 BEGIN { extends 'Coocook::Controller' }
 
-sub begin : Private {
+sub begin : Private {    # overrides Controller::Root->begin()
     my ( $self, $c ) = @_;
 
     if ( my $signature = $c->config->{email_signature} ) {
@@ -18,6 +18,8 @@ sub begin : Private {
     }
 
     $c->stash( current_view => 'Email' );
+
+    return 1;
 }
 
 sub notify_admin_about_registration : Private {
