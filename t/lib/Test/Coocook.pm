@@ -198,9 +198,14 @@ sub get_ok_email_link_like {
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    Test2::V0::subtest $name, sub {
-        my $body = $self->_get_email_body();
+    my $body = $self->_get_email_body;
 
+    if ( not defined $body ) {
+        Test2::V0::fail $name;
+        return;
+    }
+
+    Test2::V0::subtest $name, sub {
         my @urls;
 
         while ( $body =~ m/$RE{URI}{HTTP}{ -scheme => 'https?' }{-keep}/g ) {
