@@ -6,7 +6,7 @@ use Coocook::Base qw(Moose);
 
 use Carp;
 
-BEGIN { extends 'Catalyst::Controller' }
+BEGIN { extends 'Coocook::Controller' }
 
 # TODO is this the best way to apply action roles?
 sub COMPONENT {

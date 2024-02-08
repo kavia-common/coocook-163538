@@ -4,7 +4,7 @@ use Coocook::Base qw(Moose);
 
 use JSON::MaybeXS;
 
-BEGIN { extends 'Coocook::Controller::Ajax' }
+BEGIN { extends 'Coocook::Controller' }
 
 =head1 NAME
 
