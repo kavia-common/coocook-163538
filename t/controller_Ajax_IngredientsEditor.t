@@ -6,15 +6,24 @@ use lib 't/lib';
 use TestDB qw(txn_do_and_rollback);
 use Test::Coocook;
 
-plan(3);
+plan(6);
 
 my $t = Test::Coocook->new;
 
-my $ingredients = $t->schema->resultset('DishIngredient');
-$ingredients->delete();
-
 $t->get_ok('/');
 $t->login_ok( 'john_doe', 'P@ssw0rd' );
+
+for my $entity (qw( articles ingredients units )) {
+    subtest $entity => sub {
+        $t->get_ok("https://localhost/project/1/Test-Project/dish/1/$entity");
+        $t->header_is( 'Content-Type' => 'application/json; charset=utf-8' );
+        $t->content_lacks('html');
+        $t->content_like(qr/ \A \[ \{ /x);
+    };
+}
+
+my $ingredients = $t->schema->resultset('DishIngredient');
+$ingredients->delete();
 
 subtest add_ingredient => sub {
     subtest "based on ID" => txn_do_and_rollback $t->schema => sub {
