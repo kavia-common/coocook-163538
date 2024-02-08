@@ -5,6 +5,9 @@ use Test::Coocook;
 
 my $t = Test::Coocook->new( config => { enable_user_registration => 1 } );
 
+# in this scenario john_doe is not a site_admin
+$t->schema->resultset('User')->find( { name => 'john_doe' } )->roles_users->delete();
+
 subtest "400 Bad Request" => sub {
     ok $t->post('https://localhost/register');
     $t->status_is(400);
@@ -27,10 +30,20 @@ subtest "400 Bad Request" => sub {
 };
 
 subtest "403 Forbidden" => sub {
-    $t->schema->resultset('User')->find( { name => 'john_doe' } )->roles_users->delete();
     ok $t->get('https://localhost/project/3/Other-Project');
     $t->status_is(403);
     $t->text_contains("Forbidden");
+
+    ok $t->get('https://localhost/project/3/Other-Project/recipe/3/units');
+    $t->status_is(403);
+    if ( $t->res->content_length > 0 ) {    # for something like: {"error": "forbidden"}
+        $t->header_is( 'Content-Type' => 'application/json; charset=utf-8' );
+        $t->content_lacks('html');
+    }
+    else {
+        $t->lacks_header_ok('Content-Type');
+        $t->content_is('');
+    }
 };
 
 subtest "404 Not found" => sub {
@@ -38,12 +51,16 @@ subtest "404 Not found" => sub {
     $t->status_is(404);
     $t->text_like(qr/not found/i);
 
-    ok $t->post('https://localhost/project/999/Test-Project/dish/999/units');
+    ok $t->get('https://localhost/project/999/doesnt-exist/dish/999/units');
     $t->status_is(404);
-    todo "Ajax" => sub {
-        $t->header_is( 'Content-Type' => 'application/json' );
+    if ( $t->res->content_length > 0 ) {    # for something like: {"error": "not found"}
+        $t->header_is( 'Content-Type' => 'application/json; charset=utf-8' );
         $t->content_lacks('html');
-    };
+    }
+    else {
+        $t->lacks_header_ok('Content-Type');
+        $t->content_is('');
+    }
 };
 
 done_testing;

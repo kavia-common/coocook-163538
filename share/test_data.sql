@@ -80,9 +80,10 @@ INSERT INTO "articles_units"
 (         4,       2);
 
 INSERT INTO "recipes"
-(id, project_id,           name, preparation, description, servings) VALUES
-( 1,          1,        'pizza',          '',          '',        4),
-( 2,          2, 'rice pudding',          '',          '',       42);
+(id, project_id,                 name, preparation, description, servings) VALUES
+( 1,          1,              'pizza',          '',          '',        4),
+( 2,          2,       'rice pudding',          '',          '',       42),
+( 3,          3, 'chilled fruit soup',          '',          '',        1);
 
 INSERT INTO "recipe_ingredients"
 (id, position, recipe_id, prepare, article_id, unit_id, value,             comment) VALUES

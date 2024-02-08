@@ -76,6 +76,9 @@ sub base : Chained('/base') PathPart('project') CaptureArgs(2) {
 
     $c->redirect_canonical_case( 1 => $project->url_name );
 
+    # the rest of this method is only useful for HTML output
+    ( $c->stash->{current_view} // '' ) eq 'JSON' and return;
+
     $project->is_public
       or $c->stash->{robots}->index(0);
 
