@@ -13,8 +13,9 @@ sub COMPONENT {
     my ( $class, $app, $args ) = @_;
 
     $class->config(
-        action_roles => [    #perltidy
+        action_roles => [
             '~Ajax',
+            '~RequiresCapability',    # TODO this should be inherited from Coocook::Controller
         ]
     );
 
