@@ -25,8 +25,20 @@ subtest "attributes of controller actions" => sub {
     for ( $app->controllers ) {
         my $controller = $app->controller($_);
 
-        for my $action ( $controller->get_action_methods ) {
-            my $action_pkg_name = $action->package_name . "::" . $action->name . "()";
+        isa_ok $controller => 'Coocook::Controller';
+
+        # - get_action_methods() returns a list of weird Moose::Meta::Method objects
+        # - action_for($name) then returns the actual Catalyst::Action object
+        #
+        # see https://metacpan.org/pod/Catalyst::Controller#$self-%3Eget_action_methods()
+        for my $action_meta_object ( $controller->get_action_methods ) {
+            my $action = $controller->action_for( $action_meta_object->name );
+
+            # skip internal methods from Catalyst
+            grep { $action->name eq $_ } qw( _DISPATCH _BEGIN _AUTO _ACTION _END )
+              and next;
+
+            my $action_pkg_name = $action->class . "::" . $action->name . "()";
             $action_pkg_name =~ s/^Coocook:://;    # shorten pkg name in output
 
             if ( $action->name eq 'end' ) {
@@ -34,8 +46,11 @@ subtest "attributes of controller actions" => sub {
                 next;
             }
 
+            ok $action->meta->does_role('Coocook::ActionRole::RequiresCapability'),
+              "$action_pkg_name does ActionRole::RequiresCapability";
+
             my %attrs = do {
-                my @attrs = $action->attributes->@*;
+                my @attrs = $action_meta_object->attributes->@*;
                 s/ \( .+ $ //x for @attrs;    # remove arguments in parenthesis, e.g. RequiresCapability(foo)
                 map { $_ => 1 } @attrs;
             };
