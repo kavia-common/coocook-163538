@@ -1,26 +1,20 @@
 package Coocook::Controller::Ajax;
 
-# ABSTRACT: base class for all controllers in Coocook
+# ABSTRACT: base class for controllers that send & receive only JSON
 
 use Coocook::Base qw(Moose);
 
-use Carp;
-
 BEGIN { extends 'Coocook::Controller' }
 
-# TODO is this the best way to apply action roles?
-sub COMPONENT {
-    my ( $class, $app, $args ) = @_;
+__PACKAGE__->config( '+action_roles' => ['~Ajax'] );
 
-    $class->config(
-        action_roles => [
-            '~Ajax',
-            '~RequiresCapability',    # TODO this should be inherited from Coocook::Controller
-        ]
-    );
-
-    return $class->new( $app, $args );
-}
+# DO NOT PLACE ENDPOINT METHODS HERE
+# because other controller directly
+# inherit from this class.
+#
+# If this controller should ever hold
+# endpoint methods, change inheritance
+# to a seperate common base class.
 
 __PACKAGE__->meta->make_immutable;
 

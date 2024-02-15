@@ -4,8 +4,7 @@ use Coocook::Base qw(Moose);
 
 use JSON::MaybeXS;
 
-BEGIN { extends 'Coocook::Controller::Ajax' }   # TODO this should be just Coocook::Controller
-                                                # different controllers should not inherit eachother
+BEGIN { extends 'Coocook::Controller::Ajax' }
 
 =head1 NAME
 
