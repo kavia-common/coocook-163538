@@ -66,29 +66,19 @@ sub prepend_ingredient : POST Chained('base') PathPart('ingredients/prepend')
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
-    my $dish_or_recipe = $c->stash->{dish_or_recipe};
-
-    my $json          = $c->req->body_data;
-    my $ingredient_id = $json->{ingredientId};
-    my $prepare       = $json->{prepare};
-
-    my $ingredient = $dish_or_recipe->search_related('ingredients')->find($ingredient_id);
-    my %id_hash;
-    if ( $ingredient->can('recipe_id') ) {
-        $id_hash{recipe_id} = $ingredient->recipe_id;
-    }
-    elsif ( $ingredient->can('dish_id') ) {
-        $id_hash{dish_id} = $ingredient->dish_id;
-    }
-    $ingredient->move_to_group( { %id_hash, prepare => $prepare }, 1 );
-
-    $c->stash->{json_data} = { success => 1 };
+    $c->forward( '_xpend_ingredient', [1] );
 }
 
 sub append_ingredient : POST Chained('base') PathPart('ingredients/append')
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
+    $c->forward( '_xpend_ingredient', [undef] );
+}
+
+sub _xpend_ingredient : Private {
+    my ( $self, $c, $position ) = @_;
+
     my $dish_or_recipe = $c->stash->{dish_or_recipe};
 
     my $json          = $c->req->body_data;
@@ -103,7 +93,7 @@ sub append_ingredient : POST Chained('base') PathPart('ingredients/append')
     elsif ( $ingredient->can('dish_id') ) {
         $id_hash{dish_id} = $ingredient->dish_id;
     }
-    $ingredient->move_to_group( { %id_hash, prepare => $prepare }, undef );
+    $ingredient->move_to_group( { %id_hash, prepare => $prepare }, $position );
 
     $c->stash->{json_data} = { success => 1 };
 }
