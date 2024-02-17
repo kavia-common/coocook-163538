@@ -1,12 +1,16 @@
 function renderUserOrgOption(data) {
-    return [
-        `${
-            data.type === "user"
-                ? `<i class="material-icons">person</i>`
-                : `<i class="material-icons">groups</i>`
-        } ${data.display_name} (${data.name})`,
-        data.name,
-    ];
+    return data
+        .filter((elem) => !userList.includes(elem.name))
+        .filter((elem) => !orgList.includes(elem.name))
+        .sort((a, b) => a.display_name > b.display_name)
+        .map((elem) => ({
+            id: elem.name,
+            name: elem.name,
+            mark: true,
+            display: `<i class="material-icons">${
+                elem.type === "user" ? "person" : "groups"
+            }</i> ${elem.display_name} (${elem.name})`,
+        }));
 }
 
 const userList = Array.from(
@@ -18,9 +22,7 @@ const orgList = Array.from(
     (elem) => elem.innerText
 );
 
-function filterUserOrg(data) {
-    return data
-        .filter((elem) => !userList.includes(elem.name))
-        .filter((elem) => !orgList.includes(elem.name))
-        .sort((a, b) => a.display_name > b.display_name);
-}
+setTimeout(() => {
+    const search = document.getElementById("user");
+    search.renderFunc = renderUserOrgOption;
+}, 1_000);
