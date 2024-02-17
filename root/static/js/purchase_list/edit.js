@@ -208,11 +208,7 @@ moveItemsForm.addEventListener("submit", async (e) => {
             "danger"
         );
     } else {
-        const htmlRes = document.createElement("div");
-        htmlRes.innerHTML = await res.text();
-
-        document.getElementById("list-container").innerHTML =
-            htmlRes.querySelector("#list-container")?.innerHTML ?? "";
+        document.getElementById("list-container").innerHTML = await res.text();
         showMessage(
             "Successfully moved the selected items/ingredients",
             "success"
