@@ -24,14 +24,14 @@ is $sections => array {
             item hash {
                 field id               => 1;
                 field purchase_list_id => 1;
-                field value            => 1000;
+                field value            => 14.5;
                 field offset           => +0;
-                field total            => 1000;
-                field unit_id          => 1;
-                field unit             => hash { field short_name => "g";     etc() };
+                field total            => 14.5;
+                field unit_id          => 2;
+                field unit             => hash { field short_name => "kg";    etc() };
                 field article          => hash { field name       => "flour"; etc() };
                 field article_id       => 1;
-                field convertible_into => [ hash { field short_name => 'kg'; etc } ];
+                field convertible_into => [ hash { field short_name => 'g'; etc } ];
                 field purchased        => F();
                 field ingredients      => array {
                     item hash {
@@ -53,19 +53,23 @@ is $sections => array {
                         };
                         etc();
                     };
-                    item hash { field id => 4; etc() },
+                    item hash { field id => 4;  etc() };
+                    item hash { field id => 7;  etc() };
+                    item hash { field id => 11; etc() };
                 };
                 field comment => "";
                 end();
             };
             item hash {
-                field value            => 37.5;
+                field id               => 2;
+                field value            => 42.5;
                 field offset           => +0.5;
-                field total            => 38.0;
+                field total            => 43.0;
                 field unit             => hash { field short_name => "g";    etc() };
                 field article          => hash { field name       => "salt"; field comment => "NaCl"; etc() };
                 field convertible_into => [];
                 field ingredients      => array {
+                    item hash { field id => 2; etc() };
                     item hash { field id => 6; etc() };
                     item hash { field id => 8; etc() };
                 };
@@ -74,6 +78,7 @@ is $sections => array {
             };
         };
     };
+    etc();
 },
   "->shop_sections()";
 

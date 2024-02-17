@@ -45,7 +45,7 @@ is [ $rs->with_is_default->hri->all ] => array {
 is [ $rs->with_items_count->hri->all ] => array {
     item hash {
         field id          => 1;
-        field items_count => 2;
+        field items_count => 4;
         etc();
     };
     item hash {

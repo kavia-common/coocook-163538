@@ -121,11 +121,13 @@ UPDATE "projects" SET default_purchase_list_id = 1 WHERE id = 1;
 
 INSERT INTO "items"
 (id, purchase_list_id, value, "offset", unit_id, article_id, purchased,              comment) VALUES
-( 1,                1,  1000,      0.0,       1,          1,     FALSE,                   ''),
-( 2,                1,  37.5,     +0.5,       1,          2,     FALSE, 'rounded to integer');
+( 1,                1,  14.5,      0.0,       2,          1,     FALSE,                   ''),
+( 2,                1,  42.5,     +0.5,       1,          2,     FALSE, 'rounded to integer'),
+( 3,                1,  1.75,      0.0,       3,          3,     FALSE,                   ''),
+( 4,                1, 500.0,      0.0,       1,          4,     FALSE,                   '');
 
-UPDATE "dish_ingredients" SET item_id = 1 WHERE id IN (1,4);
-UPDATE "dish_ingredients" SET item_id = 2 WHERE id IN (6,8);
+-- items are handcrafted to match items.id == article_id -> assigning items is simple:
+UPDATE "dish_ingredients" SET item_id = article_id;
 
 INSERT INTO "tag_groups"
 (id, project_id,    color,        name,    comment) VALUES

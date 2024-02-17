@@ -34,6 +34,7 @@ sub run ($self) {
     $self->check_url_name_values();
     $self->check_unit_conversions_values();
     $self->check_missing_default_purchase_lists();
+    $self->check_unassigned_dish_ingredients();
 }
 
 sub check_schema ($self) {
@@ -258,6 +259,23 @@ sub check_missing_default_purchase_lists ($self) {
     while ( my $project = $projects->next ) {
         warn sprintf "Project %i has purchase list(s) but its default_purchase_list_id is NULL",
           $project->id;
+    }
+}
+
+sub check_unassigned_dish_ingredients ($self) {
+    my $projects         = $self->_schema->resultset('Project');
+    my $invalid_projects = $projects->search(
+        {
+            -and => [
+                $projects->correlate('purchase_lists')->results_exist_as_query,
+                $projects->correlate('meals')->search_related('dishes')->search_related('ingredients')
+                  ->unassigned->results_exist_as_query,
+            ]
+        }
+    );
+
+    while ( my $project = $invalid_projects->next ) {
+        warn sprintf "Project %i has purchase list(s) but also unassigned dish ingredients", $project->id;
     }
 }
 

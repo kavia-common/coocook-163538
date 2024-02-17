@@ -32,7 +32,7 @@ my $db = TestDB->new;
 subtest "ResultSet::Unit->with_number_of_ingredients_items" => sub {
     ok my @units = $db->resultset('Unit')->with_number_of_ingredients_items->hri->all;
 
-    like \@units => bag {
+    like [ sort { $a->{id} <=> $b->{id} } @units ] => array {
         item hash {
             field id                           => 1;
             field number_of_dish_ingredients   => 5;
@@ -43,13 +43,13 @@ subtest "ResultSet::Unit->with_number_of_ingredients_items" => sub {
             field id                           => 2;
             field number_of_dish_ingredients   => 3;
             field number_of_recipe_ingredients => 1;
-            field number_of_items              => 0;
+            field number_of_items              => 1;
         };
         item hash {
             field id                           => 3;
             field number_of_dish_ingredients   => 3;
             field number_of_recipe_ingredients => 1;
-            field number_of_items              => 0;
+            field number_of_items              => 1;
         };
     };
 };
