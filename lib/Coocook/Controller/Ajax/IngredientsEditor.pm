@@ -85,14 +85,14 @@ sub _xpend_ingredient : Private {
     my $ingredient_id = $json->{ingredientId};
     my $prepare       = $json->{prepare};
 
-    my $ingredient = $dish_or_recipe->search_related('ingredients')->find($ingredient_id);
-    my %id_hash;
-    if ( $ingredient->can('recipe_id') ) {
-        $id_hash{recipe_id} = $ingredient->recipe_id;
-    }
-    elsif ( $ingredient->can('dish_id') ) {
-        $id_hash{dish_id} = $ingredient->dish_id;
-    }
+    my $ingredient = $dish_or_recipe->search_related('ingredients')->find($ingredient_id)
+      or $c->redirect('/error/bad_request');
+
+    my %id_hash =
+        $ingredient->can('recipe_id') ? ( recipe_id => $ingredient->recipe_id )
+      : $ingredient->can('dish_id')   ? ( dish_id => $ingredient->dish_id )
+      :                                 die "code broken";
+
     $ingredient->move_to_group( { %id_hash, prepare => $prepare }, $position );
 
     $c->stash->{json_data} = { success => 1 };
