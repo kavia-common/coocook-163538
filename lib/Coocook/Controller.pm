@@ -8,16 +8,7 @@ use Carp;
 
 BEGIN { extends 'Catalyst::Controller' }
 
-# TODO is this the best way to apply action roles?
-sub COMPONENT ( $class, $app, $args ) {
-    $class->config(
-        action_roles => [    #perltidy
-            '~RequiresCapability',
-        ]
-    );
-
-    return $class->new( $app, $args );
-}
+__PACKAGE__->config( action_roles => ['~RequiresCapability'] );
 
 around action_for => sub ( $orig, $self, $action_name ) {
     my $action = $self->$orig($action_name)

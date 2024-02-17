@@ -1,4 +1,5 @@
-use Test2::V0;
+use Coocook::Base;
+use Test2::V0 -no_warnings => 1;
 
 use lib 't/lib';
 use Test::Coocook;
@@ -10,73 +11,69 @@ my $t = Test::Coocook->new(
     max_redirect => 0
 );
 
-my @POSSIBLE_AUTHZ_ATTRS = (
-    'RequiresCapability',    # = see ActionRole::RequiresCapability
-    'Public',                # = no permission required
-    'CustomAuthz',           # = action is not public but does authorization in code
-                             #   TODO this could be tested:
-                             #   store flag, make require_capability() remove flag,
-                             #   run action, check that flag has been removed
-);
-
 subtest "attributes of controller actions" => sub {
     my $app = $t->catalyst_app;
 
-    for ( $app->controllers ) {
+    for ( sort $app->controllers ) {    # sort() required for stable order of tests
         my $controller = $app->controller($_);
 
-        for my $action ( $controller->get_action_methods ) {
-            my $action_pkg_name = $action->package_name . "::" . $action->name . "()";
+        isa_ok $controller => 'Coocook::Controller';
+
+        # - get_action_methods() returns a list of weird Moose::Meta::Method objects
+        # - action_for($name) then returns the actual Catalyst::Action object
+        #
+        # see https://metacpan.org/pod/Catalyst::Controller#$self-%3Eget_action_methods()
+      SKIP: for my $action_meta_object ( $controller->get_action_methods ) {
+            my $action = $controller->action_for( $action_meta_object->name );
+
+            # ignore internal methods from Catalyst
+            grep { $action->name eq $_ } qw( _DISPATCH _BEGIN _AUTO _ACTION _END )
+              and next;
+
+            my $action_pkg_name = $action->class . "::" . $action->name . "()";
             $action_pkg_name =~ s/^Coocook:://;    # shorten pkg name in output
 
-            if ( $action->name eq 'end' ) {
-                note "Skipping $action_pkg_name: is 'end' action";
-                next;
-            }
+            # for some reason assigning attribute 'Private' to end() methods breaks the app
+            $action->name eq 'end' and skip "$action_pkg_name is 'end' action";
 
             my %attrs = do {
-                my @attrs = $action->attributes->@*;
+                my @attrs = $action_meta_object->attributes->@*;
                 s/ \( .+ $ //x for @attrs;    # remove arguments in parenthesis, e.g. RequiresCapability(foo)
                 map { $_ => 1 } @attrs;
             };
 
-            my $methods = join '+', grep { m/^( DELETE | GET | HEAD | POST | PUT)$/x }
-              sort keys %attrs;
+            state %http_method_attrs = map { $_ => 1 } qw( AnyMethod DELETE GET HEAD POST PUT );
+            my @used_http_methods = sort grep { $http_method_attrs{$_} } keys %attrs;
 
-            if ( $attrs{AnyMethod} ) {    # special keyword indicating any method will be ok
-                $methods .= '+' if length $methods;
-                $methods .= 'any';
+            if ( $attrs{Private} ) {
+                pass "$action_pkg_name has 'Private'";
+                next;
             }
 
             if ( $attrs{CaptureArgs} ) { # actions with CaptureArgs are chain elements and automatically private
-                is
-                  $methods => '',
-                  "$action_pkg_name: action with 'CaptureArgs' has no methods";
+                is \@used_http_methods => [], "$action_pkg_name with 'CaptureArgs' has no HTTP methods";
                 next;
             }
 
-            if ( $attrs{Private} ) {
-                $action->name =~ m/^_/    # no output for Catalyst's internal methods
-                  or note "Skipping $action_pkg_name: has 'Private' attribute";
+            is \@used_http_methods => in_set( ['AnyMethod'], [ 'GET', 'HEAD' ], ['POST'] ),
+              "$action_pkg_name has 'AnyMethod' or 'GET' & 'HEAD' or 'POST'";
 
-                next;
-            }
+            state @possible_authz_attrs = (
+                'RequiresCapability',    # = see ActionRole::RequiresCapability
+                'Public',                # = no permission required
+                'CustomAuthz',           # = action is not public but does authorization in code
+                                         #   TODO this could be tested:
+                                         #   store flag, make require_capability() remove flag,
+                                         #   run action, check that flag has been removed
+            );
 
-            ok(
-                (
-                         $methods eq 'any'
-                      or $methods eq 'GET+HEAD'
-                      or $methods eq 'POST'
-                ),
-                "$action_pkg_name has 'AnyMethod' or is GET & HEAD or POST"
-            ) or note "HTTP methods: " . $methods;
+            ok $action->meta->does_role('Coocook::ActionRole::RequiresCapability'),
+              "$action_pkg_name does ActionRole::RequiresCapability";
 
-            my @used_authz_attrs = grep { $attrs{$_} } @POSSIBLE_AUTHZ_ATTRS;
+            my @used_authz_attrs = grep { $attrs{$_} } @possible_authz_attrs;
 
-            is
-              @used_authz_attrs => 1,
-              "$action_pkg_name has 1 authorization attribute out of: @POSSIBLE_AUTHZ_ATTRS"
-              or diag "       found: @used_authz_attrs";
+            is \@used_authz_attrs => [ in_set @possible_authz_attrs ],
+              "$action_pkg_name has exactly 1 authorization attribute";
         }
     }
 };
