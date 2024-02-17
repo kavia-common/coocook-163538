@@ -89,9 +89,9 @@ sub _xpend_ingredient : Private {
       or $c->redirect('/error/bad_request');
 
     my %id_hash =
-        $ingredient->can('recipe_id') ? ( recipe_id => $ingredient->recipe_id )
-      : $ingredient->can('dish_id')   ? ( dish_id => $ingredient->dish_id )
-      :                                 die "code broken";
+        $ingredient->is_recipe_ingredient ? ( recipe_id => $ingredient->recipe_id )
+      : $ingredient->is_dish_ingredient   ? ( dish_id => $ingredient->dish_id )
+      :                                     die "code broken";
 
     $ingredient->move_to_group( { %id_hash, prepare => $prepare }, $position );
 
@@ -112,31 +112,17 @@ sub move_ingredient : POST Chained('base') PathPart('ingredients/move')
     my $source_db = $dish_or_recipe->search_related('ingredients')->find($source_id);
     my $target_db = $dish_or_recipe->search_related('ingredients')->find($target_id);
 
-    my $new_position;
-    if ( $direction eq 'upwards' ) {
-        $new_position = $target_db->position;
-    }
-    elsif ( $direction eq 'downwards' ) {
-        $new_position = $target_db->position + 1;
-    }
-    else {
-        die "Invalid move direction `$direction`";
-    }
+    my $new_position =
+        $direction eq 'upwards'   ? $target_db->position
+      : $direction eq 'downwards' ? $target_db->position + 1
+      :   $c->detach( '/error/bad_request', ["Invalid move direction `$direction`"] );
 
-    my %id_hash;
-    if ( $target_db->can('recipe_id') ) {
-        $id_hash{recipe_id} = $target_db->recipe_id;
-    }
-    elsif ( $target_db->can('dish_id') ) {
-        $id_hash{dish_id} = $target_db->dish_id;
-    }
+    my %id_hash =
+        $target_db->is_dish_ingredient   ? ( dish_id => $target_db->dish_id )
+      : $target_db->is_recipe_ingredient ? ( recipe_id => $target_db->recipe_id )
+      :                                    die "code broken";
 
-    $source_db->move_to_group(
-        {
-            %id_hash, prepare => $target_db->prepare,
-        },
-        $new_position
-    );
+    $source_db->move_to_group( { %id_hash, prepare => $target_db->prepare }, $new_position );
     $c->stash->{json_data} = { success => 1 };
 }
 

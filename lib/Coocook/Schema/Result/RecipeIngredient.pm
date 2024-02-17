@@ -4,7 +4,12 @@ use Coocook::Base qw(Moose);
 
 extends 'Coocook::Schema::Result';
 
-__PACKAGE__->load_components(qw< Ordered >);
+__PACKAGE__->load_components(
+    qw<
+      Ordered
+      +Coocook::Schema::Component::Result::Ingredient
+    >
+);
 
 __PACKAGE__->table('recipe_ingredients');
 
