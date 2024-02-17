@@ -208,7 +208,7 @@ sub add_ingredient : POST Chained('base') PathPart('ingredients/create')
         $article->create_related( articles_units => { unit => $unit } );
     }
 
-    $dish_or_recipe->create_related(
+    my $ingredient = $dish_or_recipe->create_related(
         ingredients => {
             article_id => $article->id,
             unit_id    => $unit->id,
@@ -216,6 +216,12 @@ sub add_ingredient : POST Chained('base') PathPart('ingredients/create')
             $properties->%{qw( comment prepare )},
         }
     );
+
+    if ( $ingredient->is_dish_ingredient ) {
+        if ( my $list = $project->default_purchase_list ) {
+            $ingredient->assign_to_purchase_list($list);
+        }
+    }
 
     $txn_scope_guard->commit;
 

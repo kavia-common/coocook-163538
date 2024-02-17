@@ -63,11 +63,13 @@ subtest add_ingredient => sub {
             item hash {
                 field article_id => 1;
                 field unit_id    => 2;
+                field item_id    => T();
                 etc();
             };
             item hash {
                 field article_id => 1;
                 field unit_id    => 2;
+                field item_id    => T();
                 etc();
             };
             end();
@@ -99,10 +101,12 @@ subtest add_ingredient => sub {
             item object {
                 call article => object { call name       => 'foo' };
                 call unit    => object { call short_name => 'bar' };
+                call item_id => T();
             };
             item object {
                 call article => object { call name       => 'foo' };
                 call unit    => object { call short_name => 'bar' };
+                call item_id => T();
             };
             end();
         };
