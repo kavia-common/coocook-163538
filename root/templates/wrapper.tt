@@ -29,7 +29,7 @@
 [% IF icon_url %]
     <link rel="icon" type="[% icon_type %]" href="[% icon_url %]">
 [% END %]
-[% FOR sizes IN icon_urls.keys %]
+[% FOR sizes IN icon_urls.keys.sort %]
     <link rel="apple-touch-icon" [% IF sizes.length %]sizes="[% sizes %]"[% END %] href="[% icon_urls.$sizes %]">
 [% END %]
 
