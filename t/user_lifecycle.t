@@ -3,6 +3,7 @@ use Test2::V0;
 use Time::HiRes 'time';
 
 use lib 't/lib';
+use TestDB qw(txn_do_and_rollback);
 use Test::Coocook;
 
 plan(88);
@@ -128,27 +129,26 @@ $t->robots_flags_ok( { index => 0 } );
 
     $userdata_ok{email} = 'new_user@example.com';
 
-    $t->schema->txn_begin();
-    $user1->update(
-        {
-            new_email_fc  => $userdata_ok{email},
-            token_expires => $user1->format_datetime( DateTime->now->add( hours => 12 ) )
-        }
-    );
+    txn_do_and_rollback $t->schema, sub {
+        $user1->update(
+            {
+                new_email_fc  => $userdata_ok{email},
+                token_expires => $user1->format_datetime( DateTime->now->add( hours => 12 ) )
+            }
+        );
 
-    $t->register_fails_like(
-        \%userdata_ok,
-        qr/email address is invalid or already taken/,
-        "email address that existing user wants to change to"
-    );
+        $t->register_fails_like(
+            \%userdata_ok,
+            qr/email address is invalid or already taken/,
+            "email address that existing user wants to change to"
+        );
 
-    note "email change of existing user expires ...";
-    $user1->update( { token_expires => $user1->format_datetime_now } );
+        note "email change of existing user expires ...";
+        $user1->update( { token_expires => $user1->format_datetime_now } );
 
-    $t->register_ok( \%userdata_ok );
-    $t->email_count_is(3);
-
-    $t->schema->txn_rollback();
+        $t->register_ok( \%userdata_ok );
+        $t->email_count_is(3);
+    };
 }
 
 subtest "verify email address" => sub {

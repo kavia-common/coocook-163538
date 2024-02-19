@@ -3,6 +3,7 @@ use Test2::V0;
 use DateTime;
 
 use lib 't/lib';
+use TestDB qw(txn_do_and_rollback);
 use Test::Coocook;
 
 plan(58);
@@ -50,15 +51,13 @@ $t->submit_form_fails( { with_fields => { new_email => $other->new_email_fc } },
     "post new_email_fc of other account" );
 $t->content_is( $content_invalid_email, "no information leak" );
 $t->back();
+$t->clear_emails();
 
-subtest "registration works if other user tried to change to same address but request expired" =>
-  sub {
-    $t->clear_emails();
+note "email change of other user expires ...";
+$other->update( { token_expires => $other->format_datetime_now } );
 
-    note "email change of other user expires ...";
-    $other->update( { token_expires => $other->format_datetime_now } );
-
-    $t->schema->txn_begin();
+subtest "registration works if other user tried to change to same address but request expired",
+  txn_do_and_rollback $t->schema, sub {
 
     $t->submit_form_ok( { with_fields => { new_email => $johns_new_email } } );
     $t->email_count_is(2);
@@ -68,8 +67,6 @@ subtest "registration works if other user tried to change to same address but re
         "form can be sent again" );
     $t->email_count_is(4);
     $t->back();
-
-    $t->schema->txn_rollback();    # undo changes
 
     $t->clear_emails();
   };

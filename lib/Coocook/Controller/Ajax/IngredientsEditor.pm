@@ -4,7 +4,7 @@ use Coocook::Base qw(Moose);
 
 use JSON::MaybeXS;
 
-BEGIN { extends 'Coocook::Controller::Ajax' }
+BEGIN { extends 'Coocook::Controller' }
 
 =head1 NAME
 
@@ -18,8 +18,7 @@ Catalyst Controller.
 
 =cut
 
-sub project_base : Chained('/project/base') PathPart('') CaptureArgs(2)
-  RequiresCapability('view_project') {
+sub base : Chained('/project/base') PathPart('') CaptureArgs(2) {
     my ( $self, $c, $dish_or_recipe, $dish_or_recipe_id ) = @_;
 
     return $c->detach('/error/not_found')
@@ -30,7 +29,7 @@ sub project_base : Chained('/project/base') PathPart('') CaptureArgs(2)
           || $c->detach('/error/not_found') );
 }
 
-sub get_all_ingredients : GET PathPart('ingredients') HEAD Chained('project_base')
+sub get_all_ingredients : GET HEAD Chained('base') PathPart('ingredients')
   RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
 
@@ -43,7 +42,7 @@ sub get_all_ingredients : GET PathPart('ingredients') HEAD Chained('project_base
       or die 'Error when converting ingredients to IngredientsEditor format.';
 }
 
-sub update_ingredient : POST PathPart('ingredients/update') Chained('project_base')
+sub update_ingredient : POST Chained('base') PathPart('ingredients/update')
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
     my $json       = $c->req->body_data;
@@ -55,7 +54,7 @@ sub update_ingredient : POST PathPart('ingredients/update') Chained('project_bas
     $ingrDB->update(
         {
             value   => $ingredient->{value},
-            unit_id => $ingredient->{current_unit}->{id},
+            unit_id => $ingredient->{current_unit}{id},
             comment => $ingredient->{comment},
         }
     );
@@ -63,9 +62,22 @@ sub update_ingredient : POST PathPart('ingredients/update') Chained('project_bas
     $c->stash->{json_data} = { id => $ingrDB->id };
 }
 
-sub prepend_ingredient : POST PathPart('ingredients/prepend') Chained('project_base')
+sub prepend_ingredient : POST Chained('base') PathPart('ingredients/prepend')
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
+
+    $c->forward( '_xpend_ingredient', [1] );
+}
+
+sub append_ingredient : POST Chained('base') PathPart('ingredients/append')
+  RequiresCapability('edit_project') {
+    my ( $self, $c ) = @_;
+
+    $c->forward( '_xpend_ingredient', [undef] );
+}
+
+sub _xpend_ingredient : Private {
+    my ( $self, $c, $position ) = @_;
 
     my $dish_or_recipe = $c->stash->{dish_or_recipe};
 
@@ -73,43 +85,20 @@ sub prepend_ingredient : POST PathPart('ingredients/prepend') Chained('project_b
     my $ingredient_id = $json->{ingredientId};
     my $prepare       = $json->{prepare};
 
-    my $ingredient = $dish_or_recipe->search_related('ingredients')->find($ingredient_id);
-    my %id_hash;
-    if ( $ingredient->can('recipe_id') ) {
-        $id_hash{recipe_id} = $ingredient->recipe_id;
-    }
-    elsif ( $ingredient->can('dish_id') ) {
-        $id_hash{dish_id} = $ingredient->dish_id;
-    }
-    $ingredient->move_to_group( { %id_hash, prepare => $prepare }, 1 );
+    my $ingredient = $dish_or_recipe->search_related('ingredients')->find($ingredient_id)
+      or $c->redirect('/error/bad_request');
+
+    my %id_hash =
+        $ingredient->is_recipe_ingredient ? ( recipe_id => $ingredient->recipe_id )
+      : $ingredient->is_dish_ingredient   ? ( dish_id => $ingredient->dish_id )
+      :                                     die "code broken";
+
+    $ingredient->move_to_group( { %id_hash, prepare => $prepare }, $position );
 
     $c->stash->{json_data} = { success => 1 };
 }
 
-sub append_ingredient : POST PathPart('ingredients/append') Chained('project_base')
-  RequiresCapability('edit_project') {
-    my ( $self, $c ) = @_;
-
-    my $dish_or_recipe = $c->stash->{dish_or_recipe};
-
-    my $json          = $c->req->body_data;
-    my $ingredient_id = $json->{ingredientId};
-    my $prepare       = $json->{prepare};
-
-    my $ingredient = $dish_or_recipe->search_related('ingredients')->find($ingredient_id);
-    my %id_hash;
-    if ( $ingredient->can('recipe_id') ) {
-        $id_hash{recipe_id} = $ingredient->recipe_id;
-    }
-    elsif ( $ingredient->can('dish_id') ) {
-        $id_hash{dish_id} = $ingredient->dish_id;
-    }
-    $ingredient->move_to_group( { %id_hash, prepare => $prepare }, undef );
-
-    $c->stash->{json_data} = { success => 1 };
-}
-
-sub move_ingredient : POST PathPart('ingredients/move') Chained('project_base')
+sub move_ingredient : POST Chained('base') PathPart('ingredients/move')
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
@@ -123,35 +112,21 @@ sub move_ingredient : POST PathPart('ingredients/move') Chained('project_base')
     my $source_db = $dish_or_recipe->search_related('ingredients')->find($source_id);
     my $target_db = $dish_or_recipe->search_related('ingredients')->find($target_id);
 
-    my $new_position;
-    if ( $direction eq 'upwards' ) {
-        $new_position = $target_db->position;
-    }
-    elsif ( $direction eq 'downwards' ) {
-        $new_position = $target_db->position + 1;
-    }
-    else {
-        die "Invalid move direction `$direction`";
-    }
+    my $new_position =
+        $direction eq 'upwards'   ? $target_db->position
+      : $direction eq 'downwards' ? $target_db->position + 1
+      :   $c->detach( '/error/bad_request', ["Invalid move direction `$direction`"] );
 
-    my %id_hash;
-    if ( $target_db->can('recipe_id') ) {
-        $id_hash{recipe_id} = $target_db->recipe_id;
-    }
-    elsif ( $target_db->can('dish_id') ) {
-        $id_hash{dish_id} = $target_db->dish_id;
-    }
+    my %id_hash =
+        $target_db->is_dish_ingredient   ? ( dish_id => $target_db->dish_id )
+      : $target_db->is_recipe_ingredient ? ( recipe_id => $target_db->recipe_id )
+      :                                    die "code broken";
 
-    $source_db->move_to_group(
-        {
-            %id_hash, prepare => $target_db->prepare,
-        },
-        $new_position
-    );
+    $source_db->move_to_group( { %id_hash, prepare => $target_db->prepare }, $new_position );
     $c->stash->{json_data} = { success => 1 };
 }
 
-sub delete_ingredient : POST PathPart('ingredients/delete') Chained('project_base')
+sub delete_ingredient : POST Chained('base') PathPart('ingredients/delete')
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
     my $json = $c->req->body_data;
@@ -164,16 +139,15 @@ sub delete_ingredient : POST PathPart('ingredients/delete') Chained('project_bas
     $c->stash->{json_data} = { id => $ingrDB->id };
 }
 
-sub all_articles : GET HEAD PathPart('articles') Chained('project_base')
-  RequiresCapability('view_project') {
+sub all_articles : GET HEAD Chained('base') PathPart('articles') RequiresCapability('view_project')
+{
     my ( $self, $c ) = @_;
     my $project = $c->stash->{project};
     $c->stash->{json_data} =
       [ $project->articles->search( undef, { columns => [ 'id', 'name', 'comment' ] } )->hri->all ];
 }
 
-sub all_units : GET HEAD PathPart('units') Chained('project_base')
-  RequiresCapability('view_project') {
+sub all_units : GET HEAD Chained('base') PathPart('units') RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
     my $project = $c->stash->{project};
     $c->stash->{json_data} = [
@@ -192,100 +166,56 @@ sub all_units : GET HEAD PathPart('units') Chained('project_base')
     ];
 }
 
-sub add_ingredient : POST PathPart('ingredients/create') Chained('project_base')
+sub add_ingredient : POST Chained('base') PathPart('ingredients/create')
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
     my $dish_or_recipe = $c->stash->{dish_or_recipe};
+    my $project        = $c->stash->{project};
+    my $properties     = $c->req->body_data->{ingredient};
 
-    my $project = $c->stash->{project};
+    my $txn_scope_guard = $c->model('DB')->txn_scope_guard;
 
-    my $ingredient = $c->req->body_data->{ingredient};
-    my $existing_article;
-    if ( defined $ingredient->{article}->{name} ) {
-        $existing_article = $project->articles->find( { name => $ingredient->{article}->{name} } );
+    my ( $article, $unit );
+
+    if ( defined( my $id = $properties->{article}{id} ) ) {
+        $article = $project->articles->find($id);
     }
-    elsif ( defined $ingredient->{article}->{id} ) {
-
-        $existing_article = $project->articles->find( { id => $ingredient->{article}->{id} } );
-    }
-    my $existing_unit;
-    if ( defined $ingredient->{unit}->{name} ) {
-        $existing_unit = $project->units->search(
-            [ { short_name => $ingredient->{unit}->{name} }, { long_name => $ingredient->{unit}->{name} } ] )
-          ->one_row;
-    }
-    elsif ( defined $ingredient->{unit}->{id} ) {
-
-        $existing_unit = $project->units->find( { id => $ingredient->{unit}->{id} } );
+    elsif ( defined( my $name = $properties->{article}{name} ) ) {
+        $article = $project->articles->find_or_new( { name => $name } );
     }
 
-    my %new_ingredient = (
-        article_id => $existing_article && $existing_article->id,
-        unit_id    => $existing_unit    && $existing_unit->id,
-        comment    => $ingredient->{comment},
-        value      => $ingredient->{amount},
-        prepare    => $ingredient->{prepare},
+    if ( defined( my $id = $properties->{unit}{id} ) ) {
+        $unit = $project->units->find($id);
+    }
+    elsif ( defined( my $name = $properties->{unit}{name} ) ) {
+        $unit = $project->units->search(
+            [    # OR
+                { short_name => $name },
+                { long_name  => $name },
+            ]
+          )->one_row
+          || $project->units->create( { short_name => $name, long_name => $name } );
+    }
+
+    ( $article and $unit )
+      or $c->detach('/error/bad_request');
+
+    if ( not $article->in_storage ) {
+        $article->set_columns( { comment => '' } );
+        $article->create_related( articles_units => { unit => $unit } );
+    }
+
+    $dish_or_recipe->create_related(
+        ingredients => {
+            article_id => $article->id,
+            unit_id    => $unit->id,
+            value      => $properties->{amount},    # TODO https://gitlab.com/coocook/web-components/-/issues/54
+            $properties->%{qw( comment prepare )},
+        }
     );
 
-    # 4 general cases
-    # unit and article don't exist
-    if (    !$existing_article
-        and !$existing_unit
-        and defined $ingredient->{article}->{name}
-        and defined $ingredient->{unit}->{name} )
-    {
-
-        # create both and connect them
-        $new_ingredient{article_id} = $project->articles->create(
-            {
-                name    => $ingredient->{article}->{name},
-                comment => '',
-            },
-        )->id;
-        my $unit = $project->units->create(
-            {
-                short_name => $ingredient->{unit}->{name},
-                long_name  => $ingredient->{unit}->{name},
-            }
-        );
-        $unit->create_related(
-            articles_units => {
-                article_id => $new_ingredient{article_id},
-            }
-        );
-        $new_ingredient{unit_id} = $unit->id;
-    }
-    elsif ( !$existing_article and defined $existing_unit ) {
-
-        # create article and connect unit to it
-        $new_ingredient{article_id} = $project->articles->create(
-            {
-                name    => $ingredient->{article}->{name},
-                comment => '',
-            }
-        )->id;
-        $existing_unit->create_related(
-            articles_units => {
-                article_id => $new_ingredient{article_id},
-            }
-        );
-    }
-    elsif ( defined $existing_article and !$existing_unit ) {
-
-        # create unit and connect it to the ingredient, but not the article
-        $new_ingredient{unit_id} = $project->units->create(
-            {
-                short_name => $ingredient->{unit}->{name},
-                long_name  => $ingredient->{unit}->{name},
-            }
-        )->id;
-    }
-
-    # last case: both exist and just a ingredient must be created with the ids of the articles
-    # => we don't need to anything because $article_id and $unit_id have already the right values
-
-    $dish_or_recipe->create_related( ingredients => \%new_ingredient );
+    $txn_scope_guard->commit;
 
     $c->stash->{json_data} = { success => 1 };
 }

@@ -23,13 +23,14 @@ sub _test_has_capability ( $expects_true, $capability, $input, $name = undef ) {
 
     $input->{user} //= undef;                                   # make sure key is always present
 
-    my ($result) = my @result = $authz->has_capability( $capability, $input );
+    my $result = $authz->has_capability( $capability, $input );
+    my @result = $authz->has_capability( $capability, $input );
 
     ok( ( $result xor !$expects_true ), $name );
-    ok( ( @result xor !$expects_true ), "... also in list content" );
+    ok( ( @result xor !$expects_true ), "... also in list context" );
 }
 
-is $authz->new => $authz, "is a singleton";
+is $authz->new => exact_ref($authz), "is a singleton";
 
 is [ $authz->project_roles ] => bag {
     item 'owner';

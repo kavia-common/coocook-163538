@@ -115,12 +115,12 @@ subtest stale => sub {
 
     my $rs = $db->resultset('Project');
 
-    is [ $rs->stale->get_column('id')->all ] => [ 1, 2 ], "ResultSet::Project->stale for today";
+    is [ $rs->stale->get_column('id')->all ] => [ 1, 2, 3 ], "ResultSet::Project->stale for today";
 
     {
         my $date = DateTime->new( year => 2000, month => 1, day => 2 );    # in the middle of project 1
 
-        is [ $rs->stale($date)->get_column('id')->all ] => [2],
+        is [ $rs->stale($date)->get_column('id')->all ] => [ 2, 3 ],
           "ResultSet::Project->stale for $date";
 
         subtest "Result::Project->is_stale()" => sub {

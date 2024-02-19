@@ -198,9 +198,14 @@ sub get_ok_email_link_like {
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    Test2::V0::subtest $name, sub {
-        my $body = $self->_get_email_body();
+    my $body = $self->_get_email_body;
 
+    if ( not defined $body ) {
+        Test2::V0::fail $name;
+        return;
+    }
+
+    Test2::V0::subtest $name, sub {
         my @urls;
 
         while ( $body =~ m/$RE{URI}{HTTP}{ -scheme => 'https?' }{-keep}/g ) {
@@ -394,7 +399,8 @@ sub request_recovery_link_ok ( $self, $email, $name = "request recovery link for
     };
 }
 
-sub create_project_ok ( $self, $fields, $name = "create project '$fields->{name}'" ) {
+sub create_project_ok ( $self, $fields, $name = "create project '$fields->{name}'" )
+{    # ' fix syntax highlighting
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     Test2::V0::subtest $name, sub {
@@ -448,6 +454,28 @@ sub json_is ( $self, $expected, $name = "JSON in response content" ) {
 
     my $json = decode_json $self->content;
     Test2::V0::is $json => $expected, $name;
+}
+
+=head2 post_json( "$url", %headers?, \%data )
+
+Send a POST request with C<\%data> or C<\@data> encoded as JSON.
+Automatically sets HTTP request header C<Content-Type: application/json>.
+You can set additional HTTP request headers with C<%headers> key/value pairs.
+
+=cut
+
+sub post_json {
+    my $self    = shift;
+    my $url     = shift;
+    my $data    = pop;
+    my %headers = @_;
+
+    return $self->post(
+        $url,
+        'Content-Type' => 'application/json',
+        %headers,
+        content => encode_json($data),
+    );
 }
 
 sub redirect_is ( $self, $url, $expected, $status, $name = "GET $url redirects $status $expected" )

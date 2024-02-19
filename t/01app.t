@@ -17,7 +17,8 @@ subtest "attributes of controller actions" => sub {
     for ( sort $app->controllers ) {    # sort() required for stable order of tests
         my $controller = $app->controller($_);
 
-        isa_ok $controller => 'Coocook::Controller';
+        is [ $controller->meta->superclasses ] => ['Coocook::Controller'],
+          "$controller directly inherits from Coocook::Controller";
 
         # - get_action_methods() returns a list of weird Moose::Meta::Method objects
         # - action_for($name) then returns the actual Catalyst::Action object
@@ -225,7 +226,7 @@ subtest "robots meta tag" => sub {
     };
 
     subtest "under simulation of fatal mistake in permission" => sub {
-        $t->get('/project/2/Other-Project');
+        $t->get('/project/3/Other-Project');
         $t->status_is(302);    # actually the login page
 
         note "manipulating Model::Authorization ...";

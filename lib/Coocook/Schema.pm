@@ -94,6 +94,12 @@ sub count ( $self, @sources ) {
     return $records;
 }
 
+=head2 statistics()
+
+Returns a hashref with numbers for site-global statistics.
+
+=cut
+
 sub statistics ($self) {
     return {
         dishes_served   => $self->resultset('Dish')->in_past_or_today->sum_servings,

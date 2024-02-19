@@ -7,7 +7,7 @@ use parent 'DBICx::TestDatabase';
 use Coocook::Script::Deploy;
 use Coocook::DeploymentHandler;
 use PerlX::Maybe;
-use Sub::Exporter -setup => { exports => [qw(install_ok upgrade_ok)] };
+use Sub::Exporter -setup => { exports => [qw(install_ok txn_do_and_rollback upgrade_ok)] };
 use Test::Builder;
 use Test2::V0 -no_warnings => 1;
 
@@ -98,6 +98,40 @@ sub install_ok ( $schema, $version = undef, $name = undef ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     ok $dh->install(), $name || "install version " . $dh->to_version;
+}
+
+=head2 txn_do_and_rollback( $schema, sub { ... }, @coderef_args? )
+
+Takes a coderef like L<DBIx::Class::Schema/txn_do>
+but B<always> does a rollback after running the code.
+Useful for unit tests which need to temporarily modify
+the database for test cases.
+
+Can be called in void context to execute C<$coderef> immediately
+or used in argument list, e.g. for C<subtest()> to get a coderef.
+
+    txn_do_and_rollback $schema, sub {
+        ...
+    };
+
+    # transaction begun and rolled back inside subtest
+    subtest "...", txn_do_and_rollback $schema, sub {
+        ...;
+    };
+
+=cut
+
+sub txn_do_and_rollback ( $schema, $coderef, @coderef_args ) {
+    my $wrapper_coderef = sub {
+        $schema->txn_begin();
+        my @return = $coderef->(@coderef_args);
+        $schema->txn_rollback();
+        return @return;
+    };
+
+    return defined wantarray
+      ? $wrapper_coderef         # any context -> return coderef
+      : $wrapper_coderef->();    # void context -> execute now
 }
 
 =head2 upgrade_ok( $schema, $version?, $name? )
