@@ -239,48 +239,46 @@ sub move_meal_or_dish_ajax : POST Chained('submenu') PathPart('move_meal_dish') 
 
     my $plan = $c->model('Plan');
 
-    my $moved = $plan->resolve_meal_dish_path( $project, $source_path );
-    return $c->stash->{ajax_response} = { error => { message => 'Invalid source_path' } }
-      unless ( defined $moved );
+    my $moved = $plan->resolve_meal_dish_path( $project, $source_path )
+      or $c->detach( '/error/bad_request', [ { message => 'Invalid source_path' } ] );
 
-    my $target = $plan->resolve_meal_dish_path( $project, $target_path );
-    return $c->stash->{ajax_response} = { error => { message => 'Invalid target_path' } }
-      unless ( defined $target );
+    my $target = $plan->resolve_meal_dish_path( $project, $target_path )
+      or $c->detach( '/error/bad_request', [ { message => 'Invalid target_path' } ] );
 
-    if (   $source_path->{item_type} eq 'dish'
-        && $target_path->{item_type} eq 'dish' )
+    if (    $source_path->{item_type} eq 'dish'
+        and $target_path->{item_type} eq 'dish' )
     {
         $moved->move_to_group( { meal_id => $target->meal->id }, $target->position );
     }
-    elsif ($source_path->{item_type} eq 'dish'
-        && $target_path->{item_type} eq 'meal' )
+    elsif ( $source_path->{item_type} eq 'dish'
+        and $target_path->{item_type} eq 'meal' )
     {
         $moved->move_to_group( { meal_id => $target->id }, $direction eq "over" ? 1 : undef );
     }
-    elsif ($source_path->{item_type} eq 'meal'
-        && $target_path->{item_type} eq 'dish' )
+    elsif ( $source_path->{item_type} eq 'meal'
+        and $target_path->{item_type} eq 'dish' )
     {
-        $c->stash->{ajax_response} =
-          { error => { message => 'Cannot move meal on dish.' } };
-        return;
+        $c->detach( '/error/bad_request', [ { message => 'Cannot move meal on dish.' } ] );
     }
-    elsif ($source_path->{item_type} eq 'meal'
-        && $target_path->{item_type} eq 'meal' )
+    elsif ( $source_path->{item_type} eq 'meal'
+        and $target_path->{item_type} eq 'meal' )
     {
         if ( $moved->name eq $target->name ) {
-            $c->stash->{ajax_response} = {
-                error => {
-                    message => 'Multiple meals with the same name and date are not allowed.',
-                    code    => 'UNQMEAL'
-                }
-            };
-            $c->response->status(400);
-            return;
+            $c->detach(
+                '/error/bad_request',
+                [
+                    {
+                        message => 'Multiple meals with the same name and date are not allowed.',
+                        code    => 'UNQMEAL',
+                    }
+                ]
+            );
         }
         $moved->move_to_group( { project_id => $project->id, date => $target->date }, $target->position );
     }
 
     $moved = $moved->for_meals_dishes_editor;
+
     if ( $source_path->{item_type} eq 'dish' ) {
         $moved->{delete_url} =
           $c->project_uri( '/dish/delete_ajax', $moved->{id} )->as_string;
@@ -295,6 +293,7 @@ sub move_meal_or_dish_ajax : POST Chained('submenu') PathPart('move_meal_dish') 
         $moved->{update_url} =
           $c->project_uri( '/meal/update', $moved->{id} )->as_string;
     }
+
     $c->stash->{ajax_response} = $moved;
 }
 

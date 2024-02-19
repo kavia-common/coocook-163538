@@ -39,57 +39,28 @@ sub base : Chained('/project/base') PathPart('meals') CaptureArgs(1) {
 
 sub update : POST Chained('base') Does(~Ajax) Args(0) RequiresCapability('edit_project') {
     my ( $self, $c, $id ) = @_;
-    my $new_date;
-    try {
-        $new_date = $c->req->body_data->{date};
-    }
-    catch ($error) {
-        $c->res->status(400);
-        $c->stash->{ajax_response} = {
-            error => {
-                message => "Invalid Ajax request data."
-            }
-        };
-        return;
-    };
-    unless ($new_date) {
-        $c->res->status(400);
-        $c->stash->{ajax_response} = {
-            error => {
-                message => "Missing 'date' property."
-            }
-        };
-        return;
-    }
+
+    my $new_date = $c->req->body_data->{date}
+      or $c->detach( '/error/bad_request', [ { message => "Missing 'date' property." } ] );
+
     try {
         $new_date = $c->project->parse_date($new_date);
     }
     catch ($error) {
-        $c->res->status(400);
-        $c->stash->{ajax_response} = {
-            error => {
-                message => "Cannot parse 'date' property: invalid date string."
-            }
-        };
-        return;
+        $c->detach( '/error/bad_request',
+            [ { message => "Cannot parse 'date' property: invalid date string." } ] );
     };
 
-    if ( not $new_date->delta_days( $c->stash->{meal}->date )->is_zero ) {
-        my $found_duplicate_meal = $c->project->meals->results_exist(
-            {
-                name => $c->req->body_data->{name},
-                date => $new_date,
-            }
-        );
-        if ($found_duplicate_meal) {
-            $c->res->status(400);
-            $c->stash->{ajax_response} = {
-                error => {
-                    message => "Cannot create meal with same name on same date."
-                }
-            };
-            return;
+    my $found_duplicate_meal = $c->project->meals->results_exist(
+        {
+            name => $c->req->body_data->{name},
+            date => $c->project->format_date($new_date),
         }
+    );
+
+    if ($found_duplicate_meal) {
+        $c->detach( '/error/bad_request',
+            [ { message => "Cannot create meal with same name on same date." } ] );
     }
 
     $c->stash->{meal}->update(
@@ -110,14 +81,9 @@ sub delete : POST Chained('base') Does(~Ajax) Args(0) RequiresCapability('edit_p
         $c->stash->{meal}->delete;
     }
     else {
-        my $name = $c->stash->{meal}->name;
-        $c->messages->error("$name cannot be deleted, because it contains dishes!");
-        $c->stash->{ajax_response} = {
-            error => {
-                message => "$name cannot be deleted, because it contains dishes!"
-            }
-        };
-        return;
+        my $error = $c->stash->{meal}->name . " cannot be deleted, because it contains dishes!";
+        $c->messages->error($error);
+        $c->detach( '/error/bad_request', [ { message => $error } ] );
     }
 
     $c->stash->{ajax_response} = { success => 1 };
