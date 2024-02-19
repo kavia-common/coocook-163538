@@ -3,6 +3,8 @@ use Test2::V0;
 use lib 't/lib';
 use Test::Coocook;
 
+plan tests => 3;
+
 my $t = Test::Coocook->new( config => { enable_user_registration => 1 } );
 
 # in this scenario john_doe is not a site_admin
@@ -33,17 +35,54 @@ subtest "403 Forbidden" => sub {
     ok $t->get('https://localhost/project/3/Other-Project');
     $t->status_is(403);
     $t->text_contains("Forbidden");
+    $t->lacks_header_ok('Location');    # already logged in
 
-    ok $t->get('https://localhost/project/3/Other-Project/recipe/3/units');
+    ok $t->post('https://localhost/project/3/Other-Project/delete');
     $t->status_is(403);
-    if ( $t->res->content_length > 0 ) {    # for something like: {"error": "forbidden"}
-        $t->header_is( 'Content-Type' => 'application/json; charset=utf-8' );
-        $t->content_lacks('html');
-    }
-    else {
-        $t->lacks_header_ok('Content-Type');
-        $t->content_is('');
-    }
+    $t->text_contains("Forbidden");
+    $t->lacks_header_ok('Location');    # already logged in
+
+    my $test_ajax = sub {
+        ok $t->post('https://localhost/project/3/Other-Project/recipe/3/ingredients/create');
+        $t->status_is(403);
+        $t->lacks_header_ok('Location');        # Ajax
+        if ( $t->res->content_length > 0 ) {    # for something like: {"error": "forbidden"}
+            $t->header_is( 'Content-Type' => 'application/json; charset=utf-8' );
+            $t->content_lacks('html');
+        }
+        else {
+            $t->lacks_header_ok('Content-Type');
+            $t->content_is('');
+        }
+
+        ok $t->get('https://localhost/project/3/Other-Project/recipe/3/units');
+        $t->status_is(403);
+        $t->lacks_header_ok('Location');        # Ajax
+        if ( $t->res->content_length > 0 ) {    # for something like: {"error": "forbidden"}
+            $t->header_is( 'Content-Type' => 'application/json; charset=utf-8' );
+            $t->content_lacks('html');
+        }
+        else {
+            $t->lacks_header_ok('Content-Type');
+            $t->content_is('');
+        }
+    };
+    $test_ajax->();
+
+    $t->get_ok('/');
+    $t->logout_ok();
+
+    $t->max_redirect(0);
+    ok $t->get('https://localhost/project/3/Other-Project');
+    $t->status_is(302);
+    $t->header_exists_ok('Location');    # details of login + redirect are tested in t/user_lifecycle.t
+
+    ok $t->post('https://localhost/project/3/Other-Project/delete');
+    $t->status_is(403);
+    $t->text_contains("Forbidden");
+    $t->lacks_header_ok('Location');     # reponse to POST request must not redirect
+
+    $test_ajax->();                      # Ajax should behave the same
 };
 
 subtest "404 Not found" => sub {
@@ -62,5 +101,3 @@ subtest "404 Not found" => sub {
         $t->content_is('');
     }
 };
-
-done_testing;

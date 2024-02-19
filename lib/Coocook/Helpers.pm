@@ -158,8 +158,11 @@ sub require_capability {
     $c->has_capability(@_)
       and return 1;
 
-    # not logged in? try login and redirect here again
-    if ( $c->req->method eq 'GET' and not $c->user ) {    # TODO also for HEAD?
+    {    # not logged in? try login and redirect here again
+        next if $c->user;
+        next if $c->req->method ne 'GET' and $c->req->method ne 'HEAD';
+        next if ( $c->stash->{current_view} // 'HTML' ) ne 'HTML';
+
         $c->redirect_detach( $c->redirect_uri_for_action('/session/login') );
     }
 
