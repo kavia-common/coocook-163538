@@ -31,23 +31,7 @@ sub index : GET HEAD Chained('/project/base') PathPart('purchase_lists') Args(0)
 
     my $project = $c->project;
     my $lists   = $project->purchase_lists;
-
-    my $today    = DateTime->today;
-    my $min_date = $today;
-
-    my $default_date = do {    # one day after today or last list's date
-        my $last_list =
-          $lists->search( undef, { columns => 'date', order_by => { -desc => 'date' } } )->one_row;
-
-        my $date =
-          ( $last_list and $today < $last_list->date )
-          ? $last_list->date
-          : $today->clone;
-
-        $date->add( days => 1 );
-    };
-
-    my @lists = $lists->sorted->with_is_default->with_items_count->hri->all;
+    my @lists   = $lists->sorted->with_is_default->with_items_count->hri->all;
 
     for my $list (@lists) {
         $list->{date} = $lists->parse_date( $list->{date} );
@@ -59,9 +43,11 @@ sub index : GET HEAD Chained('/project/base') PathPart('purchase_lists') Args(0)
           !$list->{is_default} ? $c->project_uri( $self->action_for('make_default'), $list->{id} ) : undef;
     }
 
+    my $today = DateTime->today;
+
     $c->stash(
-        default_date => $default_date,
-        min_date     => $min_date,
+        default_date => $lists->default_date($today),
+        min_date     => $today,
         lists        => \@lists,
         create_url   => $c->project_uri( $self->action_for('create') ),
     );
