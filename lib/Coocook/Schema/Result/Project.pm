@@ -235,6 +235,14 @@ sub other_projects ($self) {
     return $self->result_source->resultset->search( { id => { '!=' => $self->id } } );
 }
 
+=head2 unit_conversion_graph
+
+Returns the L<Coocook::Model::UnitConversionGraph> for this project.
+
+=cut
+
+sub unit_conversion_graph ($self) { return $self->unit_conversions->as_graph() }
+
 =head2 users_without_permission
 
 Returns a resultset with all C<Result::User>s without any related C<projects_users> record.
