@@ -8,10 +8,14 @@ sub ( $schema, $versions ) {
 
         $unassigned_ingredients->results_exist or next;
 
+        my $i    = 1;
+        my $name = sub { "Previously unassigned items" . ( $i > 1 ? " ($i)" : "" ) };
+        while ( $project->purchase_lists->find( { name => $name->() } ) ) { $i++ }
+
         my $list = $project->create_related(
             purchase_lists => {
                 date => $project->purchase_lists->default_date,
-                name => "Previously unassigned items"
+                name => $name->(),
             }
         );
 

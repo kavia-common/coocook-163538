@@ -20,7 +20,7 @@ my @created_dbs;
 BEGIN {
     # show progress 1/x as early as possible
     $FIRST_PGSQL_SCHEMA_VERSION = 21;
-    plan tests => 3 + ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 11;
+    plan tests => 3 + ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 12;
 
     local $@ = undef;
     my $psql = eval {
@@ -283,7 +283,7 @@ subtest "timestamps are stored in UTC" => sub {
     like( $project->get_column($_) => $utc_regex, "column '$_' is in UTC" ) for qw< created archived >;
 };
 
-subtest "issue #266 order of meals/dishes" => sub {
+subtest "migration 24->25 (issue #266 order of meals/dishes)" => sub {
     my $schema = Coocook::Schema->connect( $dsn->('issue266') );
     install_ok $schema, 24;
 
@@ -313,6 +313,29 @@ subtest "issue #266 order of meals/dishes" => sub {
         $schema->resultset('Dish')->search( undef, { order_by => 'position' } )->get_column('name')->all ]
       => [qw( b c a )],
       "dishes in order of insertion into database";
+};
+
+subtest "migration 27->28 (issue #292 unassigned items to purchase list)" => sub {
+    my $schema = TestDB->new( deploy => 0 );
+    install_ok $schema, 24;    # latest schema version that works with v21_install.sql
+    ok TestDB->execute_test_data( $schema, 't/test_data_v21_install.sql' ),
+      "populate test data for schema version 21";
+
+    my $project          = $schema->resultset('Project')->find( 1, { columns => ['id'] } );
+    my $dish_ingredients = $project->meals->search_related('dishes')->search_related('ingredients');
+    my $purchase_lists   = $project->purchase_lists;
+
+    $purchase_lists->create( { date => $purchase_lists->default_date, name => $_ } )
+      for ( 'Previously unassigned items', 'Previously unassigned items (2)' );
+
+    cmp_ok $dish_ingredients->unassigned->count, '>', 0, "has unassigned dish ingredients";
+
+    upgrade_ok $schema, 28;
+    is $dish_ingredients->unassigned->count => 0,
+      "has no more unassigned dish ingredients";
+
+    ok $schema->resultset('PurchaseList')->find( { name => "Previously unassigned items (3)" } ),
+      "created purchase list";
 };
 
 subtest "issue #346 unit conversions not normalized after import" => sub {
