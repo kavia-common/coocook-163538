@@ -39,6 +39,8 @@ sub new ( $class, %opts ) {
 Executes statements from C<$filename> or C<share/test_data.sql>.
 Returns C<$schema> again.
 
+Triggers reset of sequence values if the connection is PostgreSQL.
+
 =cut
 
 # method name not 'insert_' because not all statements are INSERTs
@@ -82,6 +84,8 @@ sub execute_test_data ( $class, $schema, $filename = 'share/test_data.sql' ) {
     }
 
     close $fh;
+
+    $schema->pgsql_reset_sequence_values();
 
     return $schema;
 }

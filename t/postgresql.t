@@ -146,22 +146,6 @@ ok TestDB->execute_test_data($schema_from_dbic),     "Execute test data in DB fr
 ok TestDB->execute_test_data($schema_from_deploy),   "Execute test data in DB from deploy SQL";
 ok TestDB->execute_test_data($schema_from_upgrades), "Execute test data in DB from upgrade SQLs";
 
-note "Fixing Pgsql sequences after bulk insert";
-for my $source ( $schema_from_dbic->sources ) {
-    $source eq 'Session'    # this table has string id column
-      and next;
-
-    my $result_source = $schema_from_dbic->resultset($source)->result_source;
-
-    if ( $result_source->has_column('id') ) {
-        my $table = $result_source->name;
-
-        $schema_from_dbic->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do(<<~SQL) } );
-        SELECT setval('${table}_id_seq', (SELECT MAX(id) FROM $table), true)
-        SQL
-    }
-}
-
 subtest "boolean values" => sub {
     my $row = $schema_from_dbic->resultset('Project')->one_row;
     my $col = 'is_public';

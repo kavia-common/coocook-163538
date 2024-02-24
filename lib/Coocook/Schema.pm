@@ -113,6 +113,51 @@ sub statistics ($self) {
 
 =head1 PostgreSQL-specific Methods
 
+=head2 pgsql_reset_sequence_values()
+
+Resets the values of any sequences if connected to PostgreSQL.
+Otherwise does nothing.
+
+Sequences hold a value that increases for every use of the sequence.
+It was the common solution to implement automatic ID values for
+primary keys. If rows are inserted with explicit values,
+e.g. from backup or test data, the sequences must be updated/reset.
+
+=cut
+
+sub pgsql_reset_sequence_values ($self) {
+    $self->storage->sqlt_type eq 'PostgreSQL' or return;
+
+    $self->storage->dbh_do(
+        sub ( $storage, $dbh ) {
+            my $statements = $dbh->selectcol_arrayref(<<~SQL);   # SQL from https://stackoverflow.com/a/38575949
+            SELECT 'SELECT SETVAL(' ||
+                   quote_literal(quote_ident(PGT.schemaname) || '.' || quote_ident(S.relname)) ||
+                   ', COALESCE(MAX(' ||quote_ident(C.attname)|| '), 1) ) FROM ' ||
+                   quote_ident(PGT.schemaname)|| '.'||quote_ident(T.relname)|| ';'
+            FROM pg_class AS S,
+                 pg_depend AS D,
+                 pg_class AS T,
+                 pg_attribute AS C,
+                 pg_tables AS PGT
+            WHERE S.relkind = 'S'
+                AND S.oid = D.objid
+                AND D.refobjid = T.oid
+                AND D.refobjid = C.attrelid
+                AND D.refobjsubid = C.attnum
+                AND T.relname = PGT.tablename
+            ORDER BY S.relname;
+            SQL
+
+            for my $statement (@$statements) {
+                $dbh->do($statement);
+            }
+        }
+    );
+
+    return 1;
+}
+
 =head2 pgsql_set_constraints_deferred()
 
 Issues `SET CONSTRAINTS ALL DEFERRED` if connected to PostgreSQL.
@@ -121,9 +166,9 @@ Otherwise does nothing.
 =cut
 
 sub pgsql_set_constraints_deferred ($self) {
-    if ( $self->storage->sqlt_type eq 'PostgreSQL' ) {
-        $self->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do('SET CONSTRAINTS ALL DEFERRED') } );
-    }
+    $self->storage->sqlt_type eq 'PostgreSQL' or return;
+
+    $self->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do('SET CONSTRAINTS ALL DEFERRED') } );
 }
 
 =head1 SQLite-specific Methods
