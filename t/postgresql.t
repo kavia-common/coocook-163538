@@ -4,14 +4,12 @@ use Test2::V0 -no_warnings => 1;
 use Test2::Require::Module 'DBD::Pg';
 use Test2::Require::Module 'DateTime::Format::Pg';
 
-use Coocook::Model::ProjectImporter;
-use Coocook::Script::Deploy;
+# only those required for checking test requirements in BEGIN-block
 use Coocook::Schema;
-use Data::Dumper;
 use DBI;
-use DBIx::Diff::Schema qw(diff_db_schema);
 use Test::Builder;
 
+my $FIRST_PGSQL_SCHEMA_VERSION;
 my $dsn;
 my $master_dbh;
 my @created_dbs;
@@ -20,6 +18,10 @@ my @created_dbs;
 # 1. try Test::PostgreSQL if installed and try to spin up temporary server
 # 2. try to connect to remote PostgreSQL server (only works if PG* env vars are set)
 BEGIN {
+    # show progress 1/x as early as possible
+    $FIRST_PGSQL_SCHEMA_VERSION = 21;
+    plan tests => 3 + ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 11;
+
     local $@ = undef;
     my $psql = eval {
         require Test::PostgreSQL;
@@ -57,15 +59,16 @@ END {    # remove temporary databases
     }
 }
 
+# these are only loaded if test requirements are fulfilled
+use Coocook::Model::ProjectImporter;
+use Data::Dumper;
+use DBIx::Diff::Schema qw(diff_db_schema);
+
 use lib 't/lib';
 use TestDB qw(install_ok upgrade_ok);
 use Test::Coocook;
 
 sub _schema_diff_like;    # declare name, implementation below
-
-my $FIRST_PGSQL_SCHEMA_VERSION = 21;
-
-plan tests => 3 + ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 11;
 
 my $schema_from_dbic = Coocook::Schema->connect( $dsn->('dbic') );
 ok lives { $schema_from_dbic->deploy() }, "deploy with DBIx::Class";
