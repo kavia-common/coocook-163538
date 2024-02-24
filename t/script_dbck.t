@@ -9,7 +9,7 @@ use lib 't/lib/';
 use TestDB qw(txn_do_and_rollback);
 use Test::Coocook;    # makes Coocook::Script::Dbck not read real config files
 
-plan(22);
+plan(23);
 
 my $db = TestDB->new();
 
@@ -165,4 +165,13 @@ subtest "project with purchase list but unassigned dish ingredients", txn_do_and
     $db->resultset('DishIngredient')->results_exist or die "this shouldn't be deleted";
 
     ok !warns { $app->run }, "doesn't warn";
+};
+
+subtest "items without dish ingredients", txn_do_and_rollback $db, sub {
+    my ( $item1, $item2 ) = $db->resultset('Item')->all;
+    $item1->ingredients->update( { item_id => $item2->id } );
+    like warning { $app->run } => qr/dish ingredients .+zero/;
+
+    $item1->update( { value => 0 } );
+    unlike warning { $app->run } => qr/zero/;
 };

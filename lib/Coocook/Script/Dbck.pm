@@ -35,6 +35,7 @@ sub run ($self) {
     $self->check_unit_conversions_values();
     $self->check_missing_default_purchase_lists();
     $self->check_unassigned_dish_ingredients();
+    $self->check_items_without_dish_ingredients();
 }
 
 sub check_schema ($self) {
@@ -276,6 +277,26 @@ sub check_unassigned_dish_ingredients ($self) {
 
     while ( my $project = $invalid_projects->next ) {
         warn sprintf "Project %i has purchase list(s) but also unassigned dish ingredients", $project->id;
+    }
+}
+
+sub check_items_without_dish_ingredients ($self) {
+    my $items     = $self->_schema->resultset('Item');
+    my $bad_items = $items->search(
+        {
+            -not_bool => $items->correlate('ingredients')->results_exist_as_query,
+        },
+        {
+            columns  => [ 'id', 'value' ],
+            prefetch => 'purchase_list',
+        }
+    );
+
+    while ( my $item = $bad_items->next ) {
+        warn sprintf "Item %i in project %i has no dish ingredients%s",
+          $item->id,
+          $item->purchase_list->project_id,
+          $item->value == 0 ? '' : " but a non-zero value";
     }
 }
 
