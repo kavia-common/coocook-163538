@@ -47,6 +47,7 @@ requires "File::Path";
 requires "File::Spec";
 requires "FindBin";
 requires "Getopt::Long";
+requires "Graph";
 requires "HTML::Meta::Robots";
 requires "JSON::MaybeXS";
 requires "MIME::Base64::URLSafe";
