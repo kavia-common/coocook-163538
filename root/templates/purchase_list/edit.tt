@@ -5,6 +5,7 @@ html_title = html_title _ ' for ' _ display_date(list.date, {html=>1});
 
 css.push('/css/print.css');
 css_push_template_path();
+js.push('/lib/coocook-web-components/dist/autocomplete/autocomplete.es.js');
 js_push_template_path() IF lists.size > 1;
 %]
 
@@ -17,7 +18,7 @@ js_push_template_path() IF lists.size > 1;
     <i class="material-icons">drive_file_move</i>&thinsp;Move items/ingredients to other purchase list
 </button>
 [% END %]
-<button id="assign-btn" class="btn btn-primary my-3 d-none" title="Assign selected articles to a shop section"  data-bs-toggle="modal" data-bs-target="#assign-items">
+<button id="assign-btn" class="btn btn-primary my-3 d-none" title="Assign selected articles to a shop section"  data-bs-toggle="modal" data-bs-target="#assign-articles">
     <i class="material-icons">move_to_inbox</i>&thinsp;Assign articles to shop section
 </button>
 <button id="assign-btn-disabled" class="btn btn-primary my-3 tt-disabled-btn" title="No articles selected to assign" disabled>
@@ -54,6 +55,51 @@ js_push_template_path() IF lists.size > 1;
                     </button>
                     <button type="submit" class="btn btn-primary btn-sm" title="Move items/ingredients to selected purchase list">
                         <i class="material-icons">drive_file_move</i>&thinsp;Move to selected purchase list
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form id="assign-articles-form">
+    <div class="modal fade" id="assign-articles" tabindex="-1" aria-labelledby="assign-articles-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="assign-articles-label">Assign articles to shop section</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <cc-autocomplete
+                          id="assign-articles-target"
+                          label="Shop section"
+                          name="target-shop-section"
+                          filter="filterShopSections"
+                          render="renderShopSectionOption"
+                          static-base-uri="[% uri_for_static('/') %]"
+                          required
+                        ></cc-autocomplete>
+                    </div>
+                    <div id="article-select-warning" class="d-none alert alert-warning gap-2">
+                        <i class="material-icons">info</i>
+                        <div>
+                            <p>For the following <span id="article-select-num"></span> you haven’t selected all items, but all items will be moved to the selected shop section.</p>
+                            <ul id="article-select-list" class="list-group"></ul>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2 align-items-center">
+                        <i class="material-icons">info</i>
+                        <div>Assigning articles to a shop section moves these articles on <em>all</em> of this project’s purchase lists.</div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-secondary btn-sm" title="Cancel" data-bs-dismiss="modal">
+                        <i class="material-icons">close</i>&thinsp;Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-sm" title="Move items/ingredients to selected purchase list">
+                        <i class="material-icons">move_to_inbox</i>&thinsp;Move to shop section
                     </button>
                 </div>
             </div>
