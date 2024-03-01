@@ -36,6 +36,7 @@ sub run ($self) {
     $self->check_missing_default_purchase_lists();
     $self->check_unassigned_dish_ingredients();
     $self->check_items_without_dish_ingredients();
+    $self->check_items_values();
 }
 
 sub check_schema ($self) {
@@ -297,6 +298,43 @@ sub check_items_without_dish_ingredients ($self) {
           $item->id,
           $item->purchase_list->project_id,
           $item->value == 0 ? '' : " but a non-zero value";
+    }
+}
+
+sub check_items_values ($self) {
+    my $items       = $self->_schema->resultset('Item');
+    my $ingredients = $items->correlate('ingredients');
+
+    my $value_subquery =
+      $ingredients->search( { $ingredients->me('unit_id') => { -ident => $items->me('unit_id') } } )
+      ->get_column('value')->sum_rs->as_query;
+
+    # DBIC doesn't support SQL alias for subquery
+    # https://stackoverflow.com/a/3429954
+    #
+    # result of as_query() is a scalarref with an arrayref with a string: ["(SELECT ...)"]
+    $$value_subquery->[0] .= q{ AS "value_sum_sql" };
+
+    my $bad_items = $items->search(
+        {
+            $items->me('value') => { '<' => { -ident => 'value_sum_sql' } },
+        },
+        {
+            join       => 'unit',
+            '+columns' => {
+                value_sum         => $value_subquery,
+                'unit_short_name' => 'unit.short_name',
+            },
+        }
+    );
+
+    while ( my $item = $bad_items->next ) {
+        warn sprintf "Item %i has value of %g%s < %g%s the sum of its ingredients",
+          $item->id,
+          $item->value,
+          $item->get_column('unit_short_name'),
+          $item->get_column('value_sum'),
+          $item->get_column('unit_short_name');
     }
 }
 
