@@ -38,9 +38,12 @@ sub index : GET HEAD Chained('/project/base') PathPart('purchase_lists') Args(0)
 
         $list->{edit_url}   = $c->project_uri( $self->action_for('edit'),   $list->{id} );
         $list->{update_url} = $c->project_uri( $self->action_for('update'), $list->{id} );
-        $list->{delete_url} = $c->project_uri( $self->action_for('delete'), $list->{id} );
         $list->{make_default_url} =
           !$list->{is_default} ? $c->project_uri( $self->action_for('make_default'), $list->{id} ) : undef;
+        $list->{delete_url} =
+          ( @lists == 1 or !$list->{is_default} )
+          ? $c->project_uri( $self->action_for('delete'), $list->{id} )
+          : undef;
     }
 
     my $today = DateTime->today;
@@ -224,8 +227,14 @@ sub update : POST Chained('base') Args(0) RequiresCapability('edit_project') {
         sub {
             $list->update_or_insert();
 
-            defined $c->project->default_purchase_list_id
-              or $c->project->update( { default_purchase_list_id => $list->id } );
+            if ( not defined $c->project->default_purchase_list_id ) {
+                $c->project->update( { default_purchase_list_id => $list->id } );
+
+                my $ingredients = $c->project->dishes->search_related('ingredients');
+                while ( my $ingredient = $ingredients->next ) {
+                    $ingredient->assign_to_purchase_list($list);
+                }
+            }
         }
     );
 
@@ -235,7 +244,20 @@ sub update : POST Chained('base') Args(0) RequiresCapability('edit_project') {
 sub delete : POST Chained('base') Args(0) RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
-    $c->stash->{list}->delete();
+    my $list = $c->stash->{list};
+
+    $list->txn_do(
+        sub {
+            if ( $list->is_default ) {
+                $list->other_purchase_lists->results_exist
+                  and $c->detach( '/error/bad_request', ["Can't delete default purchase list"] );
+
+                $list->project->update( { default_purchase_list_id => undef } );
+            }
+
+            $list->delete();
+        }
+    );
 
     $c->detach('redirect');
 }

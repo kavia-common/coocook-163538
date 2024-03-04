@@ -69,9 +69,11 @@ BLOCK new_list %]
                         [% END;
 
                     ELSE %]
-                    <button class="btn btn-outline-danger btn-sm btn-quad tt-disabled-btn" title="Default purchase list can't be deleted" disabled >
-                        <i class="material-icons">delete_forever</i>
-                    </button>
+                    <span data-bs-toggle="tooltip" data-bs-title="Can’t delete default purchase list">
+                        <button class="btn btn-outline-danger btn-sm btn-quad tt-disabled-btn" disabled>
+                            <i class="material-icons">delete_forever</i>
+                        </button>
+                    </span>
                     [% END %]
                 </div>
             </td>
