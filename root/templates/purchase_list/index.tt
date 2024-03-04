@@ -23,9 +23,10 @@ BLOCK new_list %]
         </tr>
     </thead>
     <tbody>
-        [% IF lists.size > 5; PROCESS new_list; END;
+        [% PROCESS new_list IF lists.size > 5;
+
         FOR list IN lists;
-        is_in_use = list.items_count > 0 %]
+            is_in_use = list.items_count > 0 %]
         <tr class="parent">
             <td>[% display_date(list.date, {html=>1}) %]</td>
             <td>
@@ -81,6 +82,7 @@ BLOCK new_list %]
             </td>
         </tr>
         [% END;
+
         PROCESS new_list %]
     </tbody>
 </table>
@@ -156,15 +158,13 @@ BLOCK new_list %]
                 </div>
                 <div class="modal-body">
                     Do you really want to delete this purchase list?
-                    On this list <span id="delete-list-count"></span>.
-                    [% IF lists.size > 1 %]
-                    Which will then be moved to the default purchase list
-                    [% FOREACH list IN lists;
-                        IF list.is_default;
-                            list.name; ' on '; display_date(list.date, {html=>1});
-                        END;
-                    END; %].
-                    [% END %]
+                    On this list <span id="delete-list-count"></span>
+                [%~ IF lists.size <= 1;    # fix syntax highlighting: >
+                    '.';
+                ELSE %]
+                    which will then be moved to the default purchase list
+                    (<em>[% list.name | html %]</em> on [% display_date(list.date, {html=>1}) %]).
+                [% END %]
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-secondary btn-sm" title="Cancel" data-bs-dismiss="modal">

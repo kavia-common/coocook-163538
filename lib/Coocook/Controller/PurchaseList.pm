@@ -46,10 +46,19 @@ sub index : GET HEAD Chained('/project/base') PathPart('purchase_lists') Args(0)
           : undef;
     }
 
+    my $default_list = do {
+        my @default_lists = grep { $_->{is_default} } @lists;
+
+            @default_lists == 0 ? undef
+          : @default_lists == 1 ? $default_lists[0]
+          :                       die "multiple lists with 'is_default' flag";
+    };
+
     my $today = DateTime->today;
 
     $c->stash(
         default_date => $lists->default_date($today),
+        default_list => $default_list,
         min_date     => $today,
         lists        => \@lists,
         create_url   => $c->project_uri( $self->action_for('create') ),
