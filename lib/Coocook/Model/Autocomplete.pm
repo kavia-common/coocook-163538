@@ -21,6 +21,8 @@ sub ACCEPT_CONTEXT ( $self, $c, @args ) {
 }
 
 sub organizations_users ( $self, $search ) {
+    defined $search or return;
+
     my $arrayref = $self->users($search);
     $_->{type} = 'user' for @$arrayref;
 
@@ -41,6 +43,8 @@ sub organizations_users ( $self, $search ) {
 }
 
 sub users ( $self, $search ) {
+    defined $search or return;
+
     my $users = $self->schema->resultset('User')->search(
         {
             -or => [
