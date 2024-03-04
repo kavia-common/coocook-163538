@@ -263,12 +263,10 @@ sub create_dish_from_recipe : POST Chained('/project/base') PathPart('dishes/fro
     my $recipe = $c->project->recipes->find( $c->req->body_data->{recipe_id} );
 
     my $dish = $c->model('DB::Dish')->from_recipe(
-        $recipe,
-        (
-            meal     => $meal->id,
-            servings => $c->req->body_data->{servings},
-            comment  => $c->req->body_data->{comment} // "",
-        )
+        recipe   => $recipe,
+        meal_id  => $meal->id,
+        servings => $c->req->body_data->{servings},
+        comment  => $c->req->body_data->{comment} // "",
     );
 
     $c->stash->{ajax_response} = {
