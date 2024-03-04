@@ -2,6 +2,8 @@ package Coocook::Schema::Result::PurchaseList;
 
 use Coocook::Base qw(Moose);
 
+use Carp;
+
 extends 'Coocook::Schema::Result';
 
 __PACKAGE__->table('purchase_lists');
@@ -58,7 +60,47 @@ sub make_default ($self) {
 }
 
 sub move_items_ingredients ( $self, %args ) {
-    warn "NOT IMPLEMENTED";
+    $args{$_} || croak "Missing named parameter '$_'"
+      for qw( target_purchase_list items ingredients ucg );
+
+    $self->txn_do(
+        sub {
+            my %items_done;
+            my %ingredients_per_item;
+
+            for my $item ( $args{items}->@* ) {
+                if ( $args{target_purchase_list}
+                    ->items->results_exist( { article_id => $item->article_id, unit_id => $item->unit_id } ) )
+                {    # conflicts UNIQUE constraint!
+                    $ingredients_per_item{ $item->id } = [ $item->ingredients->all ];
+                    $item->delete();
+                }
+                else {
+                    $item->update( { purchase_list_id => $args{target_purchase_list}->id } );
+                }
+
+                $items_done{ $item->id } = 1;
+            }
+
+            # group selected ingredients by item_id
+            for my $ingredient ( $args{ingredients}->@* ) {
+                next if $items_done{ $ingredient->item_id };    # whole item selected
+
+                push $ingredients_per_item{ $ingredient->item_id }->@*, $ingredient;
+            }
+
+            my %items = map { $_->id => $_ } $self->items->all;
+
+            while ( my ( $item_id => $ingredients ) = each %ingredients_per_item ) {
+                $items_done{$item_id}
+                  or $items{$item_id}->remove_ingredients( $args{ucg}, @$ingredients );
+
+                for my $ingredient (@$ingredients) {
+                    $ingredient->assign_to_purchase_list( $args{target_purchase_list} );
+                }
+            }
+        }
+    );
 }
 
 1;

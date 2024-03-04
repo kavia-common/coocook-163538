@@ -157,9 +157,10 @@ sub move_items_ingredients : POST Chained('base') Args(0) RequiresCapability('ed
     }
 
     $source_list->move_items_ingredients(
-        target_purchase_lists => $target_list,
-        items                 => \@items,
-        ingredients           => \@ingredients,
+        target_purchase_list => $target_list,
+        items                => \@items,
+        ingredients          => \@ingredients,
+        ucg                  => $c->project->unit_conversion_graph,
     );
 
     $c->stash(
