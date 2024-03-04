@@ -31,7 +31,7 @@ sub index : GET HEAD Chained('/project/base') PathPart('purchase_lists') Args(0)
 
     my $project = $c->project;
     my $lists   = $project->purchase_lists;
-    my @lists   = $lists->sorted->with_is_default->with_items_count->hri->all;
+    my @lists   = $lists->sorted->with_is_default->with_items_count->with_ingredients_count->hri->all;
 
     for my $list (@lists) {
         $list->{date} = $lists->parse_date( $list->{date} );

@@ -56,6 +56,17 @@ sub with_is_default ($self) {
     );
 }
 
+sub with_ingredients_count ($self) {
+    return $self->search(
+        undef,
+        {
+            '+columns' => {
+                ingredients_count => $self->correlate('items')->search_related('ingredients')->count_rs->as_query
+            },
+        }
+    );
+}
+
 sub with_items_count ($self) {
     return $self->search(
         undef,

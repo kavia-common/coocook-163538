@@ -4,7 +4,7 @@ js_push_template_path();
 
 BLOCK new_list %]
 <tr>
-    <td colspan="4">
+    <td colspan="5">
         <div class="d-grid">
             <button class="btn btn-outline-primary material-icons" data-bs-toggle="modal" data-bs-target="#addList">add</button>
         </div>
@@ -18,6 +18,7 @@ BLOCK new_list %]
             <th>Date</th>
             <th>Name</th>
             <th>Items</th>
+            <th>Dish Ingredients</th>
             <th class="btn-icon-[% lists.size <= 1 ? 2 : 3 %]"></th>
         </tr>
     </thead>
@@ -33,6 +34,7 @@ BLOCK new_list %]
                 [% IF lists.size > 1 AND list.is_default; '(default)'; END %]
             </td>
             <td>[% list.items_count %]</td>
+            <td>[% list.ingredients_count %]</td>
             <td>
                 <div class="d-flex justify-content-between action-btn">
                     <button class="btn btn-outline-dark btn-sm btn-quad update-trigger" title="Rename purchase list" data-url="[% list.update_url %]" data-name="[% list.name | html %]" data-bs-toggle="modal" data-bs-target="#updateList">
