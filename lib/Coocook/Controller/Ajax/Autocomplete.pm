@@ -1,4 +1,4 @@
-package Coocook::Controller::Autocomplete;
+package Coocook::Controller::Ajax::Autocomplete;
 
 use Coocook::Base qw(Moose);
 
@@ -14,8 +14,8 @@ sub base : Chained('/base') PathPart('autocomplete') CaptureArgs(0) { }
 # TODO deterministic sort order?
 # TODO rank direct matches first
 
-sub organizations_users : GET HEAD Chained('base') Args(0) Does('~Ajax')
-  RequiresCapability('autocomplete_users') {
+sub organizations_users : GET HEAD Chained('base') Args(0) RequiresCapability('autocomplete_users')
+{
     my ( $self, $c ) = @_;
 
     my $search = $c->req->params->get('search');
@@ -26,8 +26,8 @@ sub organizations_users : GET HEAD Chained('base') Args(0) Does('~Ajax')
     $c->stash( ajax_response => $users );
 }
 
-sub users : GET HEAD Chained('base') Args(0) Does('~Ajax')
-  RequiresCapability('autocomplete_organizations') RequiresCapability('autocomplete_users') {
+sub users : GET HEAD Chained('base') Args(0) RequiresCapability('autocomplete_organizations')
+  RequiresCapability('autocomplete_users') {
     my ( $self, $c ) = @_;
 
     my $search = $c->req->params->get('search');
