@@ -142,7 +142,7 @@ sub BUILD ( $self, $args ) {
                     push @convertible_into, \%convertible_into;
                 }
 
-                $item->{convertible_into} = [ sort { $b->{total} <=> $a->{total} } @convertible_into ];
+                $item->{convertible_into} = _sort_convertible_into( \@convertible_into );
             }
         }
     }
@@ -181,5 +181,17 @@ sub BUILD ( $self, $args ) {
 }
 
 __PACKAGE__->meta->make_immutable;
+
+sub _sort_convertible_into ($convertible_into) {
+    my @convertible_into = sort {
+        $a->{suggested}    # TODO more readable syntax or native operator?
+          ? ( $b->{suggested} ? 0 : -1 )
+          : ( $b->{suggested} ? 1 : 0 )
+          or length( $a->{total} ) <=> length( $b->{total} )
+          or $b->{total} <=> $a->{total}
+    } @$convertible_into;
+
+    return \@convertible_into;
+}
 
 1;

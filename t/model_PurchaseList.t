@@ -1,4 +1,5 @@
-use Test2::V0;
+use Coocook::Base;
+use Test2::V0 -no_warnings => 1;
 
 use Coocook::Model::PurchaseList;
 use DateTime;
@@ -111,5 +112,26 @@ is $sections => array {
   "->shop_sections()";
 
 memory_cycle_ok $sections, "result of by_section() is free of memory cycles";
+
+subtest _sort_convertible_into => sub {
+    my $t = sub (@expected) {
+        is Coocook::Model::PurchaseList::_sort_convertible_into( [ reverse @expected ] ) => \@expected;
+    };
+
+    $t->( { suggested => 1 }, { suggested => 0 } );
+
+    $t->( { total => 2 }, { total => 1 } );
+
+    $t->(
+        { total => 1 },
+        { total => 10 },
+        { total => 100 },
+        { total => 0.1 },
+        { total => 1000 },
+        { total => 0.01 },
+        { total => 0.001 },
+        { total => 1 / 3 },
+    );
+};
 
 done_testing;
