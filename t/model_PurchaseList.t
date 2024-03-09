@@ -23,16 +23,18 @@ is $sections => array {
         field name       => "bakery products";
         field items      => array {
             item hash {
-                field id               => 1;
-                field purchase_list_id => 1;
-                field value            => 14.5;
-                field offset           => +0;
-                field total            => 14.5;
-                field unit_id          => 2;
-                field unit             => hash { field short_name => "kg";    etc() };
-                field article          => hash { field name       => "flour"; etc() };
-                field article_id       => 1;
-                field convertible_into => array {
+                field id                => 1;
+                field purchase_list_id  => 1;
+                field value             => 14.5;
+                field offset            => +0;
+                field total             => 14.5;
+                field next_lower_total  => 14;
+                field next_higher_total => 15;
+                field unit_id           => 2;
+                field unit              => hash { field short_name => "kg";    etc() };
+                field article           => hash { field name       => "flour"; etc() };
+                field article_id        => 1;
+                field convertible_into  => array {
                     item hash {
                         field value      => 14500;
                         field short_name => 'g';
@@ -75,13 +77,15 @@ is $sections => array {
                 end();
             };
             item hash {
-                field id               => 2;
-                field value            => 42.5;
-                field offset           => +0.5;
-                field total            => 43.0;
-                field unit             => hash { field short_name => "g";    etc() };
-                field article          => hash { field name       => "salt"; field comment => "NaCl"; etc() };
-                field convertible_into => array {
+                field id                => 2;
+                field value             => 42.5;
+                field offset            => +0.5;
+                field total             => 43.0;
+                field next_lower_total  => 42;
+                field next_higher_total => 44;
+                field unit              => hash { field short_name => "g";    etc() };
+                field article           => hash { field name       => "salt"; field comment => "NaCl"; etc() };
+                field convertible_into  => array {
                     item hash {
                         field value      => 0.0425;
                         field offset     => +0.0005;

@@ -95,25 +95,13 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
 
     for my $sections ( $c->stash->{sections}->@* ) {
         for my $item ( $sections->{items}->@* ) {
-            $item->{convert_url} = $c->project_uri( '/item/convert', $item->{id} );
-
+            $item->{convert_url}       = $c->project_uri( '/item/convert',       $item->{id} );
             $item->{update_offset_url} = $c->project_uri( '/item/update_offset', $item->{id} );
 
             for my $ingredient ( $item->{ingredients}->@* ) {
                 $ingredient->{remove_url} =
                   $c->project_uri( '/purchase_list/remove_ingredient', $ingredient->{id} );
             }
-
-            # TODO move business logic out of controller
-            # 4 <- 5   -> 6
-            # 5 <- 5.1 -> 6
-            # 5 <- 5.9 -> 6
-            # 5 <- 6   -> 7
-            my $value = $item->{total};
-            $item->{next_higher_value} = int($value) + 1;
-
-            $value == int($value) and $value--;
-            $item->{next_lower_value} = int($value);
         }
     }
 

@@ -42,8 +42,8 @@
                     IF item.update_offset_url %]
                         <datalist id="values-[% loop.count %]">
                             <option value="[% item.total %]">
-                            <option value="[% item.next_higher_value %]">
-                            <option value="[% item.next_lower_value%]">
+                            <option value="[% item.next_higher_total %]">
+                            <option value="[% item.next_lower_total  %]">
                         </datalist>
                         <form class="d-flex justify-content-between" name="total" method="post" action="[% item.update_offset_url %]" onsubmit="e=>{console.log(e);e.stopPropagation()}">
                             <div class="input-group flex-nowrap">

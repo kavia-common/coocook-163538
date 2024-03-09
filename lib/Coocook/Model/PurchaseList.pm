@@ -35,8 +35,12 @@ sub BUILD ( $self, $args ) {
     for my $item ( values %items ) {
         $item->{article}     = $articles{ $item->{article_id} };
         $item->{unit}        = $units{ $item->{unit_id} };
-        $item->{total}       = $item->{value} + $item->{offset};
+        $item->{total}       = my $total = $item->{value} + $item->{offset};
         $item->{ingredients} = [];
+
+        $item->{next_higher_total} = int($total) + 1;
+        $total == int($total) and $total--;
+        $item->{next_lower_total} = int($total);
 
         push @{ $items_per_section{ $item->{article}{shop_section_id} || '' } }, $item;
     }
