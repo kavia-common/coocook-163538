@@ -72,12 +72,12 @@ INSERT INTO "unit_conversions"
 
 INSERT INTO "articles_units"
 (article_id, unit_id) VALUES
-(         1,       1),
-(         1,       2),
-(         2,       1),
-(         3,       3),
-(         4,       1),
-(         4,       2);
+(         1,       1), -- flour: g
+(         1,       2), -- flour: kg
+(         2,       1), -- salt: g
+(         3,       3), -- water: l
+(         4,       1), -- cheese: g
+(         4,       2); -- cheese: kg
 
 INSERT INTO "recipes"
 (id, project_id,                 name, preparation, description, servings) VALUES

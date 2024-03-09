@@ -44,7 +44,7 @@ subtest "remove offset" => sub {
     $t->submit_form_ok(
         {
             form_name   => 'remove-offset',
-            form_number => 6,
+            form_number => 7,
             button      => 'offset',
         },
         "Remove offset"

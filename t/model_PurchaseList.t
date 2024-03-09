@@ -31,9 +31,22 @@ is $sections => array {
                 field unit             => hash { field short_name => "kg";    etc() };
                 field article          => hash { field name       => "flour"; etc() };
                 field article_id       => 1;
-                field convertible_into => [ hash { field short_name => 'g'; etc } ];
-                field purchased        => F();
-                field ingredients      => array {
+                field convertible_into => array {
+                    item hash {
+                        field value      => 14500;
+                        field short_name => 'g';
+                        field suggested  => T();
+                        etc();
+                    };
+                    item hash {
+                        field value      => 0.0145;
+                        field short_name => 't';
+                        field suggested  => F();
+                        etc();
+                    };
+                };
+                field purchased   => F();
+                field ingredients => array {
                     item hash {
                         field id   => 1;
                         field dish => hash {
@@ -67,8 +80,23 @@ is $sections => array {
                 field total            => 43.0;
                 field unit             => hash { field short_name => "g";    etc() };
                 field article          => hash { field name       => "salt"; field comment => "NaCl"; etc() };
-                field convertible_into => [];
-                field ingredients      => array {
+                field convertible_into => array {
+                    item hash {
+                        field value      => 0.0425;
+                        field offset     => +0.0005;
+                        field short_name => 'kg';
+                        field suggested  => F();
+                        etc();
+                    };
+                    item hash {
+                        field value      => 0.0000425;
+                        field offset     => 0.0000005;
+                        field short_name => 't';
+                        field suggested  => F();
+                        etc();
+                    };
+                };
+                field ingredients => array {
                     item hash { field id => 2; etc() };
                     item hash { field id => 6; etc() };
                     item hash { field id => 8; etc() };

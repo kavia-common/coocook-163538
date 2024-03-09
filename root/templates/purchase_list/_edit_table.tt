@@ -63,7 +63,7 @@
                     IF item.convert_url AND item.convertible_into.size %]
                         <form class="d-flex flex-wrap justify-content-end border border-secondary rounded my-1 w-100 pl-form" style="cursor: default;" name="convert" method="post" action="[% item.convert_url %]" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Click on one of the units, to convert the displayed value to this unit">
                         [% FOREACH unit IN item.convertible_into %]
-                            <button class="btn btn-outline-secondary btn-sm m-1" type="submit" name="unit" value="[% unit.id %]">[% unit.short_name | html %]</button>
+                            <button class="btn btn-outline-secondary btn-sm m-1" type="submit" name="unit" value="[% unit.id %]">[% display_value_unit(unit.value, unit, {html=>1}) %]</button>
                         [% END %]
                         </form>
                     [% END %]
