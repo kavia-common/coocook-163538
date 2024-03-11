@@ -54,7 +54,7 @@ subtest "ResultSet::Unit->with_number_of_ingredients_items" => sub {
     };
 };
 
-my $kg = $db->resultset('Unit')->find( { short_name => 'kg' } );
+my $kg = $db->resultset('Unit')->find( { project_id => 1, short_name => 'kg' } );
 
 is join( ',', sort map { $_->short_name } $kg->convertible_into ) => 'g,t',
   "is convertible_into g and t";

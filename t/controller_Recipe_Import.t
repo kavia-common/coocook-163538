@@ -9,7 +9,7 @@ plan(10);
 
 my $t = Test::Coocook->new;
 
-$t->schema->resultset('Article')->search( { project_id => 2 } )->delete();
+$t->schema->resultset($_)->search( { project_id => 2 } )->delete() for qw( Article Unit );
 Coocook::Model::ProjectImporter->new->import_data(
     $t->schema->resultset('Project')->find(1),
     $t->schema->resultset('Project')->find(2),

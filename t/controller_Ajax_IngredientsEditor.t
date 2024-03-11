@@ -4,7 +4,7 @@ use lib 't/lib';
 use TestDB qw(txn_do_and_rollback);
 use Test::Coocook;
 
-plan(6);
+plan(7);
 
 my $t = Test::Coocook->new;
 
@@ -21,10 +21,54 @@ for my $entity (qw( articles ingredients units )) {
 }
 
 my $ingredients = $t->schema->resultset('DishIngredient');
-$ingredients->delete();
+
+subtest "upgrade_ingredient", txn_do_and_rollback $t->schema, sub {
+    ok $t->post('https://localhost/project/1/Test-Project/dish/999/ingredients/update');
+    $t->status_is(404);
+
+    my $ingredient = $ingredients->find(2);
+    $ingredient->unit->short_name eq ( my $original_unit = 'g' ) or die "test broken";
+
+    my $item = $ingredient->item;
+    $item->value == 42.5 or die "test broken";
+
+    my $json = {
+        ingredient => {
+            id           => 2,
+            value        => my $value = 7.5,    # 5.0 -> 0.0075 (=7.5g)
+            current_unit => { id => 2 },        # g -> kg
+            comment      => my $comment = __FILE__,
+        }
+    };
+
+    {
+        local $json->{ingredient}{id} = 999;
+        ok $t->post_json( 'https://localhost/project/1/Test-Project/dish/1/ingredients/update', $json );
+        $t->status_is(404);
+    }
+
+    {
+        my $other_unit = $t->schema->resultset('Project')->find(2)->units->one_row;
+        local $json->{ingredient}{current_unit}{id} = $other_unit->id;
+        ok $t->post_json( 'https://localhost/project/1/Test-Project/dish/1/ingredients/update', $json );
+        $t->status_is(400);
+    }
+    $ingredient->discard_changes();
+    is $ingredient->unit->short_name => $original_unit, "... unit_id wasn't changed";
+
+    ok $t->post_json( 'https://localhost/project/1/Test-Project/dish/1/ingredients/update', $json );
+    $t->status_is(200);
+    $t->json_is( { id => $ingredient->id } );
+    $ingredient->discard_changes();
+    is $ingredient->value            => $value, "value";
+    is $ingredient->unit->short_name => 'kg', "unit";
+    is $ingredient->comment          => $comment, "comment";
+};
 
 subtest add_ingredient => sub {
     subtest "based on ID" => txn_do_and_rollback $t->schema => sub {
+        $ingredients->delete();
+
         my %properties = (
             article => { id => 1 },
             unit    => { id => 2 },
@@ -77,6 +121,8 @@ subtest add_ingredient => sub {
     };
 
     subtest "based on name" => txn_do_and_rollback $t->schema => sub {
+        $ingredients->delete();
+
         my %properties = (
             article => { name => 'foo' },
             unit    => { name => 'bar' },

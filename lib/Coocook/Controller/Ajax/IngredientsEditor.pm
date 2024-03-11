@@ -48,20 +48,28 @@ sub update_ingredient : POST Chained('base') PathPart('ingredients/update')
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
     my $ajax_request = $c->req->body_data;
-    my $ingredient   = $ajax_request->{ingredient};
 
-    my $dish_or_recipe = $c->stash->{dish_or_recipe};
+    my $ingredient =
+      $c->stash->{dish_or_recipe}->search_related('ingredients')
+      ->find( $ajax_request->{ingredient}{id} )
+      or $c->detach('/error/not_found');
 
-    my $ingrDB = $dish_or_recipe->search_related('ingredients')->find( $ingredient->{id} );
-    $ingrDB->update(
+    my $unit_id = $ajax_request->{ingredient}{current_unit}{id};
+    if ( $unit_id != $ingredient->unit_id ) {
+        $c->project->units->results_exist( { id => $unit_id } )
+          or $c->detach( '/error/bad_request', [ { message => "invalid unit_id" } ] );
+
+        $ingredient->set_column( unit_id => $unit_id );
+    }
+
+    $ingredient->update(
         {
-            value   => $ingredient->{value},
-            unit_id => $ingredient->{current_unit}{id},
-            comment => $ingredient->{comment},
+            value   => $ajax_request->{ingredient}{value},
+            comment => $ajax_request->{ingredient}{comment},
         }
     );
 
-    $c->stash->{ajax_response} = { id => $ingrDB->id };
+    $c->stash->{ajax_response} = { id => $ingredient->id };
 }
 
 sub prepend_ingredient : POST Chained('base') PathPart('ingredients/prepend')

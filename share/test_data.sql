@@ -63,7 +63,8 @@ INSERT INTO "units"
 ( 2,          1,       'kg', 'kilograms'),
 ( 3,          1,        'l',    'liters'),
 ( 4,          1,        't',      'tons'),
-( 5,          1,        'p',     'pinch'); -- no conversion, (in German: Prise)
+( 5,          1,        'p',     'pinch'), -- no conversion, (in German: Prise)
+( 6,          2,       'kg', 'kilograms'); -- other project
 
 INSERT INTO "unit_conversions"
 (unit1_id, factor, unit2_id) VALUES
