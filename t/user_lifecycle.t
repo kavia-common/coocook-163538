@@ -6,7 +6,7 @@ use lib 't/lib';
 use TestDB qw(txn_do_and_rollback);
 use Test::Coocook;
 
-plan(88);
+plan(90);
 
 my $t = Test::Coocook->new( test_data => 0 );
 
@@ -260,6 +260,8 @@ is $t->cookie_jar->get_cookies( $t->base, 'username' ) => undef,
   "username is not stored in persistent cookie";
 
 $t->login_ok( 'test', 'P@ssw0rd', store_username => 'on' );
+$t->text_contains( 'Admin', "Admin section in footer" );     # issue #332
+$t->content_contains( q{/admin"}, "link to admin page" );    # issue #332
 
 $t->logout_ok();
 

@@ -7,7 +7,7 @@ plan tests => 3;
 
 my $t = Test::Coocook->new( config => { enable_user_registration => 1 } );
 
-# in this scenario john_doe is not a site_admin
+# in this scenario john_doe is not a site_owner
 $t->schema->resultset('User')->find( { name => 'john_doe' } )->roles_users->delete();
 
 subtest "400 Bad Request" => sub {

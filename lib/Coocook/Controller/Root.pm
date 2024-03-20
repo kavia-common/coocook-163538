@@ -61,7 +61,13 @@ sub begin : Private {
         die "Neither absolute URI nor absolute path: '$_'";
     }
 
-    $c->stash(                          # copy values from config to stash
+    $c->stash(
+        user => $c->user,               # TODO issue #332: assigment is copied from auto()
+                                        #      but needed here because begin() is executed first.
+                                        #      The assignment can't be moved here because
+                                        #      other begin() methods override this method.
+
+        # copy values from config to stash
         $c->config->%{
             qw<
               date_format_short
