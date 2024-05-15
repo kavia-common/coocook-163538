@@ -288,7 +288,7 @@ sub update_conversion : POST Chained('base') Args(1) RequiresCapability('edit_pr
       || $c->detach('/error/not_found');
 
     if ( $conversion->unit2_id != $unit2_id ) {
-        $factor**= -1;
+        $factor **= -1;
     }
 
     $conversion->update( { factor => $factor } );

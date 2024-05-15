@@ -278,7 +278,7 @@ sub _get_email_body ($self) {
           and carp "More than 1 email stored";
     }
 
-    my $email = $emails->[0]->{email};    # use first email
+    my $email = $emails->[0]{email};    # use first email
 
     return $email->get_body;
 }

@@ -24,7 +24,7 @@ sub filter ( $self, $number ) {
 
     while (@suffixes) {
         $number /= 1000;
-        $suffix = shift @suffixes;
+        $suffix  = shift @suffixes;
 
         if ( $number < 1000 ) {
             return Coocook::Filter::SignificantDigits->filter($number) . $suffix;

@@ -81,8 +81,8 @@ sub register : GET HEAD Chained('/base') Args(0) Public {
 
     # set register_form_served_epoch, except we're already in the progress and already have a timestamp
     for ( \$c->session->{register_form_served_epoch} ) {
-        if ( $c->stash->{last_input} ) { $$_ ||= time }
-        else                           { $$_ = time }
+        if   ( $c->stash->{last_input} ) { $$_ ||= time }
+        else                             { $$_   = time }
     }
 
     if ( my $terms = $c->model('DB::Terms')->valid_today ) {

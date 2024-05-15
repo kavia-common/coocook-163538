@@ -16,7 +16,7 @@ sub dishes_served : GET HEAD Chained('/base') PathPart('badge/dishes_served.svg'
 
     while ( $dishes >= 999.5 and @suffixes ) {
         $dishes /= 1000;
-        $suffix = shift @suffixes;
+        $suffix  = shift @suffixes;
     }
 
     if ($suffix) {

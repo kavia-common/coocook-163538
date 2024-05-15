@@ -156,12 +156,12 @@ sub edit : GET HEAD Chained('submenu') PathPart('edit') Args(0) RequiresCapabili
 
     for my $day ( keys %$days ) {
         for my $meal_key ( keys $days->{$day}->%* ) {
-            my $meal = $days->{$day}->{$meal_key};
+            my $meal = $days->{$day}{$meal_key};
             $meal->{delete_dishes_url} = $c->project_uri( '/meal/delete_dishes', $meal->{id} )->as_string;
             $meal->{delete_url}        = $c->project_uri( '/meal/delete',        $meal->{id} )->as_string;
             $meal->{update_url}        = $c->project_uri( '/meal/update',        $meal->{id} )->as_string;
             for my $dish_key ( keys $meal->{dishes}->%* ) {
-                my $dish = $meal->{dishes}->{$dish_key};
+                my $dish = $meal->{dishes}{$dish_key};
                 $dish->{delete_url} = $c->project_uri( '/dish/delete_ajax', $dish->{id} )->as_string;
                 $dish->{update_url} = $c->project_uri( '/dish/update_ajax', $dish->{id} )->as_string;
             }
@@ -194,12 +194,12 @@ sub get_project_plan_ajax : GET HEAD Chained('submenu') PathPart('project_plan')
 
     for my $day ( keys %$days ) {
         for my $meal_key ( keys $days->{$day}->%* ) {
-            my $meal = $days->{$day}->{$meal_key};
+            my $meal = $days->{$day}{$meal_key};
             $meal->{delete_dishes_url} = $c->project_uri( '/meal/delete_dishes', $meal->{id} )->as_string;
             $meal->{delete_url}        = $c->project_uri( '/meal/delete',        $meal->{id} )->as_string;
             $meal->{update_url}        = $c->project_uri( '/meal/update',        $meal->{id} )->as_string;
             for my $dish_key ( keys $meal->{dishes}->%* ) {
-                my $dish = $meal->{dishes}->{$dish_key};
+                my $dish = $meal->{dishes}{$dish_key};
                 $dish->{delete_url} = $c->project_uri( '/dish/delete_ajax', $dish->{id} )->as_string;
                 $dish->{update_url} = $c->project_uri( '/dish/update_ajax', $dish->{id} )->as_string;
             }

@@ -6,5 +6,8 @@
 --variable-maximum-line-length
 --maximum-line-length=100
 
+--delete-interbracket-arrows
 --delete-trailing-commas
+--space-signature-paren=2
+--valign-wide-equals
 --want-trailing-commas=b
