@@ -5,9 +5,8 @@ html_title = html_title _ ' for ' _ display_date(list.date, {html=>1});
 
 css.push('/css/print.css');
 css_push_template_path();
-IF lists.size > 1;
-    js_push_template_path();
-END %]
+js_push_template_path() IF lists.size > 1;
+%]
 
 <button class="btn btn-primary my-3 material-icons" onclick="print()" title="Print">print</button>
 [% IF lists.size > 1 %]
@@ -19,7 +18,7 @@ END %]
 </button>
 [% END %]
 
-<div id="list-container" [% IF lists.size > 1; 'class="editable"'; END %]>
+<div id="list-container" class="[% 'editable' IF lists.size > 1 %]">
 [% INCLUDE purchase_list/_edit_table.tt %]
 </div>
 

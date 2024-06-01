@@ -26,13 +26,16 @@ BLOCK new_list %]
         [% PROCESS new_list IF lists.size > 5;
 
         FOR list IN lists;
-            is_in_use = list.items_count > 0 %]
+            is_in_use = list.items_count > 0;
+            show_default = lists.size > 1 AND list.is_default %]
         <tr class="parent">
             <td>[% display_date(list.date, {html=>1}) %]</td>
             <td>
-                <i class="material-icons"[% IF lists.size > 1 AND list.is_default; ' title="Is the default purchase list">add_'; ELSE; '>'; END %]shopping_cart</i>&thinsp;
-                <a href="[% list.edit_url %]">[% list.name | html %]</a>
-                [% IF lists.size > 1 AND list.is_default; '(default)'; END %]
+                <i class="material-icons" title="[% 'Is the default purchase list' IF show_default %]">
+                    [% show_default ? 'add_shopping_cart' : 'shopping_cart' %]
+                </i>&thinsp;
+                <a href="[% list.edit_url %]">[% list.name | html %]</a>&thinsp;
+                [% '(default)' IF lists.size > 1 AND list.is_default %]
             </td>
             <td>[% list.items_count %]</td>
             <td>[% list.ingredients_count %]</td>

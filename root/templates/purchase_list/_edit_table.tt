@@ -13,7 +13,7 @@
     </div>
 
     <div class="mb-2 table-responsive">
-        <table class="table align-middle pl-editor no-print[% IF lists.size > 1; ' table-hover'; END %]">
+        <table class="table align-middle pl-editor no-print [% 'table-hover' IF lists.size > 1 %]">
             <thead>
                 <tr>
                     <th>Amount</th>
@@ -45,7 +45,7 @@
                             <option value="[% item.next_higher_total %]">
                             <option value="[% item.next_lower_total  %]">
                         </datalist>
-                        <form class="d-flex justify-content-between" name="total" method="post" action="[% item.update_offset_url %]" onsubmit="e=>{console.log(e);e.stopPropagation()}">
+                        <form class="d-flex justify-content-between" name="total" method="post" action="[% item.update_offset_url %]">
                             <div class="input-group flex-nowrap">
                             [% IF item.offset %]<span class="input-group-text px-1">ca.</span>[% END %]
                                 <input id="total" class="form-control" type="number" min="0" step="any" name="total" list="values-[% loop.count %]" value="[% item.total %]">
@@ -112,7 +112,7 @@
                     </td>
                     <td class="date text-center text-nowrap">[% ingredient.dish.meal.date.strftime('%a, %F') %]</td>
                     <td>
-                        [% IF ingredient.remove_url && lists.size > 1 && not list.is_default %]
+                        [% IF ingredient.remove_url AND lists.size > 1 AND NOT list.is_default %]
                         <form name="remove-ingredient" method="post" action="[% ingredient.remove_url %]" class="action-btn">
                             <button type="submit" class="btn btn-outline-danger btn-sm btn-quad" title="Remove from purchase list">
                                 <i class="material-icons">delete_forever</i>
