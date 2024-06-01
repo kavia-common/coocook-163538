@@ -4,6 +4,8 @@ package Coocook::Schema::Result::Item;
 
 use Coocook::Base qw(Moose);
 
+use Carp;
+
 extends 'Coocook::Schema::Result';
 
 __PACKAGE__->table('items');
@@ -57,38 +59,17 @@ __PACKAGE__->has_many( ingredients => 'Coocook::Schema::Result::DishIngredient',
 
 __PACKAGE__->meta->make_immutable;
 
-sub convert ( $self, $unit2 ) {
+sub convert ( $self, $new_unit, $ucg = $self->dish->meal->project->unit_conversion_graph ) {
     $self->txn_do(
         sub {
-            my $unit1 = $self->unit;
-
-            my $conversion = $self->result_source->schema->resultset('UnitConversion')->search(
-                [    # OR
-                    {
-                        unit1_id => $unit1->id,
-                        unit2_id => $unit2->id,
-                    },
-                    {
-                        unit1_id => $unit2->id,
-                        unit2_id => $unit1->id,
-                    },
-
-                ]
-            )->single;
-
-            $conversion
-              or die "Conversion does not exist";
-
-            my $factor =
-                $conversion->unit1_id == $unit1->id ? $conversion->factor
-              : $conversion->unit2_id == $unit1->id ? $conversion->factor**-1
-              :                                       die "found conversion doesn't relate to unit1";
+            my $factor = $ucg->factor_between_units($self->unit_id, $new_unit->id)
+                or croak "No conversion possible to unit";
 
             my $unit2_item = $self->result_source->resultset->find(
                 {
                     purchase_list_id => $self->purchase_list_id,
                     article_id       => $self->article_id,
-                    unit_id          => $unit2->id,
+                    unit_id          => $new_unit->id,
                 }
             );
 
@@ -109,7 +90,7 @@ sub convert ( $self, $unit2 ) {
             else {
                 $self->update(
                     {
-                        unit_id => $unit2->id,
+                        unit_id => $new_unit->id,
                         value   => $self->value * $factor,
                         offset  => $self->offset * $factor,
                     }
