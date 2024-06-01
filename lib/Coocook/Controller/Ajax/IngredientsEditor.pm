@@ -210,7 +210,7 @@ sub add_ingredient : POST Chained('base') PathPart('ingredients/create')
         ingredients => {
             article_id => $article->id,
             unit_id    => $unit->id,
-            value      => $properties->{amount},    # TODO https://gitlab.com/coocook/web-components/-/issues/54
+            value      => $properties->{value},
             $properties->%{qw( comment prepare )},
         }
     );

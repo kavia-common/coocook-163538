@@ -35,28 +35,28 @@ subtest add_ingredient => sub {
 
         ok $t->post_json(
             'https://localhost/project/1/Test-Project/dish/1/ingredients/create',
-            { ingredient => { %properties, amount => __LINE__ } }
+            { ingredient => { %properties, value => __LINE__ } }
           ),
           "POST with existing article ID and existing unit ID";
         $t->status_is(200);
 
         ok $t->post_json(
             'https://localhost/project/1/Test-Project/dish/1/ingredients/create',
-            { ingredient => { %properties, article => { id => 999 }, amount => __LINE__ } }
+            { ingredient => { %properties, article => { id => 999 }, value => __LINE__ } }
           ),
           "POST with inexistent article ID";
         $t->status_is(400);
 
         ok $t->post_json(
             'https://localhost/project/1/Test-Project/dish/1/ingredients/create',
-            { ingredient => { %properties, unit => { id => 999 }, amount => __LINE__ } }
+            { ingredient => { %properties, unit => { id => 999 }, value => __LINE__ } }
           ),
           "POST with inexistent unit ID";
         $t->status_is(400);
 
         ok $t->post_json(
             'https://localhost/project/1/Test-Project/dish/1/ingredients/create',
-            { ingredient => { %properties, amount => __LINE__ } }
+            { ingredient => { %properties, value => __LINE__ } }
           ),
           "POST same data again works";    # test against false positives for 400 above
         $t->status_is(200);
@@ -85,14 +85,14 @@ subtest add_ingredient => sub {
 
         ok $t->post_json(
             'https://localhost/project/1/Test-Project/dish/1/ingredients/create',
-            { ingredient => { %properties, amount => __LINE__ } }
+            { ingredient => { %properties, value => __LINE__ } }
           ),
           "POST with new article name and new unit name";
         $t->status_is(200);
 
         ok $t->post_json(
             'https://localhost/project/1/Test-Project/dish/1/ingredients/create',
-            { ingredient => { %properties, amount => __LINE__ } }
+            { ingredient => { %properties, value => __LINE__ } }
           ),
           "POST with same article name and same unit name";
         $t->status_is(200);
