@@ -37,7 +37,7 @@ js_push_template_path() IF lists.size > 1;
                 <div class="modal-body">
                     <div class="form-floating">
                         <select id="move-items-target" class="form-control" placeholder="Target purchase list">
-                            <option value="">---</option>
+                            [% '<option value="">---</option>' IF lists.size != 2 %]
                         </select>
                         <label for="move-items-target" class="form-label">Target purchase list</label>
                     </div>
