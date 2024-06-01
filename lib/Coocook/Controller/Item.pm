@@ -32,16 +32,31 @@ sub convert : POST Chained('base') Args(0) RequiresCapability('edit_project') {
     my $unit = $c->project->units->find( $c->req->params->get('unit') )
       || $c->detach('/error/not_found');
 
+    my $new_total = $c->req->params->get('total') // $c->detach('/error/bad_request');
+
     my $item = $c->stash->{item};
     my $ucg  = $c->project->unit_conversion_graph;
 
-    # TODO This logic could be capsuled inside convert()
-    #      if that method could raise a user error message,
+    # TODO This logic could be capsuled inside Result::Item
+    #      if model classes could raise a user error message,
     #      e.g. with some custom exception class
     my $factor = $ucg->factor_between_units( $item->unit_id => $unit->id )
       or $c->detach( '/error/bad_request', ["No conversion factor known to requested unit."] );
 
-    my $new_item = $item->convert( $unit, $ucg );
+    # difference between new total sent by browser and new total calculated now
+    # -> item or conversion has been modified since user received HTML form
+    my $abs_difference = abs( $new_total - $item->total * $factor );
+
+    # can't use numerical equivalence with == because of floating point math!
+    if ( $new_total <= 0 or $abs_difference > 0.0001 ) {
+        $c->detach('/error/bad_request');
+    }
+
+    my $new_item = $item->change_value_offset_unit(
+        $item->value * $factor,    #perltidy
+        $item->offset * $factor,
+        $unit->id
+    );
 
     $c->response->redirect(
         $c->project_uri( '/purchase_list/edit', $item->purchase_list_id, \( 'item-' . $new_item->id ) ) );

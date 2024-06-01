@@ -23,7 +23,7 @@ subtest "change item total" => sub {
     $t->submit_form_ok(
         {
             form_name   => 'total',
-            form_number => 5,
+            form_number => 6,
             with_fields => { total => 40 },
         },
         "Set total value to 40"
@@ -44,7 +44,7 @@ subtest "remove offset" => sub {
     $t->submit_form_ok(
         {
             form_name   => 'remove-offset',
-            form_number => 7,
+            form_number => 9,
             button      => 'offset',
         },
         "Remove offset"
@@ -66,7 +66,7 @@ subtest "remove ingredient" => sub {
     $t->submit_form_ok(
         {
             form_name   => $form_name,
-            form_number => 5,
+            form_number => 6,
         },
         "Remove ingredient"
     );
@@ -79,15 +79,7 @@ subtest "convert item" => sub {
     $t->content_contains( my $old_value = 'value="14"' );
     $t->content_lacks( my $new_value    = 'value="14000"' );
 
-    $t->submit_form_ok(
-        {
-            form_number => 4,
-            button      => 'unit',
-            with_fields => { unit => 1 },
-        },
-        "Convert item to g"
-    );
-
+    $t->submit_form_ok( { form_number => 4 }, "Convert item to g" );
     $t->content_lacks($old_value);
     $t->content_contains($new_value);
     $t->text_contains("14000\N{THIN SPACE}grams");

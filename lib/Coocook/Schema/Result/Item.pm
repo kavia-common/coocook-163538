@@ -59,40 +59,37 @@ __PACKAGE__->has_many( ingredients => 'Coocook::Schema::Result::DishIngredient',
 
 __PACKAGE__->meta->make_immutable;
 
-sub convert ( $self, $new_unit, $ucg = $self->dish->meal->project->unit_conversion_graph ) {
+sub change_value_offset_unit ( $self, $value, $offset, $unit_id ) {
     $self->txn_do(
         sub {
-            my $factor = $ucg->factor_between_units($self->unit_id, $new_unit->id)
-                or croak "No conversion possible to unit";
-
-            my $unit2_item = $self->result_source->resultset->find(
+            my $existing_item = $self->result_source->resultset->find(
                 {
                     purchase_list_id => $self->purchase_list_id,
                     article_id       => $self->article_id,
-                    unit_id          => $new_unit->id,
+                    unit_id          => $unit_id,
                 }
             );
 
-            if ($unit2_item) {
-                $unit2_item->update(
+            if ($existing_item) {
+                $existing_item->update(
                     {
-                        value  => $unit2_item->value + $self->value * $factor,
-                        offset => $unit2_item->offset + $self->offset * $factor,
+                        value  => $existing_item->value + $value,
+                        offset => $existing_item->offset + $offset,
                     }
                 );
 
-                $self->ingredients->update( { item_id => $unit2_item->id } );
+                $self->ingredients->update( { item_id => $existing_item->id } );
 
                 $self->delete;
 
-                return $unit2_item;
+                return $existing_item;
             }
             else {
                 $self->update(
                     {
-                        unit_id => $new_unit->id,
-                        value   => $self->value * $factor,
-                        offset  => $self->offset * $factor,
+                        unit_id => $unit_id,
+                        value   => $value,
+                        offset  => $offset,
                     }
                 );
 
@@ -170,6 +167,14 @@ sub remove_ingredients ( $self, $ucg, @ingredients_to_remove ) {
         }
     );
 }
+
+=head2 total()
+
+Returns total, i.e. sum of the item's value and offset.
+
+=cut
+
+sub total ($self) { return $self->value + $self->offset }
 
 sub update_from_ingredients ($self) {
     my $item_value = 0;

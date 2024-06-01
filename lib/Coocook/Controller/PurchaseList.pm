@@ -95,8 +95,18 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
 
     for my $sections ( $c->stash->{sections}->@* ) {
         for my $item ( $sections->{items}->@* ) {
-            $item->{convert_url}       = $c->project_uri( '/item/convert',       $item->{id} );
             $item->{update_offset_url} = $c->project_uri( '/item/update_offset', $item->{id} );
+
+            for my $unit ( $item->{convertible_into}->@* ) {
+                $unit->{convert_url} = $c->project_uri(
+                    '/item/convert',
+                    $item->{id},
+                    {
+                        total => $unit->{total},
+                        unit  => $unit->{id},
+                    }
+                );
+            }
 
             for my $ingredient ( $item->{ingredients}->@* ) {
                 $ingredient->{remove_url} =
