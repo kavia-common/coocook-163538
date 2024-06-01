@@ -113,6 +113,38 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
     );
 }
 
+sub assign_articles_to_shop_section : POST Chained('base') Args(0)
+  RequiresCapability('view_project') {
+    my ( $self, $c ) = @_;
+
+    my $sections = $c->project->search_related('shop_sections');
+    my $section;
+
+    if ( defined( my $new_section = $c->request->params->get('new_shop_section') ) ) {
+        $section = $sections->find_or_create( { name => $new_section } );
+    }
+    elsif ( my $id = $c->request->params->get('shop_section') ) {
+        if ( $id ne 'null' ) {
+            $section = $sections->find($id)
+              or $c->detach( '/error/bad_request', ["Invalid shop section given"] );
+        }
+    }
+    else {
+        $c->detach( '/error/bad_request', ["No shop section given"] );
+    }
+
+    my @article_ids      = $c->req->params->get_all('article');
+    my $project_articles = $c->project->search_related('articles');
+    $project_articles->search( { $project_articles->me('id') => { -in => \@article_ids } } )
+      ->update( { shop_section_id => $section ? $section->id : undef } );
+
+    $c->stash(
+        current_view => 'HTML::Snippet',
+        template     => 'purchase_list/_edit_table.tt',
+    );
+    $c->detach('edit');
+}
+
 sub make_default : POST Chained('base') Args(0) RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
