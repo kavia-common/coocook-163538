@@ -2,6 +2,8 @@
 
 css.push('/lib/coocook-web-components/dist/ingredients-editor/ingredients-editor_index.css');
 js.push('/lib/coocook-web-components/dist/ingredients-editor/ingredients-editor.es.js');
+js.push('/lib/coocook-web-components/dist/autocomplete/autocomplete.es.js');
+js.push('/js/tagAutocomplete.js');
 %]
 
 <div class="row mb-3 mt-n3">
@@ -41,7 +43,14 @@ js.push('/lib/coocook-web-components/dist/ingredients-editor/ingredients-editor.
         </div>
         <div class="mb-3">
             <label for="tags" class="form-label">Tags</label>
-            <input id="tags" class="form-control" type="text" name="tags" value="[% dish.tags_joined %]">
+            <cc-multi-autocomplete
+              id="tags"
+              class="tags"
+              type="search"
+              name="tags"
+              value="[% dish.tags_joined %]"
+              static-base-uri="[% uri_for_static('/') %]"
+            ></cc-multi-autocomplete>
         </div>
         <div class="row mb-3">
             <div class="col-md">

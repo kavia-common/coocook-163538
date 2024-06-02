@@ -44,7 +44,8 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
             project_id   => $c->project->id,
             project_name => $c->project->url_name,
             dish_id      => $dish->id,
-        }
+        },
+        available_tags => [ $c->project->tags->hri->sorted->all ],
     );
 
     $c->stash(
