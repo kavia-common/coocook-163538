@@ -60,7 +60,7 @@ js_push_template_path() %]
             </div>
             <div class="card-body p-0">
                 <ul class="list-group list-group-flush">
-                    [% IF dishes.size == 0 %]
+                    [% IF recipes.size == 0 %]
                     <li class="list-group-item">No related recipes</li>
                     [% ELSE;
                     FOREACH recipe IN recipes %]
