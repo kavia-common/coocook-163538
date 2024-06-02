@@ -2,6 +2,8 @@
 
 css.push('/lib/coocook-web-components/dist/ingredients-editor/ingredients-editor_index.css');
 js.push('/lib/coocook-web-components/dist/ingredients-editor/ingredients-editor.es.js');
+js.push('/lib/coocook-web-components/dist/autocomplete/autocomplete.es.js');
+js.push('/js/tagAutocomplete.js');
 
 IF import_url %]<form id="import" method="get" action="[% import_url %]"></form>[% END %]
 
@@ -58,7 +60,14 @@ IF import_url %]<form id="import" method="get" action="[% import_url %]"></form>
         </div>
         <div class="mb-3">
             <label for="tags" class="form-label">Tags</label>
-            <input id="tags" class="form-control" type="text" name="tags" value="[% recipe.tags_rs.joined %]">
+            <cc-multi-autocomplete
+              id="tags"
+              class="tags"
+              type="search"
+              name="tags"
+              value="[% recipe.tags_rs.joined %]"
+              static-base-uri="[% uri_for_static('/') %]"
+            ></cc-multi-autocomplete>
         </div>
         <div class="mb-3">
             <label for="preparation" class="form-label">Preparation</label>
@@ -83,6 +92,4 @@ IF import_url %]<form id="import" method="get" action="[% import_url %]"></form>
 </div>
 </form>
 
-<div class="ingredients-editor" data-ingredients-editor-json-id="ingredients_editor_data"
-class="col-sm-12 py-3">
-</div>
+<div class="ingredients-editor col-sm-12 py-3" data-ingredients-editor-json-id="ingredients_editor_data"></div>

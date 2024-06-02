@@ -91,6 +91,7 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
             project_name => $c->project->url_name,
             recipe_id    => $recipe->id,
         },
+        available_tags => [ $c->project->tags->hri->sorted->all ],
     );
 
     $c->stash(
