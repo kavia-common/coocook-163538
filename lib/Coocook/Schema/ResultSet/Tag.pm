@@ -10,8 +10,21 @@ sub joined ($self) {
     return join ", ", $self->sorted->get_column('name')->all;
 }
 
-sub from_names ( $self, $str ) {
+sub find_or_create_from_names ( $self, $str ) {
     my @names = split qr/,\s+/, $str;
+
+    my $existing_rs = $self->search(
+        {
+            $self->me('name') => { -in => \@names }
+        }
+    );
+
+    my %existing_names = map  { $_->name => 1 } $existing_rs->all;
+    my @new_names      = grep { !$existing_names{$_} } @names;
+
+    foreach my $name (@new_names) {
+        $self->create( { name => $name } );
+    }
 
     return $self->search(
         {

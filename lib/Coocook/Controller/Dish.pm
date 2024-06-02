@@ -129,8 +129,10 @@ sub update : POST Chained('base') Args(0) RequiresCapability('edit_project') {
                 }
             );
 
-            my $tags = $c->project->tags->from_names( $c->req->params->get('tags') );
-            $dish->set_tags( [ $tags->all ] );
+            my @tag_ids =
+              $c->project->find_or_create_tags_from_names( $c->req->params->get('tags') )->only_id_col->all;
+
+            $dish->set_tags( \@tag_ids );
         }
     );
 

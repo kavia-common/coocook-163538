@@ -187,16 +187,15 @@ sub is_stale ( $self, $pivot_date = undef ) {
     return $self->self_rs->stale($pivot_date)->results_exist();
 }
 
-=head2 tags_from_names($names)
+=head2 find_or_create_tags_from_names($names)
 
 Returns a resultset with all tags matching names in C<$names>.
-
-TODO: Should probably autocreate tags that do not yet exist.
+Non-existing ones are created.
 
 =cut
 
-sub tags_from_names ( $self, $names ) {
-    return $self->tags->from_names($names);
+sub find_or_create_tags_from_names ( $self, $names ) {
+    return $self->tags->find_or_create_from_names($names);
 }
 
 =head2 organizations_without_permission

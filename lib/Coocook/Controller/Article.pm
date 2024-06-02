@@ -236,7 +236,8 @@ sub update_or_insert : Private {
         );
     }
 
-    my @tags = $c->project->tags->from_names( $c->req->params->get('tags') )->only_id_col->all;
+    my @tag_ids =
+      $c->project->find_or_create_tags_from_names( $c->req->params->get('tags') )->only_id_col->all;
 
     my $articles_units = $article->articles_units;
 
@@ -286,7 +287,7 @@ sub update_or_insert : Private {
             $article->update_or_insert;
 
             # works only after update_or_insert()
-            $article->set_tags( \@tags );
+            $article->set_tags( \@tag_ids );
 
             # set_units() does a DELETE on all and then re-inserts what violates FK constraints
             # (that's safe for tags because there is no FK constraint on the combination of article & tag)
