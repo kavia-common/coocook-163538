@@ -7,11 +7,11 @@ extends 'Coocook::Schema::ResultSet';
 __PACKAGE__->load_components('+Coocook::Schema::Component::ResultSet::SortByName');
 
 sub joined ($self) {
-    return join " ", $self->get_column('name')->all;
+    return join ", ", $self->get_column('name')->all;
 }
 
 sub from_names ( $self, $str ) {
-    my @names = split qr/\s+/, $str;
+    my @names = split qr/,\s+/, $str;
 
     return $self->search(
         {
