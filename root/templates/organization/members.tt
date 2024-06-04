@@ -75,7 +75,13 @@ has_admin = 0 %]
         <form method="post" action="[% add_url %]" id="add-member">
             <div class="mb-2">
                 <label for="user" class="form-label">User</label>
-                <cc-autocomplete id="user" endpoint='{"url": "/autocomplete/users"}' render="renderUserOption" filter="filterUser" input-name="name" msg-func="alertMessage" invalid='["Please select an user", "danger", false, "add-member-msg"]' static-base-uri="[% uri_for_static('/') %]"></cc-autocomplete>
+                <cc-search
+                  id="user"
+                  required
+                  name="name"
+                  data-url="/autocomplete/users"
+                  static-base-uri="[% uri_for_static('/') %]"
+                ></cc-search>
                 <input class="delete-by-autocomplete-js" required name="name" type="text">
             </div>
             <div class="mb-2">
