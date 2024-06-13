@@ -3,7 +3,7 @@ on 'configure' => sub {
 };
 
 requires "perl" => "v5.32";
-recommends "perl" => "v5.38";
+recommends "perl" => "v5.40";
 
 requires "App::DH";
 requires "Carp";
