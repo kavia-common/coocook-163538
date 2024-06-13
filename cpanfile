@@ -2,8 +2,8 @@ on 'configure' => sub {
     requires "ExtUtils::MakeMaker::CPANfile";
 };
 
-requires "perl" => "v5.32";
-recommends "perl" => "v5.38";
+requires "perl" => "v5.34";
+recommends "perl" => "v5.40";
 
 requires "App::DH";
 requires "Carp";
@@ -69,7 +69,6 @@ requires "Template::Plugin::Markdown";
 requires "Term::ANSIColor";
 requires "Term::ReadKey";
 requires "Term::Size::Any";
-requires "Try::Tiny";
 requires "URI";
 requires "YAML::XS";
 

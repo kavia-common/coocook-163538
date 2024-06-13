@@ -6,7 +6,6 @@ use strict;
 use warnings;
 
 use Carp;
-use Try::Tiny;
 
 use parent 'Catalyst::Authentication::Store::DBIx::Class::User';
 
