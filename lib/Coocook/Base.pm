@@ -32,9 +32,9 @@ Using this module is equivalent to:
     use strict;
     use warnings;
     use utf8;
-    use feature qw( :5.34 signatures );
+    use feature qw( :5.34 signatures try );
     no  feature qw( indirect );
-    no warnings qw( experimental::signatures );
+    no warnings qw( experimental::signatures experimental::try );
 
 =head2 Moose
 
@@ -89,9 +89,9 @@ sub import ( $class, @packages ) {
     }
 
     # this must be done after import of @packages like Moose
-    warnings->unimport(qw( experimental::signatures ));
+    warnings->unimport(qw( experimental::signatures experimental::try ));
 
-    feature->import(qw( :5.34 signatures ));
+    feature->import(qw( :5.34 signatures try ));
     feature->unimport(qw( indirect ));
     utf8->import;
 }

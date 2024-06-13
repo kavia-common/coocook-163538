@@ -69,7 +69,6 @@ requires "Template::Plugin::Markdown";
 requires "Term::ANSIColor";
 requires "Term::ReadKey";
 requires "Term::Size::Any";
-requires "Try::Tiny";
 requires "URI";
 requires "YAML::XS";
 

@@ -2,8 +2,6 @@ package Coocook::Controller::Meal;
 
 use Coocook::Base qw(Moose);
 
-use Try::Tiny;
-
 BEGIN { extends 'Coocook::Controller' }
 
 =head1 NAME
@@ -45,7 +43,7 @@ sub update : POST Chained('base') Does(~Ajax) Args(0) RequiresCapability('edit_p
     try {
         $new_date = $c->req->body_data->{date};
     }
-    catch {
+    catch ($error) {
         $c->res->status(400);
         $c->stash->{json_data} = {
             error => {
@@ -66,7 +64,7 @@ sub update : POST Chained('base') Does(~Ajax) Args(0) RequiresCapability('edit_p
     try {
         $new_date = $c->project->parse_date($new_date);
     }
-    catch {
+    catch ($error) {
         $c->res->status(400);
         $c->stash->{json_data} = {
             error => {
