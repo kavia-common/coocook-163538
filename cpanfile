@@ -2,7 +2,7 @@ on 'configure' => sub {
     requires "ExtUtils::MakeMaker::CPANfile";
 };
 
-requires "perl" => "v5.32";
+requires "perl" => "v5.34";
 recommends "perl" => "v5.40";
 
 requires "App::DH";

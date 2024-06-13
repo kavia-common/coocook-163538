@@ -32,7 +32,7 @@ Using this module is equivalent to:
     use strict;
     use warnings;
     use utf8;
-    use feature qw( :5.32 signatures );
+    use feature qw( :5.34 signatures );
     no  feature qw( indirect );
     no warnings qw( experimental::signatures );
 
@@ -91,7 +91,7 @@ sub import ( $class, @packages ) {
     # this must be done after import of @packages like Moose
     warnings->unimport(qw( experimental::signatures ));
 
-    feature->import(qw( :5.32 signatures ));
+    feature->import(qw( :5.34 signatures ));
     feature->unimport(qw( indirect ));
     utf8->import;
 }
