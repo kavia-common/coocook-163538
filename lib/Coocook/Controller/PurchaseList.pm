@@ -120,8 +120,8 @@ sub assign_articles_to_shop_section : POST Chained('base') Args(0)
     my $sections = $c->project->search_related('shop_sections');
     my $section;
 
-    if ( defined( my $new_section = $c->request->params->get('new_shop_section') ) ) {
-        $section = $sections->find_or_create( { name => $new_section } );
+    if ( length( my $name = $c->request->params->get('new_shop_section') // '' ) ) {
+        $section = $sections->find_or_create( { name => $name } );
     }
     elsif ( my $id = $c->request->params->get('shop_section') ) {
         if ( $id ne 'null' ) {

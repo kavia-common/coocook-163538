@@ -3,7 +3,7 @@ use Test2::V0;
 use lib 't/lib';
 use Test::Coocook;
 
-plan(26);
+plan(27);
 
 my $t = Test::Coocook->new();
 
@@ -114,3 +114,53 @@ $t->post_ok(
     }
 );
 $t->content_lacks( '<body', "HTML snippet, not whole page" );
+
+subtest "assign articles to shop section" => sub {
+    $t->post( '/project/1/Test-Project/purchase_list/1/assign_articles_to_shop_section', {} );
+    $t->status_is(400);
+    $t->content_contains("No shop section given");
+
+    ok $t->post(
+        '/project/1/Test-Project/purchase_list/1/assign_articles_to_shop_section',
+        { shop_section => 9 }
+      ),
+      "assigning to invalid shop section ID";
+    $t->status_is(400);
+    $t->content_contains("Invalid shop section given");
+
+    is $project->articles->find(4)->shop_section_id => 2;
+    is $project->articles->find(5)->shop_section_id => undef;
+    ok $t->post(
+        '/project/1/Test-Project/purchase_list/1/assign_articles_to_shop_section',
+        [ shop_section => my $new_shop_section = 2, article => 4, article => 5 ]
+      ),
+      "assigning shop section to multiple articles";
+    $t->status_is(200);
+    $t->content_lacks( '<body', "HTML snippet, not whole page" );
+    is $project->articles->find($_)->shop_section_id => $new_shop_section for 4, 5;
+
+    $new_shop_section = "foo";
+    ok !$project->shop_sections->results_exist( { name => $new_shop_section } );
+    ok $t->post(
+        '/project/1/Test-Project/purchase_list/1/assign_articles_to_shop_section',
+        [ new_shop_section => $new_shop_section, article => 4, article => 5 ]
+      ),
+      "creating new shop section by assigning articles";
+    is $project->articles->find(4)->shop_section->name => $new_shop_section;
+
+    ok $t->post(
+        '/project/1/Test-Project/purchase_list/1/assign_articles_to_shop_section',
+        [ shop_section => 'null', article => 4, article => 5 ]
+      ),
+      "removing shop section assignment from articles";
+    $t->status_is(200);
+    $t->content_lacks( '<body', "HTML snippet, not whole page" );
+    is $project->articles->find($_)->shop_section_id => undef for 4, 5;
+
+    ok $t->post(
+        '/project/1/Test-Project/purchase_list/1/assign_articles_to_shop_section',
+        { shop_section => 1, new_shop_section => 'bar', article => 4 }
+      ),
+      "sending both shop section ID and name";
+    $t->status_like(qr/ ^[234] /x);    # result undefined but not 5xx
+};
