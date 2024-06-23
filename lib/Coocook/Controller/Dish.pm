@@ -52,35 +52,20 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
         dish_id      => $dish->id,
     };
 
-    $c->stash(    # TODO can be optimized: 'project' is duplicate, $dish->as_hashref
-        dish => {
-            project => {
-                id       => $c->project->id,
-                name     => $c->project->name,
-                url_name => $c->project->url_name,
-            },
-            id          => $dish->id,
-            name        => $dish->name,
-            comment     => $dish->comment,
-            servings    => $dish->servings,
-            preparation => $dish->preparation,
-            description => $dish->description,
+    $c->stash(
+        dish => $dish->as_hashref(
             tags_joined => $dish->tags_rs->joined,
             meal        => $dish->meal,
-
-            recipe => $dish->recipe
+            recipe      => $dish->recipe
             ? {
                 name => $dish->recipe->name,
                 url  => $c->project_uri( '/recipe/edit', $dish->recipe->id ),
               }
             : undef,
 
-            # undef or hashref with only 'id' property for comparisons
-            prepare_at_meal => map( { $_ ? { id => $_ } : undef } $dish->prepare_at_meal_id ),
-
             recalculate_url => $c->project_uri( $self->action_for('recalculate'), $dish->id ),
             update_url      => $c->project_uri( $self->action_for('update'),      $dish->id ),
-        },
+        ),
         ingredients        => $ingredients->as_arrayref,
         articles           => $ingredients->all_articles,
         units              => $ingredients->all_units,
