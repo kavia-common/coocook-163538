@@ -144,6 +144,8 @@ sub fetch_project_data : Private {
 
     }
 
+    $c->json_stash( available_tags => [ $c->project->tags->hri->sorted->all ] );
+
     $c->stash(
         default_shelf_life_days   => 7,
         default_preorder_servings => 10,
