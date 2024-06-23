@@ -77,7 +77,7 @@ sub units_in_use ($self) {
 sub tags_joined ($self) {
 
     # TODO implement with get_column if not prefetched
-    return join " ", map { $_->name } $self->tags;
+    return join ", ", map { $_->name } $self->tags;
 }
 
 1;

@@ -48,13 +48,26 @@ sub index : GET HEAD Chained('/project/base') PathPart('articles') Args(0)
         }
     }
 
-    my %units = map { $_->{id} => $_ } $c->project->units->hri->all;
+    {
+        my %tags = map { $_->{id} => $_ } $c->project->tags->hri->all;
 
-    my $articles_units = $c->project->articles->search_related('articles_units')->hri;
+        my $articles_tags = $c->project->articles->search_related('articles_tags')->hri;
 
-    while ( my $article_unit = $articles_units->next ) {
-        my ( $article => $unit ) = @$article_unit{ 'article_id', 'unit_id' };
-        push $articles{$article}{units}->@*, $units{$unit};
+        while ( my $article_tag = $articles_tags->next ) {
+            my ( $article_id => $tag_id ) = @$article_tag{ 'article_id', 'tag_id' };
+            push $articles{$article_id}{tags}->@*, $tags{$tag_id} || die;
+        }
+    }
+
+    {
+        my %units = map { $_->{id} => $_ } $c->project->units->hri->all;
+
+        my $articles_units = $c->project->articles->search_related('articles_units')->hri;
+
+        while ( my $article_unit = $articles_units->next ) {
+            my ( $article_id => $unit_id ) = @$article_unit{ 'article_id', 'unit_id' };
+            push $articles{$article_id}{units}->@*, $units{$unit_id} || die;
+        }
     }
 
     $c->stash(

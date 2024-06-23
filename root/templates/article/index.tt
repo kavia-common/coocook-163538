@@ -34,7 +34,11 @@
         ', ' UNLESS loop.last;
     END %]
             </td>
-            <td>[% article.tags_joined %]</td>
+            <td>
+                [% FOR tag IN article.tags;
+                    display_tag(tag);
+                END %]
+            </td>
             <td>
             [% IF article.delete_url %]
                 <form method="post" action="[% article.delete_url %]" class="action-btn">
