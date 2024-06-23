@@ -87,21 +87,22 @@ sub edit : GET HEAD Chained('tag') PathPart('') Args(0) RequiresCapability('view
 
     $c->stash( groups => [ $c->project->tag_groups->sorted->all ] );
 
-    my %relationships = (
-        articles => '/article/edit',
-        dishes   => '/dish/edit',
-        recipes  => '/recipe/edit',
+    my @relationships = (
+        [ articles => articles_tags => article => '/article/edit' ],
+        [ dishes   => dishes_tags   => dish    => '/dish/edit' ],
+        [ recipes  => recipes_tags  => recipe  => '/recipe/edit' ],
     );
 
-    while ( my ( $rel => $path ) = each %relationships ) {
-        my @hashrefs = $tag->$rel()->hri->all;    # TODO how to avoid calling the method by name?
-                                                  #      the many-to-many rel is not a real relationship
+    for (@relationships) {
+        my ( $entity, $rel1 => $rel2, $path ) = @$_;
+
+        my @hashrefs = $tag->search_related($rel1)->search_related($rel2)->hri->all;
 
         for my $hashref (@hashrefs) {
-            $hashref->{url} = $c->project_uri( $path, $hashref->{id} ),;
+            $hashref->{url} = $c->project_uri( $path, $hashref->{id} );
         }
 
-        $c->stash( $rel => \@hashrefs );
+        $c->stash( $entity => \@hashrefs );
     }
 
     $c->stash(
