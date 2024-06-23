@@ -213,5 +213,3 @@ js_push_template_path() %]
         </div>
     </div>
 </form>
-
-<script id="existing-names" type="application/json">{"tags":[% existing_tag_names_json | html %],"tagGroups":[% existing_tag_group_names_json | html %]}</script>

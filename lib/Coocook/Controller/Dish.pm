@@ -2,8 +2,6 @@ package Coocook::Controller::Dish;
 
 use Coocook::Base qw(Moose);
 
-use JSON::MaybeXS qw/to_json/;
-
 BEGIN { extends 'Coocook::Controller' }
 
 =head1 NAME
@@ -48,14 +46,13 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
       $meals->search( { date => { '<=' => $meals->format_date( $dish->meal->date ) } },
         { order_by => 'date' } );
 
-    $c->stash(
-        dish_json => to_json(
-            {
-                project_id   => $c->project->id,
-                project_name => $c->project->url_name,
-                dish_id      => $dish->id,
-            }
-        ),
+    $c->stash->{json}{'ingredients-editor-data'} = {
+        project_id   => $c->project->id,
+        project_name => $c->project->url_name,
+        dish_id      => $dish->id,
+    };
+
+    $c->stash(    # TODO can be optimized: 'project' is duplicate, $dish->as_hashref
         dish => {
             project => {
                 id       => $c->project->id,

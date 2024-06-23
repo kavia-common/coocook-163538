@@ -47,8 +47,6 @@ IF no_import; %]
 </form>
 [% END %]
 
-<script  id="properties-data" type="application/json">[% no_import ? '[]' : properties_json | html %]</script>
-
 [% WRAPPER includes/infobox.tt %]
     Complete your project faster or get more detailed information
     by importing data from existing projects.

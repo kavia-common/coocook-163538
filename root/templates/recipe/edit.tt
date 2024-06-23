@@ -83,8 +83,6 @@ IF import_url %]<form id="import"method="get" action="[% import_url %]"></form>[
 </div>
 </form>
 
-<script id="ingredients-editor-data" type="application/json">[% recipe_json | html %]</script>
-
 <div class="ingredients-editor" data-ingredients-editor-json-id="ingredients-editor-data"
 class="col-sm-12 py-3">
 </div>

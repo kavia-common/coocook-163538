@@ -251,6 +251,10 @@
         [% INCLUDE 'wrapper_footer.tt' %]
     </div>
 
+    [% FOR id IN json.keys %]
+    <script id="[% id %]" type="application/json">[% json.item(id) | html %]</script>
+    [% END %]
+
     [% FOR path IN js %]
     <script src="[% path.match('^https?://') ? path : uri_for_static(path) %]"></script>
     [% END %]

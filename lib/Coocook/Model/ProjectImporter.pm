@@ -5,7 +5,6 @@ package Coocook::Model::ProjectImporter;
 use Coocook::Base qw( Moose MooseX::NonMoose );
 
 use Carp;
-use JSON::MaybeXS;    # also a dependency of Catalyst
 use Storable qw(dclone);
 
 extends 'Catalyst::Model';
@@ -129,12 +128,6 @@ for my $property (@public_properties) {
 
 sub properties {
     return dclone \@public_properties;
-}
-
-my $json;
-
-sub properties_json {
-    return $json ||= encode_json( \@public_properties );
 }
 
 =head2 importable_properties($inventory, \@properties?)

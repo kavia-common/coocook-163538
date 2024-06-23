@@ -2,8 +2,6 @@ package Coocook::Controller::Recipe::Import;
 
 use Coocook::Base qw(Moose);
 
-use JSON::MaybeXS ();
-
 BEGIN { extends 'Coocook::Controller' }
 
 sub base : Chained('/project/base') PathPart('recipes/import') CaptureArgs(1) {
@@ -68,13 +66,14 @@ sub preview : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('
         }
     }
 
+    $c->stash->{json}{'existing-recipe-names'} = \@existing_recipe_names;
+
     $c->stash(
-        new_recipe_name            => $new_recipe_name,
-        existing_recipe_names_json => JSON::MaybeXS->new->encode( \@existing_recipe_names ),
-        ingredients                => $importer->ingredients,
-        units                      => $importer->target_units,
-        articles                   => $importer->target_articles,
-        source_project_url         =>
+        new_recipe_name    => $new_recipe_name,
+        ingredients        => $importer->ingredients,
+        units              => $importer->target_units,
+        articles           => $importer->target_articles,
+        source_project_url =>
           $c->uri_for_action( '/project/show', [ $recipe->project->id, $recipe->project->url_name ] ),
         import_url => $c->project_uri( $self->action_for('post'), $recipe->id ),
         recipe_url => $c->uri_for_action( '/browse/recipe/show', [ $recipe->id, $recipe->url_name ] ),

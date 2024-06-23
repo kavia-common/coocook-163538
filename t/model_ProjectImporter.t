@@ -7,7 +7,7 @@ use Scalar::Util qw(refaddr);
 use lib 't/lib';
 use TestDB;
 
-plan(15);
+plan(14);
 
 my $db = TestDB->new;
 
@@ -74,9 +74,6 @@ subtest properties => sub {
     ok my $properties2 = $importer->properties;
     _no_shared_references $properties, $properties2;
 };
-
-is substr( $importer->properties_json, 0, 3 ) => '[{"',
-  "->properties_json looks like a JSON string";
 
 my $source = $db->resultset('Project')->find(1);
 my $target = $db->resultset('Project')->create(

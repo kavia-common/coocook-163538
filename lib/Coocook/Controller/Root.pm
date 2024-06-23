@@ -3,6 +3,7 @@ package Coocook::Controller::Root;
 use Coocook::Base qw(Moose);
 
 use HTML::Meta::Robots;
+use JSON::MaybeXS ();
 use URI;
 
 # BEGIN-block necessary to make method attributes work
@@ -26,7 +27,8 @@ sub begin : Private {
     # TODO distinguish GET and POST requests
     # is some of this information useful for POST controller code, too?
 
-    $c->stash->{messages} = $c->session->{messages} ||= $c->model('Messages')->new;
+    $c->stash->{json}     ||= {};
+    $c->stash->{messages}   = $c->session->{messages} ||= $c->model('Messages')->new;
 
     # set these stash vars before any possible redirect_detach() calls
     $c->stash( robots => my $robots = HTML::Meta::Robots->new() );
@@ -369,6 +371,11 @@ sub end : ActionClass('RenderView') {
             $c->stash->{robots}->archive(0);
             $c->stash->{robots}->index(0);
         }
+    }
+
+    # encode data for Javascript code as JSON
+    for ( values $c->stash->{json}->%* ) {
+        $_ = JSON::MaybeXS::to_json($_);
     }
 
     # TODO this method is pointless in general for Ajax requests->improve controller flow for Ajax
