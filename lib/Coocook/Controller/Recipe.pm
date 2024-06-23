@@ -42,6 +42,18 @@ sub recipes : Chained('/project/base') PathPart('recipes') RequiresCapability('v
 sub index : GET HEAD Chained('recipes') PathPart('') RequiresCapability('view_project') Args(0) {
     my ( $self, $c ) = @_;
 
+    {
+        my $recipes      = $c->stash->{recipes};
+        my %recipes      = map { $_->{id} => $_ } @$recipes;
+        my %tags         = map { $_->{id} => $_ } $c->project->tags->hri->all;
+        my $recipes_tags = $c->project->recipes->search_related('recipes_tags')->hri;
+
+        while ( my $recipe_tag = $recipes_tags->next ) {
+            my ( $recipe_id, $tag_id ) = @$recipe_tag{ 'recipe_id', 'tag_id' };
+            push $recipes{$recipe_id}{tags}->@*, $tags{$tag_id};
+        }
+    }
+
     $c->stash(
         create_url        => $c->project_uri( $self->action_for('create') ),
         import_recipe_url => $c->project_uri('recipe/importable_recipes'),

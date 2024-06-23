@@ -17,6 +17,7 @@ new = BLOCK %]
     <thead>
         <tr class="sticky-top">
             <th scope="col">Recipe</th>
+            <th scope="col">Tags</th>
             <th scope="col" class="btn-icon-2"></th>
         </tr>
     </thead>
@@ -24,6 +25,11 @@ new = BLOCK %]
     [% FOR recipe IN recipes %]
         <tr class="parent">
             <td><a href="[% recipe.edit_url %]">[% recipe.name | html %]</a></td>
+            <td>
+                [% FOR tag IN recipe.tags;
+                    display_tag(tag);
+                END %]
+            </td>
             <td>
                 <div class="d-flex gap-2 action-btn">
                     <button onclick="setDuplicateFormValues('[% recipe.duplicate_url %]', '[% recipe.name %]');" class="btn btn-outline-dark btn-sm btn-quad" data-bs-toggle="modal" data-bs-target="#duplicate-recipe-modal" data-bs-toggle="tooltip" data-bs-placement="top" title='Duplicate [% recipe.name %]'>
