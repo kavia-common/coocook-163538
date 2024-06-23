@@ -47,7 +47,7 @@ js_push_template_path() %]
                     <li class="list-group-item">No related dishes</li>
                     [% ELSE;
                     FOREACH dish IN dishes %]
-                    <li  class="list-group-item"><a href="[% article.url %]">[% dish.name | html %]</a></li>
+                    <li  class="list-group-item"><a href="[% dish.url %]">[% dish.name | html %]</a></li>
                     [% END; END %]
                 </ul>
             </div>
@@ -64,7 +64,7 @@ js_push_template_path() %]
                     <li class="list-group-item">No related recipes</li>
                     [% ELSE;
                     FOREACH recipe IN recipes %]
-                    <li  class="list-group-item"><a href="[% article.url %]">[% recipe.name | html %]</a></li>
+                    <li  class="list-group-item"><a href="[% recipe.url %]">[% recipe.name | html %]</a></li>
                     [% END; END %]
                 </ul>
             </div>

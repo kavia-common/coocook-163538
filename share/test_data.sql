@@ -148,6 +148,10 @@ INSERT INTO "articles_tags"
 (         1,      1),
 (         4,      2);
 
+INSERT INTO "dishes_tags"
+(dish_id, tag_id) VALUES
+(      1,      3);
+
 INSERT INTO "recipes_tags"
 (recipe_id, tag_id) VALUES
 (        1,      3);
