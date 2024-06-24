@@ -135,7 +135,7 @@ END %]
                     <td class="date text-center text-nowrap">[% ingredient.dish.meal.date.strftime('%a, %F') %]</td>
                     <td>
                         [% IF ingredient.remove_url && lists.size > 1 && not list.is_default %]
-                        <form method="post" action="[% ingredient.remove_url %]" class="action-btn">
+                        <form name="remove-ingredient" method="post" action="[% ingredient.remove_url %]" class="action-btn">
                             <button type="submit" class="btn btn-outline-danger btn-sm btn-quad" title="Remove from purchase list">
                                 <i class="material-icons">delete_forever</i>
                             </button>

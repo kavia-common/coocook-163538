@@ -55,7 +55,7 @@ subtest "change item total" => sub {
     $t->submit_form_ok(
         {
             form_name   => 'total',
-            form_number => 7,
+            form_number => 5,
             with_fields => { total => 39 },
         },
         "Set total value to 39"
@@ -72,7 +72,7 @@ subtest "change item total" => sub {
     $t->submit_form_ok(
         {
             form_name   => 'remove-offset',
-            form_number => 11,
+            form_number => 6,
             button      => 'offset',
         },
         "Remove offset"
@@ -88,8 +88,16 @@ subtest "change item total" => sub {
 
     $t->content_lacks('30');
 
+    $t->content_lacks( 'remove-ingredient', "Ingredients from default purchase list can't be removed" );
+
+    note "Making purchase list 2 the default list ...";
+    $t->schema->resultset('Project')->find(1)->update( { default_purchase_list_id => 2 } );
+
+    $t->reload_ok();
+
     $t->submit_form_ok(
         {
+            form_name   => 'remove-ingredient',
             form_number => 9,
         },
         "Remove ingredient"
