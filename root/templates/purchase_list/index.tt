@@ -136,11 +136,11 @@ BLOCK new_list %]
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="pl-name" class="form-label">Name</label>
-                        <input id="pl-name" class="form-control" type="text" name="name" value="[% last_input.name %]" required>
+                        <input id="pl-name" class="form-control" type="text" name="name" required>
                     </div>
                     <div class="mb-3">
                         <label for="pl-date" class="form-label">Date</label>
-                        <input id="pl-date" class="form-control" type="date" name="date" min="[% min_date.ymd %]" value="[% last_input.date || default_date.ymd %]" required>
+                        <input id="pl-date" class="form-control" type="date" name="date" min="[% min_date.ymd %]" value="[% default_date.ymd %]" required>
                     </div>
                 </div>
                 <div class="modal-footer">
