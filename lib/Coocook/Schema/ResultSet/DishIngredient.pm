@@ -1,6 +1,5 @@
 package Coocook::Schema::ResultSet::DishIngredient;
 
-#use Coocook::Base::Moose;
 use Coocook::Base qw(Moose);
 
 extends 'Coocook::Schema::ResultSet';
