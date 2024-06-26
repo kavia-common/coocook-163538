@@ -18,10 +18,14 @@ MACRO display_datetime(datetime, opts) BLOCK;
     datetime.strftime( opts.short ? datetime_format_short : datetime_format_long );
 END;
 
-MACRO display_project(project, opts) BLOCK; ~%]
+MACRO display_project(project, opts) BLOCK ~%]
     <i class="material-icons [% opts.icon_class || 'md-18' %]">[% project.is_public ? 'public' : 'lock' %]</i>&thinsp;
     [% project.name | html;
 END;
+
+MACRO display_tag(tag) BLOCK ~%]
+    <span class="btn btn-outline-secondary btn-sm pe-none" style="font-size: 80%">[% tag.name | html %]</span>
+[% END;
 
 MACRO display_unit(unit, opts) BLOCK;
     IF opts.html ~%]
