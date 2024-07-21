@@ -95,7 +95,7 @@ sub delete_ajax : POST Chained('base') Does(~Ajax) PathPart('delete/ajax') Args(
 
     $c->stash->{dish}->update_items_and_delete;
 
-    $c->stash->{json_data} = { success => 1 };
+    $c->stash->{ajax_response} = { success => 1 };
 }
 
 sub create : POST Chained('/project/base') PathPart('dishes/create') Does(~Ajax) Args(0)
@@ -104,20 +104,20 @@ sub create : POST Chained('/project/base') PathPart('dishes/create') Does(~Ajax)
 
     my $meal = $c->project->meals->find( $c->req->body_data->{meal_id} );
 
-    my $json_dish = $c->req->body_data->{dish};
+    my $dish_data = $c->req->body_data->{dish};
 
     my $dish = $meal->create_related(
         dishes => {
-            servings           => $json_dish->{servings},
-            name               => $json_dish->{name},
-            description        => $json_dish->{description} // "",
-            comment            => $json_dish->{comment}     // "",
-            preparation        => $json_dish->{preparation} // "",
-            prepare_at_meal_id => $json_dish->{prepare_at_meal} || undef,
+            servings           => $dish_data->{servings},
+            name               => $dish_data->{name},
+            description        => $dish_data->{description} // "",
+            comment            => $dish_data->{comment}     // "",
+            preparation        => $dish_data->{preparation} // "",
+            prepare_at_meal_id => $dish_data->{prepare_at_meal} || undef,
         }
     );
 
-    $c->stash->{json_data} = { dish => $dish->for_meals_dishes_editor };
+    $c->stash->{ajax_response} = { dish => $dish->for_meals_dishes_editor };
 }
 
 sub from_recipe : POST Chained('/project/base') PathPart('dishes/from_recipe') Args(0)
@@ -136,7 +136,7 @@ sub from_recipe : POST Chained('/project/base') PathPart('dishes/from_recipe') A
         )
     );
 
-    $c->stash->{json_data} = {
+    $c->stash->{ajax_response} = {
         $dish->for_meals_dishes_editor->%*,
         delete_url => $c->project_uri( '/dish/delete_ajax', $dish->id )->as_string,
         update_url => $c->project_uri( '/dish/update_ajax', $dish->id )->as_string,
@@ -223,7 +223,7 @@ sub update_ajax : POST Chained('base') PathPart('update/ajax') Does(~Ajax) Args(
         }
     );
 
-    $c->stash->{json_data} = $dish->for_meals_dishes_editor;
+    $c->stash->{ajax_response} = $dish->for_meals_dishes_editor;
 }
 
 sub reposition : POST Chained('/project/base') PathPart('dish_ingredient/reposition') Args(1)

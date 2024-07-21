@@ -76,7 +76,7 @@ sub base : Chained('/base') PathPart('project') CaptureArgs(2) {
     $c->redirect_canonical_case( 1 => $project->url_name );
 
     # the rest of this method is only useful for HTML output
-    ( $c->stash->{current_view} // '' ) eq 'JSON' and return;
+    ( $c->stash->{current_view} // '' ) eq 'Ajax' and return;
 
     $project->is_public
       or $c->stash->{robots}->index(0);
@@ -203,7 +203,7 @@ sub get_project_plan_ajax : GET HEAD Chained('submenu') PathPart('project_plan')
         }
     }
 
-    $c->stash->{json_data} = {
+    $c->stash->{ajax_response} = {
         project_plan         => $days,
         get_project_plan_url => $c->project_uri('/project/get_project_plan_ajax')->as_string,
         move_meal_dish_url   => $c->project_uri('/project/move_meal_or_dish_ajax')->as_string,
@@ -240,11 +240,11 @@ sub move_meal_or_dish_ajax : POST Chained('submenu') PathPart('move_meal_dish') 
     my $plan = $c->model('Plan');
 
     my $moved = $plan->resolve_meal_dish_path( $project, $source_path );
-    return $c->stash->{json_data} = { error => { message => 'Invalid source_path' } }
+    return $c->stash->{ajax_response} = { error => { message => 'Invalid source_path' } }
       unless ( defined $moved );
 
     my $target = $plan->resolve_meal_dish_path( $project, $target_path );
-    return $c->stash->{json_data} = { error => { message => 'Invalid target_path' } }
+    return $c->stash->{ajax_response} = { error => { message => 'Invalid target_path' } }
       unless ( defined $target );
 
     if (   $source_path->{item_type} eq 'dish'
@@ -260,7 +260,7 @@ sub move_meal_or_dish_ajax : POST Chained('submenu') PathPart('move_meal_dish') 
     elsif ($source_path->{item_type} eq 'meal'
         && $target_path->{item_type} eq 'dish' )
     {
-        $c->stash->{json_data} =
+        $c->stash->{ajax_response} =
           { error => { message => 'Cannot move meal on dish.' } };
         return;
     }
@@ -268,7 +268,7 @@ sub move_meal_or_dish_ajax : POST Chained('submenu') PathPart('move_meal_dish') 
         && $target_path->{item_type} eq 'meal' )
     {
         if ( $moved->name eq $target->name ) {
-            $c->stash->{json_data} = {
+            $c->stash->{ajax_response} = {
                 error => {
                     message => 'Multiple meals with the same name and date are not allowed.',
                     code    => 'UNQMEAL'
@@ -295,7 +295,7 @@ sub move_meal_or_dish_ajax : POST Chained('submenu') PathPart('move_meal_dish') 
         $moved->{update_url} =
           $c->project_uri( '/meal/update', $moved->{id} )->as_string;
     }
-    $c->stash->{json_data} = $moved;
+    $c->stash->{ajax_response} = $moved;
 }
 
 sub settings : GET HEAD Chained('submenu') PathPart('settings') Args(0)

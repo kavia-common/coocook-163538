@@ -28,7 +28,7 @@ sub create : POST Chained('/project/base') PathPart('meals/create') Args(0) Does
         }
     );
 
-    $c->stash->{json_data} = { meal => $meal->for_meals_dishes_editor };
+    $c->stash->{ajax_response} = { meal => $meal->for_meals_dishes_editor };
 }
 
 sub base : Chained('/project/base') PathPart('meals') CaptureArgs(1) {
@@ -45,16 +45,16 @@ sub update : POST Chained('base') Does(~Ajax) Args(0) RequiresCapability('edit_p
     }
     catch ($error) {
         $c->res->status(400);
-        $c->stash->{json_data} = {
+        $c->stash->{ajax_response} = {
             error => {
-                message => "Invalid JSON body."
+                message => "Invalid Ajax request data."
             }
         };
         return;
     };
     unless ($new_date) {
         $c->res->status(400);
-        $c->stash->{json_data} = {
+        $c->stash->{ajax_response} = {
             error => {
                 message => "Missing 'date' property."
             }
@@ -66,7 +66,7 @@ sub update : POST Chained('base') Does(~Ajax) Args(0) RequiresCapability('edit_p
     }
     catch ($error) {
         $c->res->status(400);
-        $c->stash->{json_data} = {
+        $c->stash->{ajax_response} = {
             error => {
                 message => "Cannot parse 'date' property: invalid date string."
             }
@@ -83,7 +83,7 @@ sub update : POST Chained('base') Does(~Ajax) Args(0) RequiresCapability('edit_p
         );
         if ($found_duplicate_meal) {
             $c->res->status(400);
-            $c->stash->{json_data} = {
+            $c->stash->{ajax_response} = {
                 error => {
                     message => "Cannot create meal with same name on same date."
                 }
@@ -99,7 +99,7 @@ sub update : POST Chained('base') Does(~Ajax) Args(0) RequiresCapability('edit_p
             comment => $c->req->body_data->{comment},
         }
     );
-    $c->stash->{json_data} = $c->stash->{meal}->for_meals_dishes_editor;
+    $c->stash->{ajax_response} = $c->stash->{meal}->for_meals_dishes_editor;
 
 }
 
@@ -112,7 +112,7 @@ sub delete : POST Chained('base') Does(~Ajax) Args(0) RequiresCapability('edit_p
     else {
         my $name = $c->stash->{meal}->name;
         $c->messages->error("$name cannot be deleted, because it contains dishes!");
-        $c->stash->{json_data} = {
+        $c->stash->{ajax_response} = {
             error => {
                 message => "$name cannot be deleted, because it contains dishes!"
             }
@@ -120,7 +120,7 @@ sub delete : POST Chained('base') Does(~Ajax) Args(0) RequiresCapability('edit_p
         return;
     }
 
-    $c->stash->{json_data} = { success => 1 };
+    $c->stash->{ajax_response} = { success => 1 };
 }
 
 sub delete_dishes : POST Chained('base') Does(~Ajax) Args(0) RequiresCapability('edit_project') {
@@ -128,7 +128,7 @@ sub delete_dishes : POST Chained('base') Does(~Ajax) Args(0) RequiresCapability(
 
     $c->stash->{meal}->dishes->update_items_and_delete;
 
-    $c->stash->{json_data} = { success => 1 };
+    $c->stash->{ajax_response} = { success => 1 };
 }
 
 sub redirect : Private {

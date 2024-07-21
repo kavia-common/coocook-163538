@@ -27,7 +27,7 @@ sub organizations_users : GET HEAD Chained('base') Args(0) Does('~Ajax')
         return;
     }
 
-    $c->stash( json_data => $users );
+    $c->stash( ajax_response => $users );
 }
 
 sub users : GET HEAD Chained('base') Args(0) Does('~Ajax')
@@ -43,7 +43,7 @@ sub users : GET HEAD Chained('base') Args(0) Does('~Ajax')
         return;
     }
 
-    $c->stash( json_data => $users );
+    $c->stash( ajax_response => $users );
 }
 
 __PACKAGE__->meta->make_immutable;

@@ -279,7 +279,7 @@ sub check_value : Private {
 sub get_all_ajax : GET HEAD PathPart('ajax') Does(~Ajax) Chained('recipes')
   RequiresCapability('view_project') Args(0) {
     my ( $self, $c ) = @_;
-    $c->stash->{json_data} = {
+    $c->stash->{ajax_response} = {
         recipes             => $c->stash->{recipes},
         get_all_recipes_url => $c->project_uri('/recipe/get_all_ajax')->as_string,
     };

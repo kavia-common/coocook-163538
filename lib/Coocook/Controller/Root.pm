@@ -379,7 +379,7 @@ sub end : ActionClass('RenderView') {
     }
 
     # TODO this method is pointless in general for Ajax requests->improve controller flow for Ajax
-    if ( ( $c->stash->{current_view} // '' ) ne 'JSON' ) {
+    if ( ( $c->stash->{current_view} // '' ) ne 'Ajax' ) {
         if ( my $csp = $c->config->{content_security_policy} ) {
             $c->response->header( 'Content-Security-Policy' => $csp );
         }
