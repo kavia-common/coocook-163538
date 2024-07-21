@@ -66,7 +66,7 @@ sub preview : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('
         }
     }
 
-    $c->stash->{json}{'existing-recipe-names'} = \@existing_recipe_names;
+    $c->json_stash( existing_recipe_names => \@existing_recipe_names );
 
     $c->stash(
         new_recipe_name    => $new_recipe_name,

@@ -82,7 +82,7 @@ js.push('/lib/coocook-web-components/dist/ingredients-editor/ingredients-editor.
 </div>
 </form>
 
-<div class="ingredients-editor" data-ingredients-editor-json-id="ingredients-editor-data"
+<div class="ingredients-editor" data-ingredients-editor-json-id="ingredients_editor_data"
 class="col-sm-12 py-3">
 </div>
 

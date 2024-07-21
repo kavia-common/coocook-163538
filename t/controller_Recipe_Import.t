@@ -33,7 +33,7 @@ $t->login_ok( 'john_doe', 'P@ssw0rd' );
 $t->text_contains("Import recipe pizza from project Test")
   or note $t->text;
 
-$t->content_contains( q{id="existing-recipe-names" type="application/json">[&quot;},
+$t->content_contains( q{id="existing_recipe_names" type="application/json">[&quot;},
     "Existing of correct JSON syntax" );
 
 # JSON data in <script> element

@@ -251,8 +251,8 @@
         [% INCLUDE 'wrapper_footer.tt' %]
     </div>
 
-    [% FOR id IN json.keys %]
-    <script id="[% id %]" type="application/json">[% json.item(id) | html %]</script>
+    [% FOR id IN json_stash.keys %]
+    <script id="[% id %]" type="application/json">[% json_stash.item(id) | html %]</script>
     [% END %]
 
     [% FOR path IN js %]

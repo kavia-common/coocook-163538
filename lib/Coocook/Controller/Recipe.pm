@@ -85,11 +85,13 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
         }
     }
 
-    $c->stash->{json}{'ingredients-editor-data'} = {
-        project_id   => $c->project->id,
-        project_name => $c->project->url_name,
-        recipe_id    => $recipe->id,
-    };
+    $c->json_stash(
+        ingredients_editor_data => {
+            project_id   => $c->project->id,
+            project_name => $c->project->url_name,
+            recipe_id    => $recipe->id,
+        },
+    );
 
     $c->stash(
         recipe             => $recipe,

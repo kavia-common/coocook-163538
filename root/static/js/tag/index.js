@@ -1,4 +1,4 @@
-const existingNames = getJsonData("existing-names");
+const existingNames = getJsonData("existing_names");
 
 // Check for existing names
 function setupCheckExistingName(inputField, tag = true) {

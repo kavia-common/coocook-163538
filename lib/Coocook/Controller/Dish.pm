@@ -46,11 +46,13 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
       $meals->search( { date => { '<=' => $meals->format_date( $dish->meal->date ) } },
         { order_by => 'date' } );
 
-    $c->stash->{json}{'ingredients-editor-data'} = {
-        project_id   => $c->project->id,
-        project_name => $c->project->url_name,
-        dish_id      => $dish->id,
-    };
+    $c->json_stash(
+        ingredients_editor_data => {
+            project_id   => $c->project->id,
+            project_name => $c->project->url_name,
+            dish_id      => $dish->id,
+        }
+    );
 
     $c->stash(
         dish => $dish->as_hashref(

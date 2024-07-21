@@ -27,8 +27,8 @@ sub begin : Private {
     # TODO distinguish GET and POST requests
     # is some of this information useful for POST controller code, too?
 
-    $c->stash->{json}     ||= {};
-    $c->stash->{messages}   = $c->session->{messages} ||= $c->model('Messages')->new;
+    $c->stash->{json_stash} ||= {};
+    $c->stash->{messages}     = $c->session->{messages} ||= $c->model('Messages')->new;
 
     # set these stash vars before any possible redirect_detach() calls
     $c->stash( robots => my $robots = HTML::Meta::Robots->new() );
@@ -374,7 +374,7 @@ sub end : ActionClass('RenderView') {
     }
 
     # encode data for Javascript code as JSON
-    for ( values $c->stash->{json}->%* ) {
+    for ( values $c->json_stash->%* ) {
         $_ = JSON::MaybeXS::to_json($_);
     }
 

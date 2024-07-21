@@ -167,18 +167,20 @@ sub edit : GET HEAD Chained('submenu') PathPart('edit') Args(0) RequiresCapabili
         }
     }
 
-    $c->stash->{json}{'meals-dishes-editor-data'} = {
-        projectPlan       => $days,
-        projectId         => $c->project->id,
-        projectName       => $c->project->name,
-        recipes           => [ $c->project->recipes->sorted->hri->all ],
-        getProjectPlanURL => $c->project_uri('/project/get_project_plan_ajax')->as_string,
-        getAllRecipesURL  => $c->project_uri('/recipe/get_all_ajax')->as_string,
-        moveMealDishURL   => $c->project_uri('/project/move_meal_or_dish_ajax')->as_string,
-        createMealURL     => $c->project_uri('/meal/create')->as_string,
-        createDishURL     => $c->project_uri('/dish/create')->as_string,
-        dishFromRecipeURL => $c->project_uri('/dish/from_recipe')->as_string,
-    };
+    $c->json_stash(
+        meals_dishes_editor_data => {
+            projectPlan       => $days,
+            projectId         => $c->project->id,
+            projectName       => $c->project->name,
+            recipes           => [ $c->project->recipes->sorted->hri->all ],
+            getProjectPlanURL => $c->project_uri('/project/get_project_plan_ajax')->as_string,
+            getAllRecipesURL  => $c->project_uri('/recipe/get_all_ajax')->as_string,
+            moveMealDishURL   => $c->project_uri('/project/move_meal_or_dish_ajax')->as_string,
+            createMealURL     => $c->project_uri('/meal/create')->as_string,
+            createDishURL     => $c->project_uri('/dish/create')->as_string,
+            dishFromRecipeURL => $c->project_uri('/dish/from_recipe')->as_string,
+        },
+    );
 }
 
 sub get_project_plan_ajax : GET HEAD Chained('submenu') PathPart('project_plan') Args(0)
@@ -329,7 +331,7 @@ sub get_import : GET HEAD Chained('base') PathPart('import') Args(0)
         $properties{ $property->{key} }->{disabled} = 1;
     }
 
-    $c->stash->{json}{'properties-data'} = $properties;
+    $c->json_stash( properties_data => $properties );
 
     $c->stash(
         projects   => $c->forward('exportable_projects'),
