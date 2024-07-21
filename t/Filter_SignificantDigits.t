@@ -1,20 +1,20 @@
 use Coocook::Base;
 use Test2::V0 -no_warnings => 1;
 
-use Coocook::Filter::SignificantDigits;
+use Template;
 use Test::Builder;
 use Test2::API qw(context);
 
 plan(15);
 
-ok my $filter = Coocook::Filter::SignificantDigits->new();
+my $tt = Template->new( PLUGIN_BASE => 'Coocook::Filter' );
 
-isa_ok $filter, 'Template::Plugin::Filter';
+like dies { t( q('foo') => '' ) }, qr/isn't numeric/, "exception for non-numeric string";
+t( q('')                 => '', "empty string" );
+t( q(undefined_variable) => '', "undef becomes empty string" );
 
-like dies { $filter->filter("foo") }, qr/isn't numeric/, "exception for non-numeric string";
-
-t( undef() => undef, "undef" );
-t( ""      => "",    "empty string" );
+is Coocook::Filter::SignificantDigits->filter(undef) => undef, "... filter(undef) returns undef";
+is Coocook::Filter::SignificantDigits->filter(12345) => "12300";   # just to prove test syntax above
 
 # 3 significant digits
 t( 123        => "123" );
@@ -25,16 +25,19 @@ t( 1 / 3      => "0.333" );
 t( 0.999999   => "1" );
 t( 123456789  => "123000000" );
 t( 0.0101     => "0.0101" );
-t( 0.000001   => "0.000001" );
+t( '0.000001' => "0.000001" );
 
 todo 'sprintf("%f") cuts digits off this string--how to fix that?' => sub {
-    t( 0.0000012345 => "0.00000123" );
+    t( '0.0000012345' => "0.00000123" );
 };
 
 sub t ( $input, $expected, $name = "$input = '$expected'" ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    my $output = $filter->filter($input);
+    $tt->process( \<<~TT, {}, \my $output ) or die $tt->error;
+    [% USE SignificantDigits;
+    $input | significant_digits ~%]
+    TT
 
     is $output => $expected, $name;
 }

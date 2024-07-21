@@ -26,4 +26,4 @@
 </div>
 
 [% USE Markdown;
-terms.content_md | $Markdown %]
+terms.content_md | markdown %]

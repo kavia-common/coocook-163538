@@ -46,7 +46,7 @@ MACRO display_value(value, opts) BLOCK;
         value = 0 - value;
     END;
     USE SignificantDigits;
-    value | $SignificantDigits;
+    value | significant_digits;
 END;
 
 MACRO display_value_unit(value, unit, opts) BLOCK;
@@ -75,7 +75,7 @@ MACRO link_project(project, opts) BLOCK;
 MACRO numerus(number, singular, plural, opts) BLOCK; # apply correct grammatical number
     IF opts.significant_digits;
         USE SignificantDigits;
-        number | $SignificantDigits;
+        number | significant_digits;
     ELSE;
         number;
     END;

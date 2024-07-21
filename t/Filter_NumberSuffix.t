@@ -1,20 +1,20 @@
 use Coocook::Base;
 use Test2::V0 -no_warnings => 1;
 
-use Coocook::Filter::NumberSuffix;
+use Template;
 use Test::Builder;
 use Test2::API qw(context);
 
 plan(16);
 
-ok my $filter = Coocook::Filter::NumberSuffix->new();
+my $tt = Template->new( PLUGIN_BASE => 'Coocook::Filter' );
 
-isa_ok $filter, 'Template::Plugin::Filter';
+like dies { t( q('foo') => '' ) }, qr/isn't numeric/, "exception for non-numeric string";
+t( q('')                 => '', "empty string" );
+t( q(undefined_variable) => '', "undef becomes empty string" );
 
-like dies { $filter->filter("foo") }, qr/isn't numeric/, "exception for non-numeric string";
-
-t( undef() => undef, "undef" );
-t( ""      => "",    "empty string" );
+is Coocook::Filter::NumberSuffix->filter(undef) => undef, "... filter(undef) returns undef";
+is Coocook::Filter::NumberSuffix->filter(12345) => "12.3K";    # just to prove test syntax above
 
 t( 1          => "1" );
 t( 1.23456789 => "1.23456789" );
@@ -31,7 +31,10 @@ t( 1234567890 => "1234M" );
 sub t ( $input, $expected, $name = "$input = '$expected'" ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    my $output = $filter->filter($input);
+    $tt->process( \<<~TT, {}, \my $output ) or die $tt->error;
+    [% USE NumberSuffix;
+    $input | number_suffix ~%]
+    TT
 
     is $output => $expected, $name;
 }

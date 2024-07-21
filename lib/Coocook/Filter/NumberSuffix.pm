@@ -9,6 +9,10 @@ use parent 'Template::Plugin::Filter';
 use Coocook::Filter::SignificantDigits;
 use Scalar::Util 'looks_like_number';
 
+sub init ( $self, $config ) {
+    $self->install_filter('number_suffix');
+}
+
 sub filter ( $self, $number ) {
     defined $number or return;
     length $number  or return "";

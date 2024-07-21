@@ -16,7 +16,7 @@ FOR faq IN faqs %]
     <div class="col">
         <div class="d-flex flex-wrap align-items-center">
             <h3>
-                <span>[% faq.question_md | $Markdown %]</span>
+                <span>[% faq.question_md | markdown %]</span>
                 <a class="anchor" href="#[% faq.anchor | html %]" title="Permalink to this FAQ">¶</a>
             </h3>
             [% IF faq.edit_url %]
@@ -25,7 +25,7 @@ FOR faq IN faqs %]
                 </form>
             [% END %]
         </div>
-        <div>[% faq.answer_md | $Markdown %]</div>
+        <div>[% faq.answer_md | markdown %]</div>
     </div>
 </div>
 [% END %]

@@ -8,6 +8,14 @@ use parent 'Template::Plugin::Filter';
 
 use Scalar::Util 'looks_like_number';
 
+# This plugin could be extended to support a custom number of digits for 3
+# but this would require the plugin to be dynamic what makes TT load it
+# over and over again for every filter call. Feature not required yet.
+
+sub init ( $self, $config ) {
+    $self->install_filter('significant_digits');
+}
+
 sub filter ( $self, $number ) {
     defined $number or return;
     length $number  or return "";

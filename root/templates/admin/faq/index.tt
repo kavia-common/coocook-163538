@@ -12,7 +12,7 @@ USE Markdown; %]
             <tbody>
             [% FOR faq IN faqs %]
                 <tr>
-                    <td>[% faq.question_md | $Markdown %]</td>
+                    <td>[% faq.question_md | markdown %]</td>
                     <td class="btn-icon-1">
                         <a class="btn btn-primary btn-sm btn-quad material-icons" href="[% faq.url %]">edit<a>
                     </td>

@@ -7,7 +7,7 @@ USE NumberSuffix %]
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
         <div class="p-2">
             <div class="col content-box d-flex h-100 m-0">
-                <div class="fs-1 fw-bolder border-end pe-3 me-3">[% statistics.dishes_served | $NumberSuffix %]</div>
+                <div class="fs-1 fw-bolder border-end pe-3 me-3">[% statistics.dishes_served | number_suffix %]</div>
                 <div class="d-flex flex-column">
                     <b class="mb-1">[% statistics.dishes_served == 1 ? "serving" : "servings" %] cooked until today</b>
                     <i>Sum of all servings cooked with [% name %] until today.</i>
@@ -16,7 +16,7 @@ USE NumberSuffix %]
         </div>
         <div class="p-2">
             <div class="col content-box d-flex h-100 m-0">
-                <div class="fs-1 fw-bolder border-end pe-3 me-3">[% statistics.dishes_planned | $NumberSuffix %]</div>
+                <div class="fs-1 fw-bolder border-end pe-3 me-3">[% statistics.dishes_planned | number_suffix %]</div>
                 <div class="d-flex flex-column">
                     <b class="mb-1">[% statistics.dishes_planned == 1 ? "serving" : "servings" %] planned to be served</b>
                     <i>Sum of all servings planned with [% name %] for the future.</i>
@@ -25,7 +25,7 @@ USE NumberSuffix %]
         </div>
         <div class="p-2">
             <div class="col content-box d-flex h-100 m-0">
-                <div class="fs-1 fw-bolder border-end pe-3 me-3">[% statistics.recipes | $NumberSuffix %]</div>
+                <div class="fs-1 fw-bolder border-end pe-3 me-3">[% statistics.recipes | number_suffix %]</div>
                 <div class="d-flex flex-column">
                     <b class="mb-1">[% statistics.recipes == 1 ? "recipe" : "different recipes" %]</b>
                     <i>Approximate number of different recipes on [% name %].</i>
@@ -34,7 +34,7 @@ USE NumberSuffix %]
         </div>
         <div class="p-2">
             <div class="col content-box d-flex h-100 m-0">
-                <div class="fs-1 fw-bolder border-end pe-3 me-3">[% statistics.public_projects | $NumberSuffix %]</div>
+                <div class="fs-1 fw-bolder border-end pe-3 me-3">[% statistics.public_projects | number_suffix %]</div>
                 <div class="d-flex flex-column">
                     <b class="mb-1">public [% statistics.public_projects == 1 ? "project" : "projects" %]</b>
                     <i>Number of all public projects on [% name %].</i>
@@ -43,7 +43,7 @@ USE NumberSuffix %]
         </div>
         <div class="p-2">
             <div class="col content-box d-flex h-100 m-0">
-                <div class="fs-1 fw-bolder border-end pe-3 me-3">[% statistics.users | $NumberSuffix %]</div>
+                <div class="fs-1 fw-bolder border-end pe-3 me-3">[% statistics.users | number_suffix %]</div>
                 <div class="d-flex flex-column">
                     <b class="mb-1">[% statistics.users == 1 ? "user" : "users" %]</b>
                     <i>Number of all users registered on [% name %].</i>
@@ -52,7 +52,7 @@ USE NumberSuffix %]
         </div>
         <div class="p-2">
             <div class="col content-box d-flex h-100 m-0">
-                <div class="fs-1 fw-bolder border-end pe-3 me-3">[% statistics.organizations | $NumberSuffix %]</div>
+                <div class="fs-1 fw-bolder border-end pe-3 me-3">[% statistics.organizations | number_suffix %]</div>
                 <div class="d-flex flex-column">
                     <b class="mb-1">[% statistics.organizations == 1 ? "organization" : "organizations" %]</b>
                     <i>Number of all organizations registered on [% name %].</i>
