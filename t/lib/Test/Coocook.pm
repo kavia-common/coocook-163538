@@ -23,7 +23,8 @@ BEGIN {
 our $DEBUG //= $ENV{TEST_COOCOOK_DEBUG};
 
 # don't spill STDERR with info messages when not in verbose mode
-our $DISABLE_LOG_LEVEL_INFO //= !$ENV{TEST_VERBOSE};
+our $DISABLE_LOG_LEVELS_DEBUG_INFO //=
+  ( !$ENV{CATALYST_DEBUG} and !$ENV{COOCOOK_DEBUG} and !$ENV{TEST_VERBOSE} );
 
 use parent 'Test::WWW::Mechanize::Catalyst';
 
@@ -47,7 +48,8 @@ sub new ( $class, %args ) {
         %args
     );
 
-    if ($DISABLE_LOG_LEVEL_INFO) {
+    if ($DISABLE_LOG_LEVELS_DEBUG_INFO) {
+        $self->catalyst_app->log->disable('debug');
         $self->catalyst_app->log->disable('info');
     }
 
