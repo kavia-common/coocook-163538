@@ -166,7 +166,7 @@ BLOCK new_list %]
                     '.';
                 ELSE %]
                     which will then be moved to the default purchase list
-                    (<em>[% list.name | html %]</em> on [% display_date(list.date, {html=>1}) %]).
+                    (<em>[% default_list.name | html %]</em> on [% display_date(default_list.date, {html=>1}) %]).
                 [% END %]
                 </div>
                 <div class="modal-footer justify-content-between">
