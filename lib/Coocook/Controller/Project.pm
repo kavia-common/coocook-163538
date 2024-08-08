@@ -156,13 +156,20 @@ sub edit : GET HEAD Chained('submenu') PathPart('edit') Args(0) RequiresCapabili
     for my $day ( keys %$days ) {
         for my $meal_key ( keys $days->{$day}->%* ) {
             my $meal = $days->{$day}{$meal_key};
-            $meal->{delete_dishes_url} = $c->project_uri( '/meal/delete_dishes', $meal->{id} )->as_string;
-            $meal->{delete_url}        = $c->project_uri( '/meal/delete',        $meal->{id} )->as_string;
-            $meal->{update_url}        = $c->project_uri( '/meal/update',        $meal->{id} )->as_string;
+
+            $meal->{delete_url} =
+              $c->project_uri( '/ajax/meals_dishes_editor/delete_meal', $meal->{id} )->as_string;
+            $meal->{update_url} =
+              $c->project_uri( '/ajax/meals_dishes_editor/update_meal', $meal->{id} )->as_string;
+            $meal->{delete_dishes_url} =
+              $c->project_uri( '/ajax/meals_dishes_editor/delete_dishes_from_meal', $meal->{id} )->as_string;
+
             for my $dish_key ( keys $meal->{dishes}->%* ) {
                 my $dish = $meal->{dishes}{$dish_key};
-                $dish->{delete_url} = $c->project_uri( '/dish/delete_ajax', $dish->{id} )->as_string;
-                $dish->{update_url} = $c->project_uri( '/dish/update_ajax', $dish->{id} )->as_string;
+                $dish->{delete_url} =
+                  $c->project_uri( '/ajax/meals_dishes_editor/delete_dish', $dish->{id} )->as_string;
+                $dish->{update_url} =
+                  $c->project_uri( '/ajax/meals_dishes_editor/update_dish', $dish->{id} )->as_string;
             }
         }
     }
@@ -173,128 +180,15 @@ sub edit : GET HEAD Chained('submenu') PathPart('edit') Args(0) RequiresCapabili
             projectId         => $c->project->id,
             projectName       => $c->project->name,
             recipes           => [ $c->project->recipes->sorted->hri->all ],
-            getProjectPlanURL => $c->project_uri('/project/get_project_plan_ajax')->as_string,
-            getAllRecipesURL  => $c->project_uri('/recipe/get_all_ajax')->as_string,
-            moveMealDishURL   => $c->project_uri('/project/move_meal_or_dish_ajax')->as_string,
-            createMealURL     => $c->project_uri('/meal/create')->as_string,
-            createDishURL     => $c->project_uri('/dish/create')->as_string,
-            dishFromRecipeURL => $c->project_uri('/dish/from_recipe')->as_string,
+            getProjectPlanURL => $c->project_uri('/ajax/meals_dishes_editor/get_project_plan')->as_string,
+            getAllRecipesURL  => $c->project_uri('/ajax/meals_dishes_editor/get_recipes')->as_string,
+            moveMealDishURL   => $c->project_uri('/ajax/meals_dishes_editor/move_meal_or_dish')->as_string,
+            createMealURL     => $c->project_uri('/ajax/meals_dishes_editor/create_meal')->as_string,
+            createDishURL     => $c->project_uri('/ajax/meals_dishes_editor/create_dish')->as_string,
+            dishFromRecipeURL =>
+              $c->project_uri('/ajax/meals_dishes_editor/create_dish_from_recipe')->as_string,
         },
     );
-}
-
-sub get_project_plan_ajax : GET HEAD Chained('submenu') PathPart('project_plan') Args(0)
-  RequiresCapability('view_project') Does(~Ajax) {
-    my ( $self, $c ) = @_;
-
-    my $days = $c->model('Plan')->project_for_meals_dishes_editor( $c->project );
-
-    for my $day ( keys %$days ) {
-        for my $meal_key ( keys $days->{$day}->%* ) {
-            my $meal = $days->{$day}{$meal_key};
-            $meal->{delete_dishes_url} = $c->project_uri( '/meal/delete_dishes', $meal->{id} )->as_string;
-            $meal->{delete_url}        = $c->project_uri( '/meal/delete',        $meal->{id} )->as_string;
-            $meal->{update_url}        = $c->project_uri( '/meal/update',        $meal->{id} )->as_string;
-            for my $dish_key ( keys $meal->{dishes}->%* ) {
-                my $dish = $meal->{dishes}{$dish_key};
-                $dish->{delete_url} = $c->project_uri( '/dish/delete_ajax', $dish->{id} )->as_string;
-                $dish->{update_url} = $c->project_uri( '/dish/update_ajax', $dish->{id} )->as_string;
-            }
-        }
-    }
-
-    $c->stash->{ajax_response} = {
-        project_plan         => $days,
-        get_project_plan_url => $c->project_uri('/project/get_project_plan_ajax')->as_string,
-        move_meal_dish_url   => $c->project_uri('/project/move_meal_or_dish_ajax')->as_string,
-    };
-}
-
-=head2 move_meal_or_dish_ajax()
-
-Move a Meal before or after another Meal or move a Dish to another Meal or before or after
-another Dish.
-
-=head3 Errors
-
-=over 4
-
-=item UNQMEAL
-The name of a meal should be unique per day. For this reason, this method throws an error when it tries
-to move a meal with a name which already exists on the target date.
-
-=back
-
-=cut
-
-sub move_meal_or_dish_ajax : POST Chained('submenu') PathPart('move_meal_dish') Args(0) Does(~Ajax)
-  RequiresCapability('edit_project') {
-    my ( $self, $c ) = @_;
-
-    my $project = $c->project;
-
-    my $source_path = $c->req->body_data->{source_path};
-    my $target_path = $c->req->body_data->{target_path};
-    my $direction   = $c->req->body_data->{direction};
-
-    my $plan = $c->model('Plan');
-
-    my $moved = $plan->resolve_meal_dish_path( $project, $source_path )
-      or $c->detach( '/error/bad_request', [ { message => 'Invalid source_path' } ] );
-
-    my $target = $plan->resolve_meal_dish_path( $project, $target_path )
-      or $c->detach( '/error/bad_request', [ { message => 'Invalid target_path' } ] );
-
-    if (    $source_path->{item_type} eq 'dish'
-        and $target_path->{item_type} eq 'dish' )
-    {
-        $moved->move_to_group( { meal_id => $target->meal->id }, $target->position );
-    }
-    elsif ( $source_path->{item_type} eq 'dish'
-        and $target_path->{item_type} eq 'meal' )
-    {
-        $moved->move_to_group( { meal_id => $target->id }, $direction eq "over" ? 1 : undef );
-    }
-    elsif ( $source_path->{item_type} eq 'meal'
-        and $target_path->{item_type} eq 'dish' )
-    {
-        $c->detach( '/error/bad_request', [ { message => 'Cannot move meal on dish.' } ] );
-    }
-    elsif ( $source_path->{item_type} eq 'meal'
-        and $target_path->{item_type} eq 'meal' )
-    {
-        if ( $moved->name eq $target->name ) {
-            $c->detach(
-                '/error/bad_request',
-                [
-                    {
-                        message => 'Multiple meals with the same name and date are not allowed.',
-                        code    => 'UNQMEAL',
-                    }
-                ]
-            );
-        }
-        $moved->move_to_group( { project_id => $project->id, date => $target->date }, $target->position );
-    }
-
-    $moved = $moved->for_meals_dishes_editor;
-
-    if ( $source_path->{item_type} eq 'dish' ) {
-        $moved->{delete_url} =
-          $c->project_uri( '/dish/delete_ajax', $moved->{id} )->as_string;
-        $moved->{update_url} =
-          $c->project_uri( '/dish/update_ajax', $moved->{id} )->as_string;
-    }
-    elsif ( $source_path->{item_type} eq 'meal' ) {
-        $moved->{delete_dishes_url} =
-          $c->project_uri( '/meal/delete_dishes', $moved->{id} )->as_string;
-        $moved->{delete_url} =
-          $c->project_uri( '/meal/delete', $moved->{id} )->as_string;
-        $moved->{update_url} =
-          $c->project_uri( '/meal/update', $moved->{id} )->as_string;
-    }
-
-    $c->stash->{ajax_response} = $moved;
 }
 
 sub settings : GET HEAD Chained('submenu') PathPart('settings') Args(0)

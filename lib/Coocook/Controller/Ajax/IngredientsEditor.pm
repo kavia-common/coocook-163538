@@ -4,6 +4,10 @@ use Coocook::Base qw(Moose);
 
 BEGIN { extends 'Coocook::Controller' }
 
+# default Catalyst logic doesn't convert CamelCase to snake_case
+# and compiles 'IngredientsEditor' into 'ingredientseditor'
+__PACKAGE__->config( namespace => 'ajax/ingredients_editor' );
+
 =head1 NAME
 
 Coocook::Controller::Ajax::IngredientsEditor - Catalyst Controller

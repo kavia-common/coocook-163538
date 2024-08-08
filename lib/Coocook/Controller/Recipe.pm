@@ -276,15 +276,6 @@ sub check_value : Private {
     my ( $self, $c ) = @_;
 }
 
-sub get_all_ajax : GET HEAD PathPart('ajax') Does(~Ajax) Chained('recipes')
-  RequiresCapability('view_project') Args(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{ajax_response} = {
-        recipes             => $c->stash->{recipes},
-        get_all_recipes_url => $c->project_uri('/recipe/get_all_ajax')->as_string,
-    };
-}
-
 __PACKAGE__->meta->make_immutable;
 
 1;

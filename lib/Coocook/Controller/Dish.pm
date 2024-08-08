@@ -89,60 +89,6 @@ sub delete : POST Chained('base') PathPart('delete') Args(0) RequiresCapability(
     $c->response->redirect( $c->project_uri('/project/edit') );
 }
 
-sub delete_ajax : POST Chained('base') Does(~Ajax) PathPart('delete/ajax') Args(0)
-  RequiresCapability('edit_project') {
-    my ( $self, $c ) = @_;
-
-    $c->stash->{dish}->update_items_and_delete;
-
-    $c->stash->{ajax_response} = { success => 1 };
-}
-
-sub create : POST Chained('/project/base') PathPart('dishes/create') Does(~Ajax) Args(0)
-  RequiresCapability('edit_project') {
-    my ( $self, $c ) = @_;
-
-    my $meal = $c->project->meals->find( $c->req->body_data->{meal_id} );
-
-    my $dish_data = $c->req->body_data->{dish};
-
-    my $dish = $meal->create_related(
-        dishes => {
-            servings           => $dish_data->{servings},
-            name               => $dish_data->{name},
-            description        => $dish_data->{description} // "",
-            comment            => $dish_data->{comment}     // "",
-            preparation        => $dish_data->{preparation} // "",
-            prepare_at_meal_id => $dish_data->{prepare_at_meal} || undef,
-        }
-    );
-
-    $c->stash->{ajax_response} = { dish => $dish->for_meals_dishes_editor };
-}
-
-sub from_recipe : POST Chained('/project/base') PathPart('dishes/from_recipe') Args(0)
-  RequiresCapability('edit_project') Does(~Ajax) {
-    my ( $self, $c ) = @_;
-
-    my $meal   = $c->project->meals->find( $c->req->body_data->{meal_id} );
-    my $recipe = $c->project->recipes->find( $c->req->body_data->{recipe_id} );
-
-    my $dish = $c->model('DB::Dish')->from_recipe(
-        $recipe,
-        (
-            meal     => $meal->id,
-            servings => $c->req->body_data->{servings},
-            comment  => $c->req->body_data->{comment} // "",
-        )
-    );
-
-    $c->stash->{ajax_response} = {
-        $dish->for_meals_dishes_editor->%*,
-        delete_url => $c->project_uri( '/dish/delete_ajax', $dish->id )->as_string,
-        update_url => $c->project_uri( '/dish/update_ajax', $dish->id )->as_string,
-    };
-}
-
 sub recalculate : POST Chained('base') Args(0) RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
@@ -196,34 +142,6 @@ sub update : POST Chained('base') Args(0) RequiresCapability('edit_project') {
     );
 
     $c->detach( redirect => [ $dish->id, '#ingredients' ] );
-}
-
-sub update_ajax : POST Chained('base') PathPart('update/ajax') Does(~Ajax) Args(0)
-  RequiresCapability('edit_project') {
-    my ( $self, $c ) = @_;
-
-    my $dish = $c->stash->{dish};
-
-    $dish->txn_do(
-        sub {
-            $dish->update(
-                {
-                    name               => $c->req->body_data->{name},
-                    comment            => $c->req->body_data->{comment},
-                    servings           => $c->req->body_data->{servings},
-                    preparation        => $c->req->body_data->{preparation},
-                    description        => $c->req->body_data->{description},
-                    prepare_at_meal_id => $c->req->body_data->{prepare_at_meal} || undef,
-
-                }
-            );
-
-            my $tags = $c->project->tags->from_names( $c->req->body_data->{tags} );
-            $dish->set_tags( [ $tags->all ] );
-        }
-    );
-
-    $c->stash->{ajax_response} = $dish->for_meals_dishes_editor;
 }
 
 sub reposition : POST Chained('/project/base') PathPart('dish_ingredient/reposition') Args(1)
