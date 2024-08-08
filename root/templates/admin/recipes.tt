@@ -1,9 +1,6 @@
-<ul>
-[% FOR recipe IN recipes %]
-    <li>
-        <a href="[% recipe.url %]">[% recipe.name | html %]</a>
-        (from [% link_project(recipe.project) %]
-        by [% link_user(recipe.project.owner) %])
-    </li>
-[% END %]
-</ul>
+[% title = "Recipes" %]
+
+[% BLOCK recipe_item %]
+<a href="[% item.url %]">[% item.name | html %]</a> from [% link_project(item.project) %] by [% link_user(item.project.owner) %]
+[% END;
+list(recipes, 'recipe_item') %]
