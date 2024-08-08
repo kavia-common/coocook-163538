@@ -5,7 +5,7 @@ js.push('/lib/coocook-web-components/dist/autocomplete/autocomplete.es.js');
 
 has_admin = 0 %]
 
-<table class="table">
+[% WRAPPER table length=permissions.size classes='align-middle' %]
     <thead>
         <tr class="sticky-top">
             <th scope="col">User/Organization</th>
@@ -66,7 +66,7 @@ has_admin = 0 %]
         </tr>
 [% END %]
     </tbody>
-</table>
+[% END %]
 
 [% IF add_permission_url %]
     [% IF has_admin == 0 %]

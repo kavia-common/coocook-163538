@@ -13,7 +13,7 @@ new = BLOCK %]
 </p>
 [% END; new %]
 
-<table class="table">
+[% WRAPPER table length=recipes.size classes='align-middle' %]
     <thead>
         <tr class="sticky-top">
             <th scope="col">Recipe</th>
@@ -39,7 +39,7 @@ new = BLOCK %]
         </tr>
     [% END %]
     </tbody>
-</table>
+[% END %]
 
 [% new %]
 

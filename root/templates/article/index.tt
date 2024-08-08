@@ -4,7 +4,7 @@
 <p><a class="btn btn-primary" href="[% new_url %]"><i class="material-icons">add</i>&thinsp;New article</a></p>
 [% END; new %]
 
-<table class="table">
+[% WRAPPER table length=articles.size classes='align-middle' %]
     <thead>
         <tr class="sticky-top">
             <th scope="col">Name</th>
@@ -51,7 +51,7 @@
         </tr>
 [% END %]
     </tbody>
-</table>
+[% END %]
 
 [% new %]
 
