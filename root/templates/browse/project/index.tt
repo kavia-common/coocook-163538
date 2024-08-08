@@ -17,11 +17,8 @@ END %]
     </p>
 </div>
 
-<ul class="list-group my-3">
-[% FOR proj IN projects; # don't overwrite $project! %]
-    <li class="list-group-item">[% link_project(proj) %]</li>
-[% END %]
-</ul>
+[% BLOCK project_item; link_project(item); END;
+list(projects, 'project_item', {list_classes => 'my-3'}) %]
 
 [% WRAPPER includes/infobox.tt %]
     A <em>project</em> on [% name %] is a self-contained collection of data for an event,
