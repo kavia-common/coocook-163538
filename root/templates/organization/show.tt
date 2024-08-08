@@ -43,6 +43,14 @@
     </div>
 </div>
 
+[% BLOCK user_item %]
+    [% link_user(item.user) %] ([% item.role %])
+[%~ END;
+
+BLOCK project_item ~%]
+    [% link_project(item.project) %] ([% item.role %])
+[% END %]
+
 <div class="row g-4 mb-4">
     <div class="col-12 col-md-6">
         <div class="card">
@@ -59,11 +67,7 @@
                 [% END %]
             </div>
             <div class="card-body p-0">
-                <ul class="list-group list-group-flush">
-                    [% FOREACH org_user IN organizations_users %]
-                    <li class="list-group-item">[% link_user(org_user.user) %] ([% org_user.role %])</li>
-                    [% END %]
-                </ul>
+                [% list(organizations_users, 'user_item', {list_classes => 'list-group-flush rounded'}) %]
             </div>
         </div>
     </div>
@@ -74,16 +78,13 @@
                 <h3 class="my-2">Projects</h3>
             </div>
             <div class="card-body p-0">
-                <ul class="list-group list-group-flush">
-                    [% IF organizations_projects.size == 0 %]
+            [% IF organizations_projects.size == 0 %]
+                <ul class="list-group list-group-flush rounded">
                     <li class="list-group-item">None visible</li>
-                    [% ELSE;
-                    FOREACH org_proj IN organizations_projects %]
-                    <li class="list-group-item">
-                        [% link_project(org_proj.project) %] ([% org_proj.role %])</li>
-                    </li>
-                    [% END; END %]
                 </ul>
+            [% ELSE;
+                list(organizations_projects, 'project_item', {list_classes => 'list-group-flush rounded'});
+            END %]
             </div>
         </div>
     </div>
