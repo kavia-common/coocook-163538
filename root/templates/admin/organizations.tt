@@ -1,7 +1,4 @@
 [% title = "Organizations" %]
 
-<ul class="list-group">
-[% FOR organization IN organizations %]
-    <li class="list-group-item">[% link_organization(organization) %]</li>
-[% END %]
-</ul>
+[% BLOCK org_item; link_organization(item); END;
+list(organizations, 'org_item') %]
