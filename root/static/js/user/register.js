@@ -9,7 +9,7 @@
     const meterElem = document.getElementById("meter");
     const comparatorElem = document.getElementById("comparator");
 
-    let html = "strength: " + "&#x2606;".repeat(MAX_STARS);
+    let html = `Strength: ${"&#x2606;".repeat(MAX_STARS)}`;
     meterElem.innerHTML = html;
     comparatorElem.innerHTML = "&nbsp;";
 
@@ -18,12 +18,12 @@
 
         let stars = password == "" ? 0 : zxcvbn(password).score + 1;
 
-        html = "strength: ";
-        html += "&#x2605;".repeat(stars);
-        html += "&#x2606;".repeat(MAX_STARS - stars);
+        html = `Strength: ${"&#x2605;".repeat(stars)}${"&#x2606;".repeat(
+            MAX_STARS - stars
+        )}`;
 
         meterElem.innerHTML = html;
-        meterElem.setAttribute("title", stars + " of " + MAX_STARS);
+        meterElem.setAttribute("title", `${stars} of ${MAX_STARS}`);
     });
 
     [passwordElem, password2Elem].forEach((item) => {
@@ -33,7 +33,7 @@
 
             if ((password.length && password2.length) || password2.length) {
                 comparatorElem.innerHTML =
-                    password == password2 ? "matches" : "doesn't match";
+                    password == password2 ? "Matches" : "Doesn't match";
             } else {
                 comparatorElem.innerHTML = "&nbsp;";
             }
