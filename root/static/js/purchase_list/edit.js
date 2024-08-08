@@ -212,7 +212,18 @@ function buildPurchaseListOptions() {
         selectPl.append(option);
     }
 
-    selectPl.setCustomValidity("Please select a target purchase list");
+    if (purchaseLists.length === 2) {
+        let plId = 0;
+        for (const pl of purchaseLists) {
+            if (pl.id !== currentPurchaseListId) {
+                plId = pl.id;
+                break;
+            }
+        }
+        selectPl.value = plId;
+    } else {
+        selectPl.setCustomValidity("Please select a target purchase list");
+    }
     selectPl.addEventListener("input", () => {
         if (selectPl.value === "") {
             selectPl.setCustomValidity("Please select a target purchase list");
