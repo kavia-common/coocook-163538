@@ -5,15 +5,18 @@ use DateTime;
 use lib 't/lib';
 use Test::Coocook;
 
-#plan(41);
+plan(24);
 
 my $t = Test::Coocook->new();
 
 $t->get_ok('/');
 $t->login_ok( 'john_doe', 'P@ssw0rd' );
 
-#ok $t->post('/project/1/Test-Project/move_meal_dish'), "empty request";
-#$t->status_is(400);
+ok $t->post('/project/1/Test-Project/move_meal_dish'), "empty formdata request";
+$t->status_is(400);
+
+ok $t->post_json( '/project/1/Test-Project/move_meal_dish', {} ), "empty JSON request";
+$t->status_is(400);
 
 ok $t->post_json(
     'https://localhost/project/1/Test-Project/move_meal_dish',
@@ -95,5 +98,3 @@ $t->json_is( { error => { message => match qr/cannot be deleted/ } } );
 
 $t->post_ok('/project/1/Test-Project/meals/10/delete');
 ok !$t->schema->resultset('Meal')->find(10), "meal not found in database anymore";
-
-done_testing;    # TODO remove

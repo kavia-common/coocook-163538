@@ -88,9 +88,9 @@ sub move_meal_or_dish : POST Chained('/project/base') PathPart('move_meal_dish')
 
     my $project = $c->project;
 
-    my $source_path = $c->req->body_data->{source_path};
-    my $target_path = $c->req->body_data->{target_path};
-    my $direction   = $c->req->body_data->{direction};
+    my $source_path = $c->req->body_data->{source_path} || $c->detach('/error/bad_request');
+    my $target_path = $c->req->body_data->{target_path} || $c->detach('/error/bad_request');
+    my $direction   = $c->req->body_data->{direction}   || $c->detach('/error/bad_request');
 
     my $plan = $c->model('Plan');
 
