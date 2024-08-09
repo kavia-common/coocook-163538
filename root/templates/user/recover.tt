@@ -1,3 +1,5 @@
+[% window_title = "Password recovery" %]
+
 <div class="mx-auto" style="max-width:500px;">
     <div class="content-box mb-3">
         <div class="text-center mb-3">
