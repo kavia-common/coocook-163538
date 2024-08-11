@@ -259,7 +259,7 @@ sub check_missing_default_purchase_lists ($self) {
     );
 
     while ( my $project = $projects->next ) {
-        warn sprintf "Project %i has purchase list(s) but its default_purchase_list_id is NULL",
+        warn sprintf "Project %i has purchase list(s) but its default_purchase_list_id is NULL\n",
           $project->id;
     }
 }
@@ -277,7 +277,7 @@ sub check_unassigned_dish_ingredients ($self) {
     );
 
     while ( my $project = $invalid_projects->next ) {
-        warn sprintf "Project %i has purchase list(s) but also unassigned dish ingredients", $project->id;
+        warn sprintf "Project %i has purchase list(s) but also unassigned dish ingredients\n", $project->id;
     }
 }
 
@@ -294,7 +294,7 @@ sub check_items_without_dish_ingredients ($self) {
     );
 
     while ( my $item = $bad_items->next ) {
-        warn sprintf "Item %i in project %i has no dish ingredients%s",
+        warn sprintf "Item %i in project %i has no dish ingredients%s\n",
           $item->id,
           $item->purchase_list->project_id,
           $item->value == 0 ? '' : " but a non-zero value";
@@ -326,7 +326,7 @@ sub check_items_values ($self) {
     );
 
     while ( my $item = $bad_items->next ) {
-        warn sprintf "Item %i has value of %g%s < %g%s the sum of its ingredients",
+        warn sprintf "Item %i has value of %g%s < %g%s the sum of its ingredients\n",
           $item->id,
           $item->value,
           $item->get_column('unit_short_name'),
