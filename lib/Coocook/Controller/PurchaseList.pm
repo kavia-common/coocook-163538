@@ -289,12 +289,8 @@ sub delete : POST Chained('base') Args(0) RequiresCapability('edit_project') {
 
     $list->txn_do(
         sub {
-            if ( $list->is_default ) {
-                $list->other_purchase_lists->results_exist
-                  and $c->detach( '/error/bad_request', ["Can't delete default purchase list"] );
-
-                $list->project->update( { default_purchase_list_id => undef } );
-            }
+            ( $list->is_default and $list->other_purchase_lists->results_exist )
+              and $c->detach( '/error/bad_request', ["Can't delete default purchase list"] );
 
             $list->delete();
         }

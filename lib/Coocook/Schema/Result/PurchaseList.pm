@@ -40,6 +40,34 @@ __PACKAGE__->has_many(
     }
 );
 
+around delete => sub ( $orig, $self, $ucg = undef ) {
+    $self->txn_do(
+        sub {
+            my $project      = $self->project;
+            my $default_list = $project->default_purchase_list
+              || die "default purchase list required because project has a purchase list (self)";
+
+            if ( $default_list->id == $self->id ) {
+                if ( $self->other_purchase_lists->results_exist ) {
+                    croak "Purchase list is default list";
+                }
+                else {
+                    $project->update( { default_purchase_list_id => undef } );
+                }
+            }
+
+            $self->move_items_ingredients(
+                target_purchase_list => $default_list,
+                ingredients          => [],
+                items                => [ $self->items->all ],
+                ucg                  => $ucg || $project->unit_conversion_graph,
+            );
+
+            return $self->$orig();
+        }
+    );
+};
+
 __PACKAGE__->meta->make_immutable;
 
 sub is_default ($self) {
