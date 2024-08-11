@@ -125,4 +125,8 @@ subtest delete => sub {
     like dies { $list1->delete() } => qr/Purchase list is default list/;
     ok $list1->other_purchase_lists->delete();
     ok $list1->delete();
+
+    $list1->insert();
+    cmp_ok $list1->items->count,       '>=', $original_items;         # different units not merged
+    cmp_ok $list1->ingredients->count, '==', $original_ingredients;
 };

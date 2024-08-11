@@ -333,8 +333,17 @@ subtest "migration 27->28 (issue #292 unassigned items to purchase list)" => sub
     my $dish_ingredients = $project->meals->search_related('dishes')->search_related('ingredients');
     my $purchase_lists   = $project->purchase_lists;
 
-    $purchase_lists->create( { date => $purchase_lists->default_date, name => $_ } )
-      for ( 'Previously unassigned items', 'Previously unassigned items (2)' );
+    # insertion must be done via SQL because Result::PurchaseList overrides
+    # insert() and triggers fetch of column project.default_purchase_list_id
+    # which isn't present in schema v24 yet
+    for my $name ( 'Previously unassigned items', 'Previously unassigned items (2)' ) {
+        $schema->storage->dbh_do(
+            sub ( $storage, $dbh ) {
+                $dbh->do( 'INSERT INTO purchase_lists (project_id, date, name) VALUES (?,?,?)',
+                    {}, $project->id, $project->format_date( $purchase_lists->default_date ), $name );
+            }
+        );
+    }
 
     cmp_ok $dish_ingredients->unassigned->count, '>', 0, "has unassigned dish ingredients";
 

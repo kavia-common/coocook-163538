@@ -6,7 +6,7 @@ use Test::Builder;
 use lib 't/lib';
 use Test::Coocook;
 
-plan(41);
+plan(39);
 
 my $t = Test::Coocook->new();
 
@@ -188,9 +188,6 @@ message_like(qr/ lacks .+ purchase\ lists /x);
 
 my $list =
   $project->create_related( purchase_lists => { date => '2000-01-01', name => "purchase list" } );
-message_contains('items');
-
-$ingredient->assign_to_purchase_list($list);
 message_contains('stale');
 
 $list->update( { date => $list->format_date( DateTime->today->add( years => 1 ) ) } );

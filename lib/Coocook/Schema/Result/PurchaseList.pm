@@ -68,6 +68,28 @@ around delete => sub ( $orig, $self, $ucg = undef ) {
     );
 };
 
+around insert => sub ( $orig, $self ) {
+    $self->txn_do(
+        sub {
+            my $return = $self->$orig();
+
+            my $project = $self->project;
+
+            if ( not defined $project->default_purchase_list_id ) {
+                $project->update( { default_purchase_list_id => $self->id } );
+
+                my $ingredients = $project->dishes->search_related('ingredients');
+
+                while ( my $ingredient = $ingredients->next ) {
+                    $ingredient->assign_to_purchase_list($self);
+                }
+            }
+
+            return $return;
+        }
+    );
+};
+
 __PACKAGE__->meta->make_immutable;
 
 sub is_default ($self) {

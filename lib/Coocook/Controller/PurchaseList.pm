@@ -250,34 +250,16 @@ sub update : POST Chained('base') Args(0) RequiresCapability('edit_project') {
         $c->detach('redirect');
     }
 
-    my $list  = $c->stash->{list};
-    my $lists = $c->stash->{lists};
+    my $list        = $c->stash->{list};
+    my $other_lists = $list->other_purchase_lists;
 
-    # exclude this very list from duplicate search
-    if ( my $id = $list->id ) {
-        $lists = $lists->search( { id => { '!=' => $id } } );
-    }
-
-    if ( $lists->search( { name => $name } )->results_exist ) {
+    if ( $other_lists->search( { $other_lists->me('name') => $name } )->results_exist ) {
         $c->messages->error("A purchase list with that name already exists!");
         $c->detach('redirect');
     }
 
     $list->name($name);
-    $list->txn_do(
-        sub {
-            $list->update_or_insert();
-
-            if ( not defined $c->project->default_purchase_list_id ) {
-                $c->project->update( { default_purchase_list_id => $list->id } );
-
-                my $ingredients = $c->project->dishes->search_related('ingredients');
-                while ( my $ingredient = $ingredients->next ) {
-                    $ingredient->assign_to_purchase_list($list);
-                }
-            }
-        }
-    );
+    $list->update_or_insert();
 
     $c->detach('redirect');
 }
