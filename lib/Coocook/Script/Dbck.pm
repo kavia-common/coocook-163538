@@ -309,15 +309,12 @@ sub check_items_values ($self) {
       $ingredients->search( { $ingredients->me('unit_id') => { -ident => $items->me('unit_id') } } )
       ->get_column('value')->sum_rs->as_query;
 
-    # DBIC doesn't support SQL alias for subquery
-    # https://stackoverflow.com/a/3429954
-    #
-    # result of as_query() is a scalarref with an arrayref with a string: ["(SELECT ...)"]
-    $$value_subquery->[0] .= q{ AS "value_sum_sql" };
-
+    # in contrast to SQLite PostgreSQL does not support referencing
+    # subqueries from FROM in a WHERE clause. That's why the subquery
+    # is used twice.
     my $bad_items = $items->search(
         {
-            $items->me('value') => { '<' => { -ident => 'value_sum_sql' } },
+            $items->me('value') => { '<' => $value_subquery },
         },
         {
             join       => 'unit',

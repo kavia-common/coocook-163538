@@ -20,7 +20,7 @@ my @created_dbs;
 BEGIN {
     # show progress 1/x as early as possible
     $FIRST_PGSQL_SCHEMA_VERSION = 21;
-    plan tests => 3 + ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 12;
+    plan tests => 3 + ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 14;
 
     local $@ = undef;
     my $psql = eval {
@@ -61,6 +61,7 @@ END {    # remove temporary databases
 
 # these are only loaded if test requirements are fulfilled
 use Coocook::Model::ProjectImporter;
+use Coocook::Script::Dbck;
 use Data::Dumper;
 use DBIx::Diff::Schema qw(diff_db_schema);
 
@@ -144,10 +145,17 @@ $schema_from_upgrades->resultset($_)->delete() for qw(
   Terms
 );
 
+# test with PostgreSQL additionally to t/script_dbck.t with SQLite
+my $dbck_app = Coocook::Script::Dbck->new_with_options();
+$dbck_app->_schema($schema_from_deploy);
+ok no_warnings { $dbck_app->run }, "no warnings from script_dbck.pl for empty database";
+
 # share/test_data.sql matches only current schema -> can only after upgrades
 ok TestDB->execute_test_data($schema_from_dbic),     "Execute test data in DB from DBIx::Class";
 ok TestDB->execute_test_data($schema_from_deploy),   "Execute test data in DB from deploy SQL";
 ok TestDB->execute_test_data($schema_from_upgrades), "Execute test data in DB from upgrade SQLs";
+
+ok no_warnings { $dbck_app->run }, "no warnings from script_dbck.pl for test data";
 
 subtest "boolean values" => sub {
     my $row = $schema_from_dbic->resultset('Project')->one_row;

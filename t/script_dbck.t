@@ -9,14 +9,17 @@ use lib 't/lib/';
 use TestDB qw(txn_do_and_rollback);
 use Test::Coocook;    # makes Coocook::Script::Dbck not read real config files
 
-plan(24);
+plan(25);
 
-my $db = TestDB->new();
+my $db = TestDB->new( test_data => 0 );
 
 ok my $app = Coocook::Script::Dbck->new_with_options();
 
 $app->_schema($db);
 
+ok no_warnings { $app->run }, "no warnings with empty database";
+
+TestDB->execute_test_data($db);
 ok no_warnings { $app->run }, "no warnings with test data";
 
 txn_do_and_rollback $db, sub {
