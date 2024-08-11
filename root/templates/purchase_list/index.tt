@@ -6,7 +6,7 @@ BLOCK new_list %]
 <tr>
     <td colspan="5">
         <div class="d-grid">
-            <button class="btn btn-outline-primary material-icons" data-bs-toggle="modal" data-bs-target="#addList">add</button>
+            <button class="btn btn-outline-primary material-icons" data-bs-toggle="modal" data-bs-target="#addList" title="create [% lists.size > 0 ? "another" : "a" %] purchase list">add</button>
         </div>
     </td>
 </tr>
