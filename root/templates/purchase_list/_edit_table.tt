@@ -22,7 +22,6 @@
                     <th>Dishes</th>
                     <th>Servings</th>
                     <th colspan="2">Meals</th>
-                    <th class="btn-icon-1"></th>
                 </tr>
             </thead>
             [% FOREACH item IN section.items %]
@@ -113,15 +112,6 @@
                         [% END %]
                     </td>
                     <td class="date text-center text-nowrap">[% ingredient.dish.meal.date.strftime('%a, %F') %]</td>
-                    <td>
-                        [% IF ingredient.remove_url AND lists.size > 1 AND NOT list.is_default %]
-                        <form name="remove-ingredient" method="post" action="[% ingredient.remove_url %]" class="action-btn">
-                            <button type="submit" class="btn btn-outline-danger btn-sm btn-quad" title="Remove from purchase list">
-                                <i class="material-icons">delete_forever</i>
-                            </button>
-                        </form>
-                        [% END %]
-                    </td>
                     [% END %]
                 </tr>
 
@@ -131,10 +121,10 @@
                         [% display_value_unit( item.offset, item.unit, {html=>1, force_sign=>1} ) %]
                     </td>
                     <td></td>
-                    <td class="rounding" colspan="4">
+                    <td class="rounding" colspan="3">
                         <i>rounding difference</i>
                     </td>
-                    <td>
+                    <td class="text-center">
                         [% IF item.update_offset_url %]
                         <form name="remove-offset" method="post" action="[% item.update_offset_url %]" class="action-btn">
                             <button type="submit" class="btn btn-outline-danger btn-sm btn-quad mb-1 material-icons" title="Reset rounding" name="offset" value="0">undo</button>

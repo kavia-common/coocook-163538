@@ -3,7 +3,7 @@ use Test2::V0;
 use lib 't/lib';
 use Test::Coocook;
 
-plan(5);
+plan(4);
 
 my $t = Test::Coocook->new();
 
@@ -54,33 +54,13 @@ subtest "remove offset" => sub {
     $t->content_lacks($rounding_difference);
 };
 
-subtest "remove ingredient" => sub {
-    $t->content_contains( my $value  = '14.5' );
-    $t->content_lacks( my $form_name = 'remove-ingredient',
-        "Ingredients from default purchase list can't be removed" );
-
-    note "Making purchase list 2 the default list ...";
-    $t->schema->resultset('Project')->find(1)->update( { default_purchase_list_id => 2 } );
-    $t->reload_ok();
-
-    $t->submit_form_ok(
-        {
-            form_name   => $form_name,
-            form_number => 6,
-        },
-        "Remove ingredient"
-    );
-
-    $t->content_lacks($value);
-};
-
 subtest "convert item" => sub {
-    $t->text_contains("14\N{THIN SPACE}kilograms");
-    $t->content_contains( my $old_value = 'value="14"' );
-    $t->content_lacks( my $new_value    = 'value="14000"' );
+    $t->text_contains("14.5\N{THIN SPACE}kilograms");
+    $t->content_contains( my $old_value = 'value="14.5"' );
+    $t->content_lacks( my $new_value    = 'value="14500"' );
 
     $t->submit_form_ok( { form_number => 4 }, "Convert item to g" );
     $t->content_lacks($old_value);
     $t->content_contains($new_value);
-    $t->text_contains("14000\N{THIN SPACE}grams");
+    $t->text_contains("14500\N{THIN SPACE}grams");
 };
