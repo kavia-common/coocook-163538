@@ -3,7 +3,6 @@ use Test2::V0 -no_warnings => 1;
 
 use Template;
 use Test::Builder;
-use Test2::API qw(context);
 
 plan(15);
 
