@@ -111,7 +111,7 @@
                             <span class="comment">([% ingredient.dish.meal.comment | html %])</span>
                         [% END %]
                     </td>
-                    <td class="date text-center text-nowrap">[% ingredient.dish.meal.date.strftime('%a, %F') %]</td>
+                    <td class="date text-center text-nowrap">[% display_date(ingredient.dish.meal.date, {html=>1}) %]</td>
                     [% END %]
                 </tr>
 
