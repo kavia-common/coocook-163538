@@ -1,10 +1,13 @@
+use Coocook::Base;
+
 use Test2::V0;
+use Test::Builder;
 
 use lib 't/lib';
 use TestDB qw(txn_do_and_rollback);
 use Test::Coocook;
 
-plan(7);
+plan(8);
 
 my $t = Test::Coocook->new;
 
@@ -63,6 +66,73 @@ subtest "upgrade_ingredient", txn_do_and_rollback $t->schema, sub {
     is $ingredient->value            => $value, "value";
     is $ingredient->unit->short_name => 'kg', "unit";
     is $ingredient->comment          => $comment, "comment";
+};
+
+subtest "handling of offset on purchase list items", txn_do_and_rollback $t->schema => sub {
+    my $ingredient = $ingredients->create(
+        {
+            dish_id    => 1,
+            prepare    => 1,
+            value      => 0,
+            unit_id    => 1,
+            article_id => 1,
+            comment    => __FILE__,
+            item       => {
+                purchase_list_id => 1,
+                value            => 0,
+                offset           => 0,
+                unit_id          => 1,
+                article_id       => 1,
+                comment          => __FILE__,
+            },
+        }
+    );
+    my $item = $ingredient->item;
+
+    my $test = sub ( $value1, $offset1, $delta, $value2, $offset2 ) {
+        local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+        $ingredient->update( { value => $value1 } );
+        $item->update( { value => $value1, offset => $offset1 } );
+        $t->post_json(
+            'https://localhost/project/1/Test-Project/dish/1/ingredients/update',
+            {
+                ingredient => {
+                    id           => $ingredient->id,
+                    value        => $value1 + $delta,                 # the only change
+                    current_unit => { id => $ingredient->unit_id },
+                    comment      => $ingredient->comment,
+                }
+            }
+        );
+        $ingredient->discard_changes();
+        $item->discard_changes();
+        is $item => object {
+            call value  => number $value2;
+            call offset => number $offset2;
+        }
+    };
+
+    # value/offset => delta => value/offset
+    $test->( 12, -2 => -3 => 9,  +0 );
+    $test->( 12, -2 => -2 => 10, +0 );
+    $test->( 12, -2 => -1 => 11, -1 );
+    $test->( 12, -2 => +0 => 12, -2 );
+    $test->( 12, -2 => +1 => 13, +0 );
+    $test->( 12, -2 => +2 => 14, +0 );
+    $test->( 12, -2 => +3 => 15, +0 );
+
+    $test->( 10, +0 => -1 => 9,  +0 );
+    $test->( 10, +0 => +0 => 10, +0 );
+    $test->( 10, +0 => +1 => 11, +0 );
+
+    $test->( 8, +2 => -3 => 5,  +0 );
+    $test->( 8, +2 => -2 => 6,  +0 );
+    $test->( 8, +2 => -1 => 7,  +0 );
+    $test->( 8, +2 => +0 => 8,  +2 );
+    $test->( 8, +2 => +1 => 9,  +1 );
+    $test->( 8, +2 => +2 => 10, +0 );
+    $test->( 8, +2 => +3 => 11, +0 );
 };
 
 subtest add_ingredient => sub {

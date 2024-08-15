@@ -177,6 +177,7 @@ Returns total, i.e. sum of the item's value and offset.
 sub total ($self) { return $self->value + $self->offset }
 
 sub update_from_ingredients ($self) {
+    my $old_value  = $self->value;
     my $item_value = 0;
 
     for my $ingredient ( $self->ingredients->all ) {
@@ -201,12 +202,25 @@ sub update_from_ingredients ($self) {
         $item_value += $ingredient_value;
     }
 
-    $self->update(
-        {
-            value  => $item_value,
-            offset => 0
+    if ( $item_value == $old_value ) {
+        return $self;
+    }
+
+    $self->set_column( value => $item_value );
+
+    my $delta  = $item_value - $old_value;
+    my $offset = $self->offset;
+
+    if (   ( $delta < 0 and $offset < 0 )
+        or ( $delta > 0 and $offset > 0 ) )    # both are negative or both positive
+    {
+        if ( abs($delta) <= abs($offset) ) {    # fill up offset if possible
+            $offset -= $delta;
+            return $self->update( { offset => $offset } );
         }
-    );
+    }
+
+    $self->update( { offset => 0 } );           # otherwise clear offset
 }
 
 1;

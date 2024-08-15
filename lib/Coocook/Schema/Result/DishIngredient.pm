@@ -74,15 +74,18 @@ sub assign_to_purchase_list ( $self, $list ) {
     return $item;
 }
 
-=head2 update_on_purchase_list()
+=head2 update_on_purchase_list(@update_args?)
 
-Returns boolish value indicating if there's an item that was updated
+Updates the purchase list item of the ingredient, if any.
+Also takes optional arguments to update itself first.
+Returns boolish value indicating if there's an item that was updated.
 
 =cut
 
-sub update_on_purchase_list ($self) {
+sub update_on_purchase_list ( $self, @update_args ) {
     $self->txn_do(
         sub {
+            $self->update(@update_args) if @update_args;
             my $item = $self->item or return;
 
             $item->update_from_ingredients;

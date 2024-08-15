@@ -62,7 +62,7 @@ sub update_ingredient : POST Chained('base') PathPart('ingredients/update')
         $ingredient->set_column( unit_id => $unit_id );
     }
 
-    $ingredient->update(
+    $ingredient->update_on_purchase_list(
         {
             value   => $ajax_request->{ingredient}{value},
             comment => $ajax_request->{ingredient}{comment},
