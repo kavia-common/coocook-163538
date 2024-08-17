@@ -141,21 +141,18 @@ sub delete_ingredient : POST Chained('base') PathPart('ingredients/delete')
     my ( $self, $c ) = @_;
     my $ajax_request = $c->req->body_data;
 
-    my $ingrDB = $c->stash->{dish_or_recipe}->search_related('ingredients')->find( $ajax_request->{id} )
+    my $ingredient =
+         $c->stash->{dish_or_recipe}->search_related('ingredients')->find( $ajax_request->{id} )
       or $c->detach('/error/not_found');
 
-    $ingrDB->delete();
-
-    if ( my $item = $ingrDB->item ) {
-        if ( $item->ingredients->results_exist ) {
-            $item->update_from_ingredients();
-        }
-        else {
-            $item->delete();
-        }
+    if ( my $item = $ingredient->item ) {
+        $item->remove_ingredients( $c->project->unit_conversion_graph, $ingredient );
+    }
+    else {
+        $ingredient->delete();
     }
 
-    $c->stash->{ajax_response} = { id => $ingrDB->id };
+    $c->stash->{ajax_response} = { id => $ingredient->id };
 }
 
 sub all_articles : GET HEAD Chained('base') PathPart('articles') RequiresCapability('view_project')

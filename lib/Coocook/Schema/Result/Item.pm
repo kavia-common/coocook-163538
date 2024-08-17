@@ -121,8 +121,25 @@ sub remove_ingredients ( $self, $ucg, @ingredients_to_remove ) {
 
                 if ( defined( my $factor = $ucg->factor_between_units( $ingredient->unit_id => $self->unit_id ) ) )
                 {
-                    $value -= $ingredient->value * $factor;
+                    my $delta = $ingredient->value * $factor;
+                    $delta >= 0 or croak "Negative dish ingredient value";
 
+                    if ( my $offset = $self->offset ) {
+                        if ( $offset < 0 ) {
+                            if ( -1 * $offset <= $delta ) {
+                                $offset += $delta;    # reduce negative (!) offset by delta
+                            }
+                            else {
+                                $offset = 0;
+                            }
+                        }
+                        elsif ( $self->offset > 0 ) {    # decreasing value makes positive offset invalid
+                            $self->set_column( offset => 0 );
+                        }
+                        else { die "code broken" }
+                    }
+
+                    $value -= $delta;
                     $value < 0 and $recalculate_value = 1;
                 }
                 else {
@@ -153,7 +170,10 @@ sub remove_ingredients ( $self, $ucg, @ingredients_to_remove ) {
                     }
                 }
 
-                if ( not $item_keeps_ingredients ) {
+                if ($item_keeps_ingredients) {
+                    $self->set_column( offset => 0 );
+                }
+                else {
                     $self->delete();
                     return;
                 }
