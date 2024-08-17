@@ -41,6 +41,7 @@ __PACKAGE__->belongs_to(
 );
 
 __PACKAGE__->has_many( ingredients => 'Coocook::Schema::Result::DishIngredient', 'dish_id' );
+__PACKAGE__->many_to_many( items => ingredients => 'item' );
 
 __PACKAGE__->has_many(
     ingredients_ordered => 'Coocook::Schema::Result::DishIngredient',
@@ -63,7 +64,9 @@ sub recalculate ( $self, $servings2 ) {
                 $ingredient->update( { value => $value2 } );
             }
 
-            for my $item ( $self->ingredients->search_related('item')->all ) {
+            my $items = $self->items;
+
+            while ( my $item = $items->next ) {
                 $item->update_from_ingredients();
             }
 

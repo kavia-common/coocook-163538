@@ -17,8 +17,8 @@ $t->login_ok( 'john_doe', 'P@ssw0rd' );
 subtest "change item total" => sub {
     $t->get_ok('/project/1/Test-Project/purchase_list/1');
 
-    $t->content_contains( my $original_value = 'value="43"' );
-    $t->text_contains( "\N{PLUS SIGN}0.5\N{THIN SPACE}g" . "rounding difference" );
+    $t->content_contains( my $original_value = 'value="50"' );
+    $t->text_contains( "\N{PLUS SIGN}7.5\N{THIN SPACE}g" . "rounding difference" );
 
     $t->submit_form_ok(
         {

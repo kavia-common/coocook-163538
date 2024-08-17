@@ -33,7 +33,7 @@ subtest "upgrade_ingredient", txn_do_and_rollback $t->schema, sub {
     $ingredient->unit->short_name eq ( my $original_unit = 'g' ) or die "test broken";
 
     my $item = $ingredient->item;
-    $item->value == 42.5 or die "test broken";
+    $item->total == 50 or die "test broken";
 
     my $json = {
         ingredient => {
