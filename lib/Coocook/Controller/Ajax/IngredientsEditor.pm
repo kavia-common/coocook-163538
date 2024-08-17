@@ -141,10 +141,19 @@ sub delete_ingredient : POST Chained('base') PathPart('ingredients/delete')
     my ( $self, $c ) = @_;
     my $ajax_request = $c->req->body_data;
 
-    my $dish_or_recipe = $c->stash->{dish_or_recipe};
+    my $ingrDB = $c->stash->{dish_or_recipe}->search_related('ingredients')->find( $ajax_request->{id} )
+      or $c->detach('/error/not_found');
 
-    my $ingrDB = $dish_or_recipe->search_related('ingredients')->find( $ajax_request->{id} );
     $ingrDB->delete();
+
+    if ( my $item = $ingrDB->item ) {
+        if ( $item->ingredients->results_exist ) {
+            $item->update_from_ingredients();
+        }
+        else {
+            $item->delete();
+        }
+    }
 
     $c->stash->{ajax_response} = { id => $ingrDB->id };
 }

@@ -7,7 +7,7 @@ use lib 't/lib';
 use TestDB qw(txn_do_and_rollback);
 use Test::Coocook;
 
-plan(8);
+plan(9);
 
 my $t = Test::Coocook->new;
 
@@ -24,6 +24,40 @@ for my $entity (qw( articles ingredients units )) {
 }
 
 my $ingredients = $t->schema->resultset('DishIngredient');
+
+subtest "delete ingredients", txn_do_and_rollback $t->schema, sub {
+    ok $t->post_json( 'https://localhost/project/1/Test-Project/dish/1/ingredients/delete',
+        { id => 999 } );
+    $t->status_is(404);
+
+    my $ingredient = $t->schema->resultset('DishIngredient')->find(2);
+    my $item       = $ingredient->item;
+    $item->offset or die "test broken";
+
+    ok $t->post_json( 'https://localhost/project/1/Test-Project/dish/1/ingredients/delete',
+        { id => $ingredient->id } );
+    $t->status_is(200);
+
+    $item->discard_changes();
+    is $item => object {
+        call value  => number 37.5;
+        call offset => number 0;
+    },
+      "item was updated";
+
+    note "Deleting remaining ingredients of item ...";
+    for ( [ 2, 6 ], [ 3, 8 ] ) {
+        my ( $dish_id, $ingredient_id ) = @$_;
+
+        ok $t->post_json( "https://localhost/project/1/Test-Project/dish/$dish_id/ingredients/delete",
+            { id => $ingredient_id } );
+
+        $t->status_is(200);
+    }
+
+    $item->discard_changes();
+    ok !$item->in_storage, "item was deleted";
+};
 
 subtest "upgrade_ingredient", txn_do_and_rollback $t->schema, sub {
     ok $t->post('https://localhost/project/1/Test-Project/dish/999/ingredients/update');
