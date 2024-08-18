@@ -122,7 +122,7 @@ sub assign_articles_to_shop_section : POST Chained('base') Args(0)
   RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
 
-    my $sections = $c->project->search_related('shop_sections');
+    my $sections = $c->project->shop_sections;
     my $section;
 
     if ( length( my $name = $c->request->params->get('new_shop_section') // '' ) ) {
@@ -139,7 +139,7 @@ sub assign_articles_to_shop_section : POST Chained('base') Args(0)
     }
 
     my @article_ids      = $c->req->params->get_all('article');
-    my $project_articles = $c->project->search_related('articles');
+    my $project_articles = $c->project->articles;
     $project_articles->search( { $project_articles->me('id') => { -in => \@article_ids } } )
       ->update( { shop_section_id => $section ? $section->id : undef } );
 

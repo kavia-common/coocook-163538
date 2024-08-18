@@ -21,7 +21,7 @@ Catalyst Controller.
 sub base : Chained('/project/base') PathPart('items') CaptureArgs(1) {
     my ( $self, $c, $item_id ) = @_;
 
-    $c->stash( item => $c->project->purchase_lists->search_related('items')->find($item_id)
+    $c->stash( item => $c->project->purchase_lists->find_related( items => $item_id )
           || $c->detach('/error/not_found') );
 
 }

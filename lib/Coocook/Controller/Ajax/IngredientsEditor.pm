@@ -23,10 +23,12 @@ Catalyst Controller.
 sub base : Chained('/project/base') PathPart('') CaptureArgs(2) {
     my ( $self, $c, $dish_or_recipe, $dish_or_recipe_id ) = @_;
 
-    return $c->detach('/error/not_found')
-      unless ( $dish_or_recipe eq 'dish' or $dish_or_recipe eq 'recipe' );
+    my $plural = {
+        dish   => 'dishes',
+        recipe => 'recipes',
+    }->{$dish_or_recipe}
+      or $c->detach('/error/not_found');
 
-    my $plural = $dish_or_recipe eq 'dish' ? 'dishes' : 'recipes';
     $c->stash( dish_or_recipe => $c->project->$plural->find($dish_or_recipe_id)
           || $c->detach('/error/not_found') );
 }
@@ -49,9 +51,7 @@ sub update_ingredient : POST Chained('base') PathPart('ingredients/update')
     my ( $self, $c ) = @_;
     my $ajax_request = $c->req->body_data;
 
-    my $ingredient =
-      $c->stash->{dish_or_recipe}->search_related('ingredients')
-      ->find( $ajax_request->{ingredient}{id} )
+    my $ingredient = $c->stash->{dish_or_recipe}->ingredients->find( $ajax_request->{ingredient}{id} )
       or $c->detach('/error/not_found');
 
     my $unit_id = $ajax_request->{ingredient}{current_unit}{id};
@@ -95,7 +95,7 @@ sub _xpend_ingredient : Private {
     my $ingredient_id = $ajax_request->{ingredientId};
     my $prepare       = $ajax_request->{prepare};
 
-    my $ingredient = $dish_or_recipe->search_related('ingredients')->find($ingredient_id)
+    my $ingredient = $dish_or_recipe->ingredients->find($ingredient_id)
       or $c->redirect('/error/bad_request');
 
     my %id_hash =
@@ -119,8 +119,8 @@ sub move_ingredient : POST Chained('base') PathPart('ingredients/move')
     my $target_id    = $ajax_request->{targetId};
     my $direction    = $ajax_request->{direction};
 
-    my $source_db = $dish_or_recipe->search_related('ingredients')->find($source_id);
-    my $target_db = $dish_or_recipe->search_related('ingredients')->find($target_id);
+    my $source_db = $dish_or_recipe->ingredients->find($source_id);
+    my $target_db = $dish_or_recipe->ingredients->find($target_id);
 
     my $new_position =
         $direction eq 'upwards'   ? $target_db->position
@@ -141,8 +141,7 @@ sub delete_ingredient : POST Chained('base') PathPart('ingredients/delete')
     my ( $self, $c ) = @_;
     my $ajax_request = $c->req->body_data;
 
-    my $ingredient =
-         $c->stash->{dish_or_recipe}->search_related('ingredients')->find( $ajax_request->{id} )
+    my $ingredient = $c->stash->{dish_or_recipe}->ingredients->find( $ajax_request->{id} )
       or $c->detach('/error/not_found');
 
     if ( my $item = $ingredient->item ) {

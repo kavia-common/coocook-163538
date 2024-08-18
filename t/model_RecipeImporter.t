@@ -163,7 +163,7 @@ is $target_project->units->count    => scalar(@units);
 $target_project->search_related($_)->delete for qw< articles units recipes >;
 
 note "Importing articles and units from source project ...";
-$target_project->search_related('articles')->delete;
+$target_project->articles->delete;
 Coocook::Model::ProjectImporter->new->import_data(
     $source_project => $target_project,
     [qw< articles units >]

@@ -46,7 +46,7 @@ sub create : POST Chained('/project/base') PathPart('shop_sections/create') Args
     my ( $self, $c ) = @_;
 
     my $name     = $c->req->params->get('name');
-    my $sections = $c->project->search_related('shop_sections');
+    my $sections = $c->project->shop_sections;
 
     if ( $sections->search( { name => $name } )->results_exist ) {
         $c->messages->error("A shop section with that name already exists!");
