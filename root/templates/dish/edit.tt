@@ -54,7 +54,7 @@ js.push('/lib/coocook-web-components/dist/ingredients-editor/ingredients-editor.
                 <select id="prepare_at_meal" class="form-select" name="prepare_at_meal">
                     <option value="" [% 'selected' IF NOT dish.prepare_at_meal.defined %] >(none)</option>
                     [% FOR meal IN prepare_meals %]
-                        <option value="[% meal.id %]" [% 'selected' IF dish.prepare_at_meal.id == meal.id %]>[% display_date(meal.date) %]: [% meal.name | html %]</option>
+                        <option value="[% meal.id %]" [% 'selected' IF dish.prepare_at_meal_id == meal.id %]>[% display_date(meal.date) %]: [% meal.name | html %]</option>
                     [% END %]
                 </select>
             </div>
@@ -82,9 +82,7 @@ js.push('/lib/coocook-web-components/dist/ingredients-editor/ingredients-editor.
 </div>
 </form>
 
-<script id="ingredients-editor-data" type="application/json">[% dish_json | html %]</script>
-
-<div class="ingredients-editor" data-ingredients-editor-json-id="ingredients-editor-data"
+<div class="ingredients-editor" data-ingredients-editor-json-id="ingredients_editor_data"
 class="col-sm-12 py-3">
 </div>
 

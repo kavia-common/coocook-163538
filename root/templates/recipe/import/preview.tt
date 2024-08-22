@@ -93,5 +93,3 @@ js_push_template_path();
 
     <button type="submit" name="import" class="btn btn-primary">Import</button>
 </form>
-
-<script id="existing-recipe-names" type="application/json">[% existing_recipe_names_json | html %]</script>

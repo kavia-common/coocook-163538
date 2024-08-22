@@ -1,6 +1,6 @@
 // properties comes from root/templates/project/import.tt
 
-const properties = getJsonData("properties-data");
+const properties = getJsonData("properties_data");
 
 for (let property of properties) {
     if (property.depends_on.length || property.dependency_of.length) {

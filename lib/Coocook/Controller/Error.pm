@@ -11,8 +11,8 @@ sub bad_request : Private {
 
     $c->response->status(400);
 
-    if ( ( $c->stash->{current_view} // '' ) eq 'JSON' ) {
-        $error and $c->stash( json_data => { error => $error } );
+    if ( ( $c->stash->{current_view} // '' ) eq 'Ajax' ) {
+        $error and $c->stash( ajax_response => { error => $error } );
     }
     else {
         $error

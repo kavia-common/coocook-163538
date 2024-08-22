@@ -186,13 +186,15 @@ sub project_for_meals_dishes_editor ( $self, $project ) {
 }
 
 sub resolve_meal_dish_path ( $self, $project, $path ) {
-    if ( $path->{item_type} eq 'dish' ) {
-        return $project->dishes->find( $path->{dish_id} );
+    my $item_type = $path->{item_type} || croak "No item_type";
+
+    if ( $item_type eq 'dish' ) {
+        return $project->dishes->find( $path->{dish_id} || croak "No dish_id" );
     }
-    elsif ( $path->{item_type} eq 'meal' ) {
-        return $project->meals->find( $path->{meal_id} );
+    elsif ( $item_type eq 'meal' ) {
+        return $project->meals->find( $path->{meal_id} || croak "No meal_id" );
     }
-    die;
+    croak "Unknown item_type";
 }
 
 1;

@@ -20,14 +20,10 @@ sub organizations_users : GET HEAD Chained('base') Args(0) Does('~Ajax')
 
     my $search = $c->req->params->get('search');
 
-    my $users = $c->model('Autocomplete')->organizations_users($search);
+    my $users = $c->model('Autocomplete')->organizations_users($search)
+      or $c->detach('/error/bad_request');
 
-    if ( not $users ) {
-        $c->response->status(400);
-        return;
-    }
-
-    $c->stash( json_data => $users );
+    $c->stash( ajax_response => $users );
 }
 
 sub users : GET HEAD Chained('base') Args(0) Does('~Ajax')
@@ -36,14 +32,10 @@ sub users : GET HEAD Chained('base') Args(0) Does('~Ajax')
 
     my $search = $c->req->params->get('search');
 
-    my $users = $c->model('Autocomplete')->users($search);
+    my $users = $c->model('Autocomplete')->users($search)
+      or $c->detach('/error/bad_request');
 
-    if ( not $users ) {
-        $c->response->status(400);
-        return;
-    }
-
-    $c->stash( json_data => $users );
+    $c->stash( ajax_response => $users );
 }
 
 __PACKAGE__->meta->make_immutable;

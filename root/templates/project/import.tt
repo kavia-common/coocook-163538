@@ -1,7 +1,5 @@
 [% title = "Import";
 
-js_push_template_path();
-
 no_import = 1;
 FOR p IN properties;
     IF !p.disabled;
@@ -11,7 +9,8 @@ END;
 
 IF no_import; %]
 <p>Nothing can be imported to this project, because you already created your own stuff in all possible categories.</p>
-[% ELSE %]
+[% ELSE;
+js_push_template_path() %]
 <form method="post" action="[% import_url %]" class="import">
     <div class="card mb-3">
         <div class="card-header">
@@ -46,8 +45,6 @@ IF no_import; %]
     <button class="btn btn-primary">Import</button>
 </form>
 [% END %]
-
-<script  id="properties-data" type="application/json">[% no_import ? '[]' : properties_json | html %]</script>
 
 [% WRAPPER includes/infobox.tt %]
     Complete your project faster or get more detailed information

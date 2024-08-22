@@ -2,7 +2,6 @@ package Coocook::Controller::Tag;
 
 use Coocook::Base qw(Moose);
 
-use JSON::MaybeXS ();
 use PerlX::Maybe;
 
 BEGIN { extends 'Coocook::Controller' }
@@ -51,14 +50,19 @@ sub index : GET HEAD Chained('/project/base') PathPart('tags') Args(0)
     my @existing_tag_names       = $c->project->tags->get_column('name')->all;
     my @existing_tag_group_names = $c->project->tag_groups->get_column('name')->all;
 
+    $c->json_stash(
+        existing_names => {
+            tags      => \@existing_tag_names,
+            tagGroups => \@existing_tag_group_names,
+        },
+    );
+
     $c->stash(
-        groups                        => \@groups,
-        other_tags                    => $other_tags,
-        create_url                    => $c->project_uri( $self->action_for('create') ),
-        tag_groups                    => [ $c->project->tag_groups->sorted->hri->all ],
-        create_group_url              => $c->project_uri( $self->action_for('create_group') ),
-        existing_tag_names_json       => JSON::MaybeXS->new->encode( \@existing_tag_names ),
-        existing_tag_group_names_json => JSON::MaybeXS->new->encode( \@existing_tag_group_names ),
+        groups           => \@groups,
+        other_tags       => $other_tags,
+        create_url       => $c->project_uri( $self->action_for('create') ),
+        tag_groups       => [ $c->project->tag_groups->sorted->hri->all ],
+        create_group_url => $c->project_uri( $self->action_for('create_group') ),
     );
 }
 

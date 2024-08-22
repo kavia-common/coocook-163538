@@ -1,5 +1,5 @@
 (() => {
-    const existingRecipeNames = getJsonData("existing-recipe-names");
+    const existingRecipeNames = getJsonData("existing_recipe_names");
 
     const articleElemList = document.querySelectorAll("#import select.article");
     articleElemList.forEach((articleElem) => {

@@ -4,9 +4,7 @@ css_push_template_path();
 js.push('/lib/coocook-web-components/dist/meals-dishes-editor/meals-dishes-editor.es.js');
 %]
 
-<script id="meals-dishes-editor-data" type="application/json">[% meals_dishes_editor_json | html %]</script>
-
-<div class="meals-dishes-editor" data-meals-dishes-editor-json-id="meals-dishes-editor-data"></div>
+<div class="meals-dishes-editor" data-meals-dishes-editor-json-id="meals_dishes_editor_data"></div>
 
 [% WRAPPER includes/infobox.tt %]
     <em>Meals</em> are occasions when food will be served, e.g. breakfast, lunch and dinner,

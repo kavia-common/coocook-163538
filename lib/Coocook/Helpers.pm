@@ -27,6 +27,19 @@ sub current_uri_local_part ($c) {
     return $current_uri;
 }
 
+=head2 $c->json_stash( $script_tag_id => \@data || \%data, ... )
+
+Shortcut to store array or hash data in C<< $c->stash->{json_stash} >>
+or access the JSON stash.
+
+=cut
+
+sub json_stash ( $c, %kv_pairs ) {
+    my $json_stash = $c->stash->{json_stash};
+    %kv_pairs and %$json_stash = ( %$json_stash, %kv_pairs );
+    return $json_stash;
+}
+
 =head2 $c->uri_for_local_part($local_part)
 
 Similar to C<< $c->uri_for() >> but accepts query part.

@@ -3,8 +3,7 @@ package Coocook::Controller::Recipe;
 use Coocook::Base qw(Moose);
 
 use Coocook::Util;
-use JSON::MaybeXS qw/to_json/;
-use Scalar::Util  qw(looks_like_number);
+use Scalar::Util qw(looks_like_number);
 
 BEGIN { extends 'Coocook::Controller' }
 
@@ -86,14 +85,15 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
         }
     }
 
+    $c->json_stash(
+        ingredients_editor_data => {
+            project_id   => $c->project->id,
+            project_name => $c->project->url_name,
+            recipe_id    => $recipe->id,
+        },
+    );
+
     $c->stash(
-        recipe_json => to_json(
-            {
-                project_id   => $c->project->id,
-                project_name => $c->project->url_name,
-                recipe_id    => $recipe->id,
-            }
-        ),
         recipe             => $recipe,
         ingredients        => $ingredients->as_arrayref,
         articles           => $ingredients->all_articles,
@@ -274,15 +274,6 @@ sub check_name : Private {
 
 sub check_value : Private {
     my ( $self, $c ) = @_;
-}
-
-sub get_all_ajax : GET HEAD PathPart('ajax') Does(~Ajax) Chained('recipes')
-  RequiresCapability('view_project') Args(0) {
-    my ( $self, $c ) = @_;
-    $c->stash->{json_data} = {
-        recipes             => $c->stash->{recipes},
-        get_all_recipes_url => $c->project_uri('/recipe/get_all_ajax')->as_string,
-    };
 }
 
 __PACKAGE__->meta->make_immutable;

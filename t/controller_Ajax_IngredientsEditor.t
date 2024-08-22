@@ -1,7 +1,5 @@
 use Test2::V0;
 
-use JSON::MaybeXS;
-
 use lib 't/lib';
 use TestDB qw(txn_do_and_rollback);
 use Test::Coocook;

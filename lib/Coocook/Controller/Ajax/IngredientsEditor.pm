@@ -2,9 +2,11 @@ package Coocook::Controller::Ajax::IngredientsEditor;
 
 use Coocook::Base qw(Moose);
 
-use JSON::MaybeXS;
-
 BEGIN { extends 'Coocook::Controller' }
+
+# default Catalyst logic doesn't convert CamelCase to snake_case
+# and compiles 'IngredientsEditor' into 'ingredientseditor'
+__PACKAGE__->config( namespace => 'ajax/ingredients_editor' );
 
 =head1 NAME
 
@@ -38,15 +40,15 @@ sub get_all_ingredients : GET HEAD Chained('base') PathPart('ingredients')
         ingredients => $c->stash->{dish_or_recipe}->ingredients,
     );
 
-    $c->stash->{json_data} = $ingredients->for_ingredients_editor
+    $c->stash->{ajax_response} = $ingredients->for_ingredients_editor
       or die 'Error when converting ingredients to IngredientsEditor format.';
 }
 
 sub update_ingredient : POST Chained('base') PathPart('ingredients/update')
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
-    my $json       = $c->req->body_data;
-    my $ingredient = $json->{ingredient};
+    my $ajax_request = $c->req->body_data;
+    my $ingredient   = $ajax_request->{ingredient};
 
     my $dish_or_recipe = $c->stash->{dish_or_recipe};
 
@@ -59,7 +61,7 @@ sub update_ingredient : POST Chained('base') PathPart('ingredients/update')
         }
     );
 
-    $c->stash->{json_data} = { id => $ingrDB->id };
+    $c->stash->{ajax_response} = { id => $ingrDB->id };
 }
 
 sub prepend_ingredient : POST Chained('base') PathPart('ingredients/prepend')
@@ -81,9 +83,9 @@ sub _xpend_ingredient : Private {
 
     my $dish_or_recipe = $c->stash->{dish_or_recipe};
 
-    my $json          = $c->req->body_data;
-    my $ingredient_id = $json->{ingredientId};
-    my $prepare       = $json->{prepare};
+    my $ajax_request  = $c->req->body_data;
+    my $ingredient_id = $ajax_request->{ingredientId};
+    my $prepare       = $ajax_request->{prepare};
 
     my $ingredient = $dish_or_recipe->search_related('ingredients')->find($ingredient_id)
       or $c->redirect('/error/bad_request');
@@ -95,7 +97,7 @@ sub _xpend_ingredient : Private {
 
     $ingredient->move_to_group( { %id_hash, prepare => $prepare }, $position );
 
-    $c->stash->{json_data} = { success => 1 };
+    $c->stash->{ajax_response} = { success => 1 };
 }
 
 sub move_ingredient : POST Chained('base') PathPart('ingredients/move')
@@ -104,10 +106,10 @@ sub move_ingredient : POST Chained('base') PathPart('ingredients/move')
 
     my $dish_or_recipe = $c->stash->{dish_or_recipe};
 
-    my $json      = $c->req->body_data;
-    my $source_id = $json->{sourceId};
-    my $target_id = $json->{targetId};
-    my $direction = $json->{direction};
+    my $ajax_request = $c->req->body_data;
+    my $source_id    = $ajax_request->{sourceId};
+    my $target_id    = $ajax_request->{targetId};
+    my $direction    = $ajax_request->{direction};
 
     my $source_db = $dish_or_recipe->search_related('ingredients')->find($source_id);
     my $target_db = $dish_or_recipe->search_related('ingredients')->find($target_id);
@@ -123,34 +125,34 @@ sub move_ingredient : POST Chained('base') PathPart('ingredients/move')
       :                                    die "code broken";
 
     $source_db->move_to_group( { %id_hash, prepare => $target_db->prepare }, $new_position );
-    $c->stash->{json_data} = { success => 1 };
+    $c->stash->{ajax_response} = { success => 1 };
 }
 
 sub delete_ingredient : POST Chained('base') PathPart('ingredients/delete')
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
-    my $json = $c->req->body_data;
+    my $ajax_request = $c->req->body_data;
 
     my $dish_or_recipe = $c->stash->{dish_or_recipe};
 
-    my $ingrDB = $dish_or_recipe->search_related('ingredients')->find( $json->{id} );
+    my $ingrDB = $dish_or_recipe->search_related('ingredients')->find( $ajax_request->{id} );
     $ingrDB->delete();
 
-    $c->stash->{json_data} = { id => $ingrDB->id };
+    $c->stash->{ajax_response} = { id => $ingrDB->id };
 }
 
 sub all_articles : GET HEAD Chained('base') PathPart('articles') RequiresCapability('view_project')
 {
     my ( $self, $c ) = @_;
     my $project = $c->stash->{project};
-    $c->stash->{json_data} =
+    $c->stash->{ajax_response} =
       [ $project->articles->search( undef, { columns => [ 'id', 'name', 'comment' ] } )->hri->all ];
 }
 
 sub all_units : GET HEAD Chained('base') PathPart('units') RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
     my $project = $c->stash->{project};
-    $c->stash->{json_data} = [
+    $c->stash->{ajax_response} = [
         map {
             my $u = $_;
             $u->{articles} = [ map { $_->{article_id} } $u->{articles_units}->@* ];
@@ -217,7 +219,7 @@ sub add_ingredient : POST Chained('base') PathPart('ingredients/create')
 
     $txn_scope_guard->commit;
 
-    $c->stash->{json_data} = { success => 1 };
+    $c->stash->{ajax_response} = { success => 1 };
 }
 
 1;
