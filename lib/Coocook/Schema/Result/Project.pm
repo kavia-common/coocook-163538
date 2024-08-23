@@ -42,14 +42,16 @@ __PACKAGE__->many_to_many( organizations => organizations_projects => 'organizat
 __PACKAGE__->has_many( projects_users => 'Coocook::Schema::Result::ProjectUser', 'project_id' );
 __PACKAGE__->many_to_many( users => projects_users => 'user' );
 
-__PACKAGE__->has_many( articles       => 'Coocook::Schema::Result::Article',      'project_id' );
-__PACKAGE__->has_many( meals          => 'Coocook::Schema::Result::Meal',         'project_id' );
+__PACKAGE__->has_many( articles => 'Coocook::Schema::Result::Article', 'project_id' );
+__PACKAGE__->has_many( meals    => 'Coocook::Schema::Result::Meal',    'project_id' );
+__PACKAGE__->many_to_many( dishes => 'meals', 'dishes' );
 __PACKAGE__->has_many( purchase_lists => 'Coocook::Schema::Result::PurchaseList', 'project_id' );
-__PACKAGE__->has_many( recipes        => 'Coocook::Schema::Result::Recipe',       'project_id' );
-__PACKAGE__->has_many( shop_sections  => 'Coocook::Schema::Result::ShopSection',  'project_id' );
-__PACKAGE__->has_many( tags           => 'Coocook::Schema::Result::Tag',          'project_id' );
-__PACKAGE__->has_many( tag_groups     => 'Coocook::Schema::Result::TagGroup',     'project_id' );
-__PACKAGE__->has_many( units          => 'Coocook::Schema::Result::Unit',         'project_id' );
+__PACKAGE__->many_to_many( items => 'purchase_lists', 'items' );
+__PACKAGE__->has_many( recipes       => 'Coocook::Schema::Result::Recipe',      'project_id' );
+__PACKAGE__->has_many( shop_sections => 'Coocook::Schema::Result::ShopSection', 'project_id' );
+__PACKAGE__->has_many( tags          => 'Coocook::Schema::Result::Tag',         'project_id' );
+__PACKAGE__->has_many( tag_groups    => 'Coocook::Schema::Result::TagGroup',    'project_id' );
+__PACKAGE__->has_many( units         => 'Coocook::Schema::Result::Unit',        'project_id' );
 
 __PACKAGE__->belongs_to(
     default_purchase_list => 'Coocook::Schema::Result::PurchaseList',
@@ -91,18 +93,6 @@ sub unarchive ($self) {
       or croak "Project not archived";
 
     $self->update( { archived => undef } );
-}
-
-# pseudo-relationship
-sub dishes ($self) {
-    return $self->result_source->schema->resultset('Dish')->search(
-        {
-            'meal.project_id' => $self->id,
-        },
-        {
-            join => 'meal',
-        }
-    );
 }
 
 # fetch articles, units and cache their relationships

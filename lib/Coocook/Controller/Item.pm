@@ -21,9 +21,7 @@ Catalyst Controller.
 sub base : Chained('/project/base') PathPart('items') CaptureArgs(1) {
     my ( $self, $c, $item_id ) = @_;
 
-    $c->stash( item => $c->project->purchase_lists->find_related( items => $item_id )
-          || $c->detach('/error/not_found') );
-
+    $c->stash( item => $c->project->items->find($item_id) || $c->detach('/error/not_found') );
 }
 
 sub convert : POST Chained('base') Args(0) RequiresCapability('edit_project') {

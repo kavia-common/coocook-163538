@@ -4,13 +4,13 @@ use DateTime;
 use Test::Memory::Cycle;
 
 use lib 't/lib';
-use TestDB;
+use TestDB qw(txn_do_and_rollback);
 
-plan(4);
+plan(6);
+
+my $db = TestDB->new();
 
 subtest inventory => sub {
-    my $db = TestDB->new();
-
     my $inventory = $db->resultset('Project')->find(1)->inventory();
 
     is $inventory => {
@@ -27,9 +27,7 @@ subtest inventory => sub {
     };
 };
 
-subtest articles_cached_units => sub {
-    my $db = TestDB->new;
-
+subtest articles_cached_units => txn_do_and_rollback $db => sub {
     my $project = $db->resultset('Project')->find(1);
 
     ok my @result = $project->articles_cached_units, "\$project->articles_cached_units";
@@ -80,9 +78,7 @@ subtest articles_cached_units => sub {
     }
 };
 
-subtest delete => sub {
-    my $db = TestDB->new;
-
+subtest delete => txn_do_and_rollback $db => sub {
     $db->enable_fk_checks();
 
     my @projects = $db->resultset('Project')->all
@@ -111,8 +107,6 @@ subtest delete => sub {
 };
 
 subtest stale => sub {
-    my $db = TestDB->new();
-
     my $rs = $db->resultset('Project');
 
     is [ $rs->stale->get_column('id')->all ] => [ 1, 2, 3 ], "ResultSet::Project->stale for today";
@@ -131,4 +125,16 @@ subtest stale => sub {
             ok $rs->find(2)->is_stale($date);
         };
     }
+};
+
+my $project = $db->resultset('Project')->find(1);
+
+subtest dishes => sub {
+    isa_ok my $dishes = $project->dishes => 'Coocook::Schema::ResultSet::Dish';
+    is $dishes->count => 3;
+};
+
+subtest items => sub {
+    isa_ok my $meals = $project->meals => 'Coocook::Schema::ResultSet::Meal';
+    is $meals->count => 3;
 };
