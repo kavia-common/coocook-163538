@@ -51,6 +51,16 @@ __PACKAGE__->belongs_to(
     'item_id', { on_delete => 'SET NULL' }
 );
 
+__PACKAGE__->has_many(
+    other_ingredients_on_item => 'Coocook::Schema::Result::DishIngredient',
+    sub ($args) {
+        return {
+            "$args->{foreign_alias}.id"      => { '!='   => { -ident => "$args->{self_alias}.id" } },
+            "$args->{foreign_alias}.item_id" => { -ident => "$args->{self_alias}.item_id" },
+        };
+    }
+);
+
 __PACKAGE__->meta->make_immutable;
 
 sub assign_to_purchase_list ( $self, $list ) {
@@ -72,6 +82,71 @@ sub assign_to_purchase_list ( $self, $list ) {
     );
 
     return $item;
+}
+
+=head2 delete_update_item()
+
+=cut
+
+sub delete_update_item ($self) {
+    my $retval = $self->item_id && $self->set_value_update_item(0);
+    $self->delete();
+    return $retval;
+}
+
+=head2 set_value_update_item( $value, $ucg? )
+
+=cut
+
+sub set_value_update_item ( $self, $new_value, $ucg = undef ) {
+    $self->txn_do(
+        sub {
+            my $item = $self->item
+              or return $self->update( { value => $new_value } );
+
+            my $old_value = $self->value;
+
+            if ( $old_value == 0 ) {
+                $self->update( { item_id => undef, value => $new_value } );
+
+                my $purchase_list = $item->purchase_list;
+
+                if ( $item->ingredients->count == 0 ) {    # TODO use results_exist()
+                    $item->delete();
+                    $item = undef;
+                }
+
+                if ( $new_value > 0 ) {
+                    return $self->assign_to_purchase_list($purchase_list);
+                }
+                else {
+                    return $item;
+                }
+            }
+
+            if ( $new_value == 0 and not $self->other_ingredients_on_item->results_exist ) {
+                $self->update( { item_id => undef, value => 0 } );
+                $item->delete();
+                return;
+            }
+
+            $self->update( { value => $new_value } );
+
+            $ucg ||= $item->purchase_list->project->unit_conversion_graph;
+
+            if ( my $factor = $ucg->factor_between_units( $self->unit_id => $item->unit_id ) ) {
+                if ( $self->other_ingredients_on_item->results_exist ) {
+                    return $item->delta_to_value_offset( ( $new_value - $old_value ) * $factor );
+                }
+                else {
+                    return $item->set_value_offset( $new_value * $factor );
+                }
+            }
+
+            # no factor to item unit -> whole item needs to be rebuilt
+            return $item->update_from_ingredients();
+        }
+    );
 }
 
 =head2 update_on_purchase_list(@update_args?)

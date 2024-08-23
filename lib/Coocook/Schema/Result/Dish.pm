@@ -59,15 +59,7 @@ sub recalculate ( $self, $servings2 ) {
     $self->txn_do(
         sub {
             for my $ingredient ( $self->ingredients->all ) {
-                my $value1 = $ingredient->value;
-                my $value2 = $value1 / $servings1 * $servings2;
-                $ingredient->update( { value => $value2 } );
-            }
-
-            my $items = $self->items;
-
-            while ( my $item = $items->next ) {
-                $item->update_from_ingredients();
+                $ingredient->set_value_update_item( $ingredient->value / $servings1 * $servings2 );
             }
 
             $self->update( { servings => $servings2 } );

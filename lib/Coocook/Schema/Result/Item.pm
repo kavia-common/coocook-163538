@@ -59,6 +59,63 @@ __PACKAGE__->has_many( ingredients => 'Coocook::Schema::Result::DishIngredient',
 
 __PACKAGE__->meta->make_immutable;
 
+=encoding utf8
+
+=head2 delta_to_value_offset($delta)
+
+Adds a delta to the item’s value and adjusts the offset.
+The delta needs to be given in the item’s unit.
+Might delete the item if the new value will be zero.
+Does B<not> change any dish ingredients.
+Returns the C<Result::Item> object itself unless
+it was deleted (then returns nothing).
+
+=cut
+
+sub delta_to_value_offset ( $self, $delta ) {
+    return if $delta == 0;
+
+    my $value = $self->value + $delta;
+
+    return
+        $value < 0  ? croak "Delta leads to negative value"
+      : $value == 0 ? $self->delete()
+      :               $self->_set_value_offset( $delta => $value );
+}
+
+=head2 set_value_offset($value)
+
+Sets the item’s value to C<$value> and adjusts the offset.
+The new value needs to be given in the item’s unit.
+Might delete the item if the new value will be zero.
+Does B<not> change any dish ingredients.
+
+=cut
+
+sub set_value_offset ( $self, $value ) {
+    $value >= 0 or croak "Negative value";
+    my $delta = $value - $self->value;
+    return $self if $delta == 0;
+    return $self->_set_value_offset( $delta => $value );
+}
+
+sub _set_value_offset ( $self, $delta, $value ) {    # TODO order of methods in this file
+    $self->set_column( value => $value );
+
+    my $offset = $self->offset;
+
+    if (   ( $delta < 0 and $offset < 0 )
+        or ( $delta > 0 and $offset > 0 ) )    # both are negative or both positive
+    {
+        if ( abs($delta) <= abs($offset) ) {    # fill up offset if possible
+            $offset -= $delta;
+            return $self->update( { offset => $offset } );
+        }
+    }
+
+    $self->update( { offset => 0 } );           # otherwise clear offset
+}
+
 sub change_value_offset_unit ( $self, $value, $offset, $unit_id ) {
     $self->txn_do(
         sub {
@@ -196,51 +253,42 @@ Returns total, i.e. sum of the item's value and offset.
 
 sub total ($self) { return $self->value + $self->offset }
 
-sub update_from_ingredients ($self) {
-    my $old_value  = $self->value;
-    my $item_value = 0;
+sub update_from_ingredients ( $self, $ucg = undef ) {
+    $self->txn_do(
+        sub {
+            my $item_value = 0;
+            my $items      = 0;
 
-    for my $ingredient ( $self->ingredients->all ) {
+            $ucg ||= $self->purchase_list->project->unit_conversion_graph;
 
-        my $ingredient_value = $ingredient->value;
+            for my $ingredient ( $self->ingredients->all ) {
 
-        if ( $self->unit_id != $ingredient->unit_id ) {
-            my $unit1 = $ingredient->unit;
-            my $unit2 = $self->unit;
+                my $ingredient_value = $ingredient->value;
 
-            if ( my $conversion = $unit1->conversions_from->find( { unit2_id => $unit2->id } ) ) {
-                $ingredient_value *= $conversion->factor;
+                if ( $ingredient->value == 0 ) {
+                    $items++;
+                    next;
+                }
+
+                if ( my $factor = $ucg->factor_between_units( $ingredient->unit_id => $self->unit_id ) ) {
+                    $item_value += $ingredient->value * $factor;
+                    $items++;
+                    next;
+                }
+
+                $ingredient->update( { item_id => undef } );
+                $ingredient->assign_to_purchase_list( $self->purchase_list );
             }
-            elsif ( $conversion = $unit2->conversions_from->find( { unit2_id => $unit1->id } ) ) {
-                $ingredient_value *= $conversion->factor**-1;
+
+            if ( $items == 0 ) {
+                $self->delete();
+                return;
             }
-            else {
-                die "Can't convert between units";
-            }
+
+            $self->update( { value => $item_value, offset => 0 } );
+            return $self;
         }
-
-        $item_value += $ingredient_value;
-    }
-
-    if ( $item_value == $old_value ) {
-        return $self;
-    }
-
-    $self->set_column( value => $item_value );
-
-    my $delta  = $item_value - $old_value;
-    my $offset = $self->offset;
-
-    if (   ( $delta < 0 and $offset < 0 )
-        or ( $delta > 0 and $offset > 0 ) )    # both are negative or both positive
-    {
-        if ( abs($delta) <= abs($offset) ) {    # fill up offset if possible
-            $offset -= $delta;
-            return $self->update( { offset => $offset } );
-        }
-    }
-
-    $self->update( { offset => 0 } );           # otherwise clear offset
+    );
 }
 
 1;
