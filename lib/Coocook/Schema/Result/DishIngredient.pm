@@ -149,25 +149,36 @@ sub set_value_update_item ( $self, $new_value, $ucg = undef ) {
     );
 }
 
-=head2 update_on_purchase_list(@update_args?)
-
-Updates the purchase list item of the ingredient, if any.
-Also takes optional arguments to update itself first.
-Returns boolish value indicating if there's an item that was updated.
+=head2 set_value_unit_update_item( $value, $unit, $ucg? )
 
 =cut
 
-sub update_on_purchase_list ( $self, @update_args ) {
+sub set_value_unit_update_item ( $self, $new_value, $new_unit_id, $ucg = undef ) {
     $self->txn_do(
         sub {
-            $self->update(@update_args) if @update_args;
-            my $item = $self->item or return;
+            my $item = $self->item
+              or return $self->update( { value => $new_value, unit_id => $new_unit_id } );
 
-            $item->update_from_ingredients;
+            $ucg ||= $item->purchase_list->project->unit_conversion_graph;
+
+            my $old_value   = $self->value;
+            my $old_unit_id = $self->unit_id;
+
+            my $factor_ingredient = $ucg->factor_between_units( $old_unit_id => $new_unit_id );
+            my $factor_item       = $ucg->factor_between_units( $old_unit_id => $item->unit_id );
+
+            if ( $factor_ingredient and $factor_item ) {
+                $self->update( { value => $new_value, unit_id => $new_unit_id } );
+
+                my $delta = ( $new_value / $factor_ingredient - $old_value ) * $factor_item;
+                return $item->delta_to_value_offset($delta);
+            }
+
+            $self->set_value_update_item(0);
+            $self->update( { value => $new_value, unit_id => $new_unit_id } );
+            $self->assign_to_purchase_list( $item->purchase_list );
         }
-    ) or return;
-
-    return 1;
+    );
 }
 
 =head2 remove_from_purchase_list()

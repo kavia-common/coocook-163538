@@ -74,11 +74,39 @@ subtest "update ingredient value" => sub {
       "exception for negative value";
 };
 
+subtest "update ingredient value and unit" => sub {
+    my ( $g, $kg, $l, $p ) = map { $units->find( { short_name => $_ } )->id } qw( g kg l p );
+
+    set_items_ingredients "1g";
+    ok $ingredients->find( { value => 1 } )->set_value_unit_update_item( 2, $kg );
+    items_ingredients_are ["2kg"], "ingredient without item";
+
+    set_items_ingredients "1+0kg: 1kg";
+    ok $ingredients->find( { value => 1 } )->set_value_unit_update_item( 500, $g );
+    items_ingredients_are ["0.5+0kg: 500g"], "basic item with conversion";
+
+    set_items_ingredients "1+0kg: 1kg";
+    ok $ingredients->find( { value => 1 } )->set_value_unit_update_item( 0.5, $l );
+    items_ingredients_are ["0.5+0l: 0.5l"], "basic item without conversion";
+
+    set_items_ingredients "2+0kg: 1kg 1000g";
+    ok $ingredients->find( { value => 1 } )->set_value_unit_update_item( 500, $g );
+    items_ingredients_are ["1.5+0kg: 500g 1000g"], "item with two ingredients";
+
+    set_items_ingredients "2+0kg: 1000g 1kg";
+    ok $ingredients->find( { value => 1 } )->set_value_unit_update_item( 0.5, $l );
+    items_ingredients_are [ "1+0kg: 1000g", "0.5+0l: 0.5l" ], "kg to liter";
+
+    set_items_ingredients "2+0kg: 1000g 1l";
+    ok $ingredients->find( { value => 1 } )->set_value_unit_update_item( 500, $g );
+    items_ingredients_are [ "1+0kg: 1000g", "500+0g: 500g" ], "liter to grams";
+
+    set_items_ingredients "2+0kg: 1000g 1l";
+    ok $ingredients->find( { value => 1 } )->set_value_unit_update_item( 500, $p );
+    items_ingredients_are [ "1+0kg: 1000g", "500+0p: 500p" ], "liter to pinch";
+};
+
 todo TODO => sub {
-    subtest "update ingredient value and unit" => sub {
-
-    };
-
     subtest "move ingredient to other purchase list" => sub {
 
     };

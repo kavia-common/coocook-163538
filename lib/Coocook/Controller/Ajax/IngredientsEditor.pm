@@ -58,16 +58,10 @@ sub update_ingredient : POST Chained('base') PathPart('ingredients/update')
     if ( $unit_id != $ingredient->unit_id ) {
         $c->project->units->results_exist( { id => $unit_id } )
           or $c->detach( '/error/bad_request', [ { message => "invalid unit_id" } ] );
-
-        $ingredient->set_column( unit_id => $unit_id );
     }
 
-    $ingredient->update_on_purchase_list(
-        {
-            value   => $ajax_request->{ingredient}{value},
-            comment => $ajax_request->{ingredient}{comment},
-        }
-    );
+    $ingredient->set_column( comment => $ajax_request->{ingredient}{comment} );
+    $ingredient->set_value_unit_update_item( $ajax_request->{ingredient}{value}, $unit_id );
 
     $c->stash->{ajax_response} = { id => $ingredient->id };
 }
