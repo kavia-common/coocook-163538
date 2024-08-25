@@ -149,6 +149,8 @@ sub move_items_ingredients ( $self, %args ) {
                     $ingredient->assign_to_purchase_list( $args{target_purchase_list} );
                 }
             }
+
+            return 1;
         }
     );
 }

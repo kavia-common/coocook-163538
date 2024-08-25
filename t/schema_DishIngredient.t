@@ -7,11 +7,12 @@ use Test::Builder;
 use lib "t/lib";
 use TestDB;
 
-my $db          = TestDB->new();
-my $project     = $db->resultset('Project')->find(1);
-my $units       = $project->units;
-my $items       = $project->items;
-my $ingredients = $project->dishes->search_related('ingredients');
+my $db             = TestDB->new();
+my $project        = $db->resultset('Project')->find(1);
+my $units          = $project->units;
+my $purchase_lists = $project->purchase_lists;
+my $ingredients    = $project->dishes->search_related('ingredients');
+our $items = $project->items;
 
 # declare names to allow to call these functions without parenthesis
 sub items_ingredients_are;
@@ -25,6 +26,33 @@ items_ingredients_are [
     "1.75+0l: 0.5l 0.25l 1l",
   ],
   "items_ingredients_are() helper function";
+
+subtest "move ingredient to other purchase list" => sub {
+    my $list1 = $purchase_lists->find(1);
+    my $list2 = $purchase_lists->find(2);
+
+    ok $list1->move_items_ingredients(
+        target_purchase_list => $list2,
+        ingredients          => [ $ingredients->find(1), $ingredients->find(2) ],
+        items                => [ $items->find(4) ],
+        ucg                  => $project->unit_conversion_graph,
+    );
+
+    local $items = $list1->items;
+    items_ingredients_are [
+        "14+0kg: 0.5kg 1kg 12.5kg",    # item 1 with 500g removed
+        "37.5+0g: 12.5g 25g",          # item 1 with 5g removed
+    ];
+
+    local $items = $list2->items;
+    items_ingredients_are bag {        # order of items after operation unstable
+        item "1.75+0l: 0.5l 0.25l 1l";    # was already on $list2
+        item "500+0g: 500g";              # removed item 4
+        item "500+0g: 500g";              # removed ingredient 1 from item 1
+        item "5+0g: 5g";                  # removed ingredient 2 from item 2
+        end;
+    };
+};
 
 {
     ok set_items_ingredients(
@@ -91,12 +119,6 @@ subtest "update ingredient value and unit" => sub {
     t "2+0kg: 1l 1000g",
       sub { $_->set_value_unit_update_item( 500, $p ) } => [ "1+0kg: 1000g", "500+0p: 500p" ],
       "liter to pinch";
-};
-
-todo TODO => sub {
-    subtest "move ingredient to other purchase list" => sub {
-
-    };
 };
 
 subtest "delete ingredient" => sub {
