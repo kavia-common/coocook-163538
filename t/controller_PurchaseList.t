@@ -7,6 +7,8 @@ plan(27);
 
 my $t = Test::Coocook->new();
 
+$t->schema->resultset('PurchaseList')->find(2)->delete;    # test starts with 1 list
+
 $t->get('/');
 $t->login_ok( 'john_doe', 'P@ssw0rd' );
 

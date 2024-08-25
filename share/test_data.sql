@@ -116,7 +116,8 @@ INSERT INTO "dish_ingredients"
 
 INSERT INTO "purchase_lists"
 (id, project_id,          name,         date) VALUES
-( 1,          1, 'all at once', '1999-12-31');
+( 1,          1, 'all at once', '1999-12-31'),
+( 2,          1, 'not to buy',  '2000-01-01');
 
 UPDATE "projects" SET default_purchase_list_id = 1 WHERE id = 1;
 
@@ -124,7 +125,7 @@ INSERT INTO "items"
 (id, purchase_list_id, value, "offset", unit_id, article_id, purchased,              comment) VALUES
 ( 1,                1,  14.5,      0.0,       2,          1,     FALSE,                   ''),
 ( 2,                1,  42.5,     +7.5,       1,          2,     FALSE, 'rounded to integer'),
-( 3,                1,  1.75,      0.0,       3,          3,     FALSE,                   ''),
+( 3,                2,  1.75,      0.0,       3,          3,     FALSE,                   ''),
 ( 4,                1, 500.0,      0.0,       1,          4,     FALSE,                   '');
 
 -- items are handcrafted to match items.id == article_id -> assigning items is simple:

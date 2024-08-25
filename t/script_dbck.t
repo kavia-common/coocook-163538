@@ -124,6 +124,8 @@ txn_do_and_rollback $db, sub {
 };
 
 txn_do_and_rollback $db, sub {
+    $db->resultset('PurchaseList')->find(2)->delete();
+
     my $purchase_list = $db->resultset('PurchaseList')->find(1);
     $purchase_list->items->delete();
     $purchase_list->update( { project_id => 2 } );

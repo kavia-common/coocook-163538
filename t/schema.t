@@ -10,7 +10,7 @@ plan(9);
 
 ok my $db = TestDB->new;
 
-is $db->count()                   => 82, "count()";
+is $db->count()                   => 83, "count()";
 is $db->count(qw< Article Unit >) => 12, "count(Article Unit)";
 
 subtest "one_row() in favor of first()" => sub {

@@ -21,8 +21,8 @@ sub t;
 items_ingredients_are [
     "14.5+0kg: 500g 0.5kg 1kg 12.5kg",
     "42.5+7.5g: 5g 12.5g 25g",
-    "1.75+0l: 0.5l 0.25l 1l",
     "500+0g: 500g",
+    "1.75+0l: 0.5l 0.25l 1l",
   ],
   "items_ingredients_are() helper function";
 
