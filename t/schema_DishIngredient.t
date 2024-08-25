@@ -16,6 +16,7 @@ my $ingredients = $project->dishes->search_related('ingredients');
 # declare names to allow to call these functions without parenthesis
 sub items_ingredients_are;
 sub set_items_ingredients;
+sub t;
 
 items_ingredients_are [
     "14.5+0kg: 500g 0.5kg 1kg 12.5kg",
@@ -41,34 +42,25 @@ items_ingredients_are [
 }
 
 subtest "update ingredient value" => sub {
-    my $test = sub ( $value1, $offset1, $delta, $value2, $offset2 ) {
-        local $Test::Builder::Level = $Test::Builder::Level + 1;
+    t "12-2g: 12g", sub { $_->set_value_update_item(9) }  => "9+0g: 9g";
+    t "12-2g: 12g", sub { $_->set_value_update_item(10) } => "10+0g: 10g";
+    t "12-2g: 12g", sub { $_->set_value_update_item(11) } => "11-1g: 11g";
+    t "12-2g: 12g", sub { $_->set_value_update_item(12) } => "12-2g: 12g";
+    t "12-2g: 12g", sub { $_->set_value_update_item(13) } => "13+0g: 13g";
+    t "12-2g: 12g", sub { $_->set_value_update_item(14) } => "14+0g: 14g";
+    t "12-2g: 12g", sub { $_->set_value_update_item(15) } => "15+0g: 15g";
 
-        set_items_ingredients $value1 . ( $offset1 >= 0 ? '+' : '' ) . "${offset1}g: ${value1}g";
-        ok $ingredients->one_row->set_value_update_item( $value1 + $delta );
-        items_ingredients_are [ $value2 . ( $offset2 >= 0 ? '+' : '' ) . "${offset2}g: ${value2}g" ];
-    };
+    t "10+0g: 10g", sub { $_->set_value_update_item(9) }  => "9+0g: 9g";
+    t "10+0g: 10g", sub { $_->set_value_update_item(10) } => "10+0g: 10g";
+    t "10+0g: 10g", sub { $_->set_value_update_item(11) } => "11+0g: 11g";
 
-    # offset/value => delta => offset/value
-    $test->( 12, -2 => -3 => 9,  +0 );
-    $test->( 12, -2 => -2 => 10, +0 );
-    $test->( 12, -2 => -1 => 11, -1 );
-    $test->( 12, -2 => +0 => 12, -2 );
-    $test->( 12, -2 => +1 => 13, +0 );
-    $test->( 12, -2 => +2 => 14, +0 );
-    $test->( 12, -2 => +3 => 15, +0 );
-
-    $test->( 10, +0 => -1 => 9,  +0 );
-    $test->( 10, +0 => +0 => 10, +0 );
-    $test->( 10, +0 => +1 => 11, +0 );
-
-    $test->( 8, +2 => -3 => 5,  +0 );
-    $test->( 8, +2 => -2 => 6,  +0 );
-    $test->( 8, +2 => -1 => 7,  +0 );
-    $test->( 8, +2 => +0 => 8,  +2 );
-    $test->( 8, +2 => +1 => 9,  +1 );
-    $test->( 8, +2 => +2 => 10, +0 );
-    $test->( 8, +2 => +3 => 11, +0 );
+    t "8+2g: 8g", sub { $_->set_value_update_item(5) }  => "5+0g: 5g";
+    t "8+2g: 8g", sub { $_->set_value_update_item(6) }  => "6+0g: 6g";
+    t "8+2g: 8g", sub { $_->set_value_update_item(7) }  => "7+0g: 7g";
+    t "8+2g: 8g", sub { $_->set_value_update_item(8) }  => "8+2g: 8g";
+    t "8+2g: 8g", sub { $_->set_value_update_item(9) }  => "9+1g: 9g";
+    t "8+2g: 8g", sub { $_->set_value_update_item(10) } => "10+0g: 10g";
+    t "8+2g: 8g", sub { $_->set_value_update_item(11) } => "11+0g: 11g";
 
     like dies { $ingredients->one_row->set_value_update_item(-1) } => qr/negative/i,
       "exception for negative value";
@@ -77,33 +69,28 @@ subtest "update ingredient value" => sub {
 subtest "update ingredient value and unit" => sub {
     my ( $g, $kg, $l, $p ) = map { $units->find( { short_name => $_ } )->id } qw( g kg l p );
 
-    set_items_ingredients "1g";
-    ok $ingredients->find( { value => 1 } )->set_value_unit_update_item( 2, $kg );
-    items_ingredients_are ["2kg"], "ingredient without item";
+    t "1g", sub { $_->set_value_unit_update_item( 2, $kg ) } => "2kg", "ingredient without item";
 
-    set_items_ingredients "1+0kg: 1kg";
-    ok $ingredients->find( { value => 1 } )->set_value_unit_update_item( 500, $g );
-    items_ingredients_are ["0.5+0kg: 500g"], "basic item with conversion";
+    t "1+0kg: 1kg", sub { $_->set_value_unit_update_item( 500, $g ) } => "0.5+0kg: 500g",
+      "basic item with conversion";
 
-    set_items_ingredients "1+0kg: 1kg";
-    ok $ingredients->find( { value => 1 } )->set_value_unit_update_item( 0.5, $l );
-    items_ingredients_are ["0.5+0l: 0.5l"], "basic item without conversion";
+    t "1+0kg: 1kg", sub { $_->set_value_unit_update_item( 0.5, $l ) } => "0.5+0l: 0.5l",
+      "basic item without conversion";
 
-    set_items_ingredients "2+0kg: 1kg 1000g";
-    ok $ingredients->find( { value => 1 } )->set_value_unit_update_item( 500, $g );
-    items_ingredients_are ["1.5+0kg: 500g 1000g"], "item with two ingredients";
+    t "2+0kg: 1kg 1000g", sub { $_->set_value_unit_update_item( 500, $g ) } => "1.5+0kg: 500g 1000g",
+      "item with two ingredients";
 
-    set_items_ingredients "2+0kg: 1000g 1kg";
-    ok $ingredients->find( { value => 1 } )->set_value_unit_update_item( 0.5, $l );
-    items_ingredients_are [ "1+0kg: 1000g", "0.5+0l: 0.5l" ], "kg to liter";
+    t "2+0kg: 1kg 1000g",
+      sub { $_->set_value_unit_update_item( 0.5, $l ) } => [ "1+0kg: 1000g", "0.5+0l: 0.5l" ],
+      "kg to liter";
 
-    set_items_ingredients "2+0kg: 1000g 1l";
-    ok $ingredients->find( { value => 1 } )->set_value_unit_update_item( 500, $g );
-    items_ingredients_are [ "1+0kg: 1000g", "500+0g: 500g" ], "liter to grams";
+    t "2+0kg: 1l 1000g",
+      sub { $_->set_value_unit_update_item( 500, $g ) } => [ "1+0kg: 1000g", "500+0g: 500g" ],
+      "liter to grams";
 
-    set_items_ingredients "2+0kg: 1000g 1l";
-    ok $ingredients->find( { value => 1 } )->set_value_unit_update_item( 500, $p );
-    items_ingredients_are [ "1+0kg: 1000g", "500+0p: 500p" ], "liter to pinch";
+    t "2+0kg: 1l 1000g",
+      sub { $_->set_value_unit_update_item( 500, $p ) } => [ "1+0kg: 1000g", "500+0p: 500p" ],
+      "liter to pinch";
 };
 
 todo TODO => sub {
@@ -113,45 +100,28 @@ todo TODO => sub {
 };
 
 subtest "delete ingredient" => sub {
-    set_items_ingredients "1g";
-    ok !$ingredients->find( { value => 1 } )->delete_update_item();
-    items_ingredients_are [], "ingredient without item";
+    t "1g", sub { !$_->delete_update_item } => [], "ingredients without item";
 
-    set_items_ingredients "3+0g: 1g 2g";
-    ok $ingredients->find( { value => 1 } )->delete_update_item();
-    items_ingredients_are ["2+0g: 2g"], "basic item";
+    t "3+0g: 1g 2g", sub { $_->delete_update_item } => "2+0g: 2g", "basic item";
 
-    set_items_ingredients "1+0g: 1g";
-    ok !$ingredients->find( { value => 1 } )->delete_update_item();
-    items_ingredients_are [], "item got deleted";
+    t "1+0g: 1g", sub { !$_->delete_update_item } => [], "item got deleted";
 
-    set_items_ingredients "0+0g: 0g";
-    ok !$ingredients->find( { value => 0 } )->delete_update_item();
-    items_ingredients_are [], "zero item got deleted";
+    t "0+0g: 0g", sub { !$_->delete_update_item } => [], "zero item got deleted";
 
-    set_items_ingredients "0+0kg: 0g";
-    ok !$ingredients->find( { value => 0 } )->delete_update_item();
-    items_ingredients_are [], "zero item with conversion got deleted";
+    t "0+0kg: 0g", sub { !$_->delete_update_item } => [], "zero item with conversion got deleted";
 
-    set_items_ingredients "900+100g: 500g 400g";
-    ok $ingredients->find( { value => 400 } )->delete_update_item();
-    items_ingredients_are ["500+0g: 500g"], "removed offset";
+    t "900+100g: 400g 500g", sub { $_->delete_update_item } => "500+0g: 500g", "removed offset";
 
-    set_items_ingredients "1200-200g: 1100g 100g";
-    ok $ingredients->find( { value => 100 } )->delete_update_item();
-    items_ingredients_are ["1100-100g: 1100g"], "reduced offset";
+    t "1200-200g: 100g 1100g", sub { $_->delete_update_item } => "1100-100g: 1100g", "reduced offset";
 
-    set_items_ingredients "2+0.1kg: 600g 400g 1l 3p";
-    ok $ingredients->find( { value => 400 } )->delete_update_item();
-    items_ingredients_are ["1.6+0kg: 600g 1l 3p"], "subtracted from total, cleared offset";
+    t "2+0.1kg: 400g 600g 1l 3p", sub { $_->delete_update_item } => "1.6+0kg: 600g 1l 3p",
+      "subtracted from total, cleared offset";
 
-    set_items_ingredients "1+0kg: 1kg 0p";
-    ok $ingredients->find( { value => 0 } )->delete_update_item();
-    items_ingredients_are ["1+0kg: 1kg"], "remove zero ingredient without factor";
+    t "1+0kg: 0p 1kg", sub { $_->delete_update_item } => "1+0kg: 1kg",
+      "remove zero ingredient without factor";
 
-    set_items_ingredients "2+0.1kg: 0.6kg 400g 1l 3p";
-    ok $ingredients->find( { value => 1 } )->delete_update_item();
-    items_ingredients_are [ "1+0kg: 0.6kg 400g", "3+0p: 3p" ],
+    t "2+0.1kg: 1l 0.6kg 400g 3p",
+      sub { $_->delete_update_item } => [ "1+0kg: 0.6kg 400g", "3+0p: 3p" ],
       "recalculated from ingredients, split item";
 };
 
@@ -180,6 +150,8 @@ sub set_items_ingredients (@strings) {
     $items->delete();
     $ingredients->delete();
 
+    my @ingredients;
+
     for (@strings) {
         my ( $item_string, $ingredients_string ) = m/^(?<item>.+): (?<ingredients>.+)$/;
 
@@ -187,16 +159,18 @@ sub set_items_ingredients (@strings) {
             m/^ (?<value>[0-9.]+) (?<unit>\w+) $/x
               or croak "invalid item/ingredient: '$_'";
 
-            $ingredients->create(
+            push @ingredients,
+              $ingredients->create(
                 {
                     dish_id    => 1,
+                    item_id    => undef,
                     prepare    => 0,
                     value      => $+{value},
                     unit_id    => $units->find( { short_name => $+{unit} } )->id,
                     article_id => 1,
                     comment    => '',
                 }
-            );
+              );
 
             next;
         }
@@ -215,25 +189,38 @@ sub set_items_ingredients (@strings) {
             }
         );
 
-        my @ingredients = map {
-            m/^ (?<value>[0-9.]+) (?<unit>\w+) $/x
-              or croak "invalid ingredient: '$_'";
+        push @ingredients, $item->ingredients->populate(
+            [
+                map {
+                    m/^ (?<value>[0-9.]+) (?<unit>\w+) $/x
+                      or croak "invalid ingredient: '$_'";
 
-            my $unit_id = $units->find( { short_name => $+{unit} } )->id;
-            {
-                dish_id    => 1,
-                prepare    => 0,
-                value      => $+{value},
-                unit_id    => $unit_id,
-                article_id => 1,
-                comment    => '',
-            }
+                    my $unit_id = $units->find( { short_name => $+{unit} } )->id;
 
-        } split / /, $ingredients_string;
-
-        $item->ingredients->populate( \@ingredients );
-
+                    {
+                        dish_id    => 1,
+                        prepare    => 0,
+                        value      => $+{value},
+                        unit_id    => $unit_id,
+                        article_id => 1,
+                        comment    => '',
+                    }
+                } split( / /, $ingredients_string )
+            ]
+        );
     }
 
-    return 1;
+    return @ingredients;
+}
+
+sub t ( $input, $coderef, $expected, $name = undef ) {
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    my @ingredients = set_items_ingredients( ref $input eq 'ARRAY' ? @$input : $input );
+    local $_ = $ingredients[0];
+    my $coderef_ok = $coderef->(@ingredients) or fail $name;
+    items_ingredients_are(
+        ref $expected eq 'ARRAY' ? $expected : [$expected],
+        $coderef_ok              ? $name     : "... items_ingredients_are()"
+    );
 }
