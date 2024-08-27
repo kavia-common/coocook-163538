@@ -22,7 +22,7 @@ subtest inventory => sub {
         shop_sections    => 2,
         tags             => 3,
         tag_groups       => 1,
-        units            => 5,
+        units            => 6,
         unassigned_items => 0,
     };
 };

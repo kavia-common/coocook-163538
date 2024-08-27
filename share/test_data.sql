@@ -58,18 +58,20 @@ INSERT INTO "meals"
 ( 9,          2,        1, '2000-01-01', 'other meal',                      '');
 
 INSERT INTO "units"
-(id, project_id, short_name,   long_name) VALUES
-( 1,          1,        'g',     'grams'),
-( 2,          1,       'kg', 'kilograms'),
-( 3,          1,        'l',    'liters'),
-( 4,          1,        't',      'tons'),
-( 5,          1,        'p',     'pinch'), -- no conversion, (in German: Prise)
-( 6,          2,       'kg', 'kilograms'); -- other project
+(id, project_id, short_name,     long_name) VALUES
+( 1,          1,        'g',       'grams'),
+( 2,          1,       'kg',   'kilograms'),
+( 3,          1,        'l',      'liters'),
+( 4,          1,        't',        'tons'),
+( 5,          1,        'p',     'pinches'), -- no conversion, (in German: Prisen)
+( 6,          2,       'kg',   'kilograms'), -- other project
+( 7,          1,       'ml', 'milliliters');
 
 INSERT INTO "unit_conversions"
-(unit1_id, factor, unit2_id) VALUES
-(       1,  0.001,        2), --  g to kg
-(       2,  0.001,        4); -- kg to t
+(unit1_id,   factor, unit2_id) VALUES
+(       1,    0.001,        2), --  g to kg
+(       2,    0.001,        4), -- kg to t
+(       3, 1000    ,        7); --  l to ml
 
 INSERT INTO "articles_units"
 (article_id, unit_id) VALUES
