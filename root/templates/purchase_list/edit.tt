@@ -6,7 +6,7 @@ html_title = html_title _ ' for ' _ display_date(list.date, {html=>1});
 css.push('/css/print.css');
 css_push_template_path();
 js.push('/lib/coocook-web-components/dist/autocomplete/autocomplete.es.js');
-js_push_template_path() IF lists.size > 1;
+js_push_template_path();
 %]
 
 <button class="btn btn-primary my-3 material-icons" onclick="print()" title="Print">print</button>
@@ -25,7 +25,7 @@ js_push_template_path() IF lists.size > 1;
     <i class="material-icons">move_to_inbox</i>&thinsp;Assign articles to shop section
 </button>
 
-<div id="list-container" class="[% 'editable' IF lists.size > 1 %]">
+<div id="list-container" class="editable">
 [% INCLUDE purchase_list/_edit_table.tt %]
 </div>
 

@@ -21,6 +21,7 @@ const articleSelectList = document.getElementById("article-select-list");
 const messages = document.getElementById("messages");
 
 const purchaseLists = getJsonData("purchase-lists");
+const singleList = purchaseLists.length === 1;
 let shopSections = getJsonData("shop-sections");
 let articles = {};
 
@@ -110,7 +111,7 @@ function mapArticleAmount(items) {
 
 function init() {
     if (shopSections === undefined || purchaseLists === undefined) {
-        moveBtnDisabled.classList.add("d-none");
+        if (!singleList) moveBtnDisabled.classList.add("d-none");
         assignBtnDisabled.classList.add("d-none");
         return;
     }
@@ -191,12 +192,14 @@ function checkDisabled() {
         assignBtnDisabled?.classList.remove("d-none");
     }
 
-    if (items > 0 || ingredients.length > 0) {
-        moveBtn?.classList.remove("d-none");
-        moveBtnDisabled?.classList.add("d-none");
-    } else {
-        moveBtn?.classList.add("d-none");
-        moveBtnDisabled?.classList.remove("d-none");
+    if (!singleList) {
+        if (items > 0 || ingredients.length > 0) {
+            moveBtn?.classList.remove("d-none");
+            moveBtnDisabled?.classList.add("d-none");
+        } else {
+            moveBtn?.classList.add("d-none");
+            moveBtnDisabled?.classList.remove("d-none");
+        }
     }
 }
 

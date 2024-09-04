@@ -13,7 +13,7 @@
     </div>
 
     <div class="mb-2 table-responsive">
-        <table class="table align-middle pl-editor no-print [% 'table-hover' IF lists.size > 1 %]">
+        <table class="table align-middle pl-editor no-print table-hover">
             <thead>
                 <tr>
                     <th>Amount</th>
@@ -35,10 +35,8 @@
                        rowspan = 1;
                     END %]
                     <td class="item-amount" rowspan="[% rowspan %]">
-                    [% IF lists.size > 1 %]
-                        <input type="checkbox" id="move-item-[% item.id %]" class="d-none" data-article-id="[% item.article.id %]" data-article-name="[% item.article.name | html %]">
-                    [% END;
-                    IF item.update_offset_url %]
+                    <input type="checkbox" id="move-item-[% item.id %]" class="d-none" data-article-id="[% item.article.id %]" data-article-name="[% item.article.name | html %]">
+                    [% IF item.update_offset_url %]
                         <datalist id="values-[% loop.count %]">
                             <option value="[% item.total %]">
                             <option value="[% item.next_higher_total %]">
