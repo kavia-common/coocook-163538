@@ -208,7 +208,9 @@ function buildPurchaseListOptions() {
         if (pl.id === currentPurchaseListId) continue;
         const option = document.createElement("option");
         option.value = pl.id;
-        option.innerText = `${pl.date} ${pl.name}`;
+        option.innerHTML = `${pl.date} ${pl.name}${
+            pl.is_default ? " (default)" : ""
+        }`;
         selectPl.append(option);
     }
 
