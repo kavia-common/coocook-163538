@@ -204,6 +204,7 @@ init();
 
 // Purchase lists
 function buildPurchaseListOptions() {
+    let defaultSelected = false;
     for (const pl of purchaseLists) {
         if (pl.id === currentPurchaseListId) continue;
         const option = document.createElement("option");
@@ -212,6 +213,10 @@ function buildPurchaseListOptions() {
             pl.is_default ? " (default)" : ""
         }`;
         selectPl.append(option);
+        if (pl.is_default) {
+            selectPl.value = pl.id;
+            defaultSelected = true;
+        }
     }
 
     if (purchaseLists.length === 2) {
@@ -223,7 +228,7 @@ function buildPurchaseListOptions() {
             }
         }
         selectPl.value = plId;
-    } else {
+    } else if (!defaultSelected) {
         selectPl.setCustomValidity("Please select a target purchase list");
     }
     selectPl.addEventListener("input", () => {
