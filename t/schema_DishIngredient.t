@@ -5,7 +5,7 @@ use Test2::V0;
 use Test::Builder;
 
 use lib "t/lib";
-use TestDB;
+use TestDB qw(txn_do_and_rollback);
 
 my $db             = TestDB->new();
 my $project        = $db->resultset('Project')->find(1);
@@ -26,6 +26,17 @@ items_ingredients_are [
     "1.75+0l: 0.5l 0.25l 1l",
   ],
   "items_ingredients_are() helper function";
+
+subtest "delete dish" => txn_do_and_rollback $db => sub {
+    ok $project->dishes->find(1)->update_items_and_delete();
+
+    items_ingredients_are [
+        "14+0kg: 0.5kg 1kg 12.5kg",    #perltidy
+        "37.5+0g: 12.5g 25g",
+        "500+0g: 500g",
+        "1.25+0l: 0.25l 1l",
+    ];
+};
 
 subtest "move ingredient to other purchase list" => sub {
     my $list1 = $purchase_lists->find(1);
