@@ -20,7 +20,7 @@ sub ( $schema, $versions ) {
         );
 
         while ( my $ingredient = $unassigned_ingredients->next ) {
-            $ingredient->assign_to_purchase_list($list);
+            $ingredient->assign_to_purchase_list( $list->id );
         }
     }
 };

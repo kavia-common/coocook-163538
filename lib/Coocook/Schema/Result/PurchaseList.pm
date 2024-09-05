@@ -81,7 +81,7 @@ around insert => sub ( $orig, $self ) {
                 my $ingredients = $project->dishes->search_related('ingredients');
 
                 while ( my $ingredient = $ingredients->next ) {
-                    $ingredient->assign_to_purchase_list($self);
+                    $ingredient->assign_to_purchase_list( $self->id );
                 }
             }
 
@@ -146,7 +146,7 @@ sub move_items_ingredients ( $self, %args ) {
                   or $items{$item_id}->remove_ingredients( $args{ucg}, @$ingredients );
 
                 for my $ingredient (@$ingredients) {
-                    $ingredient->assign_to_purchase_list( $args{target_purchase_list} );
+                    $ingredient->assign_to_purchase_list( $args{target_purchase_list}->id );
                 }
             }
 

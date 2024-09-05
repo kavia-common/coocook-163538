@@ -299,7 +299,7 @@ sub update_from_ingredients ( $self, $ucg = undef ) {
                     }
                 }
 
-                my $item = $ingredient->assign_to_purchase_list( $self->purchase_list );
+                my $item = $ingredient->assign_to_purchase_list( $self->purchase_list_id );
                 push @items, $item;
             }
 

@@ -63,14 +63,14 @@ __PACKAGE__->has_many(
 
 __PACKAGE__->meta->make_immutable;
 
-sub assign_to_purchase_list ( $self, $list ) {
+sub assign_to_purchase_list ( $self, $list_id ) {
     my $item;
 
     $self->txn_do(
         sub {
             $item = $self->result_source->schema->resultset('Item')->add_or_create(
                 {
-                    purchase_list_id => ref $list ? $list->id : $list,    # TODO stricter interface?
+                    purchase_list_id => $list_id,
                     article_id       => $self->article_id,
                     unit_id          => $self->unit_id,
                     value            => $self->value,
@@ -109,7 +109,7 @@ sub set_value_update_item ( $self, $new_value, $ucg = undef ) {
             if ( $old_value == 0 ) {
                 $self->update( { item_id => undef, value => $new_value } );
 
-                my $purchase_list = $item->purchase_list;
+                my $purchase_list_id = $item->purchase_list_id;
 
                 if ( $item->ingredients->count == 0 ) {    # TODO use results_exist()
                     $item->delete();
@@ -117,7 +117,7 @@ sub set_value_update_item ( $self, $new_value, $ucg = undef ) {
                 }
 
                 if ( $new_value > 0 ) {
-                    return $self->assign_to_purchase_list($purchase_list);
+                    return $self->assign_to_purchase_list($purchase_list_id);
                 }
                 else {
                     return $item;
@@ -176,7 +176,7 @@ sub set_value_unit_update_item ( $self, $new_value, $new_unit_id, $ucg = undef )
 
             $self->set_value_update_item(0);
             $self->update( { value => $new_value, unit_id => $new_unit_id } );
-            $self->assign_to_purchase_list( $item->purchase_list );
+            $self->assign_to_purchase_list( $item->purchase_list_id );
         }
     );
 }

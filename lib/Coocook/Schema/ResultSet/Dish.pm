@@ -36,8 +36,8 @@ sub from_recipe ( $self, %args ) {
                     }
                 );
 
-                if ( my $list = $recipe->project->default_purchase_list ) {
-                    $dish_ingredient->assign_to_purchase_list($list);
+                if ( my $list_id = $recipe->project->default_purchase_list_id ) {
+                    $dish_ingredient->assign_to_purchase_list($list_id);
                 }
             }
 

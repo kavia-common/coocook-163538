@@ -225,8 +225,8 @@ sub add_ingredient : POST Chained('base') PathPart('ingredients/create')
     );
 
     if ( $ingredient->is_dish_ingredient ) {
-        if ( my $list = $project->default_purchase_list ) {
-            $ingredient->assign_to_purchase_list($list);
+        if ( my $list_id = $project->default_purchase_list_id ) {
+            $ingredient->assign_to_purchase_list($list_id);
         }
     }
 
