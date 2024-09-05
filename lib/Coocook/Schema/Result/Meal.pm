@@ -58,7 +58,7 @@ Deletes all but prepared dishes
 =cut
 
 sub delete_dishes ($self) {
-    $self->dishes->update_items_and_delete;
+    $self->dishes->delete_update_items;
 }
 
 sub for_meals_dishes_editor ($self) {

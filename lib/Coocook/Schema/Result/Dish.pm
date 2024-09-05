@@ -67,7 +67,7 @@ sub recalculate ( $self, $servings2 ) {
     );
 }
 
-sub update_items_and_delete ($self) {
+sub delete_update_items ($self) {
     $self->txn_do(
         sub {
             for my $ingredient ( $self->ingredients->all ) {

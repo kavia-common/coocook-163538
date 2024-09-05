@@ -77,7 +77,7 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
 sub delete : POST Chained('base') PathPart('delete') Args(0) RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
-    $c->stash->{dish}->update_items_and_delete;
+    $c->stash->{dish}->delete_update_items;
 
     $c->response->redirect( $c->project_uri('/project/edit') );
 }

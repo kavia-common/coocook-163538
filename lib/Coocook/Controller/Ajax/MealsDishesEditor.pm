@@ -152,7 +152,7 @@ sub delete_dishes_from_meal : POST Chained('/meal/base') PathPart('delete_dishes
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
-    $c->stash->{meal}->dishes->update_items_and_delete;
+    $c->stash->{meal}->dishes->delete_update_items;
 
     $c->stash->{ajax_response} = { success => 1 };
 }
@@ -308,7 +308,7 @@ sub delete_dish : POST Chained('/dish/base') PathPart('delete') Args(0)
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
-    $c->stash->{dish}->update_items_and_delete;
+    $c->stash->{dish}->delete_update_items;
 
     $c->stash->{ajax_response} = { success => 1 };
 }

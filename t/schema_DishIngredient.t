@@ -28,7 +28,7 @@ items_ingredients_are [
   "items_ingredients_are() helper function";
 
 subtest "delete dish" => txn_do_and_rollback $db => sub {
-    ok $project->dishes->find(1)->update_items_and_delete();
+    ok $project->dishes->find(1)->delete_update_items();
 
     items_ingredients_are [
         "14+0kg: 0.5kg 1kg 12.5kg",    #perltidy

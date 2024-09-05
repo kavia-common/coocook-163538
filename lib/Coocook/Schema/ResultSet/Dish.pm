@@ -70,13 +70,13 @@ sub in_future ($self) {
     );
 }
 
-sub update_items_and_delete ($self) {
+sub delete_update_items ($self) {
     $self->txn_do(
         sub {
             $self->assert_no_sth;
 
             while ( my $dish = $self->next ) {
-                $dish->update_items_and_delete;
+                $dish->delete_update_items;
             }
         }
     );
