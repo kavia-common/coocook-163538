@@ -256,8 +256,9 @@ sub total ($self) { return $self->value + $self->offset }
 sub update_from_ingredients ( $self, $ucg = undef ) {
     $self->txn_do(
         sub {
-            my $item_value = 0;
-            my $items      = 0;
+            my $item_value           = 0;
+            my $remaining_items      = 0;
+            my @dangling_ingredients = ();
 
             $ucg ||= $self->purchase_list->project->unit_conversion_graph;
 
@@ -266,23 +267,40 @@ sub update_from_ingredients ( $self, $ucg = undef ) {
                 my $ingredient_value = $ingredient->value;
 
                 if ( $ingredient->value == 0 ) {
-                    $items++;
+                    $remaining_items++;
                     next;
                 }
 
                 if ( my $factor = $ucg->factor_between_units( $ingredient->unit_id => $self->unit_id ) ) {
                     $item_value += $ingredient->value * $factor;
-                    $items++;
+                    $remaining_items++;
                     next;
                 }
 
                 $ingredient->update( { item_id => undef } );
-                $ingredient->assign_to_purchase_list( $self->purchase_list );
+                push @dangling_ingredients, $ingredient;
             }
 
-            if ( $items == 0 ) {
+            if ( $remaining_items == 0 ) {
                 $self->delete();
                 return;
+            }
+
+            my @items;
+
+            # add dangling ingredients as new items with minimal number of new items
+          INGREDIENT: for my $ingredient (@dangling_ingredients) {
+                for my $item (@items) {
+                    if ( my $factor = $ucg->factor_between_units( $ingredient->unit_id => $item->unit_id ) ) {
+                        $ingredient->update( { item_id => $item->id } );
+                        $item->update( { value => $item->value + $ingredient->value * $factor } );
+                        last INGREDIENT;
+
+                    }
+                }
+
+                my $item = $ingredient->assign_to_purchase_list( $self->purchase_list );
+                push @items, $item;
             }
 
             $self->update( { value => $item_value, offset => 0 } );

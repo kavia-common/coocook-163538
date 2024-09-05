@@ -156,6 +156,11 @@ subtest "delete ingredient" => sub {
     t "2+0.1kg: 1l 0.6kg 400g 3p",
       sub { $_->delete_update_item } => [ "1+0kg: 0.6kg 400g", "3+0p: 3p" ],
       "recalculated from ingredients, split item";
+
+    # l and ml are split from original item but shall be combined in new item
+    t "2.503+0.97kg: 3p 1l 500ml 0.6kg 400g",
+      sub { $_->delete_update_item } => [ "1+0kg: 0.6kg 400g", "1.5+0l: 1l 500ml" ],
+      "recalculated from ingredients, split items stay in sets";
 };
 
 done_testing;
