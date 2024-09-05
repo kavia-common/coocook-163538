@@ -71,8 +71,7 @@ sub delete_update_items ($self) {
     $self->txn_do(
         sub {
             for my $ingredient ( $self->ingredients->all ) {
-                $ingredient->remove_from_purchase_list;
-                $ingredient->delete;
+                $ingredient->delete_update_item;
             }
             $self->delete;
         }

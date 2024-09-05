@@ -181,32 +181,6 @@ sub set_value_unit_update_item ( $self, $new_value, $new_unit_id, $ucg = undef )
     );
 }
 
-=head2 remove_from_purchase_list()
-
-Returns boolish value indicating if there's an item that was updated
-
-=cut
-
-sub remove_from_purchase_list ($self) {
-    $self->txn_do(
-        sub {
-            my $item = $self->item or return;
-
-            $self->update( { item_id => undef } );
-
-            if ( $item->ingredients->results_exist ) {
-                $item->update_from_ingredients;
-            }
-
-            else {    # item belongs to no other ingredients
-                $item->delete;
-            }
-        }
-    ) or return;
-
-    return 1;
-}
-
 sub for_ingredients_editor ($self) {
     my $unit              = $self->unit;
     my @convertible_units = $self->article->units->search(
