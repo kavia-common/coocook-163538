@@ -7,6 +7,8 @@ use Coocook::Base qw( Moose MooseX::NonMoose );
 use Carp;
 use Storable qw(dclone);
 
+our $DISABLE_ISSUE346_FIX;
+
 extends 'Catalyst::Model';
 
 __PACKAGE__->meta->make_immutable;
@@ -23,6 +25,11 @@ my @internal_properties = (    # array of hashrefs with key 'key' instead of has
         depends_on => ['units'],
         import     =>
           sub ($project) { $project->unit_conversions_rs, { unit1_id => 'units', unit2_id => 'units' } },
+        after => sub ($project) {
+            $DISABLE_ISSUE346_FIX
+              or $_->reverse()->update()
+              for $project->unit_conversions->not_normalized->all;
+        },
     },
     {
         key    => 'shop_sections',
@@ -324,6 +331,10 @@ sub import_data ( $self, $source, $target, $properties ) {
 
                         $rs->populate( \@buffer );    # must be in void context to save time!
                     }
+                }
+
+                if ( my $coderef = $property->{after} ) {
+                    $coderef->($target);
                 }
             }
         }

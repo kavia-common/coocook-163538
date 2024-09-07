@@ -181,6 +181,8 @@ subtest "complete import" => sub {
     is $target->articles->find( { name => 'flour' } )->shop_section->name => 'bakery products',
       "article 'flour' stays in shop section 'bakery products'";
 
+    ok !$target->unit_conversions->not_normalized->results_exist, "all unit conversions are normalized";
+
     is
       $imported => $deleted,
       "rows imported == rows deleted"

@@ -4,6 +4,7 @@ use Test2::V0 -no_warnings => 1;
 use Test2::Require::Module 'DBD::Pg';
 use Test2::Require::Module 'DateTime::Format::Pg';
 
+use Coocook::Model::ProjectImporter;
 use Coocook::Script::Deploy;
 use Coocook::Schema;
 use Data::Dumper;
@@ -64,7 +65,7 @@ sub _schema_diff_like;    # declare name, implementation below
 
 my $FIRST_PGSQL_SCHEMA_VERSION = 21;
 
-plan tests => 3 + ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 9;
+plan tests => 3 + ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 10;
 
 my $schema_from_dbic = Coocook::Schema->connect( $dsn->('dbic') );
 ok lives { $schema_from_dbic->deploy() }, "deploy with DBIx::Class";
@@ -309,6 +310,50 @@ subtest "issue #266 order of meals/dishes" => sub {
         $schema->resultset('Dish')->search( undef, { order_by => 'position' } )->get_column('name')->all ]
       => [qw( b c a )],
       "dishes in order of insertion into database";
+};
+
+subtest "issue #346 unit conversions not normalized after import" => sub {
+    my $schema = Coocook::Schema->connect( $dsn->('issue346') );
+    $schema->deploy();
+    TestDB->execute_test_data($schema);
+    for my $table (qw( projects units )) {
+        $schema->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do(<<~SQL) } );
+        SELECT setval('${table}_id_seq', (SELECT MAX(id) FROM $table), true)
+        SQL
+    }
+
+    my $source = $schema->resultset('Project')->find(1);
+
+    $schema->txn_do(    # change order of 'units' rows in PostgreSQL
+        sub {
+            $schema->pgsql_set_constraints_deferred();
+            my $unit        = $source->units->find(1);
+            my @conversions = $unit->conversions->all;
+
+            $unit->delete()->insert();
+
+            for (@conversions) {    # conversions got deleted by ON CASCADE
+                $_->in_storage(0);
+                $_->insert();
+            }
+        }
+    );
+
+    my $test_non_normalized_units_exist = sub {
+        state $i = 1;
+        my $target = $schema->resultset('Project')
+          ->create( { name => "Import Target " . $i++, description => __FILE__, owner_id => 1 } );
+
+        Coocook::Model::ProjectImporter->import_data( $source => $target, ['units'] );
+        return $target->unit_conversions->not_normalized->results_exist;
+    };
+
+    {    # test setup can break very easily -> test for false positives
+        local $Coocook::Model::ProjectImporter::DISABLE_ISSUE346_FIX = 1;
+        $test_non_normalized_units_exist->() or die "test broken";
+    }
+
+    ok !$test_non_normalized_units_exist->(), "all unit conversions are normalized";
 };
 
 # explicitly destroy DBIC objects before Pg.
