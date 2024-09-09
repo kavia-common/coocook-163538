@@ -114,12 +114,12 @@
                 </tr>
 
                     [% IF item.offset %]
-                <tr class="parent">
-                    <td class="text-end rounding">
+                <tr class="parent rounding">
+                    <td class="text-end">
                         [% display_value_unit( item.offset, item.unit, {html=>1, force_sign=>1} ) %]
                     </td>
                     <td></td>
-                    <td class="rounding" colspan="3">
+                    <td colspan="3">
                         <i>rounding difference</i>
                     </td>
                     <td class="text-center">
