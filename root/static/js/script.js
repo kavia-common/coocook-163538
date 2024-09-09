@@ -96,7 +96,13 @@ for (const form of forms) {
     const selects = Array.prototype.slice.apply(
         form.getElementsByTagName("select")
     );
-    const elements = inputs.concat(textareas).concat(selects);
+    const autocompletes = Array.from(
+        form.getElementsByTagName("cc-multi-autocomplete")
+    );
+    const elements = inputs
+        .concat(textareas)
+        .concat(selects)
+        .concat(autocompletes);
 
     for (const elem of elements) {
         elem.addEventListener("input", () => {
