@@ -1,6 +1,17 @@
 This file documents the revision history for Coocook.
 
-0.05  NEXT
+0.06  NEXT
+
+0.05  2024-09-09 Codename "Großeinkauf"
+    - add feature of default purchase lists, remove page "unassigned items"
+    - complete overhaul of purchase list editor and print view
+    - fix/improve many calculations in special cases of add/change/remove items/ingredients
+    - modern and appealing styling of many pages using Bootstrap framework
+    - allow setting an arbitrary date for meals in modal for editing meal details
+      (additionally to moving meals to other days by drag & drop)
+    - add helpful explanations to bottom of many pages
+    - add Content Security Policy (CSP) for improved security
+    - remove inline Javascript code, pass all data as pure JSON and even stricter CSP
 
 0.04  2023-07-19 Codename "Nachtwache"
     - add recipe(s) of the day

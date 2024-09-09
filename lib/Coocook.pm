@@ -7,7 +7,7 @@ use Coocook::Base qw(Moose);
 use Catalyst::Runtime 5.80;
 use PerlX::Maybe;
 
-our $VERSION = 0.004;
+our $VERSION = 0.005;
 
 # Set flags and add plugins for the application.
 #
