@@ -15,22 +15,19 @@ END %]
     </p>
 </div>
 
-<ul class="list-group">
-[% FOR recipe IN recipes %]
-    <li class="list-group-item d-flex gap-3 justify-content-between align-items-center parent">
-        <div>
-            <a href="[% recipe.url %]">[% recipe.name | html %]</a>
-            from [% link_project(recipe.project) %]
-            by [% link_user(recipe.project.owner) %]
-        </div>
-        [% IF recipe.import_url %]
-        <form method="get" action="[% recipe.import_url %]" class="action-btn">
-            <button type="submit" title="Import this recipe into one of your projects" class="btn btn-primary">Import&thinsp;<i class="material-icons">east</i></button>
-        </form>
-        [% END %]
-    </li>
-[% END %]
-</ul>
+[% BLOCK recipe_item %]
+<div>
+    <a href="[% item.url %]">[% item.name | html %]</a>
+    from [% link_project(item.project) %]
+    by [% link_user(item.project.owner) %]
+</div>
+[% IF item.import_url %]
+<form method="get" action="[% item.import_url %]" class="action-btn">
+    <button type="submit" title="Import this recipe into one of your projects" class="btn btn-primary">Import&thinsp;<i class="material-icons">east</i></button>
+</form>
+[% END;
+END;
+list(recipes, 'recipe_item', {item_classes => 'd-flex gap-3 justify-content-between align-items-center parent', list_classes => 'my-3'}) %]
 
 [% WRAPPER includes/infobox.tt %]
     You can use these recipes as a template for your project.

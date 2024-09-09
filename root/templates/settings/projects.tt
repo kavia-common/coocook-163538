@@ -3,7 +3,7 @@
 [% IF projects.size > 0 %]
 <p>These are all projects that you own or that you have permissions for.</p>
 
-<table class="table table-striped">
+[% WRAPPER table length=projects.size classes='' %]
     <thead>
         <tr class="sticky-top">
             <th title="Archived projects" scope="col"><i class="material-icons">folder</i></th>
@@ -22,8 +22,8 @@
         </tr>
 [% END %]
     </tbody>
-</table>
+[% END;
 
-[% ELSE %]
+ELSE %]
 <p>You don’t have any projects yet.</p>
 [% END %]

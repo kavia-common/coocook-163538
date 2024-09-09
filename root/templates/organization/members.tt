@@ -11,7 +11,7 @@ has_admin = 0 %]
     </div>
 </div>
 
-<table class="table align-middle m-0">
+[% WRAPPER table length=organizations_users.size classes='align-middle m-0' %]
     <thead>
         <tr class="sticky-stacked sticky-top">
             <th>User</th>
@@ -55,7 +55,7 @@ has_admin = 0 %]
         </tr>
     [% END %]
     </tbody>
-</table>
+[% END %]
 
 [% IF has_admin == 0 %]
 <div class="alert alert-light">

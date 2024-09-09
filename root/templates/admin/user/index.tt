@@ -1,6 +1,6 @@
 [% title = "Users" %]
 
-<table class="table table-striped">
+[% WRAPPER table length=users.size %]
 <thead>
     <tr class="sticky-top">
         <th>Name</th>
@@ -21,4 +21,4 @@
     </tr>
 [% END %]
 </tbody>
-</table>
+[% END %]

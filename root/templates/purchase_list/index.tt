@@ -12,7 +12,7 @@ BLOCK new_list %]
 </tr>
 [% END %]
 
-<table class="table table-striped align-middle">
+[% WRAPPER table length=lists.size classes='align-middle' %]
     <thead>
         <tr class="sticky-top">
             <th>Date</th>
@@ -92,7 +92,7 @@ BLOCK new_list %]
 
         PROCESS new_list %]
     </tbody>
-</table>
+[% END %]
 
 [% WRAPPER includes/infobox.tt %]
     <em>Purchase lists</em> contain all articles that need to be sourced to prepare the planned meals.

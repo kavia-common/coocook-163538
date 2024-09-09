@@ -82,4 +82,21 @@ MACRO numerus(number, singular, plural, opts) BLOCK; # apply correct grammatical
     ' ';
     opts.infix _ ' ' IF opts.infix;
     number == 1 ? singular : plural;
-END ~%]
+END;
+
+BLOCK table ~%]
+<table class="table [% 'table-striped' IF length >= 4 %] [% 'table-hover' IF length >= 2 %] [% classes %]">
+    [% content %]
+</table>
+[%~ END;
+
+MACRO list(items, block, opts) BLOCK;
+length=items.size ~%]
+<ul class="list-group [% 'list-group-striped' IF length >= 4 %] [% 'list-group-hover' IF length >= 2 %] [% opts.list_classes %]">
+[% FOR item IN items %]
+    <li class="list-group-item [% opts.item_classes %]">
+        [% PROCESS $block item=item %]
+    </li>
+[% END %]
+</ul>
+[%~ END ~%]

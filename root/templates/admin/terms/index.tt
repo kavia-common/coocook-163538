@@ -1,16 +1,26 @@
 [% title = "Manage Terms" %]
 
-<ul>
-[% FOR term IN terms %]
-    <li>
-        <a href="[% term.view_url %]">Terms valid from [% display_date( term.valid_from, {html=>1} ) %]</a>
-    [% IF term.edit_url %]
-        <form class="inline" method="GET"  action="[% term.edit_url   %]"><input type="submit" value="Edit"  ></form>
-    [% END;
-    IF term.delete_url %]
-        <form class="inline" method="post" action="[% term.delete_url %]"><input type="submit" value="Delete"></form>
-    [% END %]
-    </li>
+[% BLOCK term_item %]
+<a href="[% item.view_url %]">Terms valid from [% display_date( item.valid_from ) %]</a>
+<div class="d-flex justify-content-between action-btn gap-1">
+[% IF item.edit_url %]
+    <form method="GET" action="[% item.edit_url %]">
+        <button type="submit" class="btn btn-outline-dark btn-sm btn-quad update" title="Edit terms">
+            <i class="material-icons">edit</i>
+        </button>
+    </form>
+[% END;
+IF item.delete_url %]
+    <form method="post" action="[% item.delete_url %]">
+        <button type="submit" class="btn btn-outline-danger btn-sm btn-quad" title="Delete terms">
+            <i class="material-icons">delete_forever</i>
+        </button>
+    </form>
 [% END %]
-    <li><a href="[% new_url %]">Create new Terms</a></li>
-</ul>
+</div>
+[% END;
+list(terms, 'term_item', { item_classes => 'd-flex gap-3 justify-content-between align-items-center parent'}) %]
+
+<div class="d-grid mt-4">
+    <a href="[% new_url %]" class="btn btn-outline-primary material-icons" title="Create new terms">add</a>
+</div>

@@ -12,6 +12,9 @@
 
 <p class="text-muted small">Registered: [% display_date(user_object.created) %]</p>
 
+[% BLOCK project_item; link_project(item); END;
+BLOCK org_item; link_organization(item); END %]
+
 <div class="row g-3">
     <div class="col-12 col-md-6">
         <div class="card">
@@ -19,12 +22,8 @@
                 <h3 class="my-2">Public projects owned by [% user_object.name %]</h3>
             </div>
             <div class="card-body p-0">
-                <ul class="list-group list-group-flush">
-                [% FOR proj IN projects %]
-                    <li class="list-group-item">[% link_project(proj) %]</li>
-                [% END %]
-                </div>
-            </ul>
+                [% list(projects, 'project_item', {list_classes => 'list-group-flush rounded'}) %]
+            </div>
         </div>
     </div>
     <div class="col-12 col-md-6">
@@ -33,11 +32,7 @@
                 <h3 class="my-2">Member of the following organizations</h3>
             </div>
             <div class="card-body p-0">
-                <ul class="list-group list-group-flush">
-                [% FOR organization IN organizations %]
-                    <li class="list-group-item">[% link_organization(organization) %]</li>
-                [% END %]
-                </ul>
+                [% list(organizations, 'org_item', {list_classes => 'list-group-flush rounded'}) %]
             </div>
         </div>
     </div>

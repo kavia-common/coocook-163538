@@ -4,11 +4,18 @@
 // 2. Include any default variable overrides here
 
 // colors
-$primary: #4CAF50;
+$primary: #4caf50;
 $secondary: #a0a0a0;
 $accent: #af4cab;
 $info: #4638ef;
 $green: #3df110;
+
+// tables
+$table-striped-bg-factor: 0.02;
+$table-hover-bg-factor: 0.075;
+
+// item list
+$list-group-hover-bg: rgba(0, 0, 0, $table-hover-bg-factor);
 
 // misc
 $enable-negative-margins: true;
@@ -20,12 +27,27 @@ $enable-negative-margins: true;
 // add colors to theme
 $custom-colors: (
     "accent": $accent,
-    "secondary-light": #f6fffb
+    "secondary-light": #f6fffb,
 );
 $theme-colors: map-merge($theme-colors, $custom-colors);
-$theme-colors-rgb: map-merge($theme-colors-rgb, ("accent": to-rgb($accent),));
-$utilities-text-colors: map-merge($utilities-text-colors, ("accent": rgba-css-var("accent", "text"),));
-$utilities-bg-colors: map-merge($utilities-bg-colors, ("accent": rgba-css-var("accent", "bg"),));
+$theme-colors-rgb: map-merge(
+    $theme-colors-rgb,
+    (
+        "accent": to-rgb($accent),
+    )
+);
+$utilities-text-colors: map-merge(
+    $utilities-text-colors,
+    (
+        "accent": rgba-css-var("accent", "text"),
+    )
+);
+$utilities-bg-colors: map-merge(
+    $utilities-bg-colors,
+    (
+        "accent": rgba-css-var("accent", "bg"),
+    )
+);
 
 @import "../bootstrap/scss/root";
 
@@ -67,5 +89,13 @@ $utilities-bg-colors: map-merge($utilities-bg-colors, ("accent": rgba-css-var("a
 @import "../bootstrap/scss/utilities/api";
 
 // 6. Add additional custom code here
+.list-group-striped li:nth-of-type(2n + 1) {
+    background-color: rgba(0, 0, 0, $table-striped-bg-factor);
+}
 
-
+.list-group-hover li:hover {
+    z-index: 1;
+    color: #495057;
+    text-decoration: none;
+    background-color: rgba(0, 0, 0, $table-hover-bg-factor);
+}

@@ -12,7 +12,7 @@ BLOCK new_section %]
 </tr>
 [% END %]
 
-<table class="table table-striped align-middle">
+[% WRAPPER table length=shop_sections.size classes='align-middle' %]
     <thead>
         <tr class="sticky-top">
             <th>Name</th>
@@ -47,9 +47,8 @@ BLOCK new_section %]
         </tr>
         [% END;
         PROCESS new_section %]
-
     </tbody>
-</table>
+[% END %]
 
 <form id="update-section-form" method="post" action="">
     <div class="modal fade" id="update-section" tabindex="-1" aria-labelledby="update-section-label" aria-hidden="true">

@@ -1,32 +1,7 @@
-[% title = "My Organizations" %]
+[% title = "My Organizations";
 
-[% IF organizations_users.size > 0 %]
-    <p>Before you can leave an organization you need to transfer organization ownership to another organization member.</p>
-
-    <ul class="list-group mb-3">
-    [% FOR organization_user IN organizations_users;
-        organization = organization_user.organization %]
-        <li class="list-group-item d-flex gap-3 justify-content-between align-items-center flex-wrap parent">
-            <span>[% link_organization(organization_user.organization) %] ([% organization_user.role %])</span>
-        [% IF organization_user.leave_url %]
-            <form class="action-btn" method="post" action="[% organization_user.leave_url %]">
-                <button type="submit" class="btn btn-outline-danger">
-                    <i class="material-icons">logout</i>&thinsp;Leave organization
-                </button>
-            </form>
-        [% ELSE %]
-            <button class="btn btn-outline-danger action-btn" title="You are the owner of this organization" disabled style="pointer-events:auto;cursor:default">
-                <i class="material-icons">logout</i>&thinsp;Leave organization
-            </button>
-        [% END %]
-        </li>
-    [% END %]
-    </ul>
-[% ELSE %]
-    <p>You are not member of any organization yet.</p>
-[% END %]
-
-<form method="post" action="[% create_organization_url %]">
+BLOCK new_org %]
+<form method="post" action="[% create_organization_url %]" class="mb-3">
     <div class="card">
         <div class="card-header"><h3 class="my-2">Create a new organization</h3></div>
 
@@ -45,8 +20,36 @@
         </div>
     </div>
 </form>
+[% END;
 
-[% WRAPPER includes/infobox.tt %]
+IF organizations_users.size > 5; PROCESS new_org; END;
+
+BLOCK user_item %]
+<span>[% link_organization(item.organization) %] ([% item.role %])</span>
+[% IF item.leave_url %]
+    <form class="action-btn" method="post" action="[% item.leave_url %]">
+        <button type="submit" class="btn btn-outline-danger">
+            <i class="material-icons">logout</i>&thinsp;Leave organization
+        </button>
+    </form>
+[% ELSE %]
+    <button class="btn btn-outline-danger action-btn" title="You are the owner of this organization" disabled style="pointer-events:auto;cursor:default">
+        <i class="material-icons">logout</i>&thinsp;Leave organization
+    </button>
+[% END;
+END;
+
+IF organizations_users.size > 0 %]
+    <p>Before you can leave an organization you need to transfer organization ownership to another organization member.</p>
+
+    [% list(organizations_users, 'user_item', {item_classes => 'd-flex gap-3 justify-content-between align-items-center flex-wrap parent'}) %]
+[% ELSE %]
+    <p>You are not member of any organization yet.</p>
+[% END;
+
+PROCESS new_org;
+
+WRAPPER includes/infobox.tt %]
     An <em>organization</em> is a group of [% name %] users.
     You can easily grant them permissions to projects
     without worrying about individual users even when group members change in the future.
