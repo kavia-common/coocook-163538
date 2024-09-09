@@ -110,7 +110,7 @@ Follow the instructions at [hub.docker.com/r/coocook/coocook-dev](https://hub.do
 ## Mailing list
 
 * <coocook@lists.coocook.org>
-* subscribe at [lists.coocook.org/mailman/listinfo/coocook](https://lists.coocook.org/mailman/listinfo/coocook)
+* subscribe at [lists.coocook.org](https://lists.coocook.org/)
 * or send an email with subject `subscribe` to
 [coocook-request@lists.coocook.org](mailto:coocook-request@lists.coocook.org?subject=subscribe)
 
