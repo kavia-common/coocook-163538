@@ -74,7 +74,23 @@ subtest "attributes of controller actions" => sub {
             my @used_authz_attrs = grep { $attrs{$_} } @possible_authz_attrs;
 
             is \@used_authz_attrs => [ in_set @possible_authz_attrs ],
-              "$action_pkg_name has exactly 1 authorization attribute";
+              "$action_pkg_name uses exactly 1 of 3 possible authorization attribute names";
+
+            if ( my $capabilities = $action->attributes->{RequiresCapability} ) {
+                for my $capability (@$capabilities) {
+                    Coocook::Model::Authorization->capability_exists($capability)
+                      or fail "$action_pkg_name requires invalid capability '$capability'";
+                }
+
+                if (    @$capabilities == 2
+                    and $capabilities->[0] eq 'autocomplete_organizations'
+                    and $capabilities->[1] eq 'autocomplete_users' )
+                {
+                    next;    # acceptable combination of 2 capabilites
+                }
+
+                is scalar(@$capabilities) => 1, "$action_pkg_name requires not more than 1 capability";
+            }
         }
     }
 };

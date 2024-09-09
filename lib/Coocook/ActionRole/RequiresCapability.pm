@@ -6,22 +6,6 @@ use Coocook::Base qw(Moose::Role);
 
 use Coocook::Model::Authorization;
 
-after BUILD => sub ( $class, $args ) {
-    if ( my $capabilities = $args->{attributes}{RequiresCapability} ) {
-        @$capabilities <= 1
-          or join( '+', sort @$capabilities ) eq
-          'autocomplete_organizations+autocomplete_users'    # reasonable combination
-          or
-          warn "You should define a new capability instead of requiring multiple capabilities for action "
-          . $args->{reverse};
-
-        for my $capability (@$capabilities) {
-            Coocook::Model::Authorization->capability_exists($capability)
-              or die "Invalid capability '$capability' in RequiresCapability() for action $args->{reverse}";
-        }
-    }
-};
-
 around execute => sub {
     my $orig = shift;
     my $self = shift;
