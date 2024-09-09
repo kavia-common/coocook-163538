@@ -3,7 +3,7 @@ USE Markdown; %]
 
 <div class="row my-3">
     <div class="col">
-        [% WRAPPER table length=faqs.size + 1 classes='align-middle md' %]
+        [% WRAPPER table length=faqs.size + 1 classes='align-middle markdown' %]
         <thead>
             <tr>
                 <th colspan="2">Entries</th>
