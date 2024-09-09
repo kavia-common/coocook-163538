@@ -3,7 +3,7 @@
 css.push('/lib/coocook-web-components/dist/ingredients-editor/ingredients-editor_index.css');
 js.push('/lib/coocook-web-components/dist/ingredients-editor/ingredients-editor.es.js');
 
-IF import_url %]<form id="import"method="get" action="[% import_url %]"></form>[% END %]
+IF import_url %]<form id="import" method="get" action="[% import_url %]"></form>[% END %]
 
 <div class="my-3">
     <div class="row gy-2">
