@@ -48,7 +48,7 @@ js.push('/js/tagAutocomplete.js');
               class="tags"
               type="search"
               name="tags"
-              value="[% dish.tags_joined %]"
+              value="dish_tags"
               static-base-uri="[% uri_for_static('/') %]"
             ></cc-multi-autocomplete>
         </div>

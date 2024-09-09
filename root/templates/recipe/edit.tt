@@ -65,7 +65,7 @@ IF import_url %]<form id="import" method="get" action="[% import_url %]"></form>
               class="tags"
               type="search"
               name="tags"
-              value="[% recipe.tags_rs.joined %]"
+              value="recipe_tags"
               static-base-uri="[% uri_for_static('/') %]"
             ></cc-multi-autocomplete>
         </div>

@@ -107,7 +107,7 @@ IF article; escape_title( 'Article', article.name ); ELSE; title="New Article"; 
                   class="tags"
                   type="search"
                   name="tags"
-                  value="[% article.tags_joined %]"
+                  value="article_tags"
                   static-base-uri="[% uri_for_static('/') %]"
                 ></cc-multi-autocomplete>
             </div>

@@ -157,7 +157,10 @@ sub fetch_project_data : Private {
 
     }
 
-    $c->json_stash( available_tags => [ $c->project->tags->hri->sorted->all ] );
+    $c->json_stash(
+        available_tags => [ $c->project->tags->hri->sorted->all ],
+        article_tags   => [ $article ? $article->tags->sorted->get_column('name')->all : () ],
+    );
 
     $c->stash(
         default_shelf_life_days   => 7,
@@ -252,7 +255,7 @@ sub update_or_insert : Private {
     }
 
     my @tag_ids =
-      $c->project->find_or_create_tags_from_names( $c->req->params->get('tags') )->only_id_col->all;
+      $c->project->find_or_create_tags_from_names( $c->req->params->get_all('tags') )->only_id_col->all;
 
     my $articles_units = $article->articles_units;
 

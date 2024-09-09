@@ -187,16 +187,14 @@ sub is_stale ( $self, $pivot_date = undef ) {
     return $self->self_rs->stale($pivot_date)->results_exist();
 }
 
-=head2 find_or_create_tags_from_names($names)
+=head2 find_or_create_tags_from_names(@names)
 
-Returns a resultset with all tags matching names in C<$names>.
+Returns a resultset with all tags matching names in C<@names>.
 Non-existing ones are created.
 
 =cut
 
-sub find_or_create_tags_from_names ( $self, $names ) {
-    my @names = split qr/,\s+/, $names;
-
+sub find_or_create_tags_from_names ( $self, @names ) {
     my $tags        = $self->tags;
     my $existing_rs = $tags->search(
         {

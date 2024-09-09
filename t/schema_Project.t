@@ -134,17 +134,17 @@ subtest find_or_create_tags_from_names => sub {
 
     is [ $tags->() ] => [qw( delicious gluten lactose )];
 
-    isa_ok $project->find_or_create_tags_from_names('') => 'Coocook::Schema::ResultSet::Tag';
+    isa_ok $project->find_or_create_tags_from_names() => 'Coocook::Schema::ResultSet::Tag';
 
     is [
-        $project->find_or_create_tags_from_names("gluten, lactose")->sorted->get_column('name')->all ] =>
-      [qw( gluten lactose )];
+        $project->find_or_create_tags_from_names(qw( gluten lactose ))->sorted->get_column('name')->all ]
+      => [qw( gluten lactose )];
 
     is $project->tags->count => 3, "created no tags so far";
 
     is [
-        $project->find_or_create_tags_from_names("gluten, foo, bar")->sorted->get_column('name')->all ] =>
-      [qw( bar foo gluten )];
+        $project->find_or_create_tags_from_names(qw( gluten foo bar ))->sorted->get_column('name')->all ]
+      => [qw( bar foo gluten )];
 
     is [ $tags->() ] => [qw( bar delicious foo gluten lactose )], "created tags";
 };

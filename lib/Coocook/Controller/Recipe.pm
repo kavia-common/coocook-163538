@@ -104,6 +104,7 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
             recipe_id    => $recipe->id,
         },
         available_tags => [ $c->project->tags->hri->sorted->all ],
+        recipe_tags    => [ $recipe->tags->sorted->get_column('name')->all ],
     );
 
     $c->stash(
@@ -201,7 +202,7 @@ sub update : POST Chained('base') Args(0) RequiresCapability('edit_project') {
                 );
 
                 # tags
-                my $tags = $c->project->find_or_create_tags_from_names( $c->req->params->get('tags') );
+                my $tags = $c->project->find_or_create_tags_from_names( $c->req->params->get_all('tags') );
                 $recipe->set_tags( [ $tags->all ] );
             }
         );
