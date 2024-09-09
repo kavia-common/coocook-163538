@@ -57,6 +57,11 @@ sub index : GET HEAD Chained('/project/base') PathPart('articles') Args(0)
             my ( $article_id => $tag_id ) = @$article_tag{ 'article_id', 'tag_id' };
             push $articles{$article_id}{tags}->@*, $tags{$tag_id} || die;
         }
+
+        for my $article (@articles) {
+            my $tags = $article->{tags} or next;
+            @$tags = sort { $a->{name} cmp $b->{name} } @$tags;
+        }
     }
 
     {
