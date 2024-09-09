@@ -3,7 +3,6 @@ package Coocook::Controller::PurchaseList;
 use Coocook::Base qw(Moose);
 
 use DateTime;
-use JSON::MaybeXS qw/to_json/;
 
 BEGIN { extends 'Coocook::Controller' }
 
@@ -112,11 +111,13 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
 
     my @lists = $c->stash->{lists}->search( undef, { order_by => [ 'date', 'name' ] } )
       ->with_is_default->hri->all;
-    $c->stash(
-        lists         => \@lists,
-        lists_json    => to_json( \@lists ),
-        sections_json => to_json( [ $c->project->shop_sections->hri->all ] )
+
+    $c->json_stash(
+        purchase_lists => \@lists,
+        shop_sections  => [ $c->project->shop_sections->hri->all ],
     );
+
+    $c->stash( lists => \@lists );
 }
 
 sub assign_articles_to_shop_section : POST Chained('base') Args(0)

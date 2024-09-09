@@ -20,9 +20,9 @@ const articleSelectList = document.getElementById("article-select-list");
 // General constants
 const messages = document.getElementById("messages");
 
-const purchaseLists = getJsonData("purchase-lists");
+const purchaseLists = getJsonData("purchase_lists");
 const singleList = purchaseLists.length === 1;
-let shopSections = getJsonData("shop-sections");
+let shopSections = getJsonData("shop_sections");
 let articles = {};
 let preselectedPurchaseList = null;
 

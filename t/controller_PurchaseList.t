@@ -15,7 +15,7 @@ $t->login_ok( 'john_doe', 'P@ssw0rd' );
 $t->get_ok('/project/1/Test-Project/purchase_list/1');
 $t->content_like(
     qr{
-        \Q<script id="purchase-lists" type="application/json">\E
+        \Q<script id="purchase_lists" type="application/json">\E
         \[ \{
         .+    # list content
         \} \]
@@ -25,7 +25,7 @@ $t->content_like(
 );
 $t->content_like(
     qr{
-        \Q<script id="shop-sections" type="application/json">\E
+        \Q<script id="shop_sections" type="application/json">\E
         \[ \{
         .+    # list content
         \} \]

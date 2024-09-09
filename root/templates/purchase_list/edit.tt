@@ -31,8 +31,6 @@ js_push_template_path();
 
 [% INCLUDE includes/infobox_donate.tt %]
 
-<script id="purchase-lists" type="application/json">[% lists_json | html %]</script>
-
 <form id="move-items-form">
     <div class="modal fade" id="move-items" tabindex="-1" aria-labelledby="move-items-label" aria-hidden="true">
         <div class="modal-dialog">
