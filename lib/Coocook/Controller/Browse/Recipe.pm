@@ -82,7 +82,7 @@ sub index : GET HEAD Chained('/base') PathPart('recipes') Args(0) Public {
 sub base : Chained('/base') PathPart('recipe') CaptureArgs(2) {
     my ( $self, $c, $id, $url_name ) = @_;
 
-    my $recipe = $c->model('DB::Recipe')->search( undef, { prefetch => 'project' } )->find($id)
+    my $recipe = $c->model('DB::Recipe')->find( $id, { prefetch => 'project' } )
       or $c->detach('/error/not_found');
 
     $c->stash(

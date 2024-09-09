@@ -19,11 +19,9 @@ C<today_rs> method would be required.
 =cut
 
 sub today ( $self, %opts ) {
-    $self = $self->search( undef, { prefetch => 'recipe' } );
-
     my $date = $self->format_date_today;
 
-    my $today_rs = $self->search( { day => $date } );
+    my $today_rs = $self->search( { day => $date }, { prefetch => 'recipe' } );
 
     my @rotd = $today_rs->all;
 

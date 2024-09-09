@@ -5,260 +5,104 @@ html_title = html_title _ ' for ' _ display_date(list.date, {html=>1});
 
 css.push('/css/print.css');
 css_push_template_path();
+js.push('/lib/coocook-web-components/dist/autocomplete/autocomplete.es.js');
+js_push_template_path();
 %]
 
 <button class="btn btn-primary my-3 material-icons" onclick="print()" title="Print">print</button>
-
-[% IF sections.size == 0 %]
-<p>Currently no items assigned</p>
+[% IF lists.size > 1 %]
+<button id="move-btn" class="btn btn-primary my-3 d-none" title="Move selected items/ingredients to different purchase list"  data-bs-toggle="modal" data-bs-target="#move-items">
+    <i class="material-icons">drive_file_move</i>&thinsp;Move items/ingredients to other purchase list
+</button>
+<button id="move-btn-disabled" class="btn btn-primary my-3 tt-disabled-btn" title="No items/ingredients selected to move" disabled>
+    <i class="material-icons">drive_file_move</i>&thinsp;Move items/ingredients to other purchase list
+</button>
 [% END %]
+<button id="assign-btn" class="btn btn-primary my-3 d-none" title="Assign selected articles to a shop section"  data-bs-toggle="modal" data-bs-target="#assign-articles">
+    <i class="material-icons">move_to_inbox</i>&thinsp;Assign articles to shop section
+</button>
+<button id="assign-btn-disabled" class="btn btn-primary my-3 tt-disabled-btn" title="No articles selected to assign" disabled>
+    <i class="material-icons">move_to_inbox</i>&thinsp;Assign articles to shop section
+</button>
 
-[% FOREACH section IN sections %]
-<div class="my-3 no-break-inside">
-    <div class="mb-2">
-        <h3 class="shop-section text-primary">[% section.name || "No shop section" | html FILTER ucfirst %]</h3>
-
-    [% UNLESS section.name %]
-        <p class="no-print">To sort these items into specific shop sections, edit the <a href="[% project_urls.articles %]">articles</a> and select shop sections there.</p>
-    [% END %]
-    </div>
-
-    <div class="mb-2 table-responsive">
-        <table class="table align-middle pl-editor no-print">
-            <thead>
-                <tr>
-                    <th>Amount</th>
-                    <th>Article</th>
-                    <th colspan="2">Amounts</th>
-                    <th>Dishes</th>
-                    <th>Servings</th>
-                    <th colspan="2">Meals</th>
-                    <th class="btn-icon-1"></th>
-                </tr>
-            </thead>
-            <tbody>
-            [% FOREACH item IN section.items %]
-                <tr id="item-[% item.id %]">
-                    [% rowspan = item.ingredients.size;
-                    IF item.offset != 0;
-                        rowspan = rowspan + 1;
-                    END;
-                    IF rowspan == 0;
-                       rowspan = 1;
-                    END %]
-                    <td class="item-amount" rowspan="[% rowspan %]">
-                    [% IF item.update_offset_url %]
-                        <datalist id="values-[% loop.count %]">
-                            <option value="[% item.total %]">
-                            <option value="[% item.next_higher_value %]">
-                            <option value="[% item.next_lower_value%]">
-                        </datalist>
-                        <form class="d-flex justify-content-between" name="total" method="post" action="[% item.update_offset_url %]">
-                            <div class="input-group flex-nowrap">
-                            [% IF item.offset %]<span class="input-group-text px-1">ca.</span>[% END %]
-                                <input id="total" class="form-control" type="number" min="0" step="any" name="total" list="values-[% loop.count %]" value="[% item.total %]">
-                                <span class="input-group-text">[% display_unit( item.unit, {html=>1} ) %]</span>
-                            </div>
-                            <button class="btn btn-outline-primary ms-1 material-icons" type="submit" title="Update amount">done</button>
-                        </form>
-                    [% ELSE;
-                        IF    item.offset < 0; '&CircleMinus;';
-                        ELSIF item.offset > 0; '&CirclePlus;';
-                        END;
-                        display_value_unit( item.total, item.unit, {html=>1} );
-                    END;
-
-                    IF item.convert_url AND item.convertible_into.size %]
-                        <form class="d-flex flex-wrap justify-content-end border rounded my-1 w-100" name="convert" method="post" action="[% item.convert_url %]" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Click on one of the units, to convert the displayed value to this unit">
-                        [% FOREACH unit IN item.convertible_into %]
-                            <button class="btn btn-outline-secondary btn-sm m-1" type="submit" name="unit" value="[% unit.id %]">[% unit.short_name | html %]</button>
-                        [% END %]
-                        </form>
-                    [% END %]
-                    [% IF item.comment.length %]
-                        <br>
-                        <span class="comment">([% item.comment | html %])</span>
-                    [% END %]
-                    </td>
-                    <td class="item" rowspan="[% rowspan %]">
-                        <a href="[% item.article.url %]">[% item.article.name | html %]</a>
-                    [% IF item.article.comment.length %]
-                        <br>
-                        <span class="comment">([% item.article.comment | html %])</span>
-                    [% END %]
-                    </td>
-
-                    [% IF item.ingredients.empty %]
-                    <td colspan="6">No ingredients. This might be caused by a software bug.</td>
-                </tr>
-                    [% END %]
-                    [% FOREACH ingredient IN item.ingredients %]
-                        [% UNLESS loop.first %]
-                </tr>
-                <tr>
-                        [% END %]
-                    <td class="amount text-end text-nowrap">[% display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %]</td>
-                    <td class="comment">[% IF ingredient.comment.length; '('; ingredient.comment | html; ')'; END %]</td>
-                    <td class="dish">
-                        <a href="[% ingredient.dish.url %]">[% ingredient.dish.name | html %]</a>
-                        [% IF ingredient.dish.comment.length %]
-                            <br>
-                            <span class="comment">([% ingredient.dish.comment | html %])</span>
-                        [% END %]
-                    </td>
-                    <td class="servings">[% ingredient.dish.servings %]</td>
-                    <td class="meal">
-                        [% ingredient.dish.meal.name | html;
-                        IF ingredient.dish.meal.comment.length %]
-                            <br>
-                            <span class="comment">([% ingredient.dish.meal.comment | html %])</span>
-                        [% END %]
-                    </td>
-                    <td class="date text-center text-nowrap">[% ingredient.dish.meal.date.strftime('%a, %F') %]</td>
-                    <td>
-                        [% IF ingredient.remove_url %]
-                        <form method="post" action="[% ingredient.remove_url %]">
-                            <button type="submit" class="btn btn-outline-danger btn-sm btn-quad" title="Remove from purchase list">
-                                <i class="material-icons">delete_forever</i>
-                            </button>
-                        </form>
-                        [% END %]
-                    </td>
-                </tr>
-                    [% END %]
-
-                    [% IF item.offset %]
-                <tr>
-                    <td class="text-end rounding">
-                        [% display_value_unit( item.offset, item.unit, {html=>1, force_sign=>1} ) %]
-                    </td>
-                    <td></td>
-                    <td class="rounding" colspan="4">
-                        <i>rounding difference</i>
-                    </td>
-                    <td>
-                        [% IF item.update_offset_url %]
-                        <form name="remove-offset" method="post" action="[% item.update_offset_url %]">
-                            <button type="submit" class="btn btn-outline-danger btn-sm btn-quad mb-1 material-icons" title="Reset rounding" name="offset" value="0">undo</button>
-                        </form>
-                        [% END %]
-                    </td>
-                </tr>
-                    [% END %]
-
-            [% END %]
-            </tbody>
-        </table>
-
-        <table class="table align-middle print">
-            <colgroup>
-                <col style="width:20%">
-                <col style="width:20%">
-                <col style="width:50%">
-                <col style="width:10%">
-            </colgroup>
-            <thead>
-                <tr>
-                    <th>Amount</th>
-                    <th>Article</th>
-                    <th class="amount-dish-servings-meal">
-                        <div class="d-flex flex-wrap" style="column-gap:1rem;">
-                            <span>
-                                <i class="material-icons md-18">scale</i> Amounts
-                            </span>
-                            <span>
-                                <i class="material-icons md-18">restaurant</i> Dishes
-                            </span>
-                            <span>
-                                <i class="material-icons md-18">soup_kitchen</i> Servings
-                            </span>
-                            <span>
-                                <i class="material-icons md-18">calendar_month</i> Meals
-                            </span>
-                        </div>
-                    </th>
-                    <th class="date text-end">Dates</th>
-                </tr>
-            </thead>
-            <tbody>
-            [% FOREACH item IN section.items %]
-                <tr>
-                    [% rowspan = item.ingredients.size;
-                    IF item.offset != 0;
-                        rowspan = rowspan + 1;
-                    END;
-                    IF rowspan == 0;
-                        rowspan = 1;
-                    END %]
-                    <td class="item-amount" rowspan="[% rowspan %]">
-                        [% IF    item.offset < 0; '&CircleMinus;';
-                           ELSIF item.offset > 0; '&CirclePlus;';
-                        END %]
-                        [% display_value_unit(item.total, item.unit, {print=>1}) %]
-                        [% IF item.comment.length %]
-                            <br>
-                            <span class="comment">([% item.comment | html %])</span>
-                        [% END %]
-                    </td>
-                    <td class="item" rowspan="[% rowspan %]">
-                        [% item.article.name | html;
-                        IF item.article.comment.length %]
-                            <br>
-                            <span class="comment">([% item.article.comment | html %])</span>
-                        [% END %]
-                    </td>
-
-                    [% IF item.ingredients.empty %]
-                    <td colspan="2">No ingredients. This might be caused by a software bug.</td>
-                </tr>
-                    [% END %]
-                    [% FOREACH ingredient IN item.ingredients %]
-                        [% UNLESS loop.first %]
-                </tr>
-                <tr>
-                        [% END %]
-                    <td class="small-font amount-dish-servings-meal">
-                        <div class="d-flex flex-wrap">
-                            <span class="amount">
-                                <i class="material-icons md-18">scale</i>
-                                [% display_value_unit( ingredient.value, ingredient.unit, {print=>1} ) %]
-                                [% IF ingredient.comment.length %]<i>([% ingredient.comment | html %])</i>[% END %]
-                            </span>
-                            <span class="dish">
-                                <i class="material-icons md-18">restaurant</i>
-                                [% ingredient.dish.name | html %]
-                                [% IF ingredient.dish.comment.length %]<i>([% ingredient.dish.comment | html %])</i>[% END %]
-                            </span>
-                            <span class="servings">
-                                <i class="material-icons md-18">soup_kitchen</i>
-                                [% ingredient.dish.servings %]
-                            </span>
-                            <span class="meal">
-                                <i class="material-icons md-18">calendar_month</i>
-                                [% ingredient.dish.meal.name | html %]
-                                [% IF ingredient.dish.meal.comment.length %]<i>([% ingredient.dish.meal.comment | html %])</i>[% END %]
-                            </span>
-                        </div>
-                    </td>
-                    <td class="small-font date text-end text-nowrap">[% ingredient.dish.meal.date.strftime('%a, %F') %]</th>
-                </tr>
-                    [% END %]
-
-                    [% IF item.offset %]
-                <tr>
-                    <td class="small-font date" colspan="2">
-                        [% display_value_unit( item.offset, item.unit, {print=>1, force_sign=>1} ) %]
-                        <em>rounding difference</em>
-                    </td>
-                </tr>
-                    [% END %]
-
-            [% END %]
-            </tbody>
-        </table>
-
-    </div>
+<div id="list-container" class="editable">
+[% INCLUDE purchase_list/_edit_table.tt %]
 </div>
-[% END %]
 
 [% INCLUDE includes/infobox_donate.tt %]
+
+<script id="purchase-lists" type="application/json">[% lists_json | html %]</script>
+
+<form id="move-items-form">
+    <div class="modal fade" id="move-items" tabindex="-1" aria-labelledby="move-items-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="move-items-label">Move item/ingredients to other purchase list</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating">
+                        <select id="move-items-target" class="form-control" placeholder="Target purchase list">
+                            [% '<option value="">---</option>' IF lists.size != 2 %]
+                        </select>
+                        <label for="move-items-target" class="form-label">Target purchase list</label>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-secondary btn-sm" title="Cancel" data-bs-dismiss="modal">
+                        <i class="material-icons">close</i>&thinsp;Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-sm" title="Move items/ingredients to selected purchase list">
+                        <i class="material-icons">drive_file_move</i>&thinsp;Move to selected purchase list
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form id="assign-articles-form">
+    <div class="modal fade" id="assign-articles" tabindex="-1" aria-labelledby="assign-articles-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="assign-articles-label">Assign articles to shop section</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <cc-autocomplete
+                          id="assign-articles-target"
+                          label="Shop section"
+                          name="target-shop-section"
+                          filter="filterShopSections"
+                          render="renderShopSectionOption"
+                          static-base-uri="[% uri_for_static('/') %]"
+                          required
+                        ></cc-autocomplete>
+                    </div>
+                    <div id="article-select-warning" class="d-none alert alert-warning gap-2">
+                        <i class="material-icons">info</i>
+                        <div>
+                            <p>For the following <span id="article-select-num"></span> you haven’t selected all items, but all items will be moved to the selected shop section.</p>
+                            <ul id="article-select-list" class="list-group"></ul>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2 align-items-center">
+                        <i class="material-icons">info</i>
+                        <div>Assigning articles to a shop section moves these articles on <em>all</em> of this project’s purchase lists.</div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-secondary btn-sm" title="Cancel" data-bs-dismiss="modal">
+                        <i class="material-icons">close</i>&thinsp;Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-sm" title="Move items/ingredients to selected purchase list">
+                        <i class="material-icons">move_to_inbox</i>&thinsp;Move to shop section
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

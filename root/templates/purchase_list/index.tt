@@ -4,8 +4,8 @@ js_push_template_path();
 
 BLOCK new_list %]
 <tr>
-    <td colspan="4">
-        <div class="d-grid">
+    <td colspan="5">
+        <div class="d-grid" data-bs-toggle="tooltip" data-bs-title="create [% lists.size > 0 ? "another" : "a" %] purchase list">
             <button class="btn btn-outline-primary material-icons" data-bs-toggle="modal" data-bs-target="#addList">add</button>
         </div>
     </td>
@@ -18,33 +18,94 @@ BLOCK new_list %]
             <th>Date</th>
             <th>Name</th>
             <th>Items</th>
-            <th class="btn-icon-2"></th>
+            <th>Dish Ingredients</th>
+            <th class="btn-icon-[% lists.size <= 1 ? 2 : 3 %]"></th>
         </tr>
     </thead>
     <tbody>
-        [% IF lists.size > 5; PROCESS new_list; END;
-        FOR list IN lists %]
+        [% PROCESS new_list IF lists.size > 5;
+
+        FOR list IN lists;
+            is_in_use = list.items_count > 0;
+            show_default = lists.size > 1 AND list.is_default %]
         <tr class="parent">
             <td>[% display_date(list.date, {html=>1}) %]</td>
-            <td><a href="[% list.edit_url %]">[% list.name | html %]</a></td>
-            <td>[% list.item_count %]</td>
+            <td>
+                <i class="material-icons" title="[% 'Is the default purchase list' IF show_default %]">
+                    [% show_default ? 'add_shopping_cart' : 'shopping_cart' %]
+                </i>&thinsp;
+                <a href="[% list.edit_url %]">[% list.name | html %]</a>&thinsp;
+                [% '(default)' IF lists.size > 1 AND list.is_default %]
+            </td>
+            <td>[% list.items_count %]</td>
+            <td>[% list.ingredients_count %]</td>
             <td>
                 <div class="d-flex justify-content-between action-btn">
-                    <button class="btn btn-outline-dark btn-sm btn-quad update" title="Rename purchase list" data-url="[% list.update_url %]" data-name="[% list.name | html %]"  data-bs-toggle="modal" data-bs-target="#updateList">
-                        <i class="material-icons">edit</i>
-                    </button>
+                    <span data-bs-toggle="tooltip" data-bs-title="Rename purchase list">
+                        <button class="btn btn-outline-dark btn-sm btn-quad update-trigger" data-url="[% list.update_url %]" data-name="[% list.name | html %]" data-bs-toggle="modal" data-bs-target="#updateList">
+                            <i class="material-icons">edit</i>
+                        </button>
+                    </span>
+
+                    [% IF lists.size > 1;
+                        IF list.make_default_url %]
+                    <form action="[% list.make_default_url %]" method="post">
+                        <button type="submit" class="btn btn-outline-dark btn-sm btn-quad" data-bs-toggle="tooltip" data-bs-title="Make purchase list the default purchase list">
+                            <i class="material-icons">shopping_cart_checkout</i>
+                        </button>
+                    </form>
+                        [% ELSE %]
+                    <span data-bs-toggle="tooltip" data-bs-title="Is already the default purchase list">
+                        <button class="btn btn-outline-dark btn-sm btn-quad tt-disabled-btn" disabled>
+                            <i class="material-icons">shopping_cart_checkout</i>
+                        </button>
+                    </span>
+                        [% END;
+                    END;
+
+                    IF list.delete_url;
+                        IF is_in_use %]
+                    <span data-bs-toggle="tooltip" data-bs-title="Delete purchase list">
+                        <button class="btn btn-outline-danger btn-sm btn-quad delete-trigger" data-url="[% list.delete_url %]" data-name="[% list.name | html %]" data-count="[% list.items_count %]"  data-bs-toggle="modal" data-bs-target="#delete-list">
+                            <i class="material-icons">delete_forever</i>
+                        </button>
+                    </span>
+                        [% ELSE %]
                     <form action="[% list.delete_url %]" method="post">
                         <button type="submit" class="btn btn-outline-danger btn-sm btn-quad" title="Delete purchase list">
                             <i class="material-icons">delete_forever</i>
                         </button>
                     </form>
+                        [% END;
+
+                    ELSE %]
+                    <span data-bs-toggle="tooltip" data-bs-title="Can’t delete default purchase list">
+                        <button class="btn btn-outline-danger btn-sm btn-quad tt-disabled-btn" disabled>
+                            <i class="material-icons">delete_forever</i>
+                        </button>
+                    </span>
+                    [% END %]
                 </div>
             </td>
         </tr>
         [% END;
+
         PROCESS new_list %]
     </tbody>
 </table>
+
+[% WRAPPER includes/infobox.tt %]
+    <em>Purchase lists</em> contain all articles that need to be sourced to prepare the planned meals.
+    Sort them into multiple lists for different purchase dates or stores.
+    <br>
+    If there are multiple lists, new items get assigned to the project’s <em>default purchase list</em>.
+</p>
+
+<p>
+    <i class="material-icons">lightbulb</i> Pro tip:
+    Get well-structured lists by assigning articles their shop section.
+    Also items for the same article can be merged by converting them to the same unit.
+[% END %]
 
 <form id="update-list" method="post" action="">
     <div class="modal fade" id="updateList" tabindex="-1" aria-labelledby="updateListLabel" aria-hidden="true">
@@ -68,17 +129,6 @@ BLOCK new_list %]
     </div>
 </form>
 
-[% WRAPPER includes/infobox.tt %]
-    <em>Purchase lists</em> contain all articles that need to be sourced to prepare the planned meals.
-    Sort them into multiple lists for different purchase dates or stores.
-</p>
-
-<p>
-    <i class="material-icons">lightbulb</i> Pro tip:
-    Get well-structured lists by assigning articles their shop section.
-    Also items for the same article can be merged by converting them to the same unit.
-[% END %]
-
 <form method="post" action="[% create_url %]">
     <div class="modal fade" id="addList" tabindex="-1" aria-labelledby="addListLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -90,15 +140,46 @@ BLOCK new_list %]
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="pl-name" class="form-label">Name</label>
-                        <input id="pl-name" class="form-control" type="text" name="name" value="[% last_input.name %]" required>
+                        <input id="pl-name" class="form-control" type="text" name="name" required>
                     </div>
                     <div class="mb-3">
                         <label for="pl-date" class="form-label">Date</label>
-                        <input id="pl-date" class="form-control" type="date" name="date" min="[% min_date.ymd %]" value="[% last_input.date || default_date.ymd %]" required>
+                        <input id="pl-date" class="form-control" type="date" name="date" min="[% min_date.ymd %]" value="[% default_date.ymd %]" required>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Create purchase list</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form id="delete-list-form" method="post" action="">
+    <div class="modal fade" id="delete-list" tabindex="-1" aria-labelledby="delete-list-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="delete-list-label">Delete purchase list <em id="delete-list-name"></em></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Do you really want to delete this purchase list?
+                    On this list <span id="delete-list-count"></span>
+                [%~ IF lists.size <= 1;    # fix syntax highlighting: >
+                    '.';
+                ELSE %]
+                    which will then be moved to the default purchase list
+                    (<em>[% default_list.name | html %]</em> on [% display_date(default_list.date, {html=>1}) %]).
+                [% END %]
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-secondary btn-sm" title="Cancel" data-bs-dismiss="modal">
+                        <i class="material-icons">close</i> Cancel
+                    </button>
+                    <button id="delete-btn" type="submit" class="btn btn-danger btn-sm" title="Delete purchase list">
+                        <i class="material-icons">delete_forever</i> Delete
+                    </button>
                 </div>
             </div>
         </div>

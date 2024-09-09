@@ -41,6 +41,7 @@ __PACKAGE__->belongs_to(
 );
 
 __PACKAGE__->has_many( ingredients => 'Coocook::Schema::Result::DishIngredient', 'dish_id' );
+__PACKAGE__->many_to_many( items => ingredients => 'item' );
 
 __PACKAGE__->has_many(
     ingredients_ordered => 'Coocook::Schema::Result::DishIngredient',
@@ -58,13 +59,7 @@ sub recalculate ( $self, $servings2 ) {
     $self->txn_do(
         sub {
             for my $ingredient ( $self->ingredients->all ) {
-                my $value1 = $ingredient->value;
-                my $value2 = $value1 / $servings1 * $servings2;
-                $ingredient->update( { value => $value2 } );
-            }
-
-            for my $item ( $self->ingredients->search_related('item')->all ) {
-                $item->update_from_ingredients();
+                $ingredient->set_value_update_item( $ingredient->value / $servings1 * $servings2 );
             }
 
             $self->update( { servings => $servings2 } );
@@ -72,12 +67,11 @@ sub recalculate ( $self, $servings2 ) {
     );
 }
 
-sub update_items_and_delete ($self) {
+sub delete_update_items ($self) {
     $self->txn_do(
         sub {
             for my $ingredient ( $self->ingredients->all ) {
-                $ingredient->remove_from_purchase_list;
-                $ingredient->delete;
+                $ingredient->delete_update_item;
             }
             $self->delete;
         }

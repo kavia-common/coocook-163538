@@ -9,14 +9,17 @@ use lib 't/lib/';
 use TestDB qw(txn_do_and_rollback);
 use Test::Coocook;    # makes Coocook::Script::Dbck not read real config files
 
-plan(19);
+plan(25);
 
-my $db = TestDB->new();
+my $db = TestDB->new( test_data => 0 );
 
 ok my $app = Coocook::Script::Dbck->new_with_options();
 
 $app->_schema($db);
 
+ok no_warnings { $app->run }, "no warnings with empty database";
+
+TestDB->execute_test_data($db);
 ok no_warnings { $app->run }, "no warnings with test data";
 
 txn_do_and_rollback $db, sub {
@@ -25,7 +28,7 @@ txn_do_and_rollback $db, sub {
     SQL
 
     like warnings { $app->run } => [
-        qr/table \W?projects\W?/,    #perldoc
+        qr/table \W?projects\W?/,    #perltidy
         qr/<<</,
         qr/CREATE TABLE/,
         qr/---/,
@@ -38,7 +41,7 @@ txn_do_and_rollback $db, sub {
 txn_do_and_rollback $db, sub {
     $db->resultset('Article')->find(1)->update( { project_id => 2 } );
 
-    is join( '', @{ warnings sub { $app->run } } ) => <<~EOT, "Inconsistent project_id";
+    is warnings { $app->run } => [ split /\n\K/, <<~EOT], "Inconsistent project_id";
     Project IDs differ for Article row (id = 1): me.project = 2, shop_section.project = 1
     Project IDs differ for ArticleTag row (article_id = 1, tag_id = 1): article.project = 2, tag.project = 1
     Project IDs differ for ArticleUnit row (article_id = 1, unit_id = 1): article.project = 2, unit.project = 1
@@ -118,4 +121,68 @@ txn_do_and_rollback $db, sub {
 
     like warning { $app->run } => qr/unit1_id.+unit2_id/,
       "unit_conversions: unit1_id must be lower than unit2_id (relationship normalization)";
+};
+
+txn_do_and_rollback $db, sub {
+    $db->resultset('PurchaseList')->find(2)->delete();
+
+    my $purchase_list = $db->resultset('PurchaseList')->find(1);
+    $purchase_list->items->delete();
+    $purchase_list->update( { project_id => 2 } );
+    $purchase_list->project->update( { default_purchase_list_id => 1 } );
+
+    like warning { $app->run } => qr/default_purchase_list/,
+      "project's default purchase list belongs to other project";
+};
+
+subtest "projects with purchase lists but without default_purchase_list",
+  txn_do_and_rollback $db => sub {
+    my $project = $db->resultset('Project')->find(1);
+    $project->update( { default_purchase_list_id => undef } );
+
+    like warning { $app->run } => qr/default[ _]purchase[ _]list/, "warns";
+
+    $project->purchase_lists->delete();
+
+    ok !warns { $app->run }, "doesn't warn without purchase lists";
+  };
+
+subtest "project with purchase list but unassigned dish ingredients", txn_do_and_rollback $db, sub {
+    ok !warns { $app->run }, "doesn't warn with all ingredients assigned";
+
+    note "Creating another dish ingredient without assigning it ...";
+    $db->resultset('DishIngredient')->create(
+        {
+            dish_id    => 1,
+            prepare    => 0,
+            article_id => 1,
+            value      => 1.0,
+            unit_id    => 1,
+            comment    => '',
+        }
+    );
+
+    like warning { $app->run } => qr/unassigned/, "warns";
+
+    note "Deleting all purchase lists ...";
+    $db->resultset('Project')->update( { default_purchase_list_id => undef } );
+    $db->resultset('PurchaseList')->delete();
+    $db->resultset('DishIngredient')->results_exist or die "this shouldn't be deleted";
+
+    ok !warns { $app->run }, "doesn't warn";
+};
+
+subtest "items without dish ingredients", txn_do_and_rollback $db, sub {
+    my ( $item1, $item2 ) = $db->resultset('Item')->all;
+    $item1->ingredients->delete();
+    like warning { $app->run } => qr/dish ingredients .+zero/;
+
+    $item1->update( { value => 0 } );
+    unlike warning { $app->run } => qr/zero/;
+};
+
+subtest "ingredients with value < sum of ingredients", txn_do_and_rollback $db, sub {
+    my $dish_ingredient = $db->resultset('DishIngredient')->find(2);
+    $dish_ingredient->update( { value => 1000 } );
+    like warnings { $app->run } => [qr/value .*(?:lower| \< )/];
 };

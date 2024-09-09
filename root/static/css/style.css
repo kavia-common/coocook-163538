@@ -196,6 +196,11 @@ header h1 {
     background-color: var(--bs-secondary);
 }
 
+.btn-primary:disabled,
+.btn-primary.disabled {
+    color: var(--bs-light);
+}
+
 .anchor {
     opacity: 0;
     color: grey;
@@ -358,16 +363,37 @@ cc-autocomplete {
 }
 
 /* Show/hide action buttons on hover/no hover */
-.parent:hover .action-btn {
+.parent:hover .action-btn,
+.purchase-list-table:hover .pl-form {
     visibility: visible;
 }
 
-.parent .action-btn {
+.parent .action-btn,
+.purchase-list-table .pl-form {
     visibility: hidden;
 }
 
-.unit-table:not(:nth-child(2)) {
+.unit-table:not(:nth-child(2)),
+.purchase-list-table:not(:nth-child(2)) {
     border-width: 0;
+}
+
+.tt-disabled-btn {
+    pointer-events: auto !important;
+    cursor: default;
+}
+
+.purchase-list-table .selected {
+    --bs-table-accent-bg: var(--bs-table-striped-bg);
+    color: var(--bs-table-striped-color);
+}
+
+.editable .purchase-list-table tr:not(.rounding, .no-hover) {
+    cursor: pointer;
+}
+
+.table-hover tbody .no-hover:hover * {
+    --bs-table-accent-bg: transparent;
 }
 
 /******** footer part ********/

@@ -6,16 +6,18 @@ extends 'Coocook::Schema::ResultSet';
 
 __PACKAGE__->meta->make_immutable;
 
-sub from_recipe ( $self, $recipe, %args ) {
+sub from_recipe ( $self, %args ) {
     return $self->txn_do(
         sub {
+            my $recipe = $args{recipe};
+
             my $dish = $self->create(
                 {
                     from_recipe_id => $recipe->id,
-                    servings       => $recipe->servings,    # begin with original servings
 
-                    meal_id => $args{meal},
-                    comment => $args{comment},
+                    servings => $args{servings},
+                    meal_id  => $args{meal_id},
+                    comment  => $args{comment},
 
                     name        => $args{name}        || $recipe->name,
                     description => $args{description} || $recipe->description,
@@ -26,14 +28,17 @@ sub from_recipe ( $self, $recipe, %args ) {
             $dish->set_tags( [ $recipe->tags->all ] );
 
             # copy ingredients
-            for my $ingredient ( $recipe->ingredients->all ) {
-                $dish->create_related(
-                    ingredients => { map { $_ => $ingredient->$_ } qw<position prepare article unit value comment> } );
-            }
+            for my $recipe_ingredient ( $recipe->ingredients->all ) {
+                my $dish_ingredient = $dish->create_related(
+                    ingredients => {
+                        value => $recipe_ingredient->value * $args{servings} / $recipe->servings,
+                        map { $_ => $recipe_ingredient->$_ } qw<position prepare article unit comment>
+                    }
+                );
 
-            # adjust values of dish ingredients to new servings
-            if ( my $servings = $args{servings} ) {
-                $dish->recalculate($servings);
+                if ( my $list_id = $recipe->project->default_purchase_list_id ) {
+                    $dish_ingredient->assign_to_purchase_list($list_id);
+                }
             }
 
             return $dish;
@@ -65,13 +70,13 @@ sub in_future ($self) {
     );
 }
 
-sub update_items_and_delete ($self) {
+sub delete_update_items ($self) {
     $self->txn_do(
         sub {
             $self->assert_no_sth;
 
             while ( my $dish = $self->next ) {
-                $dish->update_items_and_delete;
+                $dish->delete_update_items;
             }
         }
     );

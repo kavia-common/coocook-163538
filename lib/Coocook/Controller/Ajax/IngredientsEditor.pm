@@ -23,10 +23,12 @@ Catalyst Controller.
 sub base : Chained('/project/base') PathPart('') CaptureArgs(2) {
     my ( $self, $c, $dish_or_recipe, $dish_or_recipe_id ) = @_;
 
-    return $c->detach('/error/not_found')
-      unless ( $dish_or_recipe eq 'dish' or $dish_or_recipe eq 'recipe' );
+    my $plural = {
+        dish   => 'dishes',
+        recipe => 'recipes',
+    }->{$dish_or_recipe}
+      or $c->detach('/error/not_found');
 
-    my $plural = $dish_or_recipe eq 'dish' ? 'dishes' : 'recipes';
     $c->stash( dish_or_recipe => $c->project->$plural->find($dish_or_recipe_id)
           || $c->detach('/error/not_found') );
 }
@@ -48,20 +50,20 @@ sub update_ingredient : POST Chained('base') PathPart('ingredients/update')
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
     my $ajax_request = $c->req->body_data;
-    my $ingredient   = $ajax_request->{ingredient};
 
-    my $dish_or_recipe = $c->stash->{dish_or_recipe};
+    my $ingredient = $c->stash->{dish_or_recipe}->ingredients->find( $ajax_request->{ingredient}{id} )
+      or $c->detach('/error/not_found');
 
-    my $ingrDB = $dish_or_recipe->search_related('ingredients')->find( $ingredient->{id} );
-    $ingrDB->update(
-        {
-            value   => $ingredient->{value},
-            unit_id => $ingredient->{current_unit}{id},
-            comment => $ingredient->{comment},
-        }
-    );
+    my $unit_id = $ajax_request->{ingredient}{current_unit}{id};
+    if ( $unit_id != $ingredient->unit_id ) {
+        $c->project->units->results_exist( { id => $unit_id } )
+          or $c->detach( '/error/bad_request', [ { message => "invalid unit_id" } ] );
+    }
 
-    $c->stash->{ajax_response} = { id => $ingrDB->id };
+    $ingredient->set_column( comment => $ajax_request->{ingredient}{comment} );
+    $ingredient->set_value_unit_update_item( $ajax_request->{ingredient}{value}, $unit_id );
+
+    $c->stash->{ajax_response} = { id => $ingredient->id };
 }
 
 sub prepend_ingredient : POST Chained('base') PathPart('ingredients/prepend')
@@ -87,7 +89,7 @@ sub _xpend_ingredient : Private {
     my $ingredient_id = $ajax_request->{ingredientId};
     my $prepare       = $ajax_request->{prepare};
 
-    my $ingredient = $dish_or_recipe->search_related('ingredients')->find($ingredient_id)
+    my $ingredient = $dish_or_recipe->ingredients->find($ingredient_id)
       or $c->redirect('/error/bad_request');
 
     my %id_hash =
@@ -111,8 +113,8 @@ sub move_ingredient : POST Chained('base') PathPart('ingredients/move')
     my $target_id    = $ajax_request->{targetId};
     my $direction    = $ajax_request->{direction};
 
-    my $source_db = $dish_or_recipe->search_related('ingredients')->find($source_id);
-    my $target_db = $dish_or_recipe->search_related('ingredients')->find($target_id);
+    my $source_db = $dish_or_recipe->ingredients->find($source_id);
+    my $target_db = $dish_or_recipe->ingredients->find($target_id);
 
     my $new_position =
         $direction eq 'upwards'   ? $target_db->position
@@ -133,12 +135,17 @@ sub delete_ingredient : POST Chained('base') PathPart('ingredients/delete')
     my ( $self, $c ) = @_;
     my $ajax_request = $c->req->body_data;
 
-    my $dish_or_recipe = $c->stash->{dish_or_recipe};
+    my $ingredient = $c->stash->{dish_or_recipe}->ingredients->find( $ajax_request->{id} )
+      or $c->detach('/error/not_found');
 
-    my $ingrDB = $dish_or_recipe->search_related('ingredients')->find( $ajax_request->{id} );
-    $ingrDB->delete();
+    if ( my $item = $ingredient->item ) {
+        $item->remove_ingredients( $c->project->unit_conversion_graph, $ingredient );
+    }
+    else {
+        $ingredient->delete();
+    }
 
-    $c->stash->{ajax_response} = { id => $ingrDB->id };
+    $c->stash->{ajax_response} = { id => $ingredient->id };
 }
 
 sub all_articles : GET HEAD Chained('base') PathPart('articles') RequiresCapability('view_project')
@@ -208,7 +215,7 @@ sub add_ingredient : POST Chained('base') PathPart('ingredients/create')
         $article->create_related( articles_units => { unit => $unit } );
     }
 
-    $dish_or_recipe->create_related(
+    my $ingredient = $dish_or_recipe->create_related(
         ingredients => {
             article_id => $article->id,
             unit_id    => $unit->id,
@@ -216,6 +223,12 @@ sub add_ingredient : POST Chained('base') PathPart('ingredients/create')
             $properties->%{qw( comment prepare )},
         }
     );
+
+    if ( $ingredient->is_dish_ingredient ) {
+        if ( my $list_id = $project->default_purchase_list_id ) {
+            $ingredient->assign_to_purchase_list($list_id);
+        }
+    }
 
     $txn_scope_guard->commit;
 

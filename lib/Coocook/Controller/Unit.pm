@@ -29,7 +29,7 @@ sub index : GET HEAD Chained('/project/base') PathPart('units') Args(0)
     {
         my @resultsets = (
             $c->project->units->search_related('articles_units'),
-            $c->project->purchase_lists->search_related('items'),
+            $c->project->items_rs,
             $c->project->dishes->search_related('ingredients'),
             $c->project->recipes->search_related('ingredients'),
         );

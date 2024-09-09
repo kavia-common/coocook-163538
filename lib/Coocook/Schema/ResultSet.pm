@@ -43,6 +43,17 @@ sub count_distinct ( $self, $column ) {
       ->hri->one_row->{count};
 }
 
+=head2 find_related( @rel, @args )
+
+Same concept as L<DBIx::Class::Relationship::Base#find_related>
+but for C<ResultSet> objects.
+
+=cut
+
+sub find_related ( $self, $rel, @args ) {
+    $self->search_related($rel)->find(@args);
+}
+
 =head2 only_id_col($id_column_name?)
 
 Returns new resultset with only the column 'id' selected.

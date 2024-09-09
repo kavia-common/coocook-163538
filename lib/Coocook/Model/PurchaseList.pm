@@ -35,8 +35,12 @@ sub BUILD ( $self, $args ) {
     for my $item ( values %items ) {
         $item->{article}     = $articles{ $item->{article_id} };
         $item->{unit}        = $units{ $item->{unit_id} };
-        $item->{total}       = $item->{value} + $item->{offset};
+        $item->{total}       = my $total = $item->{value} + $item->{offset};
         $item->{ingredients} = [];
+
+        $item->{next_higher_total} = int($total) + 1;
+        $total == int($total) and $total--;
+        $item->{next_lower_total} = int($total);
 
         push @{ $items_per_section{ $item->{article}{shop_section_id} || '' } }, $item;
     }
@@ -99,50 +103,51 @@ sub BUILD ( $self, $args ) {
     }
 
     {    # add convertible_into units to each item
-        my %conversions;
-        {
-            my $conversions = $project->unit_conversions->hri;
+        my $ucg = $project->unit_conversion_graph;
 
-            # possible performance gains:
-            # - use arrayref inflator
-            # - set to undef instead of 1 and check with exists()
-
-            while ( my $conversion = $conversions->next ) {
-                $conversions{ $conversion->{unit1_id} }{ $conversion->{unit2_id} } = 1;
-                $conversions{ $conversion->{unit2_id} }{ $conversion->{unit1_id} } = 1;
-            }
-        }
-
-        my %units_per_article;    # all units linked to article (may be in use or not)
+        my %suggested_units_per_article;
 
         {
             my $articles_units = $list->articles->search_related(
                 'articles_units',
                 undef,
                 {
-                    distinct => 1,        # otherwise sometimes returns (article_id, unit_id) twice
-                    join     => 'unit',
+                    columns => [ 'article_id', 'unit_id' ],
                 }
             )->hri;
 
-            while ( my $article_unit = $articles_units->next ) {
-                push $units_per_article{ $article_unit->{article_id} }->@*, $article_unit->{unit_id};
+            while ( my $row = $articles_units->next ) {
+                $suggested_units_per_article{ $row->{article_id} }{ $row->{unit_id} } = 1;
             }
         }
 
-        my %convertible_units;    # possible target units by article, source unit
-
-        while ( my ( $article_id => $unit_ids ) = each %units_per_article ) {
-            for my $source_unit_id (@$unit_ids) {
-                $convertible_units{$article_id}{$source_unit_id} = [
-                    map  { $units{$_} || die "invalid unit ID" }
-                    grep { $conversions{$source_unit_id}{$_} } @$unit_ids
-                ];
-            }
-        }
-
+        my %items_per_unit;
         for my $item ( values %items ) {
-            $item->{convertible_into} = $convertible_units{ $item->{article}{id} }{ $item->{unit}{id} };
+            push $items_per_unit{ $item->{unit_id} }->@*, $item;
+        }
+
+        while ( my ( $source_unit_id => $items ) = each %items_per_unit ) {
+            my @target_unit_ids = $ucg->unit_convertible_into($source_unit_id);
+
+            for my $item (@$items) {
+                my @convertible_into;
+
+                for my $target_unit_id (@target_unit_ids) {
+                    my $factor = $ucg->factor_between_units( $source_unit_id => $target_unit_id );
+
+                    my %convertible_into = (
+                        $units{$target_unit_id}->%*,
+                        value     => $item->{value} * $factor,
+                        offset    => $item->{offset} * $factor,
+                        suggested => !!$suggested_units_per_article{ $item->{article_id} }{$target_unit_id},
+                    );
+
+                    $convertible_into{total} = $convertible_into{value} + $convertible_into{offset};
+                    push @convertible_into, \%convertible_into;
+                }
+
+                $item->{convertible_into} = _sort_convertible_into( \@convertible_into );
+            }
         }
     }
 
@@ -180,5 +185,17 @@ sub BUILD ( $self, $args ) {
 }
 
 __PACKAGE__->meta->make_immutable;
+
+sub _sort_convertible_into ($convertible_into) {
+    my @convertible_into = sort {
+        $a->{suggested}    # TODO more readable syntax or native operator?
+          ? ( $b->{suggested} ? 0 : -1 )
+          : ( $b->{suggested} ? 1 : 0 )
+          or length( $a->{total} ) <=> length( $b->{total} )
+          or $b->{total} <=> $a->{total}
+    } @$convertible_into;
+
+    return \@convertible_into;
+}
 
 1;

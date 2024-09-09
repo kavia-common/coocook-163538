@@ -34,54 +34,58 @@ sub new ( $class, %opts ) {
     return $schema;
 }
 
-=head2 execute_test_data($schema)
+=head2 execute_test_data( $schema, $filename? )
 
-Executes statements from C<share/test_data.sql>.
+Executes statements from C<$filename> or C<share/test_data.sql>.
 Returns C<$schema> again.
+
+Triggers reset of sequence values if the connection is PostgreSQL.
 
 =cut
 
 # method name not 'insert_' because not all statements are INSERTs
 sub execute_test_data ( $class, $schema, $filename = 'share/test_data.sql' ) {
-    open my $fh, '<', $filename // 'share/test_data.sql'
+    open my $fh, '<', $filename
       or die $!;
 
-    my $continued_line = "";
+    my $statement = "";
 
     while ( my $line = <$fh> ) {
         chomp $line;
 
-        # Remove comments from SQL-File
+        # Remove comments from SQL file
         $line =~ s/ -- .* $//x;
 
         # Remove trailing and leading whitespaces
-        $line =~ s/^ \s+ | \s+ $//xg;
+        $line =~ s/ ^\s+ | \s+$ //xg;
 
         # Skip empty lines
         length($line) or next;
 
-        # All lines get concatenated to $continued_line, only when a semicolon is found
-        # at the end of a line $continued_line gets executed and cleared
-        length $continued_line
-          and $continued_line .= ' ';
+        # All lines get concatenated to $statement, only when a semicolon is found
+        # at the end of a line $statement gets executed and cleared
+        length $statement
+          and $statement .= ' ';
 
-        $continued_line .= $line;
+        $statement .= $line;
 
         # Only let DBICx::TestDatabase execute the SQL-Statement if it is complete, i.e.
         # there is a semicolon at the end of the line
-        if ( $line =~ m/ ; $ /x ) {
+        if ( $line =~ m/ \; $ /x ) {
             my $storage = $schema->storage;
 
             $storage->debug
-              and $storage->debugfh->print("$continued_line\n");
+              and $storage->debugfh->print("$statement\n");
 
-            $storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do($continued_line) } );
+            $storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do($statement) } );
 
-            $continued_line = "";
+            $statement = "";
         }
     }
 
     close $fh;
+
+    $schema->pgsql_reset_sequence_values();
 
     return $schema;
 }

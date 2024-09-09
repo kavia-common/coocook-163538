@@ -18,108 +18,58 @@ Catalyst Controller.
 
 =cut
 
-sub unassigned : GET HEAD Chained('/purchase_list/submenu') PathPart('items/unassigned') Args(0)
-  RequiresCapability('view_project') {
-    my ( $self, $c ) = @_;
-
-    my $project = $c->project;
-
-    my $lists = $project->search_related( purchase_lists => undef, { order_by => 'date' } );
-
-    my @ingredients;
-
-    {
-        my $ingredients = $project->dish_ingredients->unassigned;
-
-        my %articles = map { $_->id => $_ } $ingredients->search_related('article')->all;
-        my %units    = map { $_->id => $_ } $ingredients->search_related('unit')->all;
-        my %dishes =
-          map { $_->id => $_ } $ingredients->search_related( dish => undef, { prefetch => 'meal' } )->all;
-
-        for my $dish ( values %dishes ) {
-            $dish->{url} = $c->project_uri( '/dish/edit', $dish->id );
-        }
-
-        @ingredients = $ingredients->search(
-            undef,
-            {
-                join     => [ 'article', { 'dish' => 'meal' } ],
-                order_by => [
-                    qw<
-                      meal.date
-                      article.shop_section_id
-                      article.name
-                    >
-                ],
-            }
-        )->hri->all;
-
-        for my $ingredient (@ingredients) {
-            $ingredient->{article} = $articles{ $ingredient->{article_id} };
-            $ingredient->{unit}    = $units{ $ingredient->{unit_id} };
-            $ingredient->{dish}    = $dishes{ $ingredient->{dish_id} };
-        }
-    }
-
-    $c->stash(
-        ingredients => \@ingredients,
-        lists       => [ $lists->all ],
-        assign_url  => $c->project_uri( $self->action_for('assign') ),
-    );
-}
-
-sub assign : POST Chained('/project/base') PathPart('items/unassigned') Args(0)
-  RequiresCapability('edit_project') {
-    my ( $self, $c ) = @_;
-
-    my $ingredients = $c->project->dish_ingredients->unassigned;
-    my %lists       = map { $_->id => $_ } $c->project->search_related('purchase_lists')->all;
-
-    $ingredients->txn_do(
-        sub {
-            while ( my $ingredient = $ingredients->next ) {
-                my $id = $ingredient->id;
-
-                if ( my $list = $c->req->params->get("assign$id") ) {
-                    $lists{$list} or $c->detach('/error/bad_request');
-
-                    $ingredient->assign_to_purchase_list($list);
-                }
-            }
-        }
-    );
-
-    $c->response->redirect( $c->project_uri( $self->action_for('unassigned') ) );
-}
-
-sub convert : POST Chained('/project/base') PathPart('items/convert') Args(1)
-  RequiresCapability('edit_project') {
+sub base : Chained('/project/base') PathPart('items') CaptureArgs(1) {
     my ( $self, $c, $item_id ) = @_;
 
-    my $item = $c->project->purchase_lists->search_related('items')->find($item_id)
-      || $c->detach('/error/not_found');
+    $c->stash( item => $c->project->items->find($item_id) || $c->detach('/error/not_found') );
+}
+
+sub convert : POST Chained('base') Args(0) RequiresCapability('edit_project') {
+    my ( $self, $c ) = @_;
 
     my $unit = $c->project->units->find( $c->req->params->get('unit') )
       || $c->detach('/error/not_found');
 
-    $item->convert($unit);
+    my $new_total = $c->req->params->get('total') // $c->detach('/error/bad_request');
+
+    my $item = $c->stash->{item};
+    my $ucg  = $c->project->unit_conversion_graph;
+
+    # TODO This logic could be capsuled inside Result::Item
+    #      if model classes could raise a user error message,
+    #      e.g. with some custom exception class
+    my $factor = $ucg->factor_between_units( $item->unit_id => $unit->id )
+      or $c->detach( '/error/bad_request', ["No conversion factor known to requested unit."] );
+
+    # difference between new total sent by browser and new total calculated now
+    # -> item or conversion has been modified since user received HTML form
+    my $abs_difference = abs( $new_total - $item->total * $factor );
+
+    # can't use numerical equivalence with == because of floating point math!
+    if ( $new_total <= 0 or $abs_difference > 0.0001 ) {
+        $c->detach('/error/bad_request');
+    }
+
+    my $new_item = $item->change_value_offset_unit(
+        $item->value * $factor,    #perltidy
+        $item->offset * $factor,
+        $unit->id
+    );
 
     $c->response->redirect(
-        $c->project_uri( '/purchase_list/edit', $item->purchase_list_id, \( 'item-' . $item_id ) ) );
+        $c->project_uri( '/purchase_list/edit', $item->purchase_list_id, \( 'item-' . $new_item->id ) ) );
 }
 
-sub update_offset : POST Chained('/project/base') PathPart('items/update_offset') Args(1)
-  RequiresCapability('edit_project') {
-    my ( $self, $c, $item_id ) = @_;
-
-    my $item = $c->project->purchase_lists->search_related('items')->find($item_id)
-      || $c->detach('/error/not_found');
+sub update_offset : POST Chained('base') Args(0) RequiresCapability('edit_project') {
+    my ( $self, $c ) = @_;
 
     my $total  = $c->req->params->get('total');
     my $offset = $c->req->params->get('offset');
 
     ( defined $total xor defined $offset )
       or $c->detach( '/error/bad_request', [] );
+
+    my $item = $c->stash->{item};
 
     if ( defined $total ) {
         $item->update( { offset => $total - $item->value } );
@@ -130,7 +80,7 @@ sub update_offset : POST Chained('/project/base') PathPart('items/update_offset'
     else { die 'Code broken' }
 
     $c->response->redirect(
-        $c->project_uri( '/purchase_list/edit', $item->purchase_list_id, \( 'item-' . $item_id ) ) );
+        $c->project_uri( '/purchase_list/edit', $item->purchase_list_id, \( 'item-' . $item->id ) ) );
 }
 
 __PACKAGE__->meta->make_immutable;

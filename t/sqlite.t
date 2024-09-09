@@ -21,7 +21,7 @@ sub _schema_eq;    # declare name, implementation is below
 # older than version 13.
 my %SCHEMA_VERSIONS_WITH_DIFFERENCES = map { $_ => 1 } ( 3 .. 5, 7 .. 12 );
 
-plan tests => 2 + ( $Coocook::Schema::VERSION - 1 ) + 4;
+plan tests => 2 + ( $Coocook::Schema::VERSION - 1 ) + 6;
 
 my $schema_from_code = TestDB->new();
 my $schema_from_deploy;
@@ -75,6 +75,20 @@ _schema_eq
   $schema_from_upgrades => $schema_from_code,
   "schema from upgrade SQLs and schema from Coocook::Schema code are equal";
 
+is [
+    $schema_from_upgrades->resultset('Project')->search(
+        undef,
+        {
+            columns  => [qw( id default_purchase_list_id )],
+            order_by => 'id'
+        }
+    )->hri->all
+] => array {
+    item hash { field id => 1; field default_purchase_list_id => 1 };
+    end();
+},
+  "default values from migration for default_purchase_list_id";
+
 {
     my $unit_conversions = $schema_from_upgrades->resultset('UnitConversion')
       ->search( undef, { columns => [qw( unit1_id factor unit2_id )] } );
@@ -86,7 +100,7 @@ _schema_eq
       "unit_conversions created from old quantity data by migration";
 }
 
-subtest "issue #266 order of meals/dishes" => sub {
+subtest "migration 24->25 (issue #266 order of meals/dishes)" => sub {
     my $schema = TestDB->new( deploy => 0 );
     install_ok $schema, 24;
     my $user = $schema->resultset('User')
@@ -113,6 +127,23 @@ subtest "issue #266 order of meals/dishes" => sub {
         $schema->resultset('Dish')->search( undef, { order_by => 'position' } )->get_column('name')->all ]
       => [qw( b c a )],
       "dishes in order of insertion into database";
+};
+
+subtest "migration 27->28 (issue #292 unassigned items to purchase list)" => sub {
+    my $schema = TestDB->new( deploy => 0 );
+    install_ok $schema, 24;    # latest schema version that works with v21_install.sql
+    ok TestDB->execute_test_data( $schema, 't/test_data_v21_install.sql' ),
+      "populate test data for schema version 21";
+
+    cmp_ok $schema->resultset('DishIngredient')->unassigned->count, '>', 0,
+      "has unassigned dish ingredients";
+
+    upgrade_ok $schema, 28;
+    is $schema->resultset('DishIngredient')->unassigned->count => 0,
+      "has no more unassigned dish ingredients";
+
+    ok $schema->resultset('PurchaseList')->search( { name => "Previously unassigned items" } )->count,
+      "created purchase lists";
 };
 
 sub _schema_eq ( $schema1, $schema2, $test_name ) {

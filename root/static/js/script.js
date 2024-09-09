@@ -136,9 +136,11 @@ function decorateExternalLinks() {
     const externalLinks = document.querySelectorAll(
         `a[href*="://"]:not([href*="${window.location.origin}"])`
     );
-    const externalIcon = '<i class="material-icons" style="font-size:90%;">open_in_new</i>';
+    const externalIcon =
+        '<i class="material-icons" style="font-size:90%;">open_in_new</i>';
     for (const link of externalLinks) {
-        if(!link.innerHTML.includes(externalIcon)) link.innerHTML += `&nbsp;${externalIcon}`;
+        if (!link.innerHTML.includes(externalIcon))
+            link.innerHTML += `&nbsp;${externalIcon}`;
     }
 }
 decorateExternalLinks();
@@ -152,5 +154,9 @@ function decodeHtml(html) {
 function getJsonData(id) {
     const html = document.getElementById(id)?.innerText || "";
     const text = decodeHtml(html);
-    return JSON.parse(text);
+    try {
+        return JSON.parse(text);
+    } catch {
+        return undefined;
+    }
 }

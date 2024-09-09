@@ -3,6 +3,7 @@ package Coocook::Controller::PurchaseList;
 use Coocook::Base qw(Moose);
 
 use DateTime;
+use JSON::MaybeXS qw/to_json/;
 
 BEGIN { extends 'Coocook::Controller' }
 
@@ -20,62 +21,51 @@ Catalyst Controller.
 
 =cut
 
-sub submenu : Chained('/project/base') PathPart('') CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-
-    $c->stash(
-        submenu_items => [
-            { text => "Purchase lists",   action => 'purchase_list/index' },
-            { text => "Unassigned items", action => 'item/unassigned' },
-            { text => "Shop sections",    action => 'shop_section/index' },
-        ]
-    );
-}
-
 =head2 index
 
 =cut
 
-sub index : GET HEAD Chained('submenu') PathPart('purchase_lists') Args(0)
+sub index : GET HEAD Chained('/project/base') PathPart('purchase_lists') Args(0)
   RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
 
-    my $lists = $c->project->purchase_lists;
-
-    my $today    = DateTime->today;
-    my $min_date = $today;
-
-    my $default_date = do {    # one day after today or last list's date
-        my $last_list =
-          $lists->search( undef, { columns => 'date', order_by => { -desc => 'date' } } )->one_row;
-
-        my $date =
-          ( $last_list and $today < $last_list->date )
-          ? $last_list->date
-          : $today->clone;
-
-        $date->add( days => 1 );
-    };
-
-    my @lists = $lists->sorted->with_item_count->hri->all;
+    my $project = $c->project;
+    my $lists   = $project->purchase_lists;
+    my @lists   = $lists->sorted->with_is_default->with_items_count->with_ingredients_count->hri->all;
 
     for my $list (@lists) {
         $list->{date} = $lists->parse_date( $list->{date} );
 
         $list->{edit_url}   = $c->project_uri( $self->action_for('edit'),   $list->{id} );
         $list->{update_url} = $c->project_uri( $self->action_for('update'), $list->{id} );
-        $list->{delete_url} = $c->project_uri( $self->action_for('delete'), $list->{id} );
+        $list->{make_default_url} =
+          !$list->{is_default} ? $c->project_uri( $self->action_for('make_default'), $list->{id} ) : undef;
+        $list->{delete_url} =
+          ( @lists == 1 or !$list->{is_default} )
+          ? $c->project_uri( $self->action_for('delete'), $list->{id} )
+          : undef;
     }
 
+    my $default_list = do {
+        my @default_lists = grep { $_->{is_default} } @lists;
+
+            @default_lists == 0 ? undef
+          : @default_lists == 1 ? $default_lists[0]
+          :                       die "multiple lists with 'is_default' flag";
+    };
+
+    my $today = DateTime->today;
+
     $c->stash(
-        default_date => $default_date,
-        min_date     => $min_date,
+        default_date => $lists->default_date($today),
+        default_list => $default_list,
+        min_date     => $today,
         lists        => \@lists,
         create_url   => $c->project_uri( $self->action_for('create') ),
     );
 }
 
-sub base : Chained('submenu') PathPart('purchase_list') CaptureArgs(1) {
+sub base : Chained('/project/base') PathPart('purchase_list') CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 
     $c->stash( lists => my $lists = $c->project->purchase_lists );
@@ -105,42 +95,115 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
 
     for my $sections ( $c->stash->{sections}->@* ) {
         for my $item ( $sections->{items}->@* ) {
-            $item->{convert_url} = $c->project_uri( '/item/convert', $item->{id} );
-
             $item->{update_offset_url} = $c->project_uri( '/item/update_offset', $item->{id} );
 
-            for my $ingredient ( $item->{ingredients}->@* ) {
-                $ingredient->{remove_url} =
-                  $c->project_uri( '/purchase_list/remove_ingredient', $ingredient->{id} );
+            for my $unit ( $item->{convertible_into}->@* ) {
+                $unit->{convert_url} = $c->project_uri(
+                    '/item/convert',
+                    $item->{id},
+                    {
+                        total => $unit->{total},
+                        unit  => $unit->{id},
+                    }
+                );
             }
-
-            # TODO move business logic out of controller
-            # 4 <- 5   -> 6
-            # 5 <- 5.1 -> 6
-            # 5 <- 5.9 -> 6
-            # 5 <- 6   -> 7
-            my $value = $item->{total};
-            $item->{next_higher_value} = int($value) + 1;
-
-            $value == int($value) and $value--;
-            $item->{next_lower_value} = int($value);
         }
     }
+
+    my @lists = $c->stash->{lists}->search( undef, { order_by => [ 'date', 'name' ] } )
+      ->with_is_default->hri->all;
+    $c->stash(
+        lists         => \@lists,
+        lists_json    => to_json( \@lists ),
+        sections_json => to_json( [ $c->project->shop_sections->hri->all ] )
+    );
 }
 
-sub remove_ingredient : POST Chained('/project/base') PathPart('purchase_list/remove_ingredient')
-  Args(1) RequiresCapability('edit_project') {
-    my ( $self, $c, $ingredient_id ) = @_;
+sub assign_articles_to_shop_section : POST Chained('base') Args(0)
+  RequiresCapability('view_project') {
+    my ( $self, $c ) = @_;
 
-    my $ingredient = $c->project->dishes->search_related('ingredients')->find($ingredient_id)
-      or die "ingredient not found";
+    my $sections = $c->project->shop_sections;
+    my $section;
 
-    my $item = $ingredient->item
-      or die "item not found";
+    if ( length( my $name = $c->request->params->get('new_shop_section') // '' ) ) {
+        $section = $sections->find_or_create( { name => $name } );
+    }
+    elsif ( my $id = $c->request->params->get('shop_section') ) {
+        if ( $id ne 'null' ) {
+            $section = $sections->find($id)
+              or $c->detach( '/error/bad_request', ["Invalid shop section given"] );
+        }
+    }
+    else {
+        $c->detach( '/error/bad_request', ["No shop section given"] );
+    }
 
-    $ingredient->remove_from_purchase_list();
+    my @article_ids      = $c->req->params->get_all('article');
+    my $project_articles = $c->project->articles;
+    $project_articles->search( { $project_articles->me('id') => { -in => \@article_ids } } )
+      ->update( { shop_section_id => $section ? $section->id : undef } );
 
-    $c->response->redirect( $c->project_uri( $self->action_for('edit'), $item->purchase_list_id ) );
+    $c->stash(
+        current_view => 'HTML::Snippet',
+        template     => 'purchase_list/_edit_table.tt',
+    );
+    $c->detach('edit');
+}
+
+sub make_default : POST Chained('base') Args(0) RequiresCapability('edit_project') {
+    my ( $self, $c ) = @_;
+
+    my $list = $c->stash->{list};
+
+    if ( $list->is_default ) {
+        $c->messages->info("Purchase list is already the project’s default purchase list.");
+    }
+    else {
+        $list->make_default();
+    }
+
+    $c->detach('redirect');
+}
+
+sub move_items_ingredients : POST Chained('base') Args(0) RequiresCapability('edit_project') {
+    my ( $self, $c ) = @_;
+
+    my $source_list = $c->stash->{list};
+
+    my $target_list_id = $c->req->params->get('target_purchase_list')
+      or $c->detach( '/error/bad_request', ["No target_list_id"] );
+
+    my $target_list = $source_list->other_purchase_lists->find($target_list_id)
+      or $c->detach( '/error/bad_request', ["Target purchase list not found"] );
+
+    my ( @items, @ingredients );
+
+    for ( [ item => $source_list->items => \@items ],
+        [ ingredient => $source_list->ingredients_rs, \@ingredients ] )
+    {
+        my ( $key, $rs, $arrayref ) = @$_;
+
+        my @values = $c->req->params->get_all($key);
+
+        @$arrayref = $rs->search( { $rs->me('id') => { -in => \@values } } )->all;
+
+        @$arrayref == @values
+          or $c->detach( '/error/bad_request', ["Invalid list of $key IDs"] );
+    }
+
+    $source_list->move_items_ingredients(
+        target_purchase_list => $target_list,
+        items                => \@items,
+        ingredients          => \@ingredients,
+        ucg                  => $c->project->unit_conversion_graph,
+    );
+
+    $c->stash(
+        current_view => 'HTML::Snippet',
+        template     => 'purchase_list/_edit_table.tt',
+    );
+    $c->detach('edit');
 }
 
 sub create : POST Chained('/project/base') PathPart('purchase_lists/create') Args(0)
@@ -168,15 +231,10 @@ sub update : POST Chained('base') Args(0) RequiresCapability('edit_project') {
         $c->detach('redirect');
     }
 
-    my $list  = $c->stash->{list};
-    my $lists = $c->stash->{lists};
+    my $list        = $c->stash->{list};
+    my $other_lists = $list->other_purchase_lists;
 
-    # exclude this very list from duplicate search
-    if ( my $id = $list->id ) {
-        $lists = $lists->search( { id => { '!=' => $id } } );
-    }
-
-    if ( $lists->search( { name => $name } )->results_exist ) {
+    if ( $other_lists->search( { $other_lists->me('name') => $name } )->results_exist ) {
         $c->messages->error("A purchase list with that name already exists!");
         $c->detach('redirect');
     }
@@ -190,7 +248,16 @@ sub update : POST Chained('base') Args(0) RequiresCapability('edit_project') {
 sub delete : POST Chained('base') Args(0) RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
-    $c->stash->{list}->delete();
+    my $list = $c->stash->{list};
+
+    $list->txn_do(
+        sub {
+            ( $list->is_default and $list->other_purchase_lists->results_exist )
+              and $c->detach( '/error/bad_request', ["Can't delete default purchase list"] );
+
+            $list->delete();
+        }
+    );
 
     $c->detach('redirect');
 }

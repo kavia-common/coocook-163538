@@ -29,8 +29,8 @@ __PACKAGE__->has_many(
 __PACKAGE__->meta->make_immutable;
 
 sub deletable ($self) {
-    if ( $self->has_column_loaded('article_count') ) {
-        return $self->get_column('article_count') == 0;
+    if ( $self->has_column_loaded('articles_count') ) {
+        return $self->get_column('articles_count') == 0;
     }
     else {
         return !$self->articles->results_exist;

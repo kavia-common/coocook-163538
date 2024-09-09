@@ -94,19 +94,19 @@ sub emails {
 }
 
 sub clear_emails ($self) {
-    $self->{coocook_checked_email_count} = 0;
+    $self->{coocook_checked_emails_count} = 0;
     Email::Sender::Simple->default_transport->clear_deliveries;
 }
 
 sub shift_emails ( $self, $n = 1 ) {
-    defined and $_ -= $n for $self->{coocook_checked_email_count};
+    defined and $_ -= $n for $self->{coocook_checked_emails_count};
     Email::Sender::Simple->default_transport->shift_deliveries for 1 .. $n;
 }
 
-sub email_count_is ( $self, $count, $name = undef ) {
+sub emails_count_is ( $self, $count, $name = undef ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    $self->{coocook_checked_email_count} = $count;
+    $self->{coocook_checked_emails_count} = $count;
 
     Test2::V0::is(
         Email::Sender::Simple->default_transport->deliveries => $count,
@@ -274,7 +274,7 @@ sub _get_email_body ($self) {
             return;
         }
 
-        my $checked = $self->{coocook_checked_email_count} || 1;
+        my $checked = $self->{coocook_checked_emails_count} || 1;
 
         @$emails > $checked
           and carp "More than 1 email stored";

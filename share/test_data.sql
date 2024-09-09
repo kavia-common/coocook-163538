@@ -58,26 +58,29 @@ INSERT INTO "meals"
 ( 9,          2,        1, '2000-01-01', 'other meal',                      '');
 
 INSERT INTO "units"
-(id, project_id, short_name,   long_name) VALUES
-( 1,          1,        'g',     'grams'),
-( 2,          1,       'kg', 'kilograms'),
-( 3,          1,        'l',    'liters'),
-( 4,          1,        't',      'tons'),
-( 5,          1,        'p',     'pinch'); -- no conversion, (in German: Prise)
+(id, project_id, short_name,     long_name) VALUES
+( 1,          1,        'g',       'grams'),
+( 2,          1,       'kg',   'kilograms'),
+( 3,          1,        'l',      'liters'),
+( 4,          1,        't',        'tons'),
+( 5,          1,        'p',     'pinches'), -- no conversion, (in German: Prisen)
+( 6,          2,       'kg',   'kilograms'), -- other project
+( 7,          1,       'ml', 'milliliters');
 
 INSERT INTO "unit_conversions"
-(unit1_id, factor, unit2_id) VALUES
-(       1,  0.001,        2), --  g to kg
-(       2,  0.001,        4); -- kg to t
+(unit1_id,   factor, unit2_id) VALUES
+(       1,    0.001,        2), --  g to kg
+(       2,    0.001,        4), -- kg to t
+(       3, 1000    ,        7); --  l to ml
 
 INSERT INTO "articles_units"
 (article_id, unit_id) VALUES
-(         1,       1),
-(         1,       2),
-(         2,       1),
-(         3,       3),
-(         4,       1),
-(         4,       2);
+(         1,       1), -- flour: g
+(         1,       2), -- flour: kg
+(         2,       1), -- salt: g
+(         3,       3), -- water: l
+(         4,       1), -- cheese: g
+(         4,       2); -- cheese: kg
 
 INSERT INTO "recipes"
 (id, project_id,                 name, preparation, description, servings) VALUES
@@ -115,15 +118,20 @@ INSERT INTO "dish_ingredients"
 
 INSERT INTO "purchase_lists"
 (id, project_id,          name,         date) VALUES
-( 1,          1, 'all at once', '1999-12-31');
+( 1,          1, 'all at once', '1999-12-31'),
+( 2,          1, 'not to buy',  '2000-01-01');
+
+UPDATE "projects" SET default_purchase_list_id = 1 WHERE id = 1;
 
 INSERT INTO "items"
 (id, purchase_list_id, value, "offset", unit_id, article_id, purchased,              comment) VALUES
-( 1,                1,  1000,      0.0,       1,          1,     FALSE,                   ''),
-( 2,                1,  37.5,     +0.5,       1,          2,     FALSE, 'rounded to integer');
+( 1,                1,  14.5,      0.0,       2,          1,     FALSE,                   ''),
+( 2,                1,  42.5,     +7.5,       1,          2,     FALSE, 'rounded to integer'),
+( 3,                2,  1.75,      0.0,       3,          3,     FALSE,                   ''),
+( 4,                1, 500.0,      0.0,       1,          4,     FALSE,                   '');
 
-UPDATE "dish_ingredients" SET item_id = 1 WHERE id IN (1,4);
-UPDATE "dish_ingredients" SET item_id = 2 WHERE id IN (6,8);
+-- items are handcrafted to match items.id == article_id -> assigning items is simple:
+UPDATE "dish_ingredients" SET item_id = article_id;
 
 INSERT INTO "tag_groups"
 (id, project_id,    color,        name,    comment) VALUES

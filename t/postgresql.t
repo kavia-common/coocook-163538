@@ -4,14 +4,12 @@ use Test2::V0 -no_warnings => 1;
 use Test2::Require::Module 'DBD::Pg';
 use Test2::Require::Module 'DateTime::Format::Pg';
 
-use Coocook::Model::ProjectImporter;
-use Coocook::Script::Deploy;
+# only those required for checking test requirements in BEGIN-block
 use Coocook::Schema;
-use Data::Dumper;
 use DBI;
-use DBIx::Diff::Schema qw(diff_db_schema);
 use Test::Builder;
 
+my $FIRST_PGSQL_SCHEMA_VERSION;
 my $dsn;
 my $master_dbh;
 my @created_dbs;
@@ -20,6 +18,10 @@ my @created_dbs;
 # 1. try Test::PostgreSQL if installed and try to spin up temporary server
 # 2. try to connect to remote PostgreSQL server (only works if PG* env vars are set)
 BEGIN {
+    # show progress 1/x as early as possible
+    $FIRST_PGSQL_SCHEMA_VERSION = 21;
+    plan tests => 3 + ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 14;
+
     local $@ = undef;
     my $psql = eval {
         require Test::PostgreSQL;
@@ -57,15 +59,17 @@ END {    # remove temporary databases
     }
 }
 
+# these are only loaded if test requirements are fulfilled
+use Coocook::Model::ProjectImporter;
+use Coocook::Script::Dbck;
+use Data::Dumper;
+use DBIx::Diff::Schema qw(diff_db_schema);
+
 use lib 't/lib';
 use TestDB qw(install_ok upgrade_ok);
 use Test::Coocook;
 
 sub _schema_diff_like;    # declare name, implementation below
-
-my $FIRST_PGSQL_SCHEMA_VERSION = 21;
-
-plan tests => 3 + ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 10;
 
 my $schema_from_dbic = Coocook::Schema->connect( $dsn->('dbic') );
 ok lives { $schema_from_dbic->deploy() }, "deploy with DBIx::Class";
@@ -109,6 +113,21 @@ for my $version ( $FIRST_PGSQL_SCHEMA_VERSION + 1 .. $Coocook::Schema::VERSION )
       "unit_conversions created from old quantity data by migration";
 }
 
+is [
+    $schema_from_upgrades->resultset('Project')->search(
+        undef,
+        {
+            columns  => [qw( id default_purchase_list_id )],
+            order_by => 'id'
+        }
+    )->hri->all
+] => array {
+    item hash { field id => 1; field default_purchase_list_id => 1 };
+    item hash { field id => 2; field default_purchase_list_id => undef };
+    end();
+},
+  "default values from migration for default_purchase_list_id";
+
 note "Deleting original test data ...";
 $schema_from_upgrades->resultset($_)->delete() for qw(
   DishIngredient
@@ -126,26 +145,17 @@ $schema_from_upgrades->resultset($_)->delete() for qw(
   Terms
 );
 
+# test with PostgreSQL additionally to t/script_dbck.t with SQLite
+my $dbck_app = Coocook::Script::Dbck->new_with_options();
+$dbck_app->_schema($schema_from_deploy);
+ok no_warnings { $dbck_app->run }, "no warnings from script_dbck.pl for empty database";
+
 # share/test_data.sql matches only current schema -> can only after upgrades
 ok TestDB->execute_test_data($schema_from_dbic),     "Execute test data in DB from DBIx::Class";
 ok TestDB->execute_test_data($schema_from_deploy),   "Execute test data in DB from deploy SQL";
 ok TestDB->execute_test_data($schema_from_upgrades), "Execute test data in DB from upgrade SQLs";
 
-note "Fixing Pgsql sequences after bulk insert";
-for my $source ( $schema_from_dbic->sources ) {
-    $source eq 'Session'    # this table has string id column
-      and next;
-
-    my $result_source = $schema_from_dbic->resultset($source)->result_source;
-
-    if ( $result_source->has_column('id') ) {
-        my $table = $result_source->name;
-
-        $schema_from_dbic->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do(<<~SQL) } );
-        SELECT setval('${table}_id_seq', (SELECT MAX(id) FROM $table), true)
-        SQL
-    }
-}
+ok no_warnings { $dbck_app->run }, "no warnings from script_dbck.pl for test data";
 
 subtest "boolean values" => sub {
     my $row = $schema_from_dbic->resultset('Project')->one_row;
@@ -174,12 +184,13 @@ $schema_from_deploy->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do(<<SQL) }
 ALTER SCHEMA public RENAME TO main
 SQL
 
-my $sqlite_schema = TestDB->new();
-
 SKIP: {
     # https://metacpan.org/release/ISHIGAKI/DBD-SQLite-1.72/source/Changes#L14
+    require DBD::SQLite;
     $DBD::SQLite::VERSION < 1.71
       or skip "DBD::SQLite broke compatibility with 1.71_05";
+
+    my $sqlite_schema = TestDB->new();
 
     _schema_diff_like $schema_from_deploy, $sqlite_schema, hash {
         field deleted_tables => [
@@ -246,7 +257,7 @@ subtest "timestamps are stored in UTC" => sub {
 
     $t->get_ok('/');
     $t->register_ok( { username => 'u', email => 'u@example.com', password => 'p', password2 => 'p' } );
-    $t->email_count_is(2);
+    $t->emails_count_is(2);
     $t->get_ok_email_link_like(qr/verify/);
     $t->clear_emails();
     $t->submit_form_ok( { with_fields => { password => 'p' } } );
@@ -280,7 +291,7 @@ subtest "timestamps are stored in UTC" => sub {
     like( $project->get_column($_) => $utc_regex, "column '$_' is in UTC" ) for qw< created archived >;
 };
 
-subtest "issue #266 order of meals/dishes" => sub {
+subtest "migration 24->25 (issue #266 order of meals/dishes)" => sub {
     my $schema = Coocook::Schema->connect( $dsn->('issue266') );
     install_ok $schema, 24;
 
@@ -310,6 +321,38 @@ subtest "issue #266 order of meals/dishes" => sub {
         $schema->resultset('Dish')->search( undef, { order_by => 'position' } )->get_column('name')->all ]
       => [qw( b c a )],
       "dishes in order of insertion into database";
+};
+
+subtest "migration 27->28 (issue #292 unassigned items to purchase list)" => sub {
+    my $schema = TestDB->new( deploy => 0 );
+    install_ok $schema, 24;    # latest schema version that works with v21_install.sql
+    ok TestDB->execute_test_data( $schema, 't/test_data_v21_install.sql' ),
+      "populate test data for schema version 21";
+
+    my $project          = $schema->resultset('Project')->find( 1, { columns => ['id'] } );
+    my $dish_ingredients = $project->meals->search_related('dishes')->search_related('ingredients');
+    my $purchase_lists   = $project->purchase_lists;
+
+    # insertion must be done via SQL because Result::PurchaseList overrides
+    # insert() and triggers fetch of column project.default_purchase_list_id
+    # which isn't present in schema v24 yet
+    for my $name ( 'Previously unassigned items', 'Previously unassigned items (2)' ) {
+        $schema->storage->dbh_do(
+            sub ( $storage, $dbh ) {
+                $dbh->do( 'INSERT INTO purchase_lists (project_id, date, name) VALUES (?,?,?)',
+                    {}, $project->id, $project->format_date( $purchase_lists->default_date ), $name );
+            }
+        );
+    }
+
+    cmp_ok $dish_ingredients->unassigned->count, '>', 0, "has unassigned dish ingredients";
+
+    upgrade_ok $schema, 28;
+    is $dish_ingredients->unassigned->count => 0,
+      "has no more unassigned dish ingredients";
+
+    ok $schema->resultset('PurchaseList')->find( { name => "Previously unassigned items (3)" } ),
+      "created purchase list";
 };
 
 subtest "issue #346 unit conversions not normalized after import" => sub {

@@ -19,15 +19,8 @@ Catalyst Controller.
 sub base : Chained('/project/submenu') PathPart('dish') CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 
-    $c->stash(
-        dish => $c->project->dishes->search(
-            undef,
-            {
-                prefetch => [ 'meal', 'recipe' ],
-            }
-        )->find($id)
-          || $c->detach('/error/not_found')
-    );
+    $c->stash( dish => $c->project->dishes->find( $id, { prefetch => [ 'meal', 'recipe' ] } )
+          || $c->detach('/error/not_found') );
 }
 
 sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('view_project') {
@@ -84,7 +77,7 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
 sub delete : POST Chained('base') PathPart('delete') Args(0) RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
-    $c->stash->{dish}->update_items_and_delete;
+    $c->stash->{dish}->delete_update_items;
 
     $c->response->redirect( $c->project_uri('/project/edit') );
 }
@@ -148,7 +141,7 @@ sub reposition : POST Chained('/project/base') PathPart('dish_ingredient/reposit
   RequiresCapability('edit_project') {
     my ( $self, $c, $id ) = @_;
 
-    my $ingredient = $c->project->dishes->search_related('ingredients')->find($id);
+    my $ingredient = $c->project->dishes->find_related( ingredients => $id );
 
     if ( $c->req->params->get('up') ) {
         $ingredient->move_previous();

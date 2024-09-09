@@ -23,7 +23,8 @@ __PACKAGE__->add_columns(
         default_value => \'CURRENT_TIMESTAMP',
         set_on_create => 1,
     },
-    archived => { data_type => 'timestamp without time zone', is_nullable => 1 },
+    archived                 => { data_type => 'timestamp without time zone', is_nullable => 1 },
+    default_purchase_list_id => { data_type => 'integer',                     is_nullable => 1 },
 );
 
 __PACKAGE__->set_primary_key('id');
@@ -41,14 +42,32 @@ __PACKAGE__->many_to_many( organizations => organizations_projects => 'organizat
 __PACKAGE__->has_many( projects_users => 'Coocook::Schema::Result::ProjectUser', 'project_id' );
 __PACKAGE__->many_to_many( users => projects_users => 'user' );
 
-__PACKAGE__->has_many( articles       => 'Coocook::Schema::Result::Article',      'project_id' );
-__PACKAGE__->has_many( meals          => 'Coocook::Schema::Result::Meal',         'project_id' );
+__PACKAGE__->has_many( articles => 'Coocook::Schema::Result::Article', 'project_id' );
+__PACKAGE__->has_many( meals    => 'Coocook::Schema::Result::Meal',    'project_id' );
+__PACKAGE__->many_to_many( dishes => 'meals', 'dishes' );
 __PACKAGE__->has_many( purchase_lists => 'Coocook::Schema::Result::PurchaseList', 'project_id' );
-__PACKAGE__->has_many( recipes        => 'Coocook::Schema::Result::Recipe',       'project_id' );
-__PACKAGE__->has_many( shop_sections  => 'Coocook::Schema::Result::ShopSection',  'project_id' );
-__PACKAGE__->has_many( tags           => 'Coocook::Schema::Result::Tag',          'project_id' );
-__PACKAGE__->has_many( tag_groups     => 'Coocook::Schema::Result::TagGroup',     'project_id' );
-__PACKAGE__->has_many( units          => 'Coocook::Schema::Result::Unit',         'project_id' );
+__PACKAGE__->many_to_many( items => 'purchase_lists', 'items' );
+__PACKAGE__->has_many( recipes       => 'Coocook::Schema::Result::Recipe',      'project_id' );
+__PACKAGE__->has_many( shop_sections => 'Coocook::Schema::Result::ShopSection', 'project_id' );
+__PACKAGE__->has_many( tags          => 'Coocook::Schema::Result::Tag',         'project_id' );
+__PACKAGE__->has_many( tag_groups    => 'Coocook::Schema::Result::TagGroup',    'project_id' );
+__PACKAGE__->has_many( units         => 'Coocook::Schema::Result::Unit',        'project_id' );
+
+__PACKAGE__->belongs_to(
+    default_purchase_list => 'Coocook::Schema::Result::PurchaseList',
+    'default_purchase_list_id'
+);
+
+__PACKAGE__->has_many(    # all of this project’s purchase lists except the default one
+    non_default_purchase_lists => 'Coocook::Schema::Result::PurchaseList',
+    sub ($args) {
+        return {
+            "$args->{foreign_alias}.project_id" => { -ident => "$args->{self_alias}.id" },
+            "$args->{foreign_alias}.id"         =>
+              { '!=' => { -ident => "$args->{self_alias}.default_purchase_list_id" } },
+        };
+    }
+);
 
 # don't need to check conversions_to because all units belong to project anyway
 __PACKAGE__->many_to_many( unit_conversions => units => 'conversions_from' );
@@ -74,18 +93,6 @@ sub unarchive ($self) {
       or croak "Project not archived";
 
     $self->update( { archived => undef } );
-}
-
-# pseudo-relationship
-sub dishes ($self) {
-    return $self->result_source->schema->resultset('Dish')->search(
-        {
-            'meal.project_id' => $self->id,
-        },
-        {
-            join => 'meal',
-        }
-    );
 }
 
 # fetch articles, units and cache their relationships
@@ -217,6 +224,14 @@ Returns a resultset to all projects except itself.
 sub other_projects ($self) {
     return $self->result_source->resultset->search( { id => { '!=' => $self->id } } );
 }
+
+=head2 unit_conversion_graph
+
+Returns the L<Coocook::Model::UnitConversionGraph> for this project.
+
+=cut
+
+sub unit_conversion_graph ($self) { return $self->unit_conversions->as_graph() }
 
 =head2 users_without_permission
 
