@@ -24,6 +24,7 @@ const purchaseLists = getJsonData("purchase-lists");
 const singleList = purchaseLists.length === 1;
 let shopSections = getJsonData("shop-sections");
 let articles = {};
+let preselectedPurchaseList = null;
 
 let SKIP = false;
 
@@ -207,7 +208,6 @@ init();
 
 // Purchase lists
 function buildPurchaseListOptions() {
-    let defaultSelected = false;
     for (const pl of purchaseLists) {
         if (pl.id === currentPurchaseListId) continue;
         const option = document.createElement("option");
@@ -218,7 +218,7 @@ function buildPurchaseListOptions() {
         selectPl.append(option);
         if (pl.is_default) {
             selectPl.value = pl.id;
-            defaultSelected = true;
+            preselectedPurchaseList = pl.id;
         }
     }
 
@@ -231,7 +231,8 @@ function buildPurchaseListOptions() {
             }
         }
         selectPl.value = plId;
-    } else if (!defaultSelected) {
+        preselectedPurchaseList = plId;
+    } else if (preselectedPurchaseList === null) {
         selectPl.setCustomValidity("Please select a target purchase list");
     }
     selectPl.addEventListener("input", () => {
@@ -247,8 +248,13 @@ buildPurchaseListOptions();
 
 moveModal.addEventListener("shown.bs.modal", () => selectPl.focus());
 moveModal.addEventListener("hidden.bs.modal", () => {
-    selectPl.value = "";
-    selectPl.setCustomValidity("Please select a target purchase list");
+    if (preselectedPurchaseList !== null) {
+        selectPl.value = preselectedPurchaseList;
+        selectPl.setCustomValidity("");
+    } else {
+        selectPl.value = "";
+        selectPl.setCustomValidity("Please select a target purchase list");
+    }
 });
 
 moveItemsForm.addEventListener("submit", async (e) => {
