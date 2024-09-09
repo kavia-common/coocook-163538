@@ -6,10 +6,6 @@ extends 'Coocook::Schema::ResultSet';
 
 __PACKAGE__->load_components('+Coocook::Schema::Component::ResultSet::SortByName');
 
-sub joined ($self) {
-    return join ", ", $self->sorted->get_column('name')->all;
-}
-
 sub ungrouped ($self) {
     return $self->search( { $self->me('tag_group') => undef } );
 }
