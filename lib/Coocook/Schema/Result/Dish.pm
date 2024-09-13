@@ -4,6 +4,12 @@ use Coocook::Base qw(Moose);
 
 extends 'Coocook::Schema::Result';
 
+__PACKAGE__->load_components(
+    qw<
+      +Coocook::Schema::Component::Result::DishOrRecipe
+    >
+);
+
 __PACKAGE__->load_components(qw< Ordered >);
 
 __PACKAGE__->table('dishes');
@@ -52,20 +58,6 @@ __PACKAGE__->has_many( dishes_tags => 'Coocook::Schema::Result::DishTag', 'dish_
 __PACKAGE__->many_to_many( tags => dishes_tags => 'tag' );
 
 __PACKAGE__->meta->make_immutable;
-
-sub recalculate ( $self, $servings2 ) {
-    my $servings1 = $self->servings;
-
-    $self->txn_do(
-        sub {
-            for my $ingredient ( $self->ingredients->all ) {
-                $ingredient->set_value_update_item( $ingredient->value / $servings1 * $servings2 );
-            }
-
-            $self->update( { servings => $servings2 } );
-        }
-    );
-}
 
 sub delete_update_items ($self) {
     $self->txn_do(
