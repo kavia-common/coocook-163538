@@ -138,7 +138,7 @@ sub delete_ingredient : POST Chained('base') PathPart('ingredients/delete')
     my $ingredient = $c->stash->{dish_or_recipe}->ingredients->find( $ajax_request->{id} )
       or $c->detach('/error/not_found');
 
-    if ( my $item = $ingredient->item ) {
+    if ( $ingredient->is_dish_ingredient and my $item = $ingredient->item ) {
         $item->remove_ingredients( $c->project->unit_conversion_graph, $ingredient );
     }
     else {
