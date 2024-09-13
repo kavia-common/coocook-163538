@@ -74,4 +74,6 @@ sub for_meals_dishes_editor ($self) {
     return { $self->as_hashref->%*, date => $self->meal->date->ymd };
 }
 
+sub project ($self) { $self->meal->project }
+
 1;

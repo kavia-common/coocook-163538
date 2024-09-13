@@ -189,58 +189,15 @@ sub add_ingredient : POST Chained('base') PathPart('ingredients/create')
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
-    my $dish_or_recipe = $c->stash->{dish_or_recipe};
-    my $project        = $c->stash->{project};
-    my $properties     = $c->req->body_data->{ingredient};
+    my $properties = $c->req->body_data->{ingredient};
 
-    my $txn_scope_guard = $c->model('DB')->txn_scope_guard;
-
-    my ( $article, $unit );
-
-    if ( defined( my $id = $properties->{article}{id} ) ) {
-        $article = $project->articles->find($id);
-    }
-    elsif ( defined( my $name = $properties->{article}{name} ) ) {
-        $article = $project->articles->find_or_new( { name => $name } );
-    }
-
-    if ( defined( my $id = $properties->{unit}{id} ) ) {
-        $unit = $project->units->find($id);
-    }
-    elsif ( defined( my $name = $properties->{unit}{name} ) ) {
-        $unit = $project->units->search(
-            [    # OR
-                { short_name => $name },
-                { long_name  => $name },
-            ]
-          )->one_row
-          || $project->units->create( { short_name => $name, long_name => $name } );
-    }
-
-    ( $article and $unit )
-      or $c->detach('/error/bad_request');
-
-    if ( not $article->in_storage ) {
-        $article->set_columns( { comment => '' } );
-        $article->create_related( articles_units => { unit => $unit } );
-    }
-
-    my $ingredient = $dish_or_recipe->create_related(
-        ingredients => {
-            article_id => $article->id,
-            unit_id    => $unit->id,
-            value      => $properties->{value},
-            $properties->%{qw( comment prepare )},
-        }
-    );
-
-    if ( $ingredient->is_dish_ingredient ) {
-        if ( my $list_id = $project->default_purchase_list_id ) {
-            $ingredient->assign_to_purchase_list($list_id);
-        }
-    }
-
-    $txn_scope_guard->commit;
+    my $ingredient = $c->stash->{dish_or_recipe}->add_ingredient(
+        article_id   => $properties->{article}{id},
+        article_name => $properties->{article}{name},
+        unit_id      => $properties->{unit}{id},
+        unit_name    => $properties->{unit}{name},
+        $properties->%{qw( comment prepare value )},
+    ) or $c->detach('/error/bad_request');
 
     $c->stash->{ajax_response} = { success => 1 };
 }

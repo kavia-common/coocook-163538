@@ -23,7 +23,14 @@ sub parse_date     { shift->result_source->storage->datetime_parser->parse_date(
 sub parse_datetime { shift->result_source->storage->datetime_parser->parse_datetime(@_) }
 
 # transactions
-sub txn_do { shift->result_source->storage->txn_do(@_) }
+sub svp_begin       { shift->result_source->storage->svp_begin(@_) }
+sub svp_release     { shift->result_source->storage->svp_release(@_) }
+sub svp_rollback    { shift->result_source->storage->svp_rollback(@_) }
+sub txn_begin       { shift->result_source->storage->txn_begin(@_) }
+sub txn_commit      { shift->result_source->storage->txn_commit(@_) }
+sub txn_do          { shift->result_source->storage->txn_do(@_) }
+sub txn_rollback    { shift->result_source->storage->txn_rollback(@_) }
+sub txn_scope_guard { shift->result_source->storage->txn_scope_guard(@_) }
 
 # TODO this is only a workaround for issue #142
 sub format_bool ( $self, $value ) {    # short, convenient method name
