@@ -328,31 +328,51 @@ subtest "migration 27->28 (issue #292 unassigned items to purchase list)" => sub
     install_ok $schema, 24;    # latest schema version that works with v21_install.sql
     ok TestDB->execute_test_data( $schema, 't/test_data_v21_install.sql' ),
       "populate test data for schema version 21";
+    upgrade_ok $schema, 27;
 
-    my $project          = $schema->resultset('Project')->find( 1, { columns => ['id'] } );
-    my $dish_ingredients = $project->meals->search_related('dishes')->search_related('ingredients');
-    my $purchase_lists   = $project->purchase_lists;
+    my $project1 = $schema->resultset('Project')->find( 1, { columns => ['id'] } );
+    my $project2 = $schema->resultset('Project')->find( 2, { columns => ['id'] } );
 
-    # insertion must be done via SQL because Result::PurchaseList overrides
-    # insert() and triggers fetch of column project.default_purchase_list_id
-    # which isn't present in schema v24 yet
-    for my $name ( 'Previously unassigned items', 'Previously unassigned items (2)' ) {
-        $schema->storage->dbh_do(
-            sub ( $storage, $dbh ) {
-                $dbh->do( 'INSERT INTO purchase_lists (project_id, date, name) VALUES (?,?,?)',
-                    {}, $project->id, $project->format_date( $purchase_lists->default_date ), $name );
-            }
+    my $purchase_lists = $project1->purchase_lists;
+
+    $purchase_lists->populate(
+        [
+            [ 'date', 'name' ],
+            map { [ $purchase_lists->default_date, $_ ] } 'Previously unassigned items',
+            'Previously unassigned items (2)'
+        ]
+    );
+
+    my $meal = $project2->meals->create( { date => '2000-01-01', name => __FILE__, comment => '' } );
+    my $dish = $meal->dishes->create(
+        { name => __FILE__, comment => '', servings => 42, preparation => '', description => '' } );
+    {    # method override because Dish->project tries to fetch 'projects.default_purchase_list_id'
+        local *Coocook::Schema::Result::Dish::project = sub { return $project2 };
+        $dish->add_ingredient(
+            value        => __LINE__,
+            article_name => __FILE__,
+            unit_name    => __FILE__,
+            comment      => __FILE__,
+            prepare      => 1,
         );
     }
 
-    cmp_ok $dish_ingredients->unassigned->count, '>', 0, "has unassigned dish ingredients";
+    cmp_ok $project1->dish_ingredients->unassigned->count, '>', 0,
+      "project 1 has unassigned dish ingredients";
 
     upgrade_ok $schema, 28;
-    is $dish_ingredients->unassigned->count => 0,
-      "has no more unassigned dish ingredients";
+
+    is $project1->dish_ingredients->unassigned->count => 0,
+      "project 1 has no more unassigned dish ingredients";
 
     ok $schema->resultset('PurchaseList')->find( { name => "Previously unassigned items (3)" } ),
       "created purchase list";
+
+    is $project2->purchase_lists->count => 0,
+      "didn't create purchase list for project no purchase lists at all";
+
+    $dbck_app->_schema($schema);
+    is warnings { $dbck_app->run } => [], "no warnings from script_dbck.pl";
 };
 
 subtest "issue #346 unit conversions not normalized after import" => sub {
