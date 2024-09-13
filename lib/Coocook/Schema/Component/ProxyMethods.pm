@@ -7,23 +7,23 @@ use Coocook::Base;
 use DateTime;
 
 # DateTime formatting
-sub format_date     { shift->result_source->schema->storage->datetime_parser->format_date(@_) }
-sub format_datetime { shift->result_source->schema->storage->datetime_parser->format_datetime(@_) }
+sub format_date     { shift->result_source->storage->datetime_parser->format_date(@_) }
+sub format_datetime { shift->result_source->storage->datetime_parser->format_datetime(@_) }
 
 sub format_date_today ($self) {
-    $self->result_source->schema->storage->datetime_parser->format_date( DateTime->today );
+    $self->result_source->storage->datetime_parser->format_date( DateTime->today );
 }
 
 sub format_datetime_now ($self) {
-    $self->result_source->schema->storage->datetime_parser->format_datetime( DateTime->now );
+    $self->result_source->storage->datetime_parser->format_datetime( DateTime->now );
 }
 
 # DateTime parsing
-sub parse_date     { shift->result_source->schema->storage->datetime_parser->parse_date(@_) }
-sub parse_datetime { shift->result_source->schema->storage->datetime_parser->parse_datetime(@_) }
+sub parse_date     { shift->result_source->storage->datetime_parser->parse_date(@_) }
+sub parse_datetime { shift->result_source->storage->datetime_parser->parse_datetime(@_) }
 
 # transactions
-sub txn_do { shift->result_source->schema->txn_do(@_) }
+sub txn_do { shift->result_source->storage->txn_do(@_) }
 
 # TODO this is only a workaround for issue #142
 sub format_bool ( $self, $value ) {    # short, convenient method name
