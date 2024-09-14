@@ -88,7 +88,7 @@
                     [% FOREACH ingredient IN item.ingredients %]
                 <tr class="parent">
                     <td class="amount text-end text-nowrap">
-                        [% IF lists.size > 1 %]
+                        [% IF purchase_lists.size > 1 %]
                         <input type="checkbox" id="move-ingredient-[% ingredient.id %]" class="d-none">
                         [% END;
                         display_value_unit( ingredient.value, ingredient.unit, {html=>1} ) %]

@@ -56,25 +56,25 @@ sub index : GET HEAD Chained('/project/base') PathPart('purchase_lists') Args(0)
     my $today = DateTime->today;
 
     $c->stash(
-        default_date => $lists->default_date($today),
-        default_list => $default_list,
-        min_date     => $today,
-        lists        => \@lists,
-        create_url   => $c->project_uri( $self->action_for('create') ),
+        default_date   => $lists->default_date($today),
+        default_list   => $default_list,
+        min_date       => $today,
+        purchase_lists => \@lists,
+        create_url     => $c->project_uri( $self->action_for('create') ),
     );
 }
 
 sub base : Chained('/project/base') PathPart('purchase_list') CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 
-    $c->stash( lists => my $lists = $c->project->purchase_lists );
-    $c->stash( list  => $lists->find($id) || $c->detach('/error/not_found') );
+    $c->stash( purchase_lists => my $lists = $c->project->purchase_lists );
+    $c->stash( purchase_list  => $lists->find($id) || $c->detach('/error/not_found') );
 }
 
 sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
 
-    my $list = $c->model('PurchaseList')->new( list => $c->stash->{list} );
+    my $list = $c->model('PurchaseList')->new( list => $c->stash->{purchase_list} );
 
     $c->stash(
         sections => $list->shop_sections,
@@ -109,15 +109,16 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
         }
     }
 
-    my @lists = $c->stash->{lists}->search( undef, { order_by => [ 'date', 'name' ] } )
+    my @purchase_lists =
+      $c->stash->{purchase_lists}->search( undef, { order_by => [ 'date', 'name' ] } )
       ->with_is_default->hri->all;
 
     $c->json_stash(
-        purchase_lists => \@lists,
+        purchase_lists => \@purchase_lists,
         shop_sections  => [ $c->project->shop_sections->hri->all ],
     );
 
-    $c->stash( lists => \@lists );
+    $c->stash( purchase_lists => \@purchase_lists );
 }
 
 sub assign_articles_to_shop_section : POST Chained('base') Args(0)
@@ -155,13 +156,13 @@ sub assign_articles_to_shop_section : POST Chained('base') Args(0)
 sub make_default : POST Chained('base') Args(0) RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
-    my $list = $c->stash->{list};
+    my $purchase_list = $c->stash->{purchase_list};
 
-    if ( $list->is_default ) {
+    if ( $purchase_list->is_default ) {
         $c->messages->info("Purchase list is already the project’s default purchase list.");
     }
     else {
-        $list->make_default();
+        $purchase_list->make_default();
     }
 
     $c->detach('redirect');
@@ -170,7 +171,7 @@ sub make_default : POST Chained('base') Args(0) RequiresCapability('edit_project
 sub move_items_ingredients : POST Chained('base') Args(0) RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
-    my $source_list = $c->stash->{list};
+    my $source_list = $c->stash->{purchase_list};
 
     my $target_list_id = $c->req->params->get('target_purchase_list')
       or $c->detach( '/error/bad_request', ["No target_list_id"] );
@@ -216,8 +217,8 @@ sub create : POST Chained('/project/base') PathPart('purchase_lists/create') Arg
 
     # TODO parse and verify date
 
-    $c->stash( lists => my $lists = $c->project->purchase_lists );
-    $c->stash( list  => $lists->new_result( { date => $date } ) );
+    $c->stash( purchase_lists => my $lists = $c->project->purchase_lists );
+    $c->stash( purchase_list  => $lists->new_result( { date => $date } ) );
 
     $c->detach('update');
 }
@@ -232,16 +233,16 @@ sub update : POST Chained('base') Args(0) RequiresCapability('edit_project') {
         $c->detach('redirect');
     }
 
-    my $list        = $c->stash->{list};
-    my $other_lists = $list->other_purchase_lists;
+    my $purchase_list = $c->stash->{purchase_list};
+    my $other_lists   = $purchase_list->other_purchase_lists;
 
     if ( $other_lists->search( { $other_lists->me('name') => $name } )->results_exist ) {
         $c->messages->error("A purchase list with that name already exists!");
         $c->detach('redirect');
     }
 
-    $list->name($name);
-    $list->update_or_insert();
+    $purchase_list->name($name);
+    $purchase_list->update_or_insert();
 
     $c->detach('redirect');
 }
@@ -249,7 +250,7 @@ sub update : POST Chained('base') Args(0) RequiresCapability('edit_project') {
 sub delete : POST Chained('base') Args(0) RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
-    my $list = $c->stash->{list};
+    my $list = $c->stash->{purchase_list};
 
     $list->txn_do(
         sub {

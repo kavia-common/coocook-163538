@@ -5,51 +5,51 @@ js_push_template_path();
 BLOCK new_list %]
 <tr>
     <td colspan="5">
-        <div class="d-grid" data-bs-toggle="tooltip" data-bs-title="create [% lists.size > 0 ? "another" : "a" %] purchase list">
+        <div class="d-grid" data-bs-toggle="tooltip" data-bs-title="create [% purchase_lists.size > 0 ? "another" : "a" %] purchase list">
             <button class="btn btn-outline-primary material-icons" data-bs-toggle="modal" data-bs-target="#addList">add</button>
         </div>
     </td>
 </tr>
 [% END %]
 
-[% WRAPPER table length=lists.size classes='align-middle' %]
+[% WRAPPER table length=purchase_lists.size classes='align-middle' %]
     <thead>
         <tr class="sticky-top">
             <th>Date</th>
             <th>Name</th>
             <th>Items</th>
             <th>Dish Ingredients</th>
-            <th class="btn-icon-[% lists.size <= 1 ? 2 : 3 %]"></th>
+            <th class="btn-icon-[% purchase_lists.size <= 1 ? 2 : 3 %]"></th>
         </tr>
     </thead>
     <tbody>
-        [% PROCESS new_list IF lists.size > 5;
+        [% PROCESS new_list IF purchase_lists.size > 5;
 
-        FOR list IN lists;
-            is_in_use = list.items_count > 0;
-            show_default = lists.size > 1 AND list.is_default %]
+        FOR purchase_list IN purchase_lists;
+            is_in_use = purchase_list.items_count > 0;
+            show_default = purchase_lists.size > 1 AND purchase_list.is_default %]
         <tr class="parent">
-            <td>[% display_date(list.date, {html=>1}) %]</td>
+            <td>[% display_date(purchase_list.date, {html=>1}) %]</td>
             <td>
                 <i class="material-icons" title="[% 'Is the default purchase list' IF show_default %]">
                     [% show_default ? 'add_shopping_cart' : 'shopping_cart' %]
                 </i>&thinsp;
-                <a href="[% list.edit_url %]">[% list.name | html %]</a>&thinsp;
-                [% '(default)' IF lists.size > 1 AND list.is_default %]
+                <a href="[% purchase_list.edit_url %]">[% purchase_list.name | html %]</a>&thinsp;
+                [% '(default)' IF purchase_lists.size > 1 AND purchase_list.is_default %]
             </td>
-            <td>[% list.items_count %]</td>
-            <td>[% list.ingredients_count %]</td>
+            <td>[% purchase_list.items_count %]</td>
+            <td>[% purchase_list.ingredients_count %]</td>
             <td>
                 <div class="d-flex justify-content-between action-btn">
                     <span data-bs-toggle="tooltip" data-bs-title="Rename purchase list">
-                        <button class="btn btn-outline-dark btn-sm btn-quad update-trigger" data-url="[% list.update_url %]" data-name="[% list.name | html %]" data-bs-toggle="modal" data-bs-target="#updateList">
+                        <button class="btn btn-outline-dark btn-sm btn-quad update-trigger" data-url="[% purchase_list.update_url %]" data-name="[% purchase_list.name | html %]" data-bs-toggle="modal" data-bs-target="#updateList">
                             <i class="material-icons">edit</i>
                         </button>
                     </span>
 
-                    [% IF lists.size > 1;
-                        IF list.make_default_url %]
-                    <form action="[% list.make_default_url %]" method="post">
+                    [% IF purchase_lists.size > 1;
+                        IF purchase_list.make_default_url %]
+                    <form action="[% purchase_list.make_default_url %]" method="post">
                         <button type="submit" class="btn btn-outline-dark btn-sm btn-quad" data-bs-toggle="tooltip" data-bs-title="Make purchase list the default purchase list">
                             <i class="material-icons">shopping_cart_checkout</i>
                         </button>
@@ -63,15 +63,15 @@ BLOCK new_list %]
                         [% END;
                     END;
 
-                    IF list.delete_url;
+                    IF purchase_list.delete_url;
                         IF is_in_use %]
                     <span data-bs-toggle="tooltip" data-bs-title="Delete purchase list">
-                        <button class="btn btn-outline-danger btn-sm btn-quad delete-trigger" data-url="[% list.delete_url %]" data-name="[% list.name | html %]" data-count="[% list.items_count %]"  data-bs-toggle="modal" data-bs-target="#delete-list">
+                        <button class="btn btn-outline-danger btn-sm btn-quad delete-trigger" data-url="[% purchase_list.delete_url %]" data-name="[% purchase_list.name | html %]" data-count="[% purchase_list.items_count %]"  data-bs-toggle="modal" data-bs-target="#delete-list">
                             <i class="material-icons">delete_forever</i>
                         </button>
                     </span>
                         [% ELSE %]
-                    <form action="[% list.delete_url %]" method="post">
+                    <form action="[% purchase_list.delete_url %]" method="post">
                         <button type="submit" class="btn btn-outline-danger btn-sm btn-quad" title="Delete purchase list">
                             <i class="material-icons">delete_forever</i>
                         </button>
@@ -166,7 +166,7 @@ BLOCK new_list %]
                 <div class="modal-body">
                     Do you really want to delete this purchase list?
                     On this list <span id="delete-list-count"></span>
-                [%~ IF lists.size <= 1;    # fix syntax highlighting: >
+                [%~ IF purchase_lists.size <= 1;    # fix syntax highlighting: >
                     '.';
                 ELSE %]
                     which will then be moved to the default purchase list

@@ -1,7 +1,7 @@
-[% escape_title( 'Purchase list', list.name );
+[% escape_title( 'Purchase list', purchase_list.name );
 
-title      =      title _ ' for ' _ display_date(list.date, {short=>1});
-html_title = html_title _ ' for ' _ display_date(list.date, {html=>1});
+title      =      title _ ' for ' _ display_date(purchase_list.date, {short=>1});
+html_title = html_title _ ' for ' _ display_date(purchase_list.date, {html=>1});
 
 css.push('/css/print.css');
 css_push_template_path();
@@ -10,7 +10,7 @@ js_push_template_path();
 %]
 
 <button class="btn btn-primary my-3 material-icons" onclick="print()" title="Print">print</button>
-[% IF lists.size > 1 %]
+[% IF purchase_lists.size > 1 %]
 <button id="move-btn" class="btn btn-primary my-3 d-none" title="Move selected items/ingredients to different purchase list"  data-bs-toggle="modal" data-bs-target="#move-items">
     <i class="material-icons">drive_file_move</i>&thinsp;Move items/ingredients to other purchase list
 </button>
@@ -42,7 +42,7 @@ js_push_template_path();
                 <div class="modal-body">
                     <div class="form-floating">
                         <select id="move-items-target" class="form-control" placeholder="Target purchase list">
-                            [% '<option value="">---</option>' IF lists.size != 2 %]
+                            [% '<option value="">---</option>' IF purchase_lists.size != 2 %]
                         </select>
                         <label for="move-items-target" class="form-label">Target purchase list</label>
                     </div>
