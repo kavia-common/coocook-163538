@@ -101,8 +101,28 @@ subtest "redirect to fix URLs" => sub {
         301     # permanent
     );
 
-    $t->get_ok('/');
-    $t->login_ok( other => 'P@ssw0rd' );
+    subtest "response is equal for existent/inexistent objects in private project" => sub {
+        my $existent_url   = "https://localhost/project/3/Other-Project/recipe/3";
+        my $inexistent_url = "https://localhost/project/3/Other-Project/recipe/999";
+
+        ok $t->get($_), "GET $_" for $inexistent_url;
+        my $status  = $t->status;
+        my $content = $t->content;
+        $content =~ s/999/3/g;    # ID given in URL may be included
+
+        ok $t->get($_), "GET $_" for $existent_url;
+        $t->status_is( $status, "Response code is the same" );
+        $t->content_is( $content, "Content is the same" );
+
+        $t->get_ok('/');
+        $t->login_ok( other => 'P@ssw0rd' );
+
+        $t->get($existent_url);
+        $t->status == 200 or die "test broken";
+
+        $t->get($inexistent_url);
+        $t->status == 404 or die "test broken";
+    };
 
     ok $t->get($_), "GET $_" for "https://localhost/project/2/I-cant-know-this-projects-name/";
     $t->status_is( 403, "no redirect that would reveal the private project's name" );

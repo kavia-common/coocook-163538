@@ -184,7 +184,8 @@ sub require_capability {
         delete $c->stash->{project_urls};
     }
 
-    $c->detach('/error/forbidden');
+    $c->detach( '/error/forbidden', [] );    # without [] detach() copies $c->args
+                                             # which might contain URL path arguments
 }
 
 =head2 $c->messages

@@ -73,6 +73,10 @@ sub base : Chained('/base') PathPart('project') CaptureArgs(2) {
 
     $c->stash( project => $project );
 
+    # always check this capability to avoid information leaks
+    # https://gitlab.com/coocook/coocook/-/issues/336
+    $c->require_capability('view_project');
+
     $c->redirect_canonical_case( 1 => $project->url_name );
 
     # the rest of this method is only useful for HTML output
