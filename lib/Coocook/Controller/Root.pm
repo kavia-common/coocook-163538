@@ -355,7 +355,12 @@ sub end : ActionClass('RenderView') {
                 $item->{url} = $c->uri_for_action($action);
             }
             else {
-                $item->{url} = $c->project_uri($action);
+                if ( $c->project ) {
+                    $item->{url} = $c->project_uri($action);
+                }
+                else {
+                    $item->{forbidden} = 1;
+                }
             }
         }
     }
