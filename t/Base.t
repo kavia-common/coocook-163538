@@ -47,8 +47,6 @@ subtest "indirect object syntax" => sub {
     ## we need stringy eval here to test invalid syntax ...
     ## no critic (BuiltinFunctions::ProhibitStringyEval)
 
-    # TODO reduce warnings category to 'bareword'
-    # https://github.com/Perl/perl5/issues/21878
     like do { no warnings qw(syntax); eval $code; $@ }
       => qr/syntax error/;
 
