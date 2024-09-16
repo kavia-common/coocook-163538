@@ -39,7 +39,7 @@ js.push('/js/tagAutocomplete.js');
         </div>
         <div class="mb-3">
             <label for="comment" class="form-label">Comment</label>
-            <textarea id="comment" class="form-control" name="comment">[% dish.comment %]</textarea>
+            <input id="comment" class="form-control" type="text" name="comment" value="[% dish.comment | html %]">
         </div>
         <div class="mb-3">
             <label for="tags" class="form-label">Tags</label>
