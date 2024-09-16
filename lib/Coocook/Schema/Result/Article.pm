@@ -74,10 +74,4 @@ sub units_in_use ($self) {
     return $self->units->in_use( { article_id => $self->id } );
 }
 
-sub tags_joined ($self) {
-
-    # TODO implement with get_column if not prefetched
-    return join " ", map { $_->name } $self->tags;
-}
-
 1;

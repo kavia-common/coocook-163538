@@ -47,7 +47,7 @@ js_push_template_path() %]
                     <li class="list-group-item">No related dishes</li>
                     [% ELSE;
                     FOREACH dish IN dishes %]
-                    <li  class="list-group-item"><a href="[% article.url %]">[% dish.name | html %]</a></li>
+                    <li  class="list-group-item"><a href="[% dish.url %]">[% dish.name | html %]</a></li>
                     [% END; END %]
                 </ul>
             </div>
@@ -60,11 +60,11 @@ js_push_template_path() %]
             </div>
             <div class="card-body p-0">
                 <ul class="list-group list-group-flush">
-                    [% IF dishes.size == 0 %]
+                    [% IF recipes.size == 0 %]
                     <li class="list-group-item">No related recipes</li>
                     [% ELSE;
                     FOREACH recipe IN recipes %]
-                    <li  class="list-group-item"><a href="[% article.url %]">[% recipe.name | html %]</a></li>
+                    <li  class="list-group-item"><a href="[% recipe.url %]">[% recipe.name | html %]</a></li>
                     [% END; END %]
                 </ul>
             </div>
@@ -82,7 +82,7 @@ js_push_template_path() %]
                 </div>
                 <div class="modal-body">
                     <div class="form-floating mb-3">
-                        <input id="edit-name" class="form-control" type="text" name="name" placeholder="name" value="[% tag.name %]" required>
+                        <input id="edit-name" class="form-control" type="text" name="name" placeholder="name" value="[% tag.name | html %]" required>
                         <label for="edit-name" class="form-label">Name</label>
                     </div>
                     <div class="form-floating">
@@ -109,11 +109,11 @@ js_push_template_path() %]
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="delete-tag-label">Delete Tag <em>[% tag.name %]</em></h5>
+                    <h5 class="modal-title" id="delete-tag-label">Delete Tag <em>[% tag.name | html %]</em></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Do you really want to delete the tag <em>[% tag.name %]</em>?
+                    Do you really want to delete the tag <em>[% tag.name | html %]</em>?
                     The tag is used in:
                     <ul class="m-0">
                         [% IF articles.size %]<li>[% numerus(articles.size, "article", "articles") %]</li>[% END;

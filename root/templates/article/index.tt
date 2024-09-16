@@ -10,9 +10,9 @@
             <th scope="col">Name</th>
             <th scope="col">Comment</th>
             <th scope="col">Preorder in advance</th>
-            <th scope="col">Shelf Life</th>
-            <th scope="col">Shop Section</th>
-            <th scope="col">
+            <th scope="col" style="min-width: 100px;">Shelf Life</th>
+            <th scope="col" style="min-width: 130px;">Shop Section</th>
+            <th scope="col" style="min-width: 180px;">
                 Suggested Units
                 <i class="material-icons md-18" style="color:rgb(251, 220, 53)">star</i>
             </th>
@@ -34,7 +34,13 @@
         ', ' UNLESS loop.last;
     END %]
             </td>
-            <td>[% article.tags_joined %]</td>
+            <td>
+                <div class="d-flex gap-1 flex-wrap">
+                [% FOR tag IN article.tags;
+                    display_tag(tag);
+                END %]
+                </div>
+            </td>
             <td>
             [% IF article.delete_url %]
                 <form method="post" action="[% article.delete_url %]" class="action-btn">

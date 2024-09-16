@@ -11,11 +11,6 @@ js_push_template_path() %]
     </button>
 </p>
 
-<div class="alert alert-warning">
-    <i class="material-icons">warning</i>
-    Support for tags is still <strong>work in progress</strong>.
-</div>
-
 [% FOR group IN groups %]
 <div class="my-4 card">
     <div class="card-header d-flex flex-wrap gap-1 align-items-center">

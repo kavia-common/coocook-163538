@@ -1,4 +1,7 @@
-[% js_push_template_path();
+[%
+js.push('/lib/coocook-web-components/dist/autocomplete/autocomplete.es.js');
+js.push('/js/tagAutocomplete.js');
+js_push_template_path();
 
 IF article; escape_title( 'Article', article.name ); ELSE; title="New Article"; END %]
 
@@ -99,7 +102,14 @@ IF article; escape_title( 'Article', article.name ); ELSE; title="New Article"; 
                 Tags
             </div>
             <div class="col-10">
-                <input type="text" class="form-control" name="tags" value="[% article.tags_rs.joined %]" placeholder="Tags" style="max-width: 500px;">
+                <cc-multi-autocomplete
+                  id="tags"
+                  class="tags"
+                  type="search"
+                  name="tags"
+                  value="article_tags"
+                  static-base-uri="[% uri_for_static('/') %]"
+                ></cc-multi-autocomplete>
             </div>
         </div>
     </div>
@@ -131,10 +141,10 @@ IF article; escape_title( 'Article', article.name ); ELSE; title="New Article"; 
 [% END;
 
 WRAPPER includes/infobox.tt %]
-   Autocomplete will prioritize <em>suggested units</em> when adding an ingredient
-   with this article to a recipe/dish. Other units may be used, too.
+    Autocomplete will prioritize <em>suggested units</em> when adding an ingredient
+    with this article to a recipe/dish. Other units may be used, too.
 </p>
 
 <p>
-   <em>Known shelf life</em> helps purchasing articles not too early for them to last until they’re used.
+    <em>Known shelf life</em> helps purchasing articles not too early for them to last until they’re used.
 [% END %]

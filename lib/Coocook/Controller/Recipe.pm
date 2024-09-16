@@ -42,6 +42,18 @@ sub recipes : Chained('/project/base') PathPart('recipes') RequiresCapability('v
 sub index : GET HEAD Chained('recipes') PathPart('') RequiresCapability('view_project') Args(0) {
     my ( $self, $c ) = @_;
 
+    {
+        my $recipes      = $c->stash->{recipes};
+        my %recipes      = map { $_->{id} => $_ } @$recipes;
+        my %tags         = map { $_->{id} => $_ } $c->project->tags->hri->all;
+        my $recipes_tags = $c->project->recipes->search_related('recipes_tags')->hri;
+
+        while ( my $recipe_tag = $recipes_tags->next ) {
+            my ( $recipe_id, $tag_id ) = @$recipe_tag{ 'recipe_id', 'tag_id' };
+            push $recipes{$recipe_id}{tags}->@*, $tags{$tag_id};
+        }
+    }
+
     $c->stash(
         create_url        => $c->project_uri( $self->action_for('create') ),
         import_recipe_url => $c->project_uri('recipe/importable_recipes'),
@@ -91,6 +103,8 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
             project_name => $c->project->url_name,
             recipe_id    => $recipe->id,
         },
+        available_tags => [ $c->project->tags->hri->sorted->all ],
+        recipe_tags    => [ $recipe->tags->sorted->get_column('name')->all ],
     );
 
     $c->stash(
@@ -188,7 +202,7 @@ sub update : POST Chained('base') Args(0) RequiresCapability('edit_project') {
                 );
 
                 # tags
-                my $tags = $c->project->tags_from_names( $c->req->params->get('tags') );
+                my $tags = $c->project->find_or_create_tags_from_names( $c->req->params->get_all('tags') );
                 $recipe->set_tags( [ $tags->all ] );
             }
         );

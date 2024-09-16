@@ -6,7 +6,7 @@ use Test::Memory::Cycle;
 use lib 't/lib';
 use TestDB qw(txn_do_and_rollback);
 
-plan(6);
+plan(7);
 
 my $db = TestDB->new();
 
@@ -128,6 +128,26 @@ subtest stale => sub {
 };
 
 my $project = $db->resultset('Project')->find(1);
+
+subtest find_or_create_tags_from_names => sub {
+    my $tags = sub { $project->tags->sorted->get_column('name')->all };
+
+    is [ $tags->() ] => [qw( delicious gluten lactose )];
+
+    isa_ok $project->find_or_create_tags_from_names() => 'Coocook::Schema::ResultSet::Tag';
+
+    is [
+        $project->find_or_create_tags_from_names(qw( gluten lactose ))->sorted->get_column('name')->all ]
+      => [qw( gluten lactose )];
+
+    is $project->tags->count => 3, "created no tags so far";
+
+    is [
+        $project->find_or_create_tags_from_names(qw( gluten foo bar ))->sorted->get_column('name')->all ]
+      => [qw( bar foo gluten )];
+
+    is [ $tags->() ] => [qw( bar delicious foo gluten lactose )], "created tags";
+};
 
 subtest dishes => sub {
     isa_ok my $dishes = $project->dishes => 'Coocook::Schema::ResultSet::Dish';

@@ -48,13 +48,31 @@ sub index : GET HEAD Chained('/project/base') PathPart('articles') Args(0)
         }
     }
 
-    my %units = map { $_->{id} => $_ } $c->project->units->hri->all;
+    {
+        my %tags = map { $_->{id} => $_ } $c->project->tags->hri->all;
 
-    my $articles_units = $c->project->articles->search_related('articles_units')->hri;
+        my $articles_tags = $c->project->articles->search_related('articles_tags')->hri;
 
-    while ( my $article_unit = $articles_units->next ) {
-        my ( $article => $unit ) = @$article_unit{ 'article_id', 'unit_id' };
-        push $articles{$article}{units}->@*, $units{$unit};
+        while ( my $article_tag = $articles_tags->next ) {
+            my ( $article_id => $tag_id ) = @$article_tag{ 'article_id', 'tag_id' };
+            push $articles{$article_id}{tags}->@*, $tags{$tag_id} || die;
+        }
+
+        for my $article (@articles) {
+            my $tags = $article->{tags} or next;
+            @$tags = sort { $a->{name} cmp $b->{name} } @$tags;
+        }
+    }
+
+    {
+        my %units = map { $_->{id} => $_ } $c->project->units->hri->all;
+
+        my $articles_units = $c->project->articles->search_related('articles_units')->hri;
+
+        while ( my $article_unit = $articles_units->next ) {
+            my ( $article_id => $unit_id ) = @$article_unit{ 'article_id', 'unit_id' };
+            push $articles{$article_id}{units}->@*, $units{$unit_id} || die;
+        }
     }
 
     $c->stash(
@@ -143,6 +161,11 @@ sub fetch_project_data : Private {
         $units = $units->with_number_of_ingredients_items( { article_id => $article->id } );
 
     }
+
+    $c->json_stash(
+        available_tags => [ $c->project->tags->hri->sorted->all ],
+        article_tags   => [ $article ? $article->tags->sorted->get_column('name')->all : () ],
+    );
 
     $c->stash(
         default_shelf_life_days   => 7,
@@ -236,7 +259,8 @@ sub update_or_insert : Private {
         );
     }
 
-    my @tags = $c->project->tags->from_names( $c->req->params->get('tags') )->only_id_col->all;
+    my @tag_ids =
+      $c->project->find_or_create_tags_from_names( $c->req->params->get_all('tags') )->only_id_col->all;
 
     my $articles_units = $article->articles_units;
 
@@ -286,7 +310,7 @@ sub update_or_insert : Private {
             $article->update_or_insert;
 
             # works only after update_or_insert()
-            $article->set_tags( \@tags );
+            $article->set_tags( \@tag_ids );
 
             # set_units() does a DELETE on all and then re-inserts what violates FK constraints
             # (that's safe for tags because there is no FK constraint on the combination of article & tag)

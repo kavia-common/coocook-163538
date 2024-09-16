@@ -296,7 +296,7 @@ sub update_dish : POST Chained('/dish/base') PathPart('update') Args(0)
                 }
             );
 
-            my $tags = $c->project->tags->from_names( $c->req->body_data->{tags} );
+            my $tags = $c->project->find_or_create_tags_from_names( $c->req->body_data->{tags} );
             $dish->set_tags( [ $tags->all ] );
         }
     );
