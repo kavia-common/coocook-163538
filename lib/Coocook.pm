@@ -99,6 +99,10 @@ __PACKAGE__->config(
             url   => 'https://lists.coocook.org/',
         },
         {
+            title => "Wiki",
+            url   => 'https://gitlab.com/coocook/coocook/-/wikis/',
+        },
+        {
             title => "Mastodon",
             url   => 'https://floss.social/@coocook',
         },
