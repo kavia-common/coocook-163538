@@ -195,7 +195,27 @@ Non-existing ones are created.
 =cut
 
 sub find_or_create_tags_from_names ( $self, $names ) {
-    return $self->tags->find_or_create_from_names($names);
+    my @names = split qr/,\s+/, $names;
+
+    my $tags        = $self->tags;
+    my $existing_rs = $tags->search(
+        {
+            $tags->me('name') => { -in => \@names }
+        }
+    );
+
+    my %existing_names = map  { $_->name => 1 } $existing_rs->all;
+    my @new_names      = grep { !$existing_names{$_} } @names;
+
+    foreach my $name (@new_names) {
+        $tags->create( { name => $name } );
+    }
+
+    return $tags->search(
+        {
+            $tags->me('name') => { -in => \@names },
+        }
+    );
 }
 
 =head2 organizations_without_permission
