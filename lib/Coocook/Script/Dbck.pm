@@ -97,13 +97,14 @@ sub check_relationships ($self) {
         { ArticleTag       => [qw< article tag >] },
         { ArticleUnit      => [qw< article unit >] },
         { Dish             => [qw< meal recipe prepare_at_meal >] },
-        { DishIngredient   => [ { dish => 'meal' }, qw< article unit  > ] },
-        { DishTag          => [ { dish => 'meal' }, qw< tag  > ] },
-        { Item             => [qw< purchase_list unit article  >] },
+        { DishIngredient   => [ { dish => 'meal' }, { item => 'purchase_list' }, qw< article unit > ] },
+        { DishTag          => [ { dish => 'meal' }, qw< tag > ] },
+        { Item             => [qw< purchase_list unit article >] },
         { Project          => [qw< me default_purchase_list >] },
         { RecipeIngredient => [qw< recipe article unit >] },
         { RecipeTag        => [qw< recipe tag >] },
         { Tag              => [qw< me tag_group >] },
+        { UnitConversion   => [qw< unit1 unit2 >] },
     );
 
     for (@m_n_tables) {

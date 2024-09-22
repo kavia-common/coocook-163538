@@ -46,10 +46,10 @@ txn_do_and_rollback $db, sub {
     Project IDs differ for ArticleTag row (article_id = 1, tag_id = 1): article.project = 2, tag.project = 1
     Project IDs differ for ArticleUnit row (article_id = 1, unit_id = 1): article.project = 2, unit.project = 1
     Project IDs differ for ArticleUnit row (article_id = 1, unit_id = 2): article.project = 2, unit.project = 1
-    Project IDs differ for DishIngredient row (id = 1): meal.project = 1, article.project = 2, unit.project = 1
-    Project IDs differ for DishIngredient row (id = 4): meal.project = 1, article.project = 2, unit.project = 1
-    Project IDs differ for DishIngredient row (id = 7): meal.project = 1, article.project = 2, unit.project = 1
-    Project IDs differ for DishIngredient row (id = 11): meal.project = 1, article.project = 2, unit.project = 1
+    Project IDs differ for DishIngredient row (id = 1): meal.project = 1, purchase_list.project = 1, article.project = 2, unit.project = 1
+    Project IDs differ for DishIngredient row (id = 4): meal.project = 1, purchase_list.project = 1, article.project = 2, unit.project = 1
+    Project IDs differ for DishIngredient row (id = 7): meal.project = 1, purchase_list.project = 1, article.project = 2, unit.project = 1
+    Project IDs differ for DishIngredient row (id = 11): meal.project = 1, purchase_list.project = 1, article.project = 2, unit.project = 1
     Project IDs differ for Item row (id = 1): purchase_list.project = 1, unit.project = 1, article.project = 2
     Project IDs differ for RecipeIngredient row (id = 2): recipe.project = 1, article.project = 2, unit.project = 1
     EOT
