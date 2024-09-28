@@ -99,26 +99,70 @@ for my $rs ( sort keys %$cols ) {
 }
 
 for my $table (qw< Organization User >) {
-    txn_do_and_rollback $db, sub {
+    subtest "incorrect name_fc in $table" => txn_do_and_rollback $db => sub {
         $db->resultset($table)->one_row->update( { name_fc => 'foobar' } );
 
-        like warning { $app->run } => qr/Incorrect name_fc for $table/i, "incorrect name_fc in $table";
+        like warning { $app->run } => qr/Incorrect name_fc for $table/i, "default";
+
+        $app->fix(1);
+        like warnings { $app->run } => array {
+            item qr/Incorrect name_fc for $table/i;
+            item "... Fixed!\n";
+            end();
+        },
+          "with --fix";
+        $app->fix('');    # reset to default
+
+        ok no_warnings { $app->run }, "actually fixed";
     };
 }
 
 for my $col (qw< url_name url_name_fc >) {
-    txn_do_and_rollback $db, sub {
-        $db->resultset('Project')->one_row->update( { $col => 'foobar' } );
+    subtest $col => txn_do_and_rollback $db => sub {
+        my $project        = $db->resultset('Project')->one_row;
+        my $original_value = $project->get_column($col);
+        $project->update( { $col => 'foobar' } );
 
         like warning { $app->run } => qr/Incorrect $col for project/, "incorrect $col in projects";
+        $project->discard_changes();
+        is $project->get_column($col) => 'foobar', "... $col not changed";
+
+        $col eq 'url_name_fc'    # --fix feature not required for column
+          and return;            # that will be pretty much obsolete after #320
+
+        $app->fix(1);
+        like warnings { $app->run } => array {
+            item qr/Incorrect $col for project/;
+            item "... Fixed!\n";
+            end();
+        };
+        $project->discard_changes();
+        is $project->get_column($col) => $original_value, "$col fixed";
+
+        $app->fix('');           # reset to default
     };
 }
 
-txn_do_and_rollback $db, sub {
-    $db->resultset('UnitConversion')->one_row->reverse()->update();
+subtest "normalization of unit conversions" => txn_do_and_rollback $db => sub {
+    my $row = $db->resultset('UnitConversion')->one_row;
+    $row->reverse()->update();
 
-    like warning { $app->run } => qr/unit1_id.+unit2_id/,
+    like warning { $app->run } => qr/ unit1_id .+ unit2_id /x,
       "unit_conversions: unit1_id must be lower than unit2_id (relationship normalization)";
+
+    $row->discard_changes();
+    cmp_ok $row->unit1_id, '>', $row->unit2_id, "... still not normalized";
+
+    $app->fix(1);
+    like warnings { $app->run } => array {
+        item qr/ unit1_id .+ unit2_id /x;
+        item "... Fixed!\n";
+        end();
+    },
+      "with --fix";
+    $row->discard_changes();
+    cmp_ok $row->unit1_id, '<', $row->unit2_id, "... now normalized";
+    $app->fix('');    # reset to default
 };
 
 txn_do_and_rollback $db, sub {

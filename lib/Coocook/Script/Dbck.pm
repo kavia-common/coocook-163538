@@ -12,6 +12,12 @@ with 'Coocook::Script::Role::HasDebug';
 with 'Coocook::Script::Role::HasSchema';
 with 'MooseX::Getopt';
 
+has fix => (
+    is            => 'rw',
+    isa           => 'Bool',
+    documentation => "enable automatic fixing of found issues",
+);
+
 # columns which tend to receive the empty string '' as value in SQLite
 # TODO should we automatically select all boolean and non-FK numeric columns?
 our $SQLITE_NOTORIOUS_EMPTY_STRING_COLUMNS = {
@@ -216,8 +222,14 @@ sub check_fc_values ($self) {
         my $rs = $self->_schema->resultset($table);
 
         while ( my $row = $rs->next ) {
-            $row->name_fc eq fc( $row->name )
-              or warn sprintf( "Incorrect name_fc for $table '%s': '%s'\n", $row->name, $row->name_fc );
+            $row->name_fc eq fc( $row->name ) and next;
+
+            warn sprintf( "Incorrect name_fc for $table '%s': '%s'\n", $row->name, $row->name_fc );
+
+            if ( $self->fix ) {
+                $row->update( { name_fc => fc $row->name } );
+                warn "... Fixed!\n";
+            }
         }
     }
 }
@@ -226,8 +238,14 @@ sub check_url_name_values ($self) {
     my $projects = $self->_schema->resultset('Project');
 
     while ( my $project = $projects->next ) {
-        $project->url_name eq Coocook::Util::url_name( $project->name )
-          or warn sprintf "Incorrect url_name for project '%s': '%s'\n", $project->name, $project->url_name;
+        if ( $project->url_name ne Coocook::Util::url_name( $project->name ) ) {
+            warn sprintf "Incorrect url_name for project '%s': '%s'\n", $project->name, $project->url_name;
+
+            if ( $self->fix ) {
+                $project->update( { url_name => Coocook::Util::url_name( $project->name ) } );
+                warn "... Fixed!\n";
+            }
+        }
 
         $project->url_name_fc eq Coocook::Util::url_name( fc $project->name )
           or warn sprintf "Incorrect url_name_fc for project '%s': '%s'\n", $project->name,
@@ -236,14 +254,21 @@ sub check_url_name_values ($self) {
 }
 
 sub check_unit_conversions_values ($self) {
-    my $count = $self->_schema->resultset('UnitConversion')->count(
+    my $not_normalized_conversions = $self->_schema->resultset('UnitConversion')->search(
         {
             unit1_id => { '>' => { -ident => 'unit2_id' } },
         }
     );
 
-    if ( $count > 0 ) {
+    if ( ( my $count = $not_normalized_conversions->count ) > 0 ) {
         warn sprintf "%i rows in unit_conversions not normalized: unit1_id > unit2_id\n", $count;
+    }
+
+    $self->fix or return;
+
+    while ( my $conversion = $not_normalized_conversions->next ) {
+        $conversion->reverse()->update();
+        warn "... Fixed!\n";
     }
 }
 
