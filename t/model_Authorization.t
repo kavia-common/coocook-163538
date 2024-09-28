@@ -1,7 +1,7 @@
 use Coocook::Base;
-use Test2::V0 -no_warnings => 1;
 
 use Coocook::Model::Authorization;
+use Test2::V0 -no_warnings => 1;
 
 use lib 't/lib/';
 use TestDB;

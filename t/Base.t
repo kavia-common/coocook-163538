@@ -1,6 +1,6 @@
 use Coocook::Base;
-use Test2::V0;
 
+use Test2::V0 -no_utf8 => 1;
 use URI;
 
 {
@@ -40,6 +40,13 @@ subtest PkgWithMoose => sub {
 
 like dies { Coocook::Base->import(qw( Carp DoesntExist )) } => qr/Can't locate DoesntExist\.pm/,
   "import() fails for inexistent packages";
+
+{
+    my $main_developer = "Daniel Böhmer";
+    is
+      $main_developer => "Daniel B\N{LATIN SMALL LETTER O WITH DIAERESIS}hmer",
+      "Base.pm enabled utf8";
+}
 
 subtest "indirect object syntax" => sub {
     my $code = "new URI()";

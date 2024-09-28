@@ -1,9 +1,7 @@
 use Coocook::Base;
-use Test2::V0 -no_warnings => 1;
 
-use Coocook;
 use Coocook::Script::Dbck;
-use Test::Output;
+use Test2::V0 -no_warnings => 1;
 
 use lib 't/lib/';
 use TestDB qw(txn_do_and_rollback);
