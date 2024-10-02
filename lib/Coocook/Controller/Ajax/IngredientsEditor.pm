@@ -61,7 +61,17 @@ sub update_ingredient : POST Chained('base') PathPart('ingredients/update')
     }
 
     $ingredient->set_column( comment => $ajax_request->{ingredient}{comment} );
-    $ingredient->set_value_unit_update_item( $ajax_request->{ingredient}{value}, $unit_id );
+    if ( $ingredient->is_dish_ingredient ) {
+        $ingredient->set_value_unit_update_item( $ajax_request->{ingredient}{value}, $unit_id );
+    }
+    else {
+        $ingredient->update(
+            {
+                unit_id => $unit_id,
+                value   => $ajax_request->{ingredient}{value},
+            }
+        );
+    }
 
     $c->stash->{ajax_response} = { id => $ingredient->id };
 }
