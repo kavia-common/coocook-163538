@@ -76,7 +76,8 @@ for my $rs ( sort keys %$cols ) {
             )
             SQL
 
-            like warning { $app->run } => qr/column \W?$col\W? .+ empty string ''/, "$col of '' in $rs";
+            like warnings { $app->run } => [qr/column \W?$col\W? .+ empty string ''/],
+              "$col of '' in $rs";
         };
 
         $col eq 'value' and txn_do_and_rollback $db, sub {
@@ -92,7 +93,7 @@ for my $rs ( sort keys %$cols ) {
             )
             SQL
 
-            like warning { $app->run } => qr/($rs|$table) .+ number.format .+ '0,1'/x,
+            like warnings { $app->run } => [qr/($rs|$table) .+ number.format .+ '0,1'/x],
               "invalid number format '0,1' in $rs";
         };
     }
@@ -243,14 +244,36 @@ subtest "project with purchase list but unassigned dish ingredients", txn_do_and
 subtest "items without dish ingredients", txn_do_and_rollback $db, sub {
     my ( $item1, $item2 ) = $db->resultset('Item')->all;
     $item1->ingredients->delete();
-    like warning { $app->run } => qr/dish ingredients .+zero/;
+    like warnings { $app->run } => [qr/dish ingredients .+zero/];
 
     $item1->update( { value => 0 } );
     unlike warning { $app->run } => qr/zero/;
 };
 
-subtest "ingredients with value < sum of ingredients", txn_do_and_rollback $db, sub {
-    my $dish_ingredient = $db->resultset('DishIngredient')->find(2);
+subtest "ingredients with value != sum of ingredients", txn_do_and_rollback $db, sub {
+    my $sql = <<~SQL;    # some useful SQL query showing items with their dish ingredients
+    SELECT
+        items.id,
+        articles.name,
+        items.value || units.short_name AS "item amount",
+        (
+            SELECT GROUP_CONCAT(value || units.short_name, ' + ')
+            FROM dish_ingredients
+            JOIN units ON units.id = unit_id
+            WHERE item_id = items.id
+        ) AS "ingredient amounts"
+        FROM items
+        JOIN articles ON articles.id = article_id
+        JOIN units ON units.id = unit_id
+    SQL
+    ok $db->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do($sql) } ), "SQL query executes";
+
+    my $dish_ingredient = $db->resultset('DishIngredient')->find(1);
+
+    $dish_ingredient->unit_id != $dish_ingredient->item->unit_id
+      or die "test broken";
+
     $dish_ingredient->update( { value => 1000 } );
-    like warnings { $app->run } => [qr/value .*(?:lower| \< )/];
+    my $item_id = $dish_ingredient->item_id;
+    like warnings { $app->run } => [qr/^Item $item_id: .+ != .+ \(.*1000\w+.*\)$/];
 };

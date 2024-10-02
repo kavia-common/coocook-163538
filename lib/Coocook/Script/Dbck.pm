@@ -7,6 +7,7 @@ use open ':locale';
 
 use Coocook::Schema;
 use Coocook::Util;
+use DateTime;
 
 with 'Coocook::Script::Role::HasDebug';
 with 'Coocook::Script::Role::HasSchema';
@@ -16,6 +17,13 @@ has fix => (
     is            => 'rw',
     isa           => 'Bool',
     documentation => "enable automatic fixing of found issues",
+);
+
+has tolerance => (
+    is            => 'rw',
+    isa           => 'Num',
+    documentation => "tolerance for item values off due to floating point rounding errors",
+    default       => 0.01,
 );
 
 # columns which tend to receive the empty string '' as value in SQLite
@@ -336,36 +344,70 @@ sub check_items_without_dish_ingredients ($self) {
 }
 
 sub check_items_values ($self) {
-    my $items       = $self->_schema->resultset('Item');
-    my $ingredients = $items->correlate('ingredients');
+    my $projects = $self->_schema->resultset('Project');
 
-    my $value_subquery =
-      $ingredients->search( { $ingredients->me('unit_id') => { -ident => $items->me('unit_id') } } )
-      ->get_column('value')->sum_rs->as_query;
+    while ( my $project = $projects->next ) {
+        my $ucg   = $project->unit_conversion_graph;
+        my $items = $project->items->search(
+            undef,
+            {
+                join       => [ 'article', 'unit' ],
+                '+columns' => {
+                    article_name    => 'article.name',
+                    unit_short_name => 'unit.short_name',
+                },
+            }
+        );
 
-    # in contrast to SQLite PostgreSQL does not support referencing
-    # subqueries from FROM in a WHERE clause. That's why the subquery
-    # is used twice.
-    my $bad_items = $items->search(
-        {
-            $items->me('value') => { '<' => $value_subquery },
-        },
-        {
-            join       => 'unit',
-            '+columns' => {
-                value_sum         => $value_subquery,
-                'unit_short_name' => 'unit.short_name',
-            },
+      ITEM: while ( my $item = $items->next ) {
+            my $ingredients = $item->ingredients->search( undef, { prefetch => 'unit' } );
+            my $right_value = 0;
+            my @ingredients;
+
+            for my $ingredient ( $ingredients->all ) {
+                push @ingredients, $ingredient->value . $ingredient->unit->short_name;
+
+                my $factor = $ucg->factor_between_units( $ingredient->unit_id => $item->unit_id );
+
+                if ($factor) {
+                    if ( defined $right_value ) {
+                        $right_value += $ingredient->value * $factor;
+                    }
+                }
+                else {
+                    $right_value = undef;
+                }
+            }
+
+            my $unit    = $item->get_column('unit_short_name');
+            my $article = $item->get_column('article_name');
+
+            if ( not defined $right_value ) {
+                warn "Impossible to convert item ", $item->id, " on list ", $item->purchase_list_id, ": ",
+                  $item->value, $unit, " ", $article, " ≟ ",
+                  join( " + ", @ingredients ), "\n";
+
+                next;
+            }
+
+            my $diff = abs( $item->value - $right_value );
+
+            if (
+                  $item->value == 0
+                ? $self->tolerance > $diff                   # absolute diff
+                : $self->tolerance > $diff / $item->value    # relative diff
+              )
+            {
+                next;
+            }
+
+            warn "Item ", $item->id, ": ",
+              $item->value, $unit, " ", $article,
+              " != ", $right_value, $unit,
+              " (", join( " + ", @ingredients ), ")",
+              "\n";
+
         }
-    );
-
-    while ( my $item = $bad_items->next ) {
-        warn sprintf "Item %i has value of %g%s < %g%s the sum of its ingredients\n",
-          $item->id,
-          $item->value,
-          $item->get_column('unit_short_name'),
-          $item->get_column('value_sum'),
-          $item->get_column('unit_short_name');
     }
 }
 
