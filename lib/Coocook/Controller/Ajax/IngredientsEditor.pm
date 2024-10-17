@@ -27,10 +27,10 @@ sub base : Chained('/project/base') PathPart('') CaptureArgs(2) {
         dish   => 'dishes',
         recipe => 'recipes',
     }->{$dish_or_recipe}
-      or $c->detach('/error/not_found');
+      or $c->detach('/error/page_not_found');
 
     $c->stash( dish_or_recipe => $c->project->$plural->find($dish_or_recipe_id)
-          || $c->detach('/error/not_found') );
+          || $c->detach('/error/object_not_found') );
 }
 
 sub get_all_ingredients : GET HEAD Chained('base') PathPart('ingredients')
@@ -52,7 +52,7 @@ sub update_ingredient : POST Chained('base') PathPart('ingredients/update')
     my $ajax_request = $c->req->body_data;
 
     my $ingredient = $c->stash->{dish_or_recipe}->ingredients->find( $ajax_request->{ingredient}{id} )
-      or $c->detach('/error/not_found');
+      or $c->detach('/error/object_not_found');
 
     my $unit_id = $ajax_request->{ingredient}{current_unit}{id};
     if ( $unit_id != $ingredient->unit_id ) {
@@ -146,7 +146,7 @@ sub delete_ingredient : POST Chained('base') PathPart('ingredients/delete')
     my $ajax_request = $c->req->body_data;
 
     my $ingredient = $c->stash->{dish_or_recipe}->ingredients->find( $ajax_request->{id} )
-      or $c->detach('/error/not_found');
+      or $c->detach('/error/object_not_found');
 
     if ( $ingredient->is_dish_ingredient and my $item = $ingredient->item ) {
         $item->remove_ingredients( $c->project->unit_conversion_graph, $ingredient );

@@ -35,7 +35,7 @@ sub base : Chained('/admin/base') PathPart('faq') CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 
     my $faq = $c->model('DB::FAQ')->find($id)
-      or $c->detach('/error/not_found');
+      or $c->detach('/error/object_not_found');
 
     $c->stash( faq => $faq );
 }

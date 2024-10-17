@@ -10,7 +10,7 @@ sub index : GET HEAD Chained('/base') PathPart('faq') Args(0) Public {
     my @faqs = $c->model('DB::FAQ')->search( undef, { order_by => 'position' } )->hri->all;
 
     @faqs > 0
-      or $c->detach('/error/not_found');
+      or $c->detach('/error/page_not_found');
 
     if ( $c->has_capability('manage_faqs') ) {
         $c->stash( admin_faq_url => $c->uri_for_action('/admin/faq/index') );

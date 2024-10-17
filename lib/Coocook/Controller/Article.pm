@@ -96,7 +96,7 @@ sub new_article : GET HEAD Chained('/project/base') PathPart('articles/new')
 sub base : Chained('/project/base') PathPart('article') CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 
-    $c->stash( article => $c->project->articles->find($id) || $c->detach('/error/not_found') );
+    $c->stash( article => $c->project->articles->find($id) || $c->detach('/error/object_not_found') );
 }
 
 sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('view_project') {

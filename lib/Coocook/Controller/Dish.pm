@@ -20,7 +20,7 @@ sub base : Chained('/project/submenu') PathPart('dish') CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 
     $c->stash( dish => $c->project->dishes->find( $id, { prefetch => [ 'meal', 'recipe' ] } )
-          || $c->detach('/error/not_found') );
+          || $c->detach('/error/object_not_found') );
 }
 
 sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('view_project') {

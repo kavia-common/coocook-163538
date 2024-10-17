@@ -40,7 +40,7 @@ sub fallback_old_url_scheme : Chained('/base') PathPart('project')
         }
     }
 
-    $c->detach('/error/not_found');
+    $c->detach('/error/project_not_found');
 }
 
 =head2 id_only
@@ -69,7 +69,7 @@ sub base : Chained('/base') PathPart('project') CaptureArgs(2) {
       and $c->detach('fallback_old_url_scheme');    # TODO deprecated
 
     my $project = $c->model('DB::Project')->find( { id => $id } )
-      or $c->detach('/error/not_found');
+      or $c->detach('/error/project_not_found');
 
     $c->stash( project => $project );
 

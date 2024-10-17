@@ -2,6 +2,8 @@ package Coocook::Controller::Error;
 
 use Coocook::Base qw(Moose);
 
+use Carp;
+
 BEGIN { extends 'Coocook::Controller' }
 
 our $ENABLE_INTERNAL_SERVER_ERROR_PAGE //= $ENV{COOCOOK_ENABLE_INTERNAL_SERVER_ERROR_PAGE};
@@ -49,7 +51,7 @@ sub internal_server_error : HEAD GET Chained('/base') Public {
     my ( $self, $c ) = @_;
 
     $ENABLE_INTERNAL_SERVER_ERROR_PAGE
-      or $c->detach( $self->action_for('not_found') );
+      or $c->detach( $self->action_for('page_not_found') );
 
     # do NOT set status to 500 because this request actually works
 
@@ -57,20 +59,40 @@ sub internal_server_error : HEAD GET Chained('/base') Public {
     $c->stash->{robots}->index(0);         # hide this in search engines
 }
 
-=head2 not_found
+=head2 page_not_found
 
-Standard 404 error page
+=head2 project_not_found
+
+=head2 object_not_found
+
+Standard 404 error pages for different types of objects.
 
 =cut
 
-sub not_found : AnyMethod Chained('/base') PathPart('') Public {
+sub page_not_found : AnyMethod Chained('/base') PathPart('') Public {
     my ( $self, $c ) = @_;
+    $c->detach( $self->action_for('not_found'), ['page'] );
+}
+
+sub object_not_found : Private {
+    my ( $self, $c ) = @_;
+    $c->detach( $self->action_for('not_found'), ['object'] );
+}
+
+sub project_not_found : Private {
+    my ( $self, $c ) = @_;
+    $c->detach( $self->action_for('not_found'), ['project'] );
+}
+
+sub not_found : Private {
+    my ( $self, $c, $object_type ) = @_;
 
     $c->response->status(404);
 
     $c->stash(
         canonical_url => undef,
-        template      => 'error/not_found.tt',    # set explicitly to allow $c->detach('/error/not_found')
+        object_type   => $object_type || croak("Object type not defined"),
+        template      => 'error/not_found.tt', # set explicitly to allow $c->detach('/error/page_not_found')
     );
 }
 

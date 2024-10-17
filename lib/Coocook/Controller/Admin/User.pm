@@ -26,7 +26,8 @@ sub index : GET HEAD Chained('/admin/base') PathPart('users') Args(0)
 sub base : Chained('/admin/base') PathPart('user') CaptureArgs(1) {
     my ( $self, $c, $name ) = @_;
 
-    my $user = $c->model('DB::User')->find( { name_fc => fc $name } ) || $c->detach('/error/not_found');
+    my $user =
+      $c->model('DB::User')->find( { name_fc => fc $name } ) || $c->detach('/error/object_not_found');
 
     $c->stash(
         user_object => $user,    # don't overwrite $user!

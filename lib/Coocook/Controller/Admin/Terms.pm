@@ -62,7 +62,7 @@ sub base : Chained('/admin/base') PathPart('terms') CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 
     my $terms = $c->model('DB::Terms')->find($id)
-      or $c->detach('/error/not_found');
+      or $c->detach('/error/object_not_found');
 
     $c->stash( terms => $terms );
 }

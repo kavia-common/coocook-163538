@@ -19,7 +19,7 @@ Catalyst Controller.
 sub base : Chained('/project/base') PathPart('meals') CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 
-    $c->stash( meal => $c->project->meals->find($id) || $c->detach('/error/not_found') );
+    $c->stash( meal => $c->project->meals->find($id) || $c->detach('/error/object_not_found') );
 }
 
 # this controller is currently nearly empty except for the base() method

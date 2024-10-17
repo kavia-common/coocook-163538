@@ -95,7 +95,7 @@ sub index : GET HEAD Chained('/project/base') PathPart('units') Args(0)
 sub base : Chained('/project/base') PathPart('unit') CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 
-    $c->stash( unit => $c->project->units->find($id) || $c->detach('/error/not_found') );
+    $c->stash( unit => $c->project->units->find($id) || $c->detach('/error/object_not_found') );
 }
 
 sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('edit_project') {
@@ -285,7 +285,7 @@ sub update_conversion : POST Chained('base') Args(1) RequiresCapability('edit_pr
     $factor += 0;    # cast into number
 
     my $conversion = $c->stash->{unit}->find_conversion_into($unit2_id)
-      || $c->detach('/error/not_found');
+      || $c->detach('/error/object_not_found');
 
     if ( $conversion->unit2_id != $unit2_id ) {
         $factor **= -1;
@@ -300,7 +300,7 @@ sub delete_conversion : POST Chained('base') Args(1) RequiresCapability('edit_pr
     my ( $self, $c, $unit2_id ) = @_;
 
     my $conversion = $c->stash->{unit}->find_conversion_into($unit2_id)
-      || $c->detach('/error/not_found');
+      || $c->detach('/error/object_not_found');
 
     $conversion->delete();
     $c->detach('redirect');

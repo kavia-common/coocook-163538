@@ -88,7 +88,15 @@ subtest "403 Forbidden" => sub {
 subtest "404 Not found" => sub {
     ok $t->get('https://localhost/doesnt-exist');
     $t->status_is(404);
-    $t->text_like(qr/not found/i);
+    $t->text_like(qr/page not found/i);
+
+    ok $t->get('https://localhost/project/999/doesnt-exist');
+    $t->status_is(404);
+    $t->text_like(qr/project not found/i);
+
+    ok $t->get('https://localhost/project/1/Test-Project/recipe/999');
+    $t->status_is(404);
+    $t->text_like(qr/object not found/i);
 
     ok $t->get('https://localhost/project/999/doesnt-exist/dish/999/units');
     $t->status_is(404);

@@ -68,7 +68,7 @@ sub base : Chained('/project/base') PathPart('purchase_list') CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 
     $c->stash( purchase_lists => my $lists = $c->project->purchase_lists );
-    $c->stash( purchase_list  => $lists->find($id) || $c->detach('/error/not_found') );
+    $c->stash( purchase_list  => $lists->find($id) || $c->detach('/error/object_not_found') );
 }
 
 sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('view_project') {
