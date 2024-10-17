@@ -83,7 +83,7 @@ sub base : Chained('/base') PathPart('recipe') CaptureArgs(2) {
     my ( $self, $c, $id, $url_name ) = @_;
 
     my $recipe = $c->model('DB::Recipe')->find( $id, { prefetch => 'project' } )
-      or $c->detach('/error/not_found');
+      or $c->detach('/error/object_not_found');
 
     $c->stash(
         recipe         => $recipe,

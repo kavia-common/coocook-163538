@@ -60,7 +60,7 @@ sub base : Chained('/base') PathPart('organization') CaptureArgs(1) {
     my ( $self, $c, $name ) = @_;
 
     my $organization =
-      $c->model('Organizations')->find_by_name($name) || $c->detach('/error/not_found');
+      $c->model('Organizations')->find_by_name($name) || $c->detach('/error/object_not_found');
 
     $c->stash( organization => $organization );
 

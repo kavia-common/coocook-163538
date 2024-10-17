@@ -69,7 +69,7 @@ sub base : Chained('/project/base') PathPart('shop_sections') CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 
     $c->stash( shop_section => $c->project->shop_sections->find($id)
-          || $c->detach('/error/not_found') );
+          || $c->detach('/error/object_not_found') );
 }
 
 sub update : POST Chained('base') Args(0) RequiresCapability('edit_project') {

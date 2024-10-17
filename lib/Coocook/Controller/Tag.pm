@@ -70,14 +70,15 @@ sub tag : Chained('/project/base') PathPart('tag') CaptureArgs(1)
   RequiresCapability('view_project') {
     my ( $self, $c, $id ) = @_;
 
-    $c->stash( tag => $c->project->tags->find($id) || $c->detach('/error/not_found') );
+    $c->stash( tag => $c->project->tags->find($id) || $c->detach('/error/object_not_found') );
 }
 
 sub tag_group : Chained('/project/base') PathPart('tag_group') CaptureArgs(1)
   RequiresCapability('view_project') {
     my ( $self, $c, $id ) = @_;
 
-    $c->stash( tag_group => $c->project->tag_groups->find($id) || $c->detach('/error/not_found') );
+    $c->stash( tag_group => $c->project->tag_groups->find($id)
+          || $c->detach('/error/object_not_found') );
 }
 
 sub edit : GET HEAD Chained('tag') PathPart('') Args(0) RequiresCapability('view_project') {

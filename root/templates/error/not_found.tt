@@ -1,3 +1,3 @@
-[% title = "Not found" %]
+[% title = object_type.ucfirst _ " not found" %]
 
-The page you requested was not found.
+The [% object_type %] you requested was not found[% " in this project" IF project %].

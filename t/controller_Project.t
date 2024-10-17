@@ -9,6 +9,7 @@ use Test::Coocook;
 plan(39);
 
 my $t = Test::Coocook->new();
+$t->schema->resultset('User')->find( { name_fc => 'other' } )->update( { password => 'P@ssw0rd' } );
 
 subtest "project not found" => sub {
     ok $t->get('https://localhost/project/999/foobar');
@@ -39,13 +40,18 @@ subtest "redirect to fix URLs" => sub {
         301    # permanent
     );
 
+    my $secret_project_id = 2;
+    my $secret_project    = $t->schema->resultset('Project')->find($secret_project_id);
+
     # this endpoint doesn't check any permissions but $c->go()s to another action
     # this might be dangerous if check don't happen there
     $t->redirect_is(
-        "https://localhost/project/2" => "https://localhost/login?redirect=%2Fproject%2F2",
+        "https://localhost/project/$secret_project_id" => "https://localhost/login?redirect=%2Fproject%2F2",
         302,    # temporary
         "/project/2 shortcut doesn't allow access to private projects, doesn't reveal their name"
     );
+    $t->content_lacks( $secret_project->name );
+    $t->content_lacks( $secret_project->url_name );
 
     $t->redirect_is(
         "https://localhost/project/1/tEST-pROJECT/recipes" =>
@@ -54,11 +60,14 @@ subtest "redirect to fix URLs" => sub {
     );
 
     $t->redirect_is(
-        "https://localhost/project/2/I-cant-know-this-projects-name/recipes" =>
-          "https://localhost/login?redirect=%2Fproject%2F2%2FI-cant-know-this-projects-name%2Frecipes",
+        "https://localhost/project/$secret_project_id/I-cant-know-this-projects-name/recipes" =>
+          'https://localhost/login?redirect='
+          . "%2Fproject%2F$secret_project_id%2FI-cant-know-this-projects-name%2Frecipes",
         302,    # temporary
         "/project/2/foobar doesn't reveal the real name of project 2",
     );
+    $t->content_lacks( $secret_project->name );
+    $t->content_lacks( $secret_project->url_name );
 
     $t->redirect_is(
         "https://localhost/project/1/completely-different-string/recipes" =>
@@ -91,6 +100,37 @@ subtest "redirect to fix URLs" => sub {
           "https://localhost/project/1/Test-Project/recipes?key=val",
         301     # permanent
     );
+
+    subtest "response is equal for existent/inexistent objects in private project" => sub {
+        my $existent_url   = "https://localhost/project/3/Other-Project/recipe/3";
+        my $inexistent_url = "https://localhost/project/3/Other-Project/recipe/999";
+
+        ok $t->get($_), "GET $_" for $inexistent_url;
+        my $status  = $t->status;
+        my $content = $t->content;
+        $content =~ s/999/3/g;    # ID given in URL may be included
+
+        ok $t->get($_), "GET $_" for $existent_url;
+        $t->status_is( $status, "Response code is the same" );
+        $t->content_is( $content, "Content is the same" );
+
+        $t->get_ok('/');
+        $t->login_ok( other => 'P@ssw0rd' );
+
+        $t->get($existent_url);
+        $t->status == 200 or die "test broken";
+
+        $t->get($inexistent_url);
+        $t->status == 404 or die "test broken";
+    };
+
+    ok $t->get($_), "GET $_" for "https://localhost/project/2/I-cant-know-this-projects-name/";
+    $t->status_is( 403, "no redirect that would reveal the private project's name" );
+    $t->lacks_header_ok('Location');
+    $t->content_lacks( $secret_project->name );
+    $t->content_lacks( $secret_project->url_name );
+
+    $t->logout_ok();
 };
 
 subtest import => sub {

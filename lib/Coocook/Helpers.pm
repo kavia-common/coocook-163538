@@ -179,7 +179,13 @@ sub require_capability {
         $c->redirect_detach( $c->redirect_uri_for_action('/session/login') );
     }
 
-    $c->detach('/error/forbidden');
+    if ( $c->project and not $c->has_capability('view_project') ) {
+        delete $c->stash->{project};
+        delete $c->stash->{project_urls};
+    }
+
+    $c->detach( '/error/forbidden', [] );    # without [] detach() copies $c->args
+                                             # which might contain URL path arguments
 }
 
 =head2 $c->messages

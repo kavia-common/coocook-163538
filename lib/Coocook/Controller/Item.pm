@@ -21,14 +21,14 @@ Catalyst Controller.
 sub base : Chained('/project/base') PathPart('items') CaptureArgs(1) {
     my ( $self, $c, $item_id ) = @_;
 
-    $c->stash( item => $c->project->items->find($item_id) || $c->detach('/error/not_found') );
+    $c->stash( item => $c->project->items->find($item_id) || $c->detach('/error/object_not_found') );
 }
 
 sub convert : POST Chained('base') Args(0) RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
     my $unit = $c->project->units->find( $c->req->params->get('unit') )
-      || $c->detach('/error/not_found');
+      || $c->detach('/error/object_not_found');
 
     my $new_total = $c->req->params->get('total') // $c->detach('/error/bad_request');
 

@@ -24,7 +24,7 @@ sub base : Chained('/base') PathPart('user') CaptureArgs(1) {
     my ( $self, $c, $name ) = @_;
 
     my $user = $c->model('DB::User')->find( { name_fc => fc($name) } )
-      || $c->detach('/error/not_found');
+      || $c->detach('/error/object_not_found');
 
     # this variable MUST NOT be named 'user' because it collides with $c->user
     # TODO maybe store $c->user as $c->stash->{logged_in_user} or similar
