@@ -1,5 +1,5 @@
 FROM alpine:latest AS dev
-MAINTAINER Mose Schmiedel <mose@schmiednet.de>
+LABEL org.opencontainers.image.authors="Mose Schmiedel <mose@schmiednet.de>"
 
 RUN apk update && apk add \
       pkgconf \
