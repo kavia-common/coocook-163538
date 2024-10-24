@@ -96,16 +96,20 @@ for (const form of forms) {
     const selects = Array.prototype.slice.apply(
         form.getElementsByTagName("select")
     );
-    const autocompletes = Array.from(
-        form.getElementsByTagName("cc-multi-autocomplete")
-    );
-    const elements = inputs
-        .concat(textareas)
-        .concat(selects)
-        .concat(autocompletes);
+    const elements = inputs.concat(textareas).concat(selects);
 
     for (const elem of elements) {
         elem.addEventListener("input", () => {
+            if (!hasUnsavedChanges) hasUnsavedChanges = true;
+        });
+    }
+
+    const autocompletes = Array.from(
+        form.getElementsByTagName("cc-multi-autocomplete")
+    );
+
+    for (const elem of autocompletes) {
+        elem.addEventListener("changed", (e) => {
             if (!hasUnsavedChanges) hasUnsavedChanges = true;
         });
     }
