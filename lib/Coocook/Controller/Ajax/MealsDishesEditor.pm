@@ -191,27 +191,28 @@ sub update_meal : POST Chained('/meal/base') PathPart('update') Args(0)
             [ { message => "Cannot parse 'date' property: invalid date string." } ] );
     };
 
-    my $found_duplicate_meal = $c->project->meals->results_exist(
+    my $meal                 = $c->stash->{meal};
+    my $other_meals          = $meal->other_meals;
+    my $found_duplicate_meal = $other_meals->results_exist(
         {
-            name => $c->req->body_data->{name},
-            date => $c->project->format_date($new_date),
+            $other_meals->me('name') => $c->req->body_data->{name},
+            $other_meals->me('date') => $meal->format_date($new_date),
         }
     );
 
-    if ($found_duplicate_meal) {
-        $c->detach( '/error/bad_request',
-            [ { message => "Cannot create meal with same name on same date." } ] );
-    }
+    $found_duplicate_meal
+      and $c->detach( '/error/bad_request',
+        [ { message => "Cannot create meal with same name on same date." } ] );
 
-    $c->stash->{meal}->update(
+    $meal->update(
         {
             date    => $new_date,
-            name    => $c->req->body_data->{name},
-            comment => $c->req->body_data->{comment},
+            name    => $c->req->body_data->{name}    // $c->detach('/error/bad_request'),
+            comment => $c->req->body_data->{comment} // $c->detach('/error/bad_request'),
         }
     );
 
-    $c->stash->{ajax_response} = $c->stash->{meal}->for_meals_dishes_editor;
+    $c->stash->{ajax_response} = $meal->for_meals_dishes_editor;
 }
 
 sub delete_meal : POST Chained('/meal/base') PathPart('delete') Args(0)

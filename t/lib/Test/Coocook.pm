@@ -454,7 +454,15 @@ sub input_has_value ( $self, $input, $value, $name = "Input with name '$input' h
 sub json_is ( $self, $expected, $name = "JSON in response content" ) {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    my $json = decode_json $self->content;
+    my $content = $self->content;
+    my $json;
+    try {
+        $json = decode_json $content;
+    }
+    catch ($error) {
+        Test2::V0::note $error;
+        croak "Invalid JSON in response content";
+    };
     Test2::V0::is $json => $expected, $name;
 }
 
