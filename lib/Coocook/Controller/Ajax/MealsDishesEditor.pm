@@ -204,11 +204,22 @@ sub update_meal : POST Chained('/meal/base') PathPart('update') Args(0)
       and $c->detach( '/error/bad_request',
         [ { message => "Cannot create meal with same name on same date." } ] );
 
-    $meal->update(
-        {
-            date    => $new_date,
-            name    => $c->req->body_data->{name}    // $c->detach('/error/bad_request'),
-            comment => $c->req->body_data->{comment} // $c->detach('/error/bad_request'),
+    $meal->txn_do(
+        sub {
+            # TODO DBIx::Class::Ordered seems to have a bug which makes it
+            # update the "group" and "position" columns but not any additional
+            # columns. This leads to failing UNIQUE constraints when a name
+            # is duplicate unless the "date" is changed in the same UPDATE.
+            # Workaround: update in several steps.
+
+            $meal->update( { name => '' } );          # expected not to exist
+            $meal->update( { date => $new_date } );
+            $meal->update(
+                {
+                    name    => $c->req->body_data->{name}    // $c->detach('/error/bad_request'),
+                    comment => $c->req->body_data->{comment} // $c->detach('/error/bad_request'),
+                }
+            );
         }
     );
 

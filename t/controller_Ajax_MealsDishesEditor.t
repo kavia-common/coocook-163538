@@ -78,6 +78,7 @@ $t->json_is(
 
 subtest "update mals" => sub {
     my $meal1 = $t->schema->resultset('Meal')->find(1);
+    my $meal2 = $t->schema->resultset('Meal')->find(2);
 
     ok $t->post_json( '/project/1/Test-Project/meals/10/update', {} ), "POST /update with empty JSON";
     $t->status_is(400);
@@ -102,7 +103,7 @@ subtest "update mals" => sub {
     is $meal1->discard_changes->comment => __FILE__, "comment was updated";
 
     my %update_request = (
-        date    => '2000-01-02',
+        date    => $meal2->date->ymd,
         name    => 'extra meal',
         comment => __FILE__,
     );
@@ -141,6 +142,26 @@ subtest "update mals" => sub {
         call name => 'extra meal';
     },
       "was updated in database";
+
+    my @update_conflict = (
+        '/project/1/Test-Project/meals/1/update',
+        {
+            name    => $meal2->name,
+            date    => $meal2->date->ymd,
+            comment => __FILE__ . ":" . __LINE__,
+        }
+    );
+    $t->post_json(@update_conflict);
+    $t->status == 400 or die "test broken";
+
+    $update_conflict[1]{date} = '2000-01-01';    # set duplicate name but move to different date
+    $t->post_json(@update_conflict);
+    $t->status_is(200);
+
+    $meal1->discard_changes();
+    is $meal1->name      => $meal2->name;
+    is $meal1->date->ymd => '2000-01-01';
+    is $meal1->comment   => __FILE__ . ":" . ( __LINE__ - 13 );
 };
 
 ok $t->post('/project/1/Test-Project/meals/2/delete'), "POST /delete on meal with dishes";
