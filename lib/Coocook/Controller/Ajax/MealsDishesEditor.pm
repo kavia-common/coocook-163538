@@ -33,8 +33,8 @@ sub get_project_plan : GET HEAD Chained('/project/base') PathPart('project_plan'
     for my $day ( keys %$days ) {
         for my $meal_key ( keys $days->{$day}->%* ) {
             my $meal = $days->{$day}{$meal_key};
-            $meal->{delete_url} = $c->project_uri( $self->action_for('delete_dish'), $meal->{id} )->as_string;
-            $meal->{update_url} = $c->project_uri( $self->action_for('update_dish'), $meal->{id} )->as_string;
+            $meal->{delete_url} = $c->project_uri( $self->action_for('delete_meal'), $meal->{id} )->as_string;
+            $meal->{update_url} = $c->project_uri( $self->action_for('update_meal'), $meal->{id} )->as_string;
             $meal->{delete_dishes_url} =
               $c->project_uri( $self->action_for('delete_dishes_from_meal'), $meal->{id} )->as_string;
 
