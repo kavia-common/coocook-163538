@@ -299,11 +299,19 @@ sub check_unassigned_dish_ingredients ($self) {
                 $projects->correlate('meals')->search_related('dishes')->search_related('ingredients')
                   ->unassigned->results_exist_as_query,
             ]
+        },
+        {
+            '+columns' => {
+                unassigned_items_count =>
+                  $projects->correlate('meals')->search_related('dishes')->search_related('ingredients')
+                  ->unassigned->count_rs->as_query,
+            },
         }
     );
 
     while ( my $project = $invalid_projects->next ) {
-        warn sprintf "Project %i has purchase list(s) but also unassigned dish ingredients\n", $project->id;
+        warn sprintf "Project %i has purchase list(s) but also %i unassigned dish ingredient(s)\n",
+          $project->id, $project->get_column('unassigned_items_count');
     }
 }
 
@@ -320,9 +328,9 @@ sub check_items_without_dish_ingredients ($self) {
     );
 
     while ( my $item = $bad_items->next ) {
-        warn sprintf "Item %i in project %i has no dish ingredients%s\n",
-          $item->id,
+        warn sprintf "In project %i item %i has no dish ingredients%s\n",
           $item->purchase_list->project_id,
+          $item->id,
           $item->value == 0 ? '' : " but a non-zero value";
     }
 }

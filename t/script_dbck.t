@@ -192,6 +192,29 @@ subtest "projects with purchase lists but without default_purchase_list",
 subtest "project with purchase list but unassigned dish ingredients", txn_do_and_rollback $db, sub {
     ok !warns { $app->run }, "doesn't warn with all ingredients assigned";
 
+    my $sql = <<~SQL;    # some useful SQL query showing unassigned dish ingredients
+    SELECT
+        dish_ingredients.id,
+        meals.date || ' ' || meals.name AS meal,
+        dishes.name AS dish,
+        value || ' ' || units.long_name AS amount,
+        articles.name AS article,
+        dish_ingredients.comment
+    FROM dish_ingredients
+    JOIN articles ON articles.id = article_id
+    JOIN units ON units.id = unit_id
+    JOIN dishes ON dishes.id = dish_id
+    JOIN meals ON meals.id = meal_id
+    WHERE dish_ingredients.item_id IS NULL
+        AND EXISTS(
+            SELECT 1
+            FROM purchase_lists
+            WHERE purchase_lists.project_id = meals.project_id
+        );
+    SQL
+    is $db->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->selectall_arrayref($sql) } ) => [],
+      "SQL query returns empty";
+
     note "Creating another dish ingredient without assigning it ...";
     $db->resultset('DishIngredient')->create(
         {
@@ -205,6 +228,9 @@ subtest "project with purchase list but unassigned dish ingredients", txn_do_and
     );
 
     like warning { $app->run } => qr/unassigned/, "warns";
+    is $db->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->selectall_arrayref($sql) } ) =>
+      array { item T(); etc() },
+      "SQL query with relevant data";
 
     note "Deleting all purchase lists ...";
     $db->resultset('Project')->update( { default_purchase_list_id => undef } );
