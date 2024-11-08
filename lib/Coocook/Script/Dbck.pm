@@ -364,79 +364,84 @@ sub check_items_without_dish_ingredients ($self) {
 }
 
 sub check_items_values ($self) {
-    my $projects = $self->_schema->resultset('Project');
+    my $unit_conversions = $self->_schema->resultset('UnitConversion');
 
-    while ( my $project = $projects->next ) {
-        my $ucg   = $project->unit_conversion_graph;
-        my $items = $project->items->search(
-            undef,
+    my $items = $self->_schema->resultset('Item')->search(
+        undef,
+        {
+            join       => [ 'article', 'purchase_list', 'unit' ],
+            '+columns' => {
+                project_id      => 'purchase_list.project_id',
+                article_name    => 'article.name',
+                unit_short_name => 'unit.short_name',
+            },
+            prefetch => { 'ingredients' => 'unit' },
+        }
+    );
+
+    my %ucg_cache;
+
+    while ( my $item = $items->next ) {
+        my $project_id = $item->get_column('project_id');
+        my $ucg        = $ucg_cache{$project_id} ||=
+          $unit_conversions->search( { 'unit1.project_id' => $project_id }, { join => 'unit1' } )->as_graph;
+
+        my $ingredients = $item->ingredients;
+        my $right_value = 0;
+        my @ingredients;
+
+        for my $ingredient ( $ingredients->all ) {
+            push @ingredients, $ingredient->value . $ingredient->unit->short_name;
+
+            my $factor = $ucg->factor_between_units( $ingredient->unit_id => $item->unit_id );
+
+            if ($factor) {
+                if ( defined $right_value ) {
+                    $right_value += $ingredient->value * $factor;
+                }
+            }
+            else {
+                $right_value = undef;
+            }
+        }
+
+        my $unit    = $item->get_column('unit_short_name');
+        my $article = $item->get_column('article_name');
+
+        if ( not defined $right_value ) {
+            warn "Impossible to convert item ", $item->id, " on list ", $item->purchase_list_id, ": ",
+              $item->value, $unit, " ", $article, " ≟ ",
+              join( " + ", @ingredients ), "\n";
+
+            next;
+        }
+
+        my $diff = abs( $item->value - $right_value );
+
+        if (
+              $item->value == 0
+            ? $self->tolerance > $diff                   # absolute diff
+            : $self->tolerance > $diff / $item->value    # relative diff
+          )
+        {
+            next;
+        }
+
+        warn "Item ", $item->id, ": ",
+          $item->value, $unit, " ", $article,
+          " != ", $right_value, $unit,
+          " (", join( " + ", @ingredients ), ")",
+          "\n";
+
+        $self->fix or next;
+
+        $item->update(
             {
-                join       => [ 'article', 'unit' ],
-                '+columns' => {
-                    article_name    => 'article.name',
-                    unit_short_name => 'unit.short_name',
-                },
+                value  => $right_value,
+                offset => $item->total - $right_value,
             }
         );
-
-      ITEM: while ( my $item = $items->next ) {
-            my $ingredients = $item->ingredients->search( undef, { prefetch => 'unit' } );
-            my $right_value = 0;
-            my @ingredients;
-
-            for my $ingredient ( $ingredients->all ) {
-                push @ingredients, $ingredient->value . $ingredient->unit->short_name;
-
-                my $factor = $ucg->factor_between_units( $ingredient->unit_id => $item->unit_id );
-
-                if ($factor) {
-                    if ( defined $right_value ) {
-                        $right_value += $ingredient->value * $factor;
-                    }
-                }
-                else {
-                    $right_value = undef;
-                }
-            }
-
-            my $unit    = $item->get_column('unit_short_name');
-            my $article = $item->get_column('article_name');
-
-            if ( not defined $right_value ) {
-                warn "Impossible to convert item ", $item->id, " on list ", $item->purchase_list_id, ": ",
-                  $item->value, $unit, " ", $article, " ≟ ",
-                  join( " + ", @ingredients ), "\n";
-
-                next;
-            }
-
-            my $diff = abs( $item->value - $right_value );
-
-            if (
-                  $item->value == 0
-                ? $self->tolerance > $diff                   # absolute diff
-                : $self->tolerance > $diff / $item->value    # relative diff
-              )
-            {
-                next;
-            }
-
-            warn "Item ", $item->id, ": ",
-              $item->value, $unit, " ", $article,
-              " != ", $right_value, $unit,
-              " (", join( " + ", @ingredients ), ")",
-              "\n";
-
-            $self->fix or next;
-
-            $item->update(
-                {
-                    value  => $right_value,
-                    offset => $item->total - $right_value,
-                }
-            );
-            warn "... Fixed!\n";
-        }
+        warn "... Fixed!\n";
     }
 }
 
