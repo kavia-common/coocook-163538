@@ -184,6 +184,26 @@ sub check_relationships ($self) {
             }
         }
     }
+
+    # special case: article_id
+    my $dish_ingredients = $self->_schema->resultset('DishIngredient');
+    my $inconsistencies  = $dish_ingredients->search(
+        {
+            $dish_ingredients->me('article_id') => { '!=' => { -ident => 'item.article_id' } }
+        },
+        {
+            prefetch => 'item',
+        }
+    );
+
+    while ( my $dish_ingredient = $inconsistencies->next ) {
+        warn sprintf "Article IDs differ: dish_ingredients row %i has article_id = %i, "
+          . "items row %i has article_id = %i\n",
+          (
+            $dish_ingredient->id,       $dish_ingredient->article_id,
+            $dish_ingredient->item->id, $dish_ingredient->item->article_id,
+          );
+    }
 }
 
 sub check_sqlite_numeric_values ($self) {

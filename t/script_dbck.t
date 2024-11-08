@@ -7,7 +7,7 @@ use lib 't/lib/';
 use TestDB qw(txn_do_and_rollback);
 use Test::Coocook;    # makes Coocook::Script::Dbck not read real config files
 
-plan(25);
+plan(26);
 
 my $db = TestDB->new( test_data => 0 );
 
@@ -51,6 +51,13 @@ txn_do_and_rollback $db, sub {
     Project IDs differ for Item row (id = 1): purchase_list.project = 1, unit.project = 1, article.project = 2
     Project IDs differ for RecipeIngredient row (id = 2): recipe.project = 1, article.project = 2, unit.project = 1
     EOT
+};
+
+txn_do_and_rollback $db, sub {
+    $db->resultset('DishIngredient')->find(1)->update( { article_id => 2 } );
+
+    like warnings { $app->run } => [qr/article_id/],
+      "Inconstitent article_id for dish ingredient/purchase list item";
 };
 
 my $cols = do { no warnings 'once'; $Coocook::Script::Dbck::SQLITE_NOTORIOUS_EMPTY_STRING_COLUMNS }
