@@ -7,10 +7,24 @@ use open ':locale';
 
 use Coocook::Schema;
 use Coocook::Util;
+use DateTime;
 
 with 'Coocook::Script::Role::HasDebug';
 with 'Coocook::Script::Role::HasSchema';
 with 'MooseX::Getopt';
+
+has fix => (
+    is            => 'rw',
+    isa           => 'Bool',
+    documentation => "enable automatic fixing of found issues",
+);
+
+has tolerance => (
+    is            => 'rw',
+    isa           => 'Num',
+    documentation => "tolerance for item values off due to floating point rounding errors",
+    default       => 0.01,
+);
 
 # columns which tend to receive the empty string '' as value in SQLite
 # TODO should we automatically select all boolean and non-FK numeric columns?
@@ -97,13 +111,14 @@ sub check_relationships ($self) {
         { ArticleTag       => [qw< article tag >] },
         { ArticleUnit      => [qw< article unit >] },
         { Dish             => [qw< meal recipe prepare_at_meal >] },
-        { DishIngredient   => [ { dish => 'meal' }, qw< article unit  > ] },
-        { DishTag          => [ { dish => 'meal' }, qw< tag  > ] },
-        { Item             => [qw< purchase_list unit article  >] },
+        { DishIngredient   => [ { dish => 'meal' }, { item => 'purchase_list' }, qw< article unit > ] },
+        { DishTag          => [ { dish => 'meal' }, qw< tag > ] },
+        { Item             => [qw< purchase_list unit article >] },
         { Project          => [qw< me default_purchase_list >] },
         { RecipeIngredient => [qw< recipe article unit >] },
         { RecipeTag        => [qw< recipe tag >] },
         { Tag              => [qw< me tag_group >] },
+        { UnitConversion   => [qw< unit1 unit2 >] },
     );
 
     for (@m_n_tables) {
@@ -169,6 +184,26 @@ sub check_relationships ($self) {
             }
         }
     }
+
+    # special case: article_id
+    my $dish_ingredients = $self->_schema->resultset('DishIngredient');
+    my $inconsistencies  = $dish_ingredients->search(
+        {
+            $dish_ingredients->me('article_id') => { '!=' => { -ident => 'item.article_id' } }
+        },
+        {
+            prefetch => 'item',
+        }
+    );
+
+    while ( my $dish_ingredient = $inconsistencies->next ) {
+        warn sprintf "Article IDs differ: dish_ingredients row %i has article_id = %i, "
+          . "items row %i has article_id = %i\n",
+          (
+            $dish_ingredient->id,       $dish_ingredient->article_id,
+            $dish_ingredient->item->id, $dish_ingredient->item->article_id,
+          );
+    }
 }
 
 sub check_sqlite_numeric_values ($self) {
@@ -215,8 +250,14 @@ sub check_fc_values ($self) {
         my $rs = $self->_schema->resultset($table);
 
         while ( my $row = $rs->next ) {
-            $row->name_fc eq fc( $row->name )
-              or warn sprintf( "Incorrect name_fc for $table '%s': '%s'\n", $row->name, $row->name_fc );
+            $row->name_fc eq fc( $row->name ) and next;
+
+            warn sprintf( "Incorrect name_fc for $table '%s': '%s'\n", $row->name, $row->name_fc );
+
+            if ( $self->fix ) {
+                $row->update( { name_fc => fc $row->name } );
+                warn "... Fixed!\n";
+            }
         }
     }
 }
@@ -225,8 +266,14 @@ sub check_url_name_values ($self) {
     my $projects = $self->_schema->resultset('Project');
 
     while ( my $project = $projects->next ) {
-        $project->url_name eq Coocook::Util::url_name( $project->name )
-          or warn sprintf "Incorrect url_name for project '%s': '%s'\n", $project->name, $project->url_name;
+        if ( $project->url_name ne Coocook::Util::url_name( $project->name ) ) {
+            warn sprintf "Incorrect url_name for project '%s': '%s'\n", $project->name, $project->url_name;
+
+            if ( $self->fix ) {
+                $project->update( { url_name => Coocook::Util::url_name( $project->name ) } );
+                warn "... Fixed!\n";
+            }
+        }
 
         $project->url_name_fc eq Coocook::Util::url_name( fc $project->name )
           or warn sprintf "Incorrect url_name_fc for project '%s': '%s'\n", $project->name,
@@ -235,14 +282,21 @@ sub check_url_name_values ($self) {
 }
 
 sub check_unit_conversions_values ($self) {
-    my $count = $self->_schema->resultset('UnitConversion')->count(
+    my $not_normalized_conversions = $self->_schema->resultset('UnitConversion')->search(
         {
             unit1_id => { '>' => { -ident => 'unit2_id' } },
         }
     );
 
-    if ( $count > 0 ) {
+    if ( ( my $count = $not_normalized_conversions->count ) > 0 ) {
         warn sprintf "%i rows in unit_conversions not normalized: unit1_id > unit2_id\n", $count;
+    }
+
+    $self->fix or return;
+
+    while ( my $conversion = $not_normalized_conversions->next ) {
+        $conversion->reverse()->update();
+        warn "... Fixed!\n";
     }
 }
 
@@ -273,11 +327,19 @@ sub check_unassigned_dish_ingredients ($self) {
                 $projects->correlate('meals')->search_related('dishes')->search_related('ingredients')
                   ->unassigned->results_exist_as_query,
             ]
+        },
+        {
+            '+columns' => {
+                unassigned_items_count =>
+                  $projects->correlate('meals')->search_related('dishes')->search_related('ingredients')
+                  ->unassigned->count_rs->as_query,
+            },
         }
     );
 
     while ( my $project = $invalid_projects->next ) {
-        warn sprintf "Project %i has purchase list(s) but also unassigned dish ingredients\n", $project->id;
+        warn sprintf "Project %i has purchase list(s) but also %i unassigned dish ingredient(s)\n",
+          $project->id, $project->get_column('unassigned_items_count');
     }
 }
 
@@ -294,44 +356,92 @@ sub check_items_without_dish_ingredients ($self) {
     );
 
     while ( my $item = $bad_items->next ) {
-        warn sprintf "Item %i in project %i has no dish ingredients%s\n",
-          $item->id,
+        warn sprintf "In project %i item %i has no dish ingredients%s\n",
           $item->purchase_list->project_id,
+          $item->id,
           $item->value == 0 ? '' : " but a non-zero value";
     }
 }
 
 sub check_items_values ($self) {
-    my $items       = $self->_schema->resultset('Item');
-    my $ingredients = $items->correlate('ingredients');
+    my $unit_conversions = $self->_schema->resultset('UnitConversion');
 
-    my $value_subquery =
-      $ingredients->search( { $ingredients->me('unit_id') => { -ident => $items->me('unit_id') } } )
-      ->get_column('value')->sum_rs->as_query;
-
-    # in contrast to SQLite PostgreSQL does not support referencing
-    # subqueries from FROM in a WHERE clause. That's why the subquery
-    # is used twice.
-    my $bad_items = $items->search(
+    my $items = $self->_schema->resultset('Item')->search(
+        undef,
         {
-            $items->me('value') => { '<' => $value_subquery },
-        },
-        {
-            join       => 'unit',
+            join       => [ 'article', 'purchase_list', 'unit' ],
             '+columns' => {
-                value_sum         => $value_subquery,
-                'unit_short_name' => 'unit.short_name',
+                project_id      => 'purchase_list.project_id',
+                article_name    => 'article.name',
+                unit_short_name => 'unit.short_name',
             },
+            prefetch => { 'ingredients' => 'unit' },
         }
     );
 
-    while ( my $item = $bad_items->next ) {
-        warn sprintf "Item %i has value of %g%s < %g%s the sum of its ingredients\n",
-          $item->id,
-          $item->value,
-          $item->get_column('unit_short_name'),
-          $item->get_column('value_sum'),
-          $item->get_column('unit_short_name');
+    my %ucg_cache;
+
+    while ( my $item = $items->next ) {
+        my $project_id = $item->get_column('project_id');
+        my $ucg        = $ucg_cache{$project_id} ||=
+          $unit_conversions->search( { 'unit1.project_id' => $project_id }, { join => 'unit1' } )->as_graph;
+
+        my $ingredients = $item->ingredients;
+        my $right_value = 0;
+        my @ingredients;
+
+        for my $ingredient ( $ingredients->all ) {
+            push @ingredients, $ingredient->value . $ingredient->unit->short_name;
+
+            my $factor = $ucg->factor_between_units( $ingredient->unit_id => $item->unit_id );
+
+            if ($factor) {
+                if ( defined $right_value ) {
+                    $right_value += $ingredient->value * $factor;
+                }
+            }
+            else {
+                $right_value = undef;
+            }
+        }
+
+        my $unit    = $item->get_column('unit_short_name');
+        my $article = $item->get_column('article_name');
+
+        if ( not defined $right_value ) {
+            warn "Impossible to convert item ", $item->id, " on list ", $item->purchase_list_id, ": ",
+              $item->value, $unit, " ", $article, " ≟ ",
+              join( " + ", @ingredients ), "\n";
+
+            next;
+        }
+
+        my $diff = abs( $item->value - $right_value );
+
+        if (
+              $item->value == 0
+            ? $self->tolerance > $diff                   # absolute diff
+            : $self->tolerance > $diff / $item->value    # relative diff
+          )
+        {
+            next;
+        }
+
+        warn "Item ", $item->id, ": ",
+          $item->value, $unit, " ", $article,
+          " != ", $right_value, $unit,
+          " (", join( " + ", @ingredients ), ")",
+          "\n";
+
+        $self->fix or next;
+
+        $item->update(
+            {
+                value  => $right_value,
+                offset => $item->total - $right_value,
+            }
+        );
+        warn "... Fixed!\n";
     }
 }
 

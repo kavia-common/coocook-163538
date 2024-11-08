@@ -1,7 +1,7 @@
 use Coocook::Base;
-use Test2::V0 -no_warnings => 1;
 
 use Template;
+use Test2::V0 -no_warnings => 1;
 use Test::Builder;
 
 plan(15);

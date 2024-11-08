@@ -6,6 +6,12 @@ use Coocook::Util;
 
 extends 'Coocook::Schema::Result';
 
+__PACKAGE__->load_components(
+    qw<
+      +Coocook::Schema::Component::Result::DishOrRecipe
+    >
+);
+
 __PACKAGE__->table('recipes');
 
 __PACKAGE__->add_columns(
@@ -64,13 +70,5 @@ __PACKAGE__->has_many( recipes_tags => 'Coocook::Schema::Result::RecipeTag', 're
 __PACKAGE__->many_to_many( tags => recipes_tags => 'tag' );
 
 __PACKAGE__->meta->make_immutable;
-
-sub duplicate ( $self, $args ) {
-    $args->{name} // die "no name defined in \$args";
-
-    return $self->copy($args);
-}
-
-sub url_name ($self) { Coocook::Util::url_name( $self->name ) }
 
 1;

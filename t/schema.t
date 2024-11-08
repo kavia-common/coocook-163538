@@ -1,7 +1,7 @@
-use Test2::V0;
-
 use Coocook::Base;
+
 use Coocook::Schema;
+use Test2::V0 -no_warnings => 1;
 
 use lib 't/lib';
 use TestDB;

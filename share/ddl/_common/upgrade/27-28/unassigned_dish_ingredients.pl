@@ -4,9 +4,10 @@ sub ( $schema, $versions ) {
     my $projects = $schema->resultset('Project');
 
     while ( my $project = $projects->next ) {
-        my $unassigned_ingredients = $schema->resultset('DishIngredient')->unassigned;
+        my $unassigned_ingredients = $project->dish_ingredients->unassigned;
 
-        $unassigned_ingredients->results_exist or next;
+        $project->purchase_lists->results_exist or next;
+        $unassigned_ingredients->results_exist  or next;
 
         my $i    = 1;
         my $name = sub { "Previously unassigned items" . ( $i > 1 ? " ($i)" : "" ) };

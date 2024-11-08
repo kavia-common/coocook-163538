@@ -6,6 +6,7 @@ use strict;
 use warnings;
 no warnings qw(experimental::signatures);
 use feature qw(signatures);
+use utf8;
 
 use Carp;
 use Module::Load;
