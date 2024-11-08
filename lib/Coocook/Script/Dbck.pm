@@ -407,6 +407,15 @@ sub check_items_values ($self) {
               " (", join( " + ", @ingredients ), ")",
               "\n";
 
+            $self->fix or next;
+
+            $item->update(
+                {
+                    value  => $right_value,
+                    offset => $item->total - $right_value,
+                }
+            );
+            warn "... Fixed!\n";
         }
     }
 }

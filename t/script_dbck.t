@@ -269,11 +269,28 @@ subtest "ingredients with value != sum of ingredients", txn_do_and_rollback $db,
     ok $db->storage->dbh_do( sub ( $storage, $dbh ) { $dbh->do($sql) } ), "SQL query executes";
 
     my $dish_ingredient = $db->resultset('DishIngredient')->find(1);
+    my $original_item   = $dish_ingredient->item;
 
-    $dish_ingredient->unit_id != $dish_ingredient->item->unit_id
+    $dish_ingredient->unit_id != $original_item->unit_id
+      or die "test broken";
+
+    ( $original_item->value == 14.5 and $original_item->offset == 0 )
       or die "test broken";
 
     $dish_ingredient->update( { value => 1000 } );
     my $item_id = $dish_ingredient->item_id;
     like warnings { $app->run } => [qr/^Item $item_id: .+ != .+ \(.*1000\w+.*\)$/];
+
+    $app->fix(1);
+    like warnings { $app->run } => array {
+        item qr/1000/;
+        item "... Fixed!\n";
+        end();
+    },
+      "with --fix";
+
+    my $item = $original_item->self_rs->one_row;
+    is $item->value  =>  15,  "value";
+    is $item->offset => -0.5, "offset";
+    is $item->total  => $original_item->total, "total didn't change";
 };
