@@ -100,7 +100,7 @@ sub _xpend_ingredient : Private {
     my $prepare       = $ajax_request->{prepare};
 
     my $ingredient = $dish_or_recipe->ingredients->find($ingredient_id)
-      or $c->redirect('/error/bad_request');
+      or $c->detach('/error/bad_request');
 
     my %id_hash =
         $ingredient->is_recipe_ingredient ? ( recipe_id => $ingredient->recipe_id )

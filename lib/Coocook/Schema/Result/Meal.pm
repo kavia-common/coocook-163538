@@ -29,6 +29,16 @@ __PACKAGE__->grouping_column( [ 'project_id', 'date' ] );
 __PACKAGE__->belongs_to( project => 'Coocook::Schema::Result::Project', 'project_id' );
 
 __PACKAGE__->has_many(
+    other_meals => __PACKAGE__,
+    sub ($args) {
+        return {
+            "$args->{foreign_alias}.id"         => { '!='   => { -ident => "$args->{self_alias}.id" } },
+            "$args->{foreign_alias}.project_id" => { -ident => "$args->{self_alias}.project_id" },
+        };
+    }
+);
+
+__PACKAGE__->has_many(
     dishes => 'Coocook::Schema::Result::Dish',
     'meal_id',
     {

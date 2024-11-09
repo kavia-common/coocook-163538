@@ -120,13 +120,16 @@ sub update : POST Chained('base') Args(0) RequiresCapability('edit_project') {
         sub {
             $dish->update(
                 {
-                    name               => $c->req->params->get('name'),
-                    comment            => $c->req->params->get('comment'),
-                    servings           => $c->req->params->get('servings'),
-                    preparation        => $c->req->params->get('preparation'),
-                    description        => $c->req->params->get('description'),
                     prepare_at_meal_id => $c->req->params->get('prepare_at_meal') || undef,
-
+                    map {
+                        $_ => $c->req->params->get($_) // $c->detach( '/error/bad_request', ["Parameter '$_' missing"] )
+                      } qw(
+                      name
+                      comment
+                      servings
+                      preparation
+                      description
+                      )
                 }
             );
 

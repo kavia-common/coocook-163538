@@ -33,8 +33,8 @@ sub get_project_plan : GET HEAD Chained('/project/base') PathPart('project_plan'
     for my $day ( keys %$days ) {
         for my $meal_key ( keys $days->{$day}->%* ) {
             my $meal = $days->{$day}{$meal_key};
-            $meal->{delete_url} = $c->project_uri( $self->action_for('delete_dish'), $meal->{id} )->as_string;
-            $meal->{update_url} = $c->project_uri( $self->action_for('update_dish'), $meal->{id} )->as_string;
+            $meal->{delete_url} = $c->project_uri( $self->action_for('delete_meal'), $meal->{id} )->as_string;
+            $meal->{update_url} = $c->project_uri( $self->action_for('update_meal'), $meal->{id} )->as_string;
             $meal->{delete_dishes_url} =
               $c->project_uri( $self->action_for('delete_dishes_from_meal'), $meal->{id} )->as_string;
 
@@ -191,27 +191,39 @@ sub update_meal : POST Chained('/meal/base') PathPart('update') Args(0)
             [ { message => "Cannot parse 'date' property: invalid date string." } ] );
     };
 
-    my $found_duplicate_meal = $c->project->meals->results_exist(
+    my $meal                 = $c->stash->{meal};
+    my $other_meals          = $meal->other_meals;
+    my $found_duplicate_meal = $other_meals->results_exist(
         {
-            name => $c->req->body_data->{name},
-            date => $c->project->format_date($new_date),
+            $other_meals->me('name') => $c->req->body_data->{name},
+            $other_meals->me('date') => $meal->format_date($new_date),
         }
     );
 
-    if ($found_duplicate_meal) {
-        $c->detach( '/error/bad_request',
-            [ { message => "Cannot create meal with same name on same date." } ] );
-    }
+    $found_duplicate_meal
+      and $c->detach( '/error/bad_request',
+        [ { message => "Cannot create meal with same name on same date." } ] );
 
-    $c->stash->{meal}->update(
-        {
-            date    => $new_date,
-            name    => $c->req->body_data->{name},
-            comment => $c->req->body_data->{comment},
+    $meal->txn_do(
+        sub {
+            # TODO DBIx::Class::Ordered seems to have a bug which makes it
+            # update the "group" and "position" columns but not any additional
+            # columns. This leads to failing UNIQUE constraints when a name
+            # is duplicate unless the "date" is changed in the same UPDATE.
+            # Workaround: update in several steps.
+
+            $meal->update( { name => '' } );          # expected not to exist
+            $meal->update( { date => $new_date } );
+            $meal->update(
+                {
+                    name    => $c->req->body_data->{name}    // $c->detach('/error/bad_request'),
+                    comment => $c->req->body_data->{comment} // $c->detach('/error/bad_request'),
+                }
+            );
         }
     );
 
-    $c->stash->{ajax_response} = $c->stash->{meal}->for_meals_dishes_editor;
+    $c->stash->{ajax_response} = $meal->for_meals_dishes_editor;
 }
 
 sub delete_meal : POST Chained('/meal/base') PathPart('delete') Args(0)
