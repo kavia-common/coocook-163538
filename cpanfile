@@ -31,7 +31,7 @@ requires "Crypt::Digest::SHA256";
 requires "DBIx::Class::Core";
 requires "DBIx::Class::DeploymentHandler";
 requires "DBIx::Class::FilterColumn";
-requires "DBIx::Class::Helpers" => "2.036000";    # supports RS->results_exist() with condition
+requires "DBIx::Class::Helpers" => "2.037000";    # supports newer one_row() and prefetch() syntax
 requires "DBIx::Class::Helpers::Util";
 requires "DBIx::Class::InflateColumn::DateTime";
 requires "DBIx::Class::ResultSet";

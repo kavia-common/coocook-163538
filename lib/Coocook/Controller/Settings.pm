@@ -77,8 +77,7 @@ sub change_password : POST Chained('base') Args(0) RequiresCapability('change_pa
 sub organizations : GET HEAD Chained('base') Args(0) RequiresCapability('view_user_organizations') {
     my ( $self, $c ) = @_;
 
-    my @organizations_users =
-      $c->user->search_related( organizations_users => undef, { prefetch => 'organization' } )->all;
+    my @organizations_users = $c->user->organizations_users->prefetch('organization')->all;
 
     for (@organizations_users) {
         my $organization_user = $_;

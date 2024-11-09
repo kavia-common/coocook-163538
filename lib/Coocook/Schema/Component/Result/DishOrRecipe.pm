@@ -38,13 +38,12 @@ sub add_ingredient ( $self, %args ) {
                 $unit = $project->units->find( $args{unit_id} );
             }
             elsif ( defined( my $name = $args{unit_name} ) ) {
-                $unit = $project->units->search(
+                $unit = $project->units->one_row(
                     [    # OR
                         { short_name => $name },
                         { long_name  => $name },
                     ]
-                  )->one_row
-                  || $project->units->create( { short_name => $name, long_name => $name } );
+                ) || $project->units->create( { short_name => $name, long_name => $name } );
             }
 
             if ( !$article or !$unit ) {

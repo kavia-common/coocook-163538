@@ -254,7 +254,7 @@ sub importable_recipes : GET HEAD Chained('/project/base') PathPart('recipes/imp
     $recipes = $recipes->union( $c->user->projects->search_related('recipes') )     # + user's projects
       ->search( { $recipes->me('project_id') => { '!=' => $c->project->id } } );    # - this project
 
-    my @recipes = $recipes->search( undef, { prefetch => { project => 'owner' } } )->all;
+    my @recipes = $recipes->prefetch( { project => 'owner' } )->all;
 
     for my $recipe (@recipes) {
         $recipe->{url} = $c->uri_for_action( '/browse/recipe/show', [ $recipe->id, $recipe->url_name ] );
