@@ -38,9 +38,20 @@ sub post_login : POST Chained('/base') PathPart('login') Args(0) Public {
 
     my $user = $c->authenticate(
         {
-            name           => $c->req->body_params->get('username'),
-            password_hash  => $c->req->body_params->get('password'),
-            email_verified => { '!=' => undef },
+            password_hash => $c->req->body_params->get('password'),
+            dbix_class    =>
+              {    # see https://metacpan.org/pod/Catalyst::Authentication::Store::DBIx::Class#Searchargs
+                searchargs => [
+                    {
+                        -or => [
+                            name_fc  => fc $c->req->body_params->get('username'),
+                            email_fc => fc $c->req->body_params->get('username'),
+                        ],
+                        email_verified => { '!=' => undef },
+                    },
+                    undef
+                ],
+              },
         }
     );
 
