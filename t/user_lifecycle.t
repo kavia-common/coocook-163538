@@ -24,6 +24,8 @@ $t->text_contains("first user");
 
 $t->robots_flags_ok( { index => 0 } );
 
+my $user1;
+
 {
     my %userdata_ok = (
         username  => 'test',
@@ -92,7 +94,7 @@ $t->robots_flags_ok( { index => 0 } );
     $t->register_ok( \%userdata_ok );
     $t->emails_count_is(1);
 
-    my $user1 = $schema->resultset('User')->find( { name => 'test' } );
+    $user1 = $schema->resultset('User')->find( { name => 'test' } );
 
     ok $user1->get_column($_), "column '$_' is set" for 'token_created';
     is $user1->get_column($_) => undef, "column '$_' is NULL" for 'token_expires';
@@ -167,7 +169,7 @@ subtest "verify email address" => sub {
 
     like $node->string_value => qr/sign in/i, "got redirected to login page";
 
-    $t->input_has_value( username => 'test', "username is prefilled in login form" );
+    $t->input_has_value( username => $user1->name, "username is prefilled in login form" );
 };
 
 $t->clear_emails();
@@ -196,20 +198,19 @@ $t->email_like(qr{ /user/test2 }x);    # URLs to user info pages
 $t->email_like(qr{ /admin/user/test2 }x);
 $t->shift_emails();
 
-for my $user2 ( $schema->resultset('User')->find( { name => 'test2' } ) ) {
-    ok !$user2->has_any_role('site_owner'),      "2nd user created hasn't 'site_owner' role";
-    ok $user2->has_any_role('private_projects'), "2nd user created has 'private_projects' role";
-}
+my $user2 = $schema->resultset('User')->find( { name => 'test2' } );
+ok !$user2->has_any_role('site_owner'),      "2nd user created hasn't 'site_owner' role";
+ok $user2->has_any_role('private_projects'), "2nd user created has 'private_projects' role";
 
-$t->login_fails( 'test', 'invalid' );    # wrong password
+$t->login_fails( $user1->name, 'invalid', "wrong password fails" );
 
-$t->login_fails( 'test2', 's3cr3t' );    # not verified
+$t->login_fails( $user2->name, 's3cr3t', "not yet verified user fails" );
 
 {
     my $guard = $t->local_config_guard( login_sleep_secs => 1 );
 
     my $t1 = time();
-    $t->login_ok( 'test', 's3cr3t' );
+    $t->login_ok( $user1->name, 's3cr3t' );
     my $t2 = time();
 
     cmp_ok $t2 - $t1, '>', 1, "login request took more than 1 second";
@@ -259,7 +260,7 @@ $t->checkbox_is_off('store_username');
 is $t->cookie_jar->get_cookies( $t->base, 'username' ) => undef,
   "username is not stored in persistent cookie";
 
-$t->login_ok( 'test', 'P@ssw0rd', store_username => 'on' );
+$t->login_ok( $user1->name, 'P@ssw0rd', store_username => 'on' );
 $t->text_contains( 'Admin', "Admin section in footer" );     # issue #332
 $t->content_contains( q{/admin"}, "link to admin page" );    # issue #332
 
@@ -278,10 +279,10 @@ $t->logout_ok();
 
 $t->get_ok('https://localhost/login');
 
-is $t->cookie_jar->get_cookies( $t->base, 'username' ) => 'test',
-  "'username' cookie contains username 'test'";
+is $t->cookie_jar->get_cookies( $t->base, 'username' ) => $user1->name,
+  "'username' cookie stored username";
 
-$t->input_has_value( username => 'test', "username is prefilled from persistent cookie" );
+$t->input_has_value( username => $user1->name, "username is prefilled from persistent cookie" );
 
 $t->robots_flags_ok( { index => 0, archive => 0 },
     "/login with username from cookie may NOT be indexed" );
@@ -289,7 +290,7 @@ $t->robots_flags_ok( { index => 0, archive => 0 },
 $t->form_number(3);
 $t->checkbox_is_on('store_username');
 
-$t->login_ok( 'test', 'P@ssw0rd', store_username => '' );
+$t->login_ok( $user1->name, 'P@ssw0rd', store_username => '' );
 
 $t->logout_ok();
 
@@ -297,7 +298,7 @@ is $t->cookie_jar->get_cookies( $t->base, 'username' ) => undef,
   "... username was deleted from persistent cookie";
 
 subtest "expired password reset token URL" => sub {
-    $t->request_recovery_link_ok('test@example.com');
+    $t->request_recovery_link_ok( $user1->email_fc );
 
     $schema->resultset('User')->update( { token_expires => '2000-01-01 00:00:00' } );
 
@@ -310,17 +311,16 @@ subtest "expired password reset token URL" => sub {
 };
 
 subtest "password recovery" => sub {
-    my $user         = $t->schema->resultset('User')->find( { email_fc => 'test@example.com' } );
-    my $new_password = 'new, nice & shiny';
+    $user1->discard_changes;
+    ok $user1->check_password('P@ssw0rd'), "password is same as before";
 
-    ok $user->check_password('P@ssw0rd'), "password is same as before";
+    $t->request_recovery_link_ok( 'not-registered@example.com',
+        "request recovery for unregistered email address" );
+    my $response_unregistered = $t->response;
 
-    $t->request_recovery_link_ok('not-registered@example.com');
-    my $content_unregistered = $t->response->decoded_content;
-
-    $t->request_recovery_link_ok('test@example.com');
-    is $t->response->decoded_content => $content_unregistered,
-      "content is same for unregistered email addresses";
+    $t->request_recovery_link_ok( $user1->email_fc, "request recovery for user1" );
+    is $t->response->code    => $response_unregistered->code,    "... HTTP status code is same";
+    is $t->response->content => $response_unregistered->content, "... content is same";
 
     $t->get_ok_email_link_like(qr/reset_password/);
     $t->text_contains('verified');
@@ -337,16 +337,17 @@ subtest "password recovery" => sub {
 
     $t->text_like(qr/don.t match/);
 
-    $user->discard_changes();
-    ok $user->check_password('P@ssw0rd'), "password hasn't been changed";
+    $user1->discard_changes();
+    ok $user1->check_password('P@ssw0rd'), "password hasn't been changed";
 
+    my $new_password = 'new, nice & shiny';
     $t->submit_form_ok( { with_fields => { map { $_ => $new_password } 'password', 'password2' } },
         "submit new password twice" );
 
     $t->text_like(qr/ password .+ changed/x);
 
-    $user->discard_changes();
-    ok $user->check_password($new_password), "password has been changed";
+    $user1->discard_changes();
+    ok $user1->check_password($new_password), "password has been changed";
 
     $t->logout_ok();
 
@@ -354,25 +355,23 @@ subtest "password recovery" => sub {
 };
 
 subtest "password recovery marks email address verified" => sub {
-    my $test2        = $schema->resultset('User')->find( { name => 'test2' } );
-    my $new_password = 'sUpEr s3cUr3';
-
-    is $test2->email_verified => undef,
+    $user2->discard_changes;
+    is $user2->email_verified => undef,
       "email_verified IS NULL";
 
-    $t->request_recovery_link_ok('test2@example.com');
+    $t->request_recovery_link_ok( $user2->email_fc );
     $t->get_ok_email_link_like(qr/reset_password/);
     $t->submit_form_ok( { with_fields => { map { $_ => 'sUpEr s3cUr3' } 'password', 'password2' } },
         "submit password reset form" );
 
-    $test2->discard_changes;
-    isnt $test2->email_verified => undef,
+    $user2->discard_changes;
+    isnt $user2->email_verified => undef,
       "email_verified IS NOT NULL";
 
     $t->logout_ok();
 };
 
-$t->login_ok( 'test', 'new, nice & shiny' );
+$t->login_ok( $user1->name, 'new, nice & shiny' );
 
 subtest "redirects after login/logout" => sub {
     $t->get_ok('https://localhost/about');
@@ -385,11 +384,11 @@ subtest "redirects after login/logout" => sub {
     $t->follow_link_ok( { text => 'Sign up' } );
 
     # keep link with failed login attempts
-    $t->login_fails( 'test', 'invalid' );
+    $t->login_fails( $user1->name, 'invalid' );
 
     note "uri: " . $t->uri;
 
-    $t->login_ok( 'test', 'new, nice & shiny' );
+    $t->login_ok( $user1->name, 'new, nice & shiny' );
 
     $t->base_is( 'https://localhost/about', "client is redirected to last page after login" );
 };
@@ -418,7 +417,7 @@ subtest "malicious redirects are filtered on logout" => sub {
 subtest "malicious redirects are filtered on login" => sub {
     $t->post(
         'https://localhost/login?redirect=https://malicious.example/',
-        { username => 'test', password => 'new, nice & shiny' }
+        { username => $user1->name, password => 'new, nice & shiny' }
     );
     $t->base_is( 'https://localhost/', "client is redirected to /" );
     $t->is_logged_in();
@@ -428,7 +427,7 @@ subtest "malicious redirects are filtered on login" => sub {
         '/login',
         {
             redirect => 'https://malicious.example/',
-            username => 'test',
+            username => $user1->name,
             password => 'new, nice & shiny'
         }
     );
@@ -454,10 +453,10 @@ ok my $project = $schema->resultset('Project')->find( { name => "Test Project 1"
 
 ok !$project->is_public, "1st project is private";
 
-is $project->owner->name => 'test',
+is $project->owner->name => $user1->name,
   "new project is owned by new user";
 
-is $project->users->one_row->name => 'test',
+is $project->users->one_row->name => $user1->name,
   "owner relationship is also stored via table 'projects_users'";
 
 ok my $project2 = $schema->resultset('Project')->find( { name => "Test Project 2" } );
