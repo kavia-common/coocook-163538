@@ -6,7 +6,7 @@ use lib 't/lib';
 use TestDB qw(txn_do_and_rollback);
 use Test::Coocook;
 
-plan(90);
+plan(96);
 
 my $t = Test::Coocook->new( test_data => 0 );
 
@@ -216,6 +216,13 @@ $t->login_fails( $user2->name, 's3cr3t', "not yet verified user fails" );
     cmp_ok $t2 - $t1, '>', 1, "login request took more than 1 second";
 }
 
+$t->logout_ok();
+$t->login_ok( uc( $user1->name ), 's3cr3t', "login with username case-insensitive" );
+$t->logout_ok();
+$t->login_ok( $user1->email_fc, 's3cr3t', "login with email" );
+$t->logout_ok();
+$t->login_ok( uc( $user1->email_fc ), 's3cr3t', "login with email case-insensitive" );
+
 $t->follow_link_ok( { text => 'Settings' } );
 
 $t->submit_form_ok(
@@ -318,7 +325,7 @@ subtest "password recovery" => sub {
         "request recovery for unregistered email address" );
     my $response_unregistered = $t->response;
 
-    $t->request_recovery_link_ok( $user1->email_fc, "request recovery for user1" );
+    $t->request_recovery_link_ok( uc( $user1->email_fc ), "request recovery for user1" );
     is $t->response->code    => $response_unregistered->code,    "... HTTP status code is same";
     is $t->response->content => $response_unregistered->content, "... content is same";
 
