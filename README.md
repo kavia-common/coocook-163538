@@ -137,9 +137,10 @@ Daniel Böhmer <post@daniel-boehmer.de>
 * [@rico-hengst](https://github.com/rico-hengst) Rico Hengst
 * [@kuro610](https://gitlab.com/kuro610) Kurt Roscher
 * [@tjfoerster](https://gitlab.com/tjfoerster) Timon Förster
+* [@KliBas](https://gitlab.com/KliBas) Bastian Klinge
 
 ## Copyright and License
 
-This software is copyright (c) 2015-2024 by Daniel Böhmer.
+This software is copyright (c) 2015-2025 by Daniel Böhmer.
 This web application is free software, licensed under the
 [GNU Affero General Public License, Version 3, 19 November 2007](LICENSE).
