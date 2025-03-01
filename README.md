@@ -137,6 +137,7 @@ Daniel Böhmer <post@daniel-boehmer.de>
 * [@rico-hengst](https://github.com/rico-hengst) Rico Hengst
 * [@kuro610](https://gitlab.com/kuro610) Kurt Roscher
 * [@tjfoerster](https://gitlab.com/tjfoerster) Timon Förster
+* [@KliBas](https://gitlab.com/KliBas) Bastian Klinge
 
 ## Copyright and License
 
