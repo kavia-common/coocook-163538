@@ -2,7 +2,7 @@
 
 Web application for collecting recipes and making food plans
 
-## Main features
+## Main Features
 
 * collect recipes
 * create food plans
@@ -15,7 +15,36 @@ Web application for collecting recipes and making food plans
     * define maximum shelf life or limit for need to preorder of articles
     * select some ingredients and part of cooking instructions to be done at an earlier meals
 
-## Quick start
+## Coocook.org Software as a Service
+
+If you discovered this software repository and might want to use Coocook,
+have a look at [Coocook.org](https://coocook.org/) which is software as a service
+and provides Coocook as service for you that you don’t need to install or manage.
+
+## Mailing List
+
+This mailing list is used to inform users about major changes (maybe once or twice a year)
+and can be used by users to send and discuss questions about Coocook (very low volume so far).
+In case email volume increases mailing lists will be split to allow more specific subscriptions.
+
+* send emails to <coocook@lists.coocook.org>
+* subscribe at [lists.coocook.org](https://lists.coocook.org/)
+  or send an email with subject `subscribe` to
+[coocook-request@lists.coocook.org](mailto:coocook-request@lists.coocook.org?subject=subscribe)
+
+## Terminology
+
+| Name | Description | Example |
+| --- | --- | --- |
+| Project | self-contained collection of Coocook data | Paris vacation |
+| Meal | an occasion for food on a particular date | lunch at August 15th |
+| Dish | an actual food planned for a certain meal | apple pie for lunch on August 15th |
+| Recipe | a scalable template for a dish | apple pie |
+| Ingredient | an amount of some article for a dish/recipe | 1kg of apples |
+| Article | a single sort of food that can be purchased | apples |
+| Unit | a type of measurement | kilograms
+
+## Quick Start for Development
 
 Get source code:
 
@@ -54,12 +83,9 @@ Prerequisites:
 
 * [Perl5](https://www.perl.org/get.html)
   with [`cpanm`](https://metacpan.org/pod/App::cpanminus#INSTALLATION)
-
 * database
-
   * by default [SQLite](https://www.sqlite.org/)
     with [`DBD::SQLite`](https://metacpan.org/pod/DBD::SQLite)
-
   * or [PostgreSQL](https://www.postgresql.org/)
     with [`DBD::Pg`](https://metacpan.org/pod/DBD::Pg)
 
@@ -91,47 +117,87 @@ There are a few additional dependencies for *development* as well *recommended* 
 $ cpanm --installdeps --with-develop --with-recommends --with-suggests .
 ```
 
-Install the database schema into a connection from your `dbic.yaml` (see above) and start development server in debug mode:
+### Run with Docker
+
+Follow the instructions at [hub.docker.com/r/coocook/coocook-dev](https://hub.docker.com/r/coocook/coocook-dev) to use the Docker image for development.
+
+If you are using Docker, you need to prefix the commands in the following sections
+with a `docker` call or run them inside your Docker container.
+
+### Run the Development Server
+
+Install the database schema into a connection from your `dbic.yaml` (see section [Configuration](#configuration)),
+install the required dependencies from the [Coocook Web Components repository](https://gitlab.com/coocook/web-components) and
+start the development server in debug mode:
 
 ```console
 $ script/coocook_deploy.pl --connection_name 'development' install
+$ script/coocook_install_web_dependencies.pl
+=== downloading coocook web dependencies ===
+downloading coocook-web-components@0.6.4 ..........................................  SUCCESS
+downloading bootstrap@5.1.3 .......................................................  SUCCESS
+
+=== installing coocook web dependencies ===
+installing coocook-web-components@0.6.4 ............................................ SUCCESS
+installing bootstrap@5.1.3 ......................................................... SUCCESS
 $ script/coocook_server.pl --debug
 ...
 HTTP::Server::PSGI: Accepting connections at http://0:3000/
 ```
 
-Hint: With the `--restart` option the development server restarts automatically when files in `lib/` are changed.
-This requires [`Catalyst::Restarter`](https://metacpan.org/pod/Catalyst::Restarter).
+Hint: With the `--restart` option the development server restarts automatically
+when files in `lib/` are changed.
+This requires the suggested development dependency
+[`Catalyst::Restarter`](https://metacpan.org/pod/Catalyst::Restarter).
 
-### Run with Docker
+### Code formatting
 
-Follow the instructions at [hub.docker.com/r/coocook/coocook-dev](https://hub.docker.com/r/coocook/coocook-dev) to use the Docker image for development.
+The [GitLab CI pipeline](.gitlab-ci.yml) enforces some formatting rules for all files.
+Any kind of text files MUST NOT contain carriage returns (CR),
+tab stops (TAB) or trailing whitespace on any line.
+The last line of text files MUST also end with a line feed (LF).
 
-## Mailing list
+Part of the test suite is checking
+that all Perl code files are properly formatted with
+[Perltidy](https://metacpan.org/dist/Perl-Tidy/view/bin/perltidy).
+Our ruleset for Perltidy is defined in [`.perltidyrc`](.perltidyrc).
+To let Perltidy fix all Perl files in your working directory run:
 
-* <coocook@lists.coocook.org>
-* subscribe at [lists.coocook.org](https://lists.coocook.org/)
-* or send an email with subject `subscribe` to
-[coocook-request@lists.coocook.org](mailto:coocook-request@lists.coocook.org?subject=subscribe)
+```console
+$ util/perltidy.sh
+```
 
-## Terminology
+### Run the Test Suite
 
-| Name | Description | Example |
-| --- | --- | --- |
-| Project | self-contained collection of Coocook data | Paris vacation |
-| Meal | an occasion for food on a particular date | lunch at August 15th |
-| Dish | an actual food planned for a certain meal | apple pie for lunch on August 15th |
-| Recipe | a scalable template for a dish | apple pie |
-| Ingredient | an amount of some article for a dish/recipe | 1kg of apples |
-| Article | a single sort of food that can be purchased | apples |
-| Unit | a type of measurement | kilograms
+Coocok has a Perl-based test suite which checks code formatting and runs software tests.
+Set `AUTHOR_TESTING` or author tests will be skipped, and run:
+
+```console
+$ AUTHOR_TESTING=1 prove --lib --verbose
+...
+ok
+All tests successful.
+Files=64, Tests=1495, 195 wallclock secs ( 0.48 usr  0.09 sys + 184.87 cusr  9.55 csys = 194.99 CPU)
+Result: PASS
+```
+
+Part of the test suite is a static code analysis with
+[Perlcritic](https://metacpan.org/dist/Perl-Critic/view/bin/perlcritic).
+Our ruleset for Perlcritic is defined in [`.perlcriticrc`](.perlcriticrc).
+
+## Merge Requests
+
+Merge Requests MUST be linear on top of the `master` branch
+and will be merged with an explicit merge commit
+to create a semi-linear history.
 
 ## Author
 
-Daniel Böhmer <post@daniel-boehmer.de>
+[@dboehmer](https://gitlab.com/dboehmer) Daniel Böhmer <post@daniel-boehmer.de>
 
 ## Contributors
 
+* [@rolschinera](https://gitlab.com/rolschinera) Lina Roscher
 * [@ChristinaSi](https://github.com/ChristinaSi) Christina Sixtus
 * [@moseschmiedel](https://gitlab.com/moseschmiedel) Mose Schmiedel
 * [@rico-hengst](https://github.com/rico-hengst) Rico Hengst
