@@ -424,3 +424,9 @@ footer a[href] {
 footer a[href]:hover {
     text-decoration: underline !important;
 }
+
+cc-autocomplete,
+cc-ajax-autocomplete,
+cc-multi-autocomplete {
+    appearance: inherit !important;
+}
