@@ -42,14 +42,16 @@ sub index : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('ad
 
     $_->{url} = $c->uri_for_action( '/project/show', [ $_->{id}, $_->{url_name} ] ) for @projects;
 
+    my $recipes = $c->model('DB::Recipe');
+
     $c->forward(
         '/browse/recipe/index',
         [
-            $c->model('DB::Recipe')->search(
+            $recipes->search(
                 undef,
-                {    # TODO recipes have no 'created' column, sorted by project instead
+                {
                     join     => 'project',
-                    order_by => { -desc => 'project.created' },
+                    order_by => { -desc => $recipes->me('created') },
                     rows     => $max_recipes,
                 }
             )
