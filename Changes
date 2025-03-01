@@ -3,6 +3,9 @@ This file documents the revision history for Coocook.
 0.06  NEXT
     - add support for automatic repair of database inconsistencies found by coocook_dbck.pl
     - allow login with email address and accept username case-insensitively
+    - revisit handling of tags on articles/dishes/recipes
+    - fix information leak that showed existence of objects in private projects (GitLab #336)
+    - fix/add links in footer
 
 0.05  2024-09-09 Codename "Großeinkauf"
     - add feature of default purchase lists, remove page "unassigned items"
