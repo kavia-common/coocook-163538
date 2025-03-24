@@ -19,6 +19,7 @@ __PACKAGE__->load_components(
       Helper::ResultSet::OneRow
       Helper::ResultSet::Random
       Helper::ResultSet::SetOperations
+      Helper::ResultSet::Shortcut::Prefetch
       Helper::ResultSet::Shortcut::ResultsExist
       Helper::ResultSet::Shortcut::HRI
     >

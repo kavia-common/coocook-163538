@@ -10,7 +10,7 @@ my $db = TestDB->new;
 subtest make_owner => sub {
     my $project = $db->resultset('Project')->find(1);
 
-    my $editor = $project->projects_users->search( { role => 'editor' } )->one_row
+    my $editor = $project->projects_users->one_row( { role => 'editor' } )
       || die "missing test data";
 
     like dies { $editor->make_owner } => qr/admin/, "making an editor to an owner fails";

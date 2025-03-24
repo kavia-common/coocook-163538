@@ -11,8 +11,7 @@ sub index : GET HEAD Chained('/project/submenu') PathPart('permissions') Args(0)
     my @permissions;
 
     {
-        my $organizations_projects =
-          $c->project->organizations_projects->search( undef, { prefetch => 'organization' } );
+        my $organizations_projects = $c->project->organizations_projects->prefetch('organization');
 
         while ( my $organization_project = $organizations_projects->next ) {
             push @permissions, {
@@ -37,7 +36,7 @@ sub index : GET HEAD Chained('/project/submenu') PathPart('permissions') Args(0)
     }
 
     {
-        my $projects_users = $c->project->projects_users->search( undef, { prefetch => 'user' } );
+        my $projects_users = $c->project->projects_users->prefetch('user');
 
         while ( my $project_user = $projects_users->next ) {
             push @permissions, {

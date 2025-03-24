@@ -72,8 +72,7 @@ sub show : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
 
     my $organization = $c->stash->{organization};
 
-    my @organizations_users =
-      $organization->search_related( organizations_users => undef, { prefetch => 'user' } )->all;
+    my @organizations_users = $organization->organizations_users->prefetch('user')->all;
 
     for (@organizations_users) {
         my $organization_user = $_;
@@ -88,8 +87,7 @@ sub show : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
     my @organizations_projects;
 
     {
-        my $organizations_projects =
-          $organization->search_related( organizations_projects => undef, { prefetch => 'project' } );
+        my $organizations_projects = $organization->organizations_projects->prefetch('project');
 
         while ( my $organization_project = $organizations_projects->next ) {
             my $project = $organization_project->project;
