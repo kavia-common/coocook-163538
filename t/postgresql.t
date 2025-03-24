@@ -285,7 +285,7 @@ subtest "timestamps are stored in UTC" => sub {
     $t->get_ok('/');
     $t->submit_form_ok( { with_fields => { name => 'Project UTC' } }, "create project" );
     $t->follow_link_ok( { text        => 'Project' } );
-    $t->follow_link_ok( { text        => 'Settings', class_regex => qr/^ .* nav-link .* $/x } );
+    $t->follow_link_ok( { text        => 'Settings', class_regex => qr/nav-link/ } );
     $t->submit_form_ok( { with_fields => { archive => 'on' } } );
     my $project = $schema->resultset('Project')->find( { name => 'Project UTC' } ) || die;
     like( $project->get_column($_) => $utc_regex, "column '$_' is in UTC" ) for qw< created archived >;
