@@ -80,9 +80,10 @@ sub index : GET HEAD Chained('/project/submenu') PathPart('permissions') Args(0)
     }
 
     $c->stash(
-        permissions => \@permissions,
-        roles       => [ grep { $_ ne 'owner' } $c->model('Authorization')->project_roles ],
-        template    => 'project/permissions.tt',
+        permissions           => \@permissions,
+        roles                 => [ grep { $_ ne 'owner' } $c->model('Authorization')->project_roles ],
+        autocomplete_data_url => $c->uri_for_action('/ajax/autocomplete/organizations_users'),
+        template              => 'project/permissions.tt',
     );
 }
 

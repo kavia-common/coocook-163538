@@ -117,6 +117,8 @@ sub begin : Private {
         statistics_url => $c->uri_for_action('/statistics'),
         about_url      => $c->uri_for_action('/about'),
         user_url       => $c->user ? $c->uri_for_action( '/user/show', [ $c->user->name ] ) : undef,
+
+        static_base_url => $c->uri_for_static('/'),
     );
 
     if ( my $base = $c->config->{canonical_url_base} ) {

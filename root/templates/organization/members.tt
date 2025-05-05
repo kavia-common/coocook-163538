@@ -75,13 +75,13 @@ has_admin = 0 %]
         <form method="post" action="[% add_url %]" id="add-member">
             <div class="mb-2">
                 <label for="user" class="form-label">User</label>
-                <cc-search
+                <cc-ajax-autocomplete
                   id="user"
                   required
                   name="name"
-                  data-url="/autocomplete/users"
-                  static-base-uri="[% uri_for_static('/') %]"
-                ></cc-search>
+                  data-url="[% autocomplete_data_url | html %]"
+                  static-base-url="[% static_base_url | html %]"
+                ></cc-ajax-autocomplete>
                 <input class="delete-by-autocomplete-js" required name="name" type="text">
             </div>
             <div class="mb-2">

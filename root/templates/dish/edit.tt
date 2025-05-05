@@ -49,7 +49,7 @@ js.push('/js/tagAutocomplete.js');
               type="search"
               name="tags"
               value="dish_tags"
-              static-base-uri="[% uri_for_static('/') %]"
+              static-base-url="[% static_base_url | html %]"
             ></cc-multi-autocomplete>
         </div>
         <div class="row mb-3">

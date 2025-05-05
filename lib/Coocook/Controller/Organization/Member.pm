@@ -65,10 +65,11 @@ sub index : GET HEAD Chained('/organization/base') PathPart('members') Args(0)
     }
 
     $c->stash(
-        organization_url    => $c->uri_for_action( '/organization/show', [ $organization->name ] ),
-        organizations_users => \@organizations_users,
-        roles               => [ grep { $_ ne 'owner' } $c->model('Authorization')->organization_roles ],
-        template            => 'organization/members.tt',
+        autocomplete_data_url => $c->uri_for_action('/ajax/autocomplete/users'),
+        organization_url      => $c->uri_for_action( '/organization/show', [ $organization->name ] ),
+        organizations_users   => \@organizations_users,
+        roles                 => [ grep { $_ ne 'owner' } $c->model('Authorization')->organization_roles ],
+        template              => 'organization/members.tt',
     );
 }
 

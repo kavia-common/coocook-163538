@@ -76,7 +76,7 @@ js_push_template_path();
                           name="target-shop-section"
                           filter="filterShopSections"
                           render="renderShopSectionOption"
-                          static-base-uri="[% uri_for_static('/') %]"
+                          static-base-url="[% static_base_url | html %]"
                           required
                         ></cc-autocomplete>
                     </div>
