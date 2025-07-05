@@ -1,4 +1,5 @@
 [% escape_title( 'Dish', dish.name );
+window_title = 'Dish "' _ dish.name _ '" · ' _ display_date(dish.meal.date, {short=>1}) _ ': ' _ dish.meal.name;
 
 css.push('/lib/coocook-web-components/dist/ingredients-editor/ingredients-editor_index.css');
 js.push('/lib/coocook-web-components/dist/ingredients-editor/ingredients-editor.es.js');
