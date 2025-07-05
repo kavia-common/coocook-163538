@@ -204,6 +204,7 @@ to create a semi-linear history.
 * [@kuro610](https://gitlab.com/kuro610) Kurt Roscher
 * [@tjfoerster](https://gitlab.com/tjfoerster) Timon Förster
 * [@KliBas](https://gitlab.com/KliBas) Bastian Klinge
+* [@xenoom](https://gitlab.com/xenoom) Marcus Hirsch
 
 ## Copyright and License
 
