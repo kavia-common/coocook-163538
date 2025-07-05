@@ -65,6 +65,10 @@ MACRO link_organization(organization) BLOCK;
     (<span class="organization">[% organization.name %]</span>)
 [%~ END;
 
+MACRO link_tag(tag) BLOCK ~%]
+    <a href="[% tag.url %]">[% display_tag(tag) %]</a>
+[% END;
+
 MACRO link_user(user) BLOCK;
     THROW "no user URL" UNLESS user.url ~%]
     <i class="material-icons">person</i>&thinsp;<a href="[% user.url %]" title="Show user profile">[% user.display_name | html %]</a> (<span class="username">[% user.name %]</span>)

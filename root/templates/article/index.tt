@@ -37,7 +37,7 @@
             <td>
                 <div class="d-flex gap-1 flex-wrap">
                 [% FOR tag IN article.tags;
-                    display_tag(tag);
+                    link_tag(tag);
                 END %]
                 </div>
             </td>

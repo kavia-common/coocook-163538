@@ -3,7 +3,7 @@ use Test2::V0;
 use lib 't/lib';
 use Test::Coocook;
 
-plan(13);
+plan(14);
 
 my $t = Test::Coocook->new();
 
@@ -12,6 +12,7 @@ $t->login_ok( 'john_doe', 'P@ssw0rd' );
 
 $t->follow_link_ok( { text => 'public Test Project' } );
 $t->follow_link_ok( { text => 'Articles' } );
+$t->content_contains('https://localhost/project/1/Test-Project/tag/1');
 
 $t->follow_link_ok( { text => 'add New article' } );
 

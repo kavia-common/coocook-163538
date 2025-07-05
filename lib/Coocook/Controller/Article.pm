@@ -51,6 +51,10 @@ sub index : GET HEAD Chained('/project/base') PathPart('articles') Args(0)
     {
         my %tags = map { $_->{id} => $_ } $c->project->tags->hri->all;
 
+        for my $tag (values %tags) {
+            $tag->{url} = $c->project_uri( '/tag/edit', $tag->{id} );
+        }
+
         my $articles_tags = $c->project->articles->search_related('articles_tags')->hri;
 
         while ( my $article_tag = $articles_tags->next ) {

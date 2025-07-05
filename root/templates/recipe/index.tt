@@ -26,9 +26,11 @@ new = BLOCK %]
         <tr class="parent">
             <td><a href="[% recipe.edit_url %]">[% recipe.name | html %]</a></td>
             <td>
+                <div class="d-flex gap-1 flex-wrap">
                 [% FOR tag IN recipe.tags;
-                    display_tag(tag);
+                    link_tag(tag);
                 END %]
+                </div>
             </td>
             <td>
                 <div class="d-flex gap-2 action-btn">
