@@ -7,7 +7,7 @@ plan(14);
 
 my $t = Test::Coocook->new();
 
-$t->get('/');
+$t->get('https://localhost/');
 $t->login_ok( 'john_doe', 'P@ssw0rd' );
 
 $t->follow_link_ok( { text => 'public Test Project' } );
