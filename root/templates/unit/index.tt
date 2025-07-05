@@ -35,10 +35,12 @@ new = BLOCK %]
                 [% display_value_unit(1, unit, {html=>1}) %]
                 =
                 [% display_value_unit(conversion.factor, conversion.unit, {html=>1}) %]
+            [% IF conversion.factor != 1 %]
                 <span> | </span>
                 [% display_value_unit(1, conversion.unit, {html=>1}) %]
                 =
                 [% display_value_unit(1 / conversion.factor, unit, {html=>1}) %]
+            [% END %]
             </td>
         [% ELSE %]
             <td></td>

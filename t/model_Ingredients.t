@@ -94,11 +94,13 @@ todo "fetch objects only once" => sub {
 };
 
 is my $units = $ingredients->all_units => array {
-    item object { call short_name => 'g';  call long_name => 'grams' };
-    item object { call short_name => 'kg'; call long_name => 'kilograms' };
-    item object { call short_name => 'l';  call long_name => 'liters' };
-    item object { call short_name => 'ml'; call long_name => 'milliliters' };
-    item object { call short_name => 'p';  call long_name => 'pinches' };
-    item object { call short_name => 't';  call long_name => 'tons' };
+    item object { call short_name => 'btl'; call long_name => 'bottles' };
+    item object { call short_name => 'g';   call long_name => 'grams' };
+    item object { call short_name => 'kg';  call long_name => 'kilograms' };
+    item object { call short_name => 'l';   call long_name => 'liters' };
+    item object { call short_name => 'ml';  call long_name => 'milliliters' };
+    item object { call short_name => 'pcs'; call long_name => 'pieces' };
+    item object { call short_name => 'p';   call long_name => 'pinches' };
+    item object { call short_name => 't';   call long_name => 'tons' };
 },
   "all_units";

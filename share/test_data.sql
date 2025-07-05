@@ -64,14 +64,17 @@ INSERT INTO "units"
 ( 3,          1,        'l',      'liters'),
 ( 4,          1,        't',        'tons'),
 ( 5,          1,        'p',     'pinches'), -- no conversion, (in German: Prisen)
-( 6,          2,       'kg',   'kilograms'), -- other project
-( 7,          1,       'ml', 'milliliters');
+( 6,          1,      'pcs',      'pieces'),
+( 7,          1,       'ml', 'milliliters'),
+( 8,          1,      'btl',     'bottles'),
+(99,          2,       'kg',   'kilograms'); -- other project
 
 INSERT INTO "unit_conversions"
 (unit1_id,   factor, unit2_id) VALUES
-(       1,    0.001,        2), --  g to kg
-(       2,    0.001,        4), -- kg to t
-(       3, 1000    ,        7); --  l to ml
+(       1,    0.001,        2), --   g to kg
+(       2,    0.001,        4), --  kg to t
+(       3, 1000    ,        7), --   l to ml
+(       6,        1,        8); -- pcs to btl
 
 INSERT INTO "articles_units"
 (article_id, unit_id) VALUES
