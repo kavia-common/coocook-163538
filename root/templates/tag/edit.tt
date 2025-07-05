@@ -1,6 +1,14 @@
 [% escape_title( 'Tag', tag.name );
 js_push_template_path() %]
 
+<p class="fs-1">
+    [%~ IF tag.tag_group %]
+        Tag Group: [% tag.tag_group.name | html;
+    ELSE %]
+        No Tag Group.
+    [% END ~%]
+</p>
+
 <div class="d-flex gap-2">
     <button class="btn btn-primary update" title="Edit tag" data-bs-toggle="modal" data-bs-target="#edit-tag">
         <i class="material-icons">edit</i> Edit
