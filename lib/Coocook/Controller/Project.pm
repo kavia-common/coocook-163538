@@ -357,7 +357,7 @@ sub visibility : POST Chained('base') Args(0) RequiresCapability('edit_project_v
     $c->project->update(
         { is_public => $c->project->format_bool( !!$c->req->params->get('public') ) } );
 
-    $c->response->redirect( $c->project_uri('/project/settings') );
+    $c->detach( '/_validated_redirect', [ $c->project_uri( '/project/settings', \'visibility' ) ] );
 }
 
 sub delete : POST Chained('base') Args(0) RequiresCapability('delete_project') {

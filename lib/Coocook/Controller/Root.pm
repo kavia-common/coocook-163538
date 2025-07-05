@@ -401,12 +401,12 @@ Gets a redirect URL from the current request URI's query parameter C<redirect>
 and validates the URL path. If the paramter is present and the URL is valid,
 the client is redirected to this URL.
 
-In every other case the client is redirected to C</>.
+In every other case the client is redirected to C<$default_uri> or C</>.
 
 =cut
 
 sub _validated_redirect : Private {
-    my ( $self, $c ) = @_;
+    my ( $self, $c, $default_uri ) = @_;
 
     my $uri;
 
@@ -432,7 +432,7 @@ sub _validated_redirect : Private {
     }
 
     # don't $c->detach() here, caller can decide between visit() or detach()
-    $c->response->redirect( $uri || $c->uri_for('/') );
+    $c->response->redirect( $uri || $default_uri );
 }
 
 __PACKAGE__->meta->make_immutable;

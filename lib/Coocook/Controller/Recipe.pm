@@ -48,7 +48,7 @@ sub index : GET HEAD Chained('recipes') PathPart('') RequiresCapability('view_pr
         my %tags         = map { $_->{id} => $_ } $c->project->tags->hri->all;
         my $recipes_tags = $c->project->recipes->search_related('recipes_tags')->hri;
 
-        for my $tag (values %tags) {
+        for my $tag ( values %tags ) {
             $tag->{url} = $c->project_uri( '/tag/edit', $tag->{id} );
         }
 

@@ -83,7 +83,9 @@ sub index : GET HEAD Chained('/project/submenu') PathPart('permissions') Args(0)
         permissions           => \@permissions,
         roles                 => [ grep { $_ ne 'owner' } $c->model('Authorization')->project_roles ],
         autocomplete_data_url => $c->uri_for_action('/ajax/autocomplete/organizations_users'),
-        template              => 'project/permissions.tt',
+        visibility_url        =>
+          $c->redirect_uri_for_action( '/project/visibility', [ $c->project->id, $c->project->url_name ] ),
+        template => 'project/permissions.tt',
     );
 }
 

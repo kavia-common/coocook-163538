@@ -65,6 +65,21 @@ has_admin = 0 %]
             </td>
         </tr>
 [% END %]
+
+        <tr>
+            <td><span class="[% 'opacity-25' UNLESS project.is_public %]"><i class="material-icons">public</i> anyone</span></td>
+            <td>[% project.is_public ? "viewer (project is public)" : "— (project is private)" %]</td>
+            <td>
+                <form method="post" action="[% visibility_url %]">
+            [% IF project.is_public %]
+                    <button type="submit" title="Make project private" class="btn btn-outline-warning btn-sm btn-quad material-icons">lock</button>
+            [% ELSE %]
+                    <input type="hidden" name="public" value="on">
+                    <button type="submit" title="Make project public"  class="btn btn-outline-warning btn-sm btn-quad material-icons">public</button>
+            [% END %]
+                </form>
+            </td>
+        </tr>
     </tbody>
 [% END %]
 
