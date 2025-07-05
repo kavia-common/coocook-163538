@@ -139,7 +139,7 @@ __PACKAGE__->config(
             if ( mod_installed 'Sys::Hostname::FQDN' ) {
                 Sys::Hostname::FQDN::fqdn();
             }
-            elsif ( my $fqdn = `hostname --fqdn` ) {
+            elsif ( my $fqdn = `hostname -f` ) {
                 chomp $fqdn;
                 $fqdn;
             }
