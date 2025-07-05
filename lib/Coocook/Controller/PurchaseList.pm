@@ -31,8 +31,13 @@ sub index : GET HEAD Chained('/project/base') PathPart('purchase_lists') Args(0)
     my $project = $c->project;
     my $lists   = $project->purchase_lists;
     my @lists   = $lists->sorted->with_is_default->with_items_count->with_ingredients_count->hri->all;
+    my $total_items_count       = 0;
+    my $total_ingredients_count = 0;
 
     for my $list (@lists) {
+        $total_items_count       += $list->{items_count};
+        $total_ingredients_count += $list->{ingredients_count};
+
         $list->{date} = $lists->parse_date( $list->{date} );
 
         $list->{edit_url}   = $c->project_uri( $self->action_for('edit'),   $list->{id} );
@@ -56,11 +61,13 @@ sub index : GET HEAD Chained('/project/base') PathPart('purchase_lists') Args(0)
     my $today = DateTime->today;
 
     $c->stash(
-        default_date   => $lists->default_date($today),
-        default_list   => $default_list,
-        min_date       => $today,
-        purchase_lists => \@lists,
-        create_url     => $c->project_uri( $self->action_for('create') ),
+        default_date            => $lists->default_date($today),
+        default_list            => $default_list,
+        min_date                => $today,
+        purchase_lists          => \@lists,
+        create_url              => $c->project_uri( $self->action_for('create') ),
+        total_items_count       => $total_items_count,
+        total_ingredients_count => $total_ingredients_count,
     );
 }
 

@@ -90,6 +90,15 @@ BLOCK new_list %]
         </tr>
         [% END;
 
+        IF purchase_lists.size > 1 %]
+        <tr>
+            <td></td>
+            <td>total</td>
+            <td>[% total_items_count %]</td>
+            <td>[% total_ingredients_count %]</td>
+        </tr>
+        [% END;
+
         PROCESS new_list %]
     </tbody>
 [% END %]
