@@ -432,7 +432,7 @@ sub _validated_redirect : Private {
     }
 
     # don't $c->detach() here, caller can decide between visit() or detach()
-    $c->response->redirect( $uri || $default_uri );
+    $c->response->redirect( $uri || $default_uri || $c->uri_for('/') );
 }
 
 __PACKAGE__->meta->make_immutable;
