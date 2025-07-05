@@ -180,7 +180,7 @@ sub _importable_properties ( $self, $shall_be_importable, $inventory, $propertie
 
     my @to_report = $properties ? @public_properties{@$properties} : values %public_properties;
 
-    return grep { !$unimportable{ $_->{key} } eq $shall_be_importable } @to_report;
+    return grep { $shall_be_importable xor $unimportable{ $_->{key} } } @to_report;
 }
 
 =head2 can_import_properties( $project, \@properties, \@errors?)
