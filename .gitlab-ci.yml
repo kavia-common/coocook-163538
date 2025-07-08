@@ -78,14 +78,14 @@ perl-5.34:
 
 
 # latest supported Perl version (without coverage, not for master)
-perl-5.40:
+perl-5.42:
   extends: .make-test
   rules: *except-master
   services:
     - name: postgres:bookworm
   variables:
     AUTHOR_TESTING: '1'
-    PERL_VERSION: '5.40'
+    PERL_VERSION: '5.42'
     POSTGRES_PASSWORD: coocook    # for "postgres" setup
     PGHOST:            postgres   # for DBD::Pg
     PGUSER:            postgres
@@ -93,16 +93,16 @@ perl-5.40:
 
 
 # latest supported Perl version with CATALYST_DEBUG=1 (without coverage, only for master)
-perl-5.40+CATALYST_DEBUG:
-  extends: perl-5.40
+perl-5.42+CATALYST_DEBUG:
+  extends: perl-5.42
   rules: *only-master
   variables:
     CATALYST_DEBUG: 1
 
 
 # latest supported Perl version with coverage (only for master)
-perl-5.40+coverage:
-  extends: perl-5.40
+perl-5.42+coverage:
+  extends: perl-5.42
   rules: *only-master
   variables:
     INSTALL_DEVEL_COVER: '1'
