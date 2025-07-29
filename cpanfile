@@ -121,5 +121,6 @@ on 'develop' => sub {
 
     suggests "Catalyst::Plugin::StackTrace";
     suggests "Catalyst::Restarter";
+    suggests "Devel::Cover";
     suggests "Term::Size::Any";
 };
