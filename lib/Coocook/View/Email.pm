@@ -32,8 +32,11 @@ sub process ( $self, $c, @args ) {
 
     my $body = $c->view('Email::TT')->render( $c, $stash->{template}, $c->stash );
 
-    Email::Stuffer->from( $stash->{from} )->to( $stash->{to} )->subject( $stash->{subject} )
-      ->text_body($body)->send;
+    Email::Stuffer->from( $stash->{from} )
+      ->to( $stash->{to} )
+      ->subject( $stash->{subject} )
+      ->text_body($body)
+      ->send;
 }
 
 __PACKAGE__->meta->make_immutable;

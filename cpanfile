@@ -110,7 +110,7 @@ on 'test' => sub {
 
 on 'develop' => sub {
     requires "Module::CPANfile";
-    requires "Perl::Tidy" => "== 20240511";
+    requires "Perl::Tidy" => "== 20250711";
     requires "Sub::Override";
     requires "Test::Perl::Critic";
     requires "Test::PerlTidy";

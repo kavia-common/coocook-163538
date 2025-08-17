@@ -48,5 +48,6 @@ $t->text_contains('cheddar');
 
 is
   join( ',' =>
-      sort $t->schema->resultset('Article')->find( { name => 'cheddar' } )
+      sort $t->schema->resultset('Article')
+      ->find( { name => 'cheddar' } )
       ->units->get_column('short_name')->all ) => 'g,kg,l';

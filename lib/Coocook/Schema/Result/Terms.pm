@@ -121,7 +121,9 @@ Positive C<$offset> means next terms.
 =cut
 
 sub neighbor ( $self, $offset ) {
-    return $self->neighbors($offset)->order($offset)->search( undef, { offset => abs($offset) - 1 } )
+    return $self->neighbors($offset)
+      ->order($offset)
+      ->search( undef, { offset => abs($offset) - 1 } )
       ->one_row;
 }
 

@@ -324,14 +324,17 @@ sub check_unassigned_dish_ingredients ($self) {
         {
             -and => [
                 $projects->correlate('purchase_lists')->results_exist_as_query,
-                $projects->correlate('meals')->search_related('dishes')->search_related('ingredients')
+                $projects->correlate('meals')
+                  ->search_related('dishes')
+                  ->search_related('ingredients')
                   ->unassigned->results_exist_as_query,
             ]
         },
         {
             '+columns' => {
-                unassigned_items_count =>
-                  $projects->correlate('meals')->search_related('dishes')->search_related('ingredients')
+                unassigned_items_count => $projects->correlate('meals')
+                  ->search_related('dishes')
+                  ->search_related('ingredients')
                   ->unassigned->count_rs->as_query,
             },
         }

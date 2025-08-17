@@ -32,13 +32,17 @@ sub index : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('ad
     my $max_recipes       = 10;
     my $max_users         = 10;
 
-    my @organizations = $c->model('DB::Organization')
-      ->search( undef, { order_by => { -desc => 'created' }, rows => $max_organizations } )->hri->all;
+    my @organizations =
+      $c->model('DB::Organization')
+      ->search( undef, { order_by => { -desc => 'created' }, rows => $max_organizations } )
+      ->hri->all;
 
     $_->{url} = $c->uri_for_action( '/organization/show', [ $_->{name} ] ) for @organizations;
 
-    my @projects = $c->model('DB::Project')
-      ->search( undef, { order_by => { -desc => 'created' }, rows => $max_projects } )->hri->all;
+    my @projects =
+      $c->model('DB::Project')
+      ->search( undef, { order_by => { -desc => 'created' }, rows => $max_projects } )
+      ->hri->all;
 
     $_->{url} = $c->uri_for_action( '/project/show', [ $_->{id}, $_->{url_name} ] ) for @projects;
 
@@ -58,8 +62,10 @@ sub index : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('ad
         ]
     );
 
-    my @users = $c->model('DB::User')
-      ->search( undef, { order_by => { -desc => 'created' }, rows => $max_users } )->hri->all;
+    my @users =
+      $c->model('DB::User')
+      ->search( undef, { order_by => { -desc => 'created' }, rows => $max_users } )
+      ->hri->all;
 
     $_->{url} = $c->uri_for_action( '/admin/user/show', [ $_->{name} ] ) for @users;
 

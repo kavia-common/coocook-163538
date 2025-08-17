@@ -64,7 +64,8 @@ sub BUILD ( $self, $args ) {
         }
 
         @dishes =
-          $list->items->search_related('ingredients')->search_related( 'dish', undef, { distinct => 1 } )
+          $list->items->search_related('ingredients')
+          ->search_related( 'dish', undef, { distinct => 1 } )
           ->hri->all;
 
         my %meals = map { $_->{id} => $_ }
