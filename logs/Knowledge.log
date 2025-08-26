@@ -7980,3 +7980,1331 @@ TimeoutError
 2025-08-26 07:22:44,806 - Knowledge - INFO - Updating org costs, total cost: 0
 2025-08-26 07:22:45,633 - Knowledge - INFO - Saving knowledge to Redis...
 2025-08-26 07:22:45,925 - Knowledge - INFO - Knowledge saved to Redis successfully
+2025-08-26 09:09:16,345 - Knowledge - INFO - Redis support added with prefix knowledge:b3226ih:
+2025-08-26 09:09:18,606 - Knowledge - INFO - load persisted knowledge: begin
+2025-08-26 09:09:18,703 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:18,792 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:18,886 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/28/001-auto.yml
+2025-08-26 09:09:18,992 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:19,099 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:19,178 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/js/organization/members.js
+2025-08-26 09:09:19,275 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:19,364 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:19,454 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Model/Badge.pm
+2025-08-26 09:09:19,559 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:19,657 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:19,734 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/test_data_v19_upgrade.sql
+2025-08-26 09:09:19,825 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:19,951 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:20,056 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/ActionRole/Ajax.pm
+2025-08-26 09:09:20,153 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:20,285 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:20,367 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet/TagGroup.pm
+2025-08-26 09:09:20,479 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:20,568 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:20,668 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/18/001-auto-__VERSION.yml
+2025-08-26 09:09:20,795 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:20,910 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:21,002 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/deploy/26/001-auto.sql
+2025-08-26 09:09:21,120 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:21,203 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:21,292 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/19/001-auto.sql
+2025-08-26 09:09:21,401 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:21,493 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:21,587 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/model_Plan.t
+2025-08-26 09:09:21,682 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:21,783 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:21,870 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/controller_Recipe.t
+2025-08-26 09:09:21,977 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:22,051 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:22,140 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Filter/NumberSuffix.pm
+2025-08-26 09:09:22,243 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:22,353 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:22,437 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/27/001-auto-__VERSION.sql
+2025-08-26 09:09:22,538 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:22,626 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:22,716 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet/BlacklistUsername.pm
+2025-08-26 09:09:22,813 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:22,931 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:23,050 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/9/001-auto-__VERSION.yml
+2025-08-26 09:09:23,149 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:23,253 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:23,355 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/deploy/25/001-auto-__VERSION.sql
+2025-08-26 09:09:23,447 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:23,527 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:23,624 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/schema_Terms.t
+2025-08-26 09:09:23,740 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:23,854 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:23,947 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Admin/FAQ.pm
+2025-08-26 09:09:24,041 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:24,151 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:24,261 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/18/001-auto-__VERSION.sql
+2025-08-26 09:09:24,380 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:24,456 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:24,558 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/Organization.pm
+2025-08-26 09:09:24,652 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:24,746 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:24,843 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/27/001-auto-__VERSION.yml
+2025-08-26 09:09:24,931 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:25,051 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:25,148 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/28/001-auto.sql
+2025-08-26 09:09:25,230 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:25,347 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:25,474 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Helpers.pm
+2025-08-26 09:09:25,570 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:25,650 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:25,750 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/js/recipe/index.js
+2025-08-26 09:09:25,879 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:25,971 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:26,072 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/9/001-auto-__VERSION.sql
+2025-08-26 09:09:26,169 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:26,258 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:26,352 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Unit.pm
+2025-08-26 09:09:26,492 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:26,565 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:26,652 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/19/001-auto.yml
+2025-08-26 09:09:26,745 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:26,835 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:26,926 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/Base.t
+2025-08-26 09:09:27,030 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:27,107 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:27,219 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/lib/Test/Coocook.pm
+2025-08-26 09:09:27,309 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:27,402 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:27,513 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet/RecipeIngredient.pm
+2025-08-26 09:09:27,618 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:27,708 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:27,821 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet/BlacklistEmail.pm
+2025-08-26 09:09:27,946 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:28,026 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:28,132 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Model/Plan.pm
+2025-08-26 09:09:28,210 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:28,344 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:28,434 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/10/001-auto-__VERSION.sql
+2025-08-26 09:09:28,534 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:28,628 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:28,717 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/css/material-design-icons.css
+2025-08-26 09:09:28,810 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:28,912 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:29,032 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet.pm
+2025-08-26 09:09:29,117 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:29,201 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:29,296 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Email.pm
+2025-08-26 09:09:29,380 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:29,458 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:29,552 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/js/unit/index.js
+2025-08-26 09:09:29,636 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:29,725 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:29,839 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/2/001-auto.yml
+2025-08-26 09:09:29,940 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:30,038 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:30,150 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Dish.pm
+2025-08-26 09:09:30,248 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:30,365 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:30,450 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/Filter_NumberSuffix.t
+2025-08-26 09:09:30,548 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:30,632 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:30,745 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/js/project/show.js
+2025-08-26 09:09:30,863 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:30,971 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:31,060 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/11/001-auto.yml
+2025-08-26 09:09:31,144 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:31,228 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:31,308 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/1/001-auto-__VERSION.sql
+2025-08-26 09:09:31,431 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:31,543 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:31,639 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/20/001-auto.sql
+2025-08-26 09:09:31,732 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:31,818 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:31,923 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/FAQ.pm
+2025-08-26 09:09:32,039 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:32,130 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:32,212 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Recipe.pm
+2025-08-26 09:09:32,331 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:32,435 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:32,516 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/10/001-auto-__VERSION.yml
+2025-08-26 09:09:32,606 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:32,703 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:32,814 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Base.pm
+2025-08-26 09:09:32,907 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:33,003 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:33,092 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/test_data_v21_install.sql
+2025-08-26 09:09:33,183 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:33,276 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:33,400 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/controller_Unit.t
+2025-08-26 09:09:33,507 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:33,640 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:33,761 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/1/001-auto-__VERSION.yml
+2025-08-26 09:09:33,842 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:33,964 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:34,047 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/11/001-auto.sql
+2025-08-26 09:09:34,158 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:34,245 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:34,337 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet/DishIngredient.pm
+2025-08-26 09:09:34,459 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:34,579 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:34,680 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/Makefile.PL
+2025-08-26 09:09:34,807 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:34,895 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:34,987 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/2/001-auto.sql
+2025-08-26 09:09:35,111 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:35,237 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:35,327 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/20/001-auto.yml
+2025-08-26 09:09:35,425 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:35,515 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:35,627 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Browse/Project.pm
+2025-08-26 09:09:35,744 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:35,820 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:35,945 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/css/purchase_list/edit.css
+2025-08-26 09:09:36,025 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:36,117 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:36,233 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/controller_Tag.t
+2025-08-26 09:09:36,343 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:36,429 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:36,506 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/js/recipe/import/preview.js
+2025-08-26 09:09:36,619 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:36,741 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:36,847 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/lib/marked/marked.min.js
+2025-08-26 09:09:36,982 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:37,090 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:37,171 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Root.pm
+2025-08-26 09:09:37,260 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:37,344 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:37,443 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/schema_Item.t
+2025-08-26 09:09:37,528 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:37,646 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:37,724 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/script/coocook_install_web_dependencies.pl
+2025-08-26 09:09:37,855 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:37,942 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:38,062 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/controller_Ajax_MealsDishesEditor.t
+2025-08-26 09:09:38,177 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:38,281 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:38,390 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Model/PurchaseList.pm
+2025-08-26 09:09:38,492 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:38,597 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:38,721 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/script/coocook_sqlite2pgsql.sh
+2025-08-26 09:09:38,844 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:38,929 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:39,037 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/BlacklistUsername.pm
+2025-08-26 09:09:39,162 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:39,251 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:39,363 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/TraitFor/Request/DisableParam.pm
+2025-08-26 09:09:39,446 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:39,574 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:39,668 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Ajax.pm
+2025-08-26 09:09:39,763 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:39,886 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:39,993 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/js/tag/index.js
+2025-08-26 09:09:40,109 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:40,199 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:40,306 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Article.pm
+2025-08-26 09:09:40,417 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:40,529 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:40,657 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/schema_User.t
+2025-08-26 09:09:40,753 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:40,874 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:40,987 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/js/user/register.js
+2025-08-26 09:09:41,065 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:41,179 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:41,265 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Session.pm
+2025-08-26 09:09:41,370 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:41,464 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:41,571 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/TagGroup.pm
+2025-08-26 09:09:41,686 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:41,771 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:41,848 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/View/HTML.pm
+2025-08-26 09:09:41,940 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:42,050 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:42,166 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/script/coocook_passwd.pl
+2025-08-26 09:09:42,252 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:42,332 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:42,429 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/css/recipe/import/preview.css
+2025-08-26 09:09:42,518 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:42,611 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:42,720 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/schema_Project.t
+2025-08-26 09:09:42,862 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:42,957 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:43,060 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/controller_Root.t
+2025-08-26 09:09:43,176 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:43,258 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:43,334 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/14/001-auto-__VERSION.sql
+2025-08-26 09:09:43,425 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:43,537 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:43,654 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/schema_PurchaseList.t
+2025-08-26 09:09:43,745 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:43,837 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:43,966 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/deploy/21/001-auto-__VERSION.sql
+2025-08-26 09:09:44,056 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:44,143 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:44,234 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/script/coocook_cron.pl
+2025-08-26 09:09:44,322 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:44,398 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:44,499 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/test_data_v24_upgrade.sql
+2025-08-26 09:09:44,596 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:44,681 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:44,801 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/DishIngredient.pm
+2025-08-26 09:09:44,893 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:45,002 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:45,170 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/15/001-auto.yml
+2025-08-26 09:09:45,291 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:45,369 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:45,460 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Tag.pm
+2025-08-26 09:09:45,552 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:45,632 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:45,725 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/5/001-auto-__VERSION.sql
+2025-08-26 09:09:45,850 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:45,934 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:46,024 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/24/001-auto.sql
+2025-08-26 09:09:46,136 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:46,231 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:46,320 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/controller_Article.t
+2025-08-26 09:09:46,429 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:46,552 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:46,655 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/23/001-auto-__VERSION.yml
+2025-08-26 09:09:46,753 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:46,835 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:46,917 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/6/001-auto.yml
+2025-08-26 09:09:47,007 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:47,110 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:47,231 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/DeploymentHandler.pm
+2025-08-26 09:09:47,319 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:47,455 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:47,574 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/css/user/register.css
+2025-08-26 09:09:47,703 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:47,786 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:47,933 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/script/coocook_users.pl
+2025-08-26 09:09:48,052 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:48,151 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:48,244 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/15/001-auto.sql
+2025-08-26 09:09:48,331 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:48,436 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:48,530 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/23/001-auto-__VERSION.sql
+2025-08-26 09:09:48,666 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:48,779 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:48,888 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Ajax/MealsDishesEditor.pm
+2025-08-26 09:09:48,998 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:49,099 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:49,207 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/5/001-auto-__VERSION.yml
+2025-08-26 09:09:49,321 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:49,424 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:49,517 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet/Organization.pm
+2025-08-26 09:09:49,608 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:49,689 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:49,777 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/deploy/22/001-auto.sql
+2025-08-26 09:09:49,864 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:50,181 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:50,276 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/14/001-auto-__VERSION.yml
+2025-08-26 09:09:50,358 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:50,436 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:50,541 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/24/001-auto.yml
+2025-08-26 09:09:50,639 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:50,754 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:50,847 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/6/001-auto.sql
+2025-08-26 09:09:50,929 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:51,017 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:51,135 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/RoleUser.pm
+2025-08-26 09:09:51,250 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:51,383 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:51,488 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result.pm
+2025-08-26 09:09:51,594 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:51,681 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:51,764 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/BlacklistEmail.pm
+2025-08-26 09:09:51,860 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:51,983 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:52,083 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/js/purchase_list/edit.js
+2025-08-26 09:09:52,174 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:52,273 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:52,367 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/RecipeIngredient.pm
+2025-08-26 09:09:52,457 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:52,548 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:52,644 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Organization/Member.pm
+2025-08-26 09:09:52,768 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:52,843 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:52,920 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/model_PurchaseList.t
+2025-08-26 09:09:53,018 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:53,114 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:53,226 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/deploy/28/001-auto.sql
+2025-08-26 09:09:53,322 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:53,424 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:53,534 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/PurchaseList.pm
+2025-08-26 09:09:53,627 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:53,721 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:53,824 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/js/tag/edit.js
+2025-08-26 09:09:53,922 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:54,043 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:54,183 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Authentication/Store/DBIx/Class/User.pm
+2025-08-26 09:09:54,274 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:54,367 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:54,482 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Component/ResultSet/Blacklist.pm
+2025-08-26 09:09:54,575 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:54,663 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:54,763 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet/Terms.pm
+2025-08-26 09:09:54,860 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:54,935 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:55,025 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/lib/themed-bootstrap/themed.scss
+2025-08-26 09:09:55,125 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:55,205 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:55,294 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/9-10/001.sql
+2025-08-26 09:09:55,382 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:55,463 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:55,554 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/deploy/27/001-auto-__VERSION.sql
+2025-08-26 09:09:55,638 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:55,724 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:55,799 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/Project.pm
+2025-08-26 09:09:55,899 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:56,019 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:56,102 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/js/project/import.js
+2025-08-26 09:09:56,246 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:56,337 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:56,459 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/controller_Error.t
+2025-08-26 09:09:56,577 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:56,666 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:56,780 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Recipe/Import.pm
+2025-08-26 09:09:56,872 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:56,991 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:57,078 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/script/coocook_docker.pl
+2025-08-26 09:09:57,185 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:57,278 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:57,381 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/3/001-auto-__VERSION.sql
+2025-08-26 09:09:57,484 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:57,570 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:57,659 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/4/001-auto.yml
+2025-08-26 09:09:57,760 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:57,855 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:57,941 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Plugin/UriForStatic.pm
+2025-08-26 09:09:58,078 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:58,172 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:58,280 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/User.pm
+2025-08-26 09:09:58,371 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:58,491 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:58,587 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/controller_Recipe_Import.t
+2025-08-26 09:09:58,686 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:58,775 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:58,876 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/script/coocook_test.pl
+2025-08-26 09:09:58,983 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:59,102 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:59,222 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/13/001-auto.yml
+2025-08-26 09:09:59,346 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:59,425 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:59,545 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/css/style.css
+2025-08-26 09:09:59,633 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:09:59,721 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:09:59,829 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/22/001-auto.sql
+2025-08-26 09:09:59,927 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:00,018 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:00,104 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/21/001-auto-__VERSION.yml
+2025-08-26 09:10:00,202 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:00,315 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:00,398 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/lib/TestDB.pm
+2025-08-26 09:10:00,493 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:00,616 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:00,737 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/script/coocook_get.pl
+2025-08-26 09:10:00,822 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:00,903 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:00,998 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/js/article/edit.js
+2025-08-26 09:10:01,110 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:01,211 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:01,319 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/12/001-auto-__VERSION.sql
+2025-08-26 09:10:01,418 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:01,541 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:01,632 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/02pod.t
+2025-08-26 09:10:01,728 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:01,865 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:01,940 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/Meal.pm
+2025-08-26 09:10:02,032 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:02,120 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:02,211 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/19-20/001-auto.sql
+2025-08-26 09:10:02,309 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:02,420 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:02,502 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Error.pm
+2025-08-26 09:10:02,609 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:02,716 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:02,830 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/Item.pm
+2025-08-26 09:10:02,928 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:03,029 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:03,109 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/4/001-auto.sql
+2025-08-26 09:10:03,229 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:03,321 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:03,423 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/22/001-auto.yml
+2025-08-26 09:10:03,527 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:03,629 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:03,726 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/controller_Autocomplete.t
+2025-08-26 09:10:03,813 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:03,915 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:04,003 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/API.pm
+2025-08-26 09:10:04,108 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:04,239 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:04,337 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/ShopSection.pm
+2025-08-26 09:10:04,443 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:04,528 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:04,627 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/12/001-auto-__VERSION.yml
+2025-08-26 09:10:04,725 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:04,835 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:04,938 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/13/001-auto.sql
+2025-08-26 09:10:05,040 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:05,142 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:05,243 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/21/001-auto-__VERSION.sql
+2025-08-26 09:10:05,339 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:05,428 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:05,548 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/3/001-auto-__VERSION.yml
+2025-08-26 09:10:05,649 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:05,749 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:05,866 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/test_data_v13_upgrade.sql
+2025-08-26 09:10:05,962 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:06,058 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:06,146 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/model_Authorization.t
+2025-08-26 09:10:06,270 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:06,366 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:06,458 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/16-17/001-rename-site-owner.sql
+2025-08-26 09:10:06,546 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:06,623 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:06,759 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/20-21/001-rename-old-tables.sql
+2025-08-26 09:10:06,852 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:06,971 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:07,089 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/css/print.css
+2025-08-26 09:10:07,212 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:07,293 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:07,389 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/js/shop_section/index.js
+2025-08-26 09:10:07,530 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:07,617 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:07,707 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Component/Result/Ingredient.pm
+2025-08-26 09:10:07,804 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:07,914 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:07,995 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/lib/zxcvbn.js
+2025-08-26 09:10:08,108 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:08,201 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:08,315 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/private_project.t
+2025-08-26 09:10:08,435 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:08,523 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:08,611 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/12-13/fix-cascade.sql
+2025-08-26 09:10:08,719 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:08,820 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:08,915 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Model/ProjectImporter.pm
+2025-08-26 09:10:09,008 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:09,135 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:09,227 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Ajax/IngredientsEditor.pm
+2025-08-26 09:10:09,324 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:09,422 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:09,526 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet/ShopSection.pm
+2025-08-26 09:10:09,653 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:09,775 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:09,881 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/script_deploy.t
+2025-08-26 09:10:09,990 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:10,072 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:10,186 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet/Item.pm
+2025-08-26 09:10:10,294 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:10,397 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:10,501 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/View/Email/TT.pm
+2025-08-26 09:10:10,605 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:10,700 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:10,782 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/7-8/002_default_user.pl
+2025-08-26 09:10:10,916 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:11,036 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:11,133 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet/User.pm
+2025-08-26 09:10:11,230 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:11,359 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:11,479 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/Terms.pm
+2025-08-26 09:10:11,578 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:11,666 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:11,766 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/schema_DishIngredient.t
+2025-08-26 09:10:11,859 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:11,951 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:12,042 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/schema.t
+2025-08-26 09:10:12,145 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:12,240 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:12,325 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet/Meal.pm
+2025-08-26 09:10:12,476 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:12,565 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:12,656 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/model_Token.t
+2025-08-26 09:10:12,774 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:12,862 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:12,976 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/test_data_v1_install.sql
+2025-08-26 09:10:13,088 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:13,205 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:13,293 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/js/script.js
+2025-08-26 09:10:13,431 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:13,550 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:13,647 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/17/001-auto.yml
+2025-08-26 09:10:13,740 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:13,860 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:13,944 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/25/001-auto-__VERSION.yml
+2025-08-26 09:10:14,065 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:14,145 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:14,226 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/View/HTML/Snippet.pm
+2025-08-26 09:10:14,335 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:14,424 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:14,544 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/controller_Ajax_IngredientsEditor.t
+2025-08-26 09:10:14,660 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:14,762 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:14,858 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/26/001-auto.sql
+2025-08-26 09:10:15,009 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:15,142 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:15,279 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet/PurchaseList.pm
+2025-08-26 09:10:15,377 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:15,453 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:15,530 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/18-19/001-fix-real-columns.sql
+2025-08-26 09:10:15,638 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:15,719 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:15,822 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/model_ProjectImporter.t
+2025-08-26 09:10:15,920 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:16,005 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:16,098 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/7/001-auto-__VERSION.sql
+2025-08-26 09:10:16,195 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:16,273 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:16,400 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/8/001-auto.yml
+2025-08-26 09:10:16,531 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:16,624 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:16,712 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Component/Result/DishOrRecipe.pm
+2025-08-26 09:10:16,839 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:16,956 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:17,046 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Component/ResultSet/ArticleOrUnit.pm
+2025-08-26 09:10:17,144 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:17,215 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:17,313 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/script/coocook_create.pl
+2025-08-26 09:10:17,404 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:17,519 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:17,611 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/16/001-auto-__VERSION.sql
+2025-08-26 09:10:17,707 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:17,814 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:17,903 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/deploy/23/001-auto-__VERSION.sql
+2025-08-26 09:10:17,994 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:18,091 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:18,195 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/00compile.t
+2025-08-26 09:10:18,290 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:18,422 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:18,548 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/ActionRole/RequiresCapability.pm
+2025-08-26 09:10:18,671 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:18,812 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:18,943 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Model/Token.pm
+2025-08-26 09:10:19,037 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:19,137 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:19,264 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/js/purchase_list/index.js
+2025-08-26 09:10:19,391 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:19,491 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:19,590 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/26/001-auto.yml
+2025-08-26 09:10:19,677 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:19,768 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:19,876 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/8/001-auto.sql
+2025-08-26 09:10:19,974 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:20,063 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:20,151 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Script/Deploy.pm
+2025-08-26 09:10:20,240 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:20,323 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:20,460 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/lib/themed-bootstrap/README.md
+2025-08-26 09:10:20,577 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:20,659 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:20,747 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/examples/coocook.yaml
+2025-08-26 09:10:20,843 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:20,937 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:21,035 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook.pm
+2025-08-26 09:10:21,130 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:21,216 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:21,334 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/deploy/24/001-auto.sql
+2025-08-26 09:10:21,431 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:21,534 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:21,673 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/script/coocook_dbck.pl
+2025-08-26 09:10:21,847 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:21,950 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:22,089 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Settings/ChangeEmail.pm
+2025-08-26 09:10:22,228 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:22,321 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:22,419 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/25/001-auto-__VERSION.sql
+2025-08-26 09:10:22,505 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:22,626 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:22,727 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/7/001-auto-__VERSION.yml
+2025-08-26 09:10:22,822 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:22,912 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:23,001 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet/Project.pm
+2025-08-26 09:10:23,086 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:23,183 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:23,286 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/schema_Blacklist.t
+2025-08-26 09:10:23,398 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:23,489 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:23,575 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/17/001-auto.sql
+2025-08-26 09:10:23,671 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:23,756 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:23,848 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema.pm
+2025-08-26 09:10:23,950 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:24,038 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:24,131 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/16/001-auto-__VERSION.yml
+2025-08-26 09:10:24,238 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:24,359 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:24,531 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Model/Authorization.pm
+2025-08-26 09:10:24,623 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:24,702 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:24,805 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/model_Ingredients.t
+2025-08-26 09:10:24,899 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:25,016 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:25,105 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/4-5/001.sql
+2025-08-26 09:10:25,207 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:25,304 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:25,399 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/28/001-auto-__VERSION.yml
+2025-08-26 09:10:25,508 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:25,596 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:25,686 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/UnitConversion.pm
+2025-08-26 09:10:25,798 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:25,890 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:25,978 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Settings.pm
+2025-08-26 09:10:26,085 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:26,225 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:26,317 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/recipes_of_the_day.t
+2025-08-26 09:10:26,414 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:26,517 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:26,604 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/script/coocook_server.pl
+2025-08-26 09:10:26,744 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:26,833 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:26,926 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/deploy/26/001-auto-__VERSION.sql
+2025-08-26 09:10:27,036 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:27,118 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:27,207 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/Test_Coocook.t
+2025-08-26 09:10:27,310 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:27,412 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:27,505 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller.pm
+2025-08-26 09:10:27,606 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:27,699 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:27,778 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/ProjectUser.pm
+2025-08-26 09:10:27,864 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:27,952 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:28,052 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/10-11/001-auto.sql
+2025-08-26 09:10:28,159 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:28,249 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:28,338 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/1-2/001-auto.sql
+2025-08-26 09:10:28,463 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:28,546 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:28,640 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Script/Get.pm
+2025-08-26 09:10:28,758 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:28,858 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:28,956 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/19/001-auto-__VERSION.sql
+2025-08-26 09:10:29,058 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:29,156 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:29,244 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/controller_Browse_Recipe.t
+2025-08-26 09:10:29,372 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:29,490 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:29,613 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/upgrade/26-27/001-auto.sql
+2025-08-26 09:10:29,708 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:29,794 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:29,894 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/deploy/27/001-auto.sql
+2025-08-26 09:10:30,021 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:30,108 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:30,231 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/27-28/001-auto.sql
+2025-08-26 09:10:30,362 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:30,442 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:30,525 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Component/Result/Boolify.pm
+2025-08-26 09:10:30,619 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:30,724 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:30,814 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/lib/themed-bootstrap/themed.min.css
+2025-08-26 09:10:30,991 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:31,060 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:31,167 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/19/001-auto-__VERSION.yml
+2025-08-26 09:10:31,268 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:31,384 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:31,468 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/28/001-auto-__VERSION.sql
+2025-08-26 09:10:31,589 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:31,686 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:31,813 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/controller_Admin.t
+2025-08-26 09:10:31,922 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:32,011 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:32,114 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/8-9/001.sql
+2025-08-26 09:10:32,249 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:32,371 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:32,448 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/test_data.sql
+2025-08-26 09:10:32,565 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:32,669 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:32,766 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/20-21/002-deploy-fresh.pl
+2025-08-26 09:10:32,857 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:32,955 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:33,079 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Plugin/StrictTransportSecurity.pm
+2025-08-26 09:10:33,195 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:33,309 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:33,395 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/script_get.t
+2025-08-26 09:10:33,486 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:33,560 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:33,641 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/upgrade/22-23/001-auto.sql
+2025-08-26 09:10:33,755 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:33,834 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:33,913 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/12/001-auto.sql
+2025-08-26 09:10:33,993 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:34,100 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:34,183 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/5-6/002_copy_project_data.pl
+2025-08-26 09:10:34,311 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:34,422 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:34,522 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/23-24/001-auto.sql
+2025-08-26 09:10:34,641 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:34,739 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:34,862 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Model/Ingredients.pm
+2025-08-26 09:10:34,954 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:35,070 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:35,150 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Admin.pm
+2025-08-26 09:10:35,232 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:35,340 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:35,422 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/doc/entities.md
+2025-08-26 09:10:35,512 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:35,614 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:35,705 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/test_data_v21_upgrade.sql
+2025-08-26 09:10:35,820 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:35,948 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:36,029 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/11/001-auto-__VERSION.yml
+2025-08-26 09:10:36,107 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:36,191 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:36,302 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/20/001-auto-__VERSION.sql
+2025-08-26 09:10:36,391 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:36,474 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:36,568 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/2/001-auto-__VERSION.yml
+2025-08-26 09:10:36,673 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:36,761 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:36,850 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Browse/Recipe.pm
+2025-08-26 09:10:36,941 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:37,038 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:37,126 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/21/001-auto.yml
+2025-08-26 09:10:37,217 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:37,316 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:37,423 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/3/001-auto.sql
+2025-08-26 09:10:37,521 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:37,627 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:37,719 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/3/001-auto.yml
+2025-08-26 09:10:37,806 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:37,897 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:37,985 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/organization_lifecycle.t
+2025-08-26 09:10:38,118 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:38,223 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:38,306 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/test_data_v12_upgrade.sql
+2025-08-26 09:10:38,443 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:38,512 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:38,645 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/21/001-auto.sql
+2025-08-26 09:10:38,740 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:38,838 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:38,958 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/postgresql.t
+2025-08-26 09:10:39,050 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:39,134 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:39,263 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/11/001-auto-__VERSION.sql
+2025-08-26 09:10:39,357 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:39,439 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:39,542 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/12/001-auto.yml
+2025-08-26 09:10:39,622 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:39,702 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:39,777 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Permission.pm
+2025-08-26 09:10:39,907 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:39,986 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:40,102 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/20/001-auto-__VERSION.yml
+2025-08-26 09:10:40,206 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:40,306 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:40,402 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/captcha.t
+2025-08-26 09:10:40,518 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:40,636 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:40,736 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/2/001-auto-__VERSION.sql
+2025-08-26 09:10:40,834 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:40,938 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:41,043 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Model/Organizations.pm
+2025-08-26 09:10:41,165 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:41,242 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:41,350 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Organization.pm
+2025-08-26 09:10:41,454 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:41,549 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:41,664 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/lib/marked/LICENSE.md
+2025-08-26 09:10:41,777 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:41,855 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:41,932 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/6-7/001.sql
+2025-08-26 09:10:42,045 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:42,142 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:42,265 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/TermsUser.pm
+2025-08-26 09:10:42,353 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:42,436 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:42,552 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/21-22/001-auto.sql
+2025-08-26 09:10:42,675 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:42,759 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:42,875 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Filter/SignificantDigits.pm
+2025-08-26 09:10:43,002 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:43,082 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:43,180 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Email/ChangeEmail.pm
+2025-08-26 09:10:43,279 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:43,379 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:43,459 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/20-21/003-copy-back.sql
+2025-08-26 09:10:43,545 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:43,620 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:43,746 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Model/Messages.pm
+2025-08-26 09:10:43,834 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:43,924 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:44,020 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Script/Dbck.pm
+2025-08-26 09:10:44,120 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:44,250 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:44,336 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Model/UnitConversionGraph.pm
+2025-08-26 09:10:44,444 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:44,555 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:44,672 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/schema_Unit.t
+2025-08-26 09:10:44,770 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:44,849 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:44,948 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Component/ProxyMethods.pm
+2025-08-26 09:10:45,072 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:45,159 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:45,255 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Ajax/Autocomplete.pm
+2025-08-26 09:10:45,362 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:45,452 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:45,548 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Script/Role/HasDebug.pm
+2025-08-26 09:10:45,681 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:45,794 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:45,927 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/script_dbck.t
+2025-08-26 09:10:46,049 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:46,138 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:46,259 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/README.md
+2025-08-26 09:10:46,367 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:46,452 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:46,559 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/16/001-auto.sql
+2025-08-26 09:10:46,651 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:46,749 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:46,856 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet/UnitConversion.pm
+2025-08-26 09:10:46,962 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:47,042 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:47,151 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/deploy/23/001-auto.sql
+2025-08-26 09:10:47,249 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:47,327 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:47,408 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/model_UnitConversionGraph.t
+2025-08-26 09:10:47,538 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:47,636 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:47,718 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/Filter_SignificantDigits.t
+2025-08-26 09:10:47,802 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:47,876 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:47,977 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet/ProjectUser.pm
+2025-08-26 09:10:48,073 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:48,172 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:48,286 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/7/001-auto.sql
+2025-08-26 09:10:48,410 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:48,486 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:48,578 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/24/001-auto-__VERSION.sql
+2025-08-26 09:10:48,705 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:48,799 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:48,909 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/25/001-auto.yml
+2025-08-26 09:10:49,027 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:49,137 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:49,228 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/script/coocook_cgi.pl
+2025-08-26 09:10:49,360 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:49,457 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:49,559 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/6/001-auto-__VERSION.yml
+2025-08-26 09:10:49,695 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:49,798 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:49,911 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/25-26/001-auto.sql
+2025-08-26 09:10:49,995 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:50,089 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:50,161 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/upgrade/24-25/001-auto.sql
+2025-08-26 09:10:50,257 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:50,328 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:50,456 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/15/001-auto-__VERSION.yml
+2025-08-26 09:10:50,588 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:50,730 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:50,819 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/schema_Dish.t
+2025-08-26 09:10:50,911 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:51,034 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:51,156 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/25/001-auto.sql
+2025-08-26 09:10:51,251 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:51,384 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:51,509 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/model_Organizations.t
+2025-08-26 09:10:51,633 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:51,732 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:51,817 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/schema_Recipe.t
+2025-08-26 09:10:51,949 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:52,042 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:52,128 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/15/001-auto-__VERSION.sql
+2025-08-26 09:10:52,238 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:52,322 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:52,415 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/16/001-auto.yml
+2025-08-26 09:10:52,539 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:52,630 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:52,727 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/model_Messages.t
+2025-08-26 09:10:52,828 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:52,937 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:53,020 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/deploy/22/001-auto-__VERSION.sql
+2025-08-26 09:10:53,147 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:53,260 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:53,363 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Print.pm
+2025-08-26 09:10:53,499 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:53,596 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:53,710 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/7/001-auto.yml
+2025-08-26 09:10:53,810 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:53,909 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:54,018 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/change_password.t
+2025-08-26 09:10:54,130 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:54,198 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:54,278 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/6/001-auto-__VERSION.sql
+2025-08-26 09:10:54,400 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:54,500 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:54,598 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Component/ResultSet/SortByName.pm
+2025-08-26 09:10:54,721 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:54,835 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:54,919 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/24/001-auto-__VERSION.yml
+2025-08-26 09:10:55,024 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:55,105 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:55,219 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/Recipe.pm
+2025-08-26 09:10:55,332 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:55,423 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:55,500 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Admin/Terms.pm
+2025-08-26 09:10:55,596 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:55,676 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:55,764 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/FAQ.pm
+2025-08-26 09:10:55,858 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:55,947 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:56,027 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Badge.pm
+2025-08-26 09:10:56,148 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:56,262 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:56,373 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/deploy/28/001-auto-__VERSION.sql
+2025-08-26 09:10:56,509 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:56,614 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:56,703 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/js/autocomplete.js
+2025-08-26 09:10:56,824 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:56,950 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:57,039 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/14-15/001.sql
+2025-08-26 09:10:57,174 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:57,294 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:57,384 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/Util.t
+2025-08-26 09:10:57,491 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:57,596 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:57,685 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/upgrade/27-28/001-auto.sql
+2025-08-26 09:10:57,810 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:57,888 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:57,999 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/bootstrap-theme.html
+2025-08-26 09:10:58,106 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:58,202 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:58,286 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Script/Passwd.pm
+2025-08-26 09:10:58,414 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:58,517 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:58,637 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/zz-perltidy.t
+2025-08-26 09:10:58,756 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:58,877 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:58,980 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/web-dependencies.yaml
+2025-08-26 09:10:59,087 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:59,181 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:59,272 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Model/DB.pm
+2025-08-26 09:10:59,371 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:59,454 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:59,559 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/2-3/001-auto.sql
+2025-08-26 09:10:59,687 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:10:59,784 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:10:59,880 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Script/Cron.pm
+2025-08-26 09:10:59,989 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:00,066 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:00,188 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/5-6/001.sql
+2025-08-26 09:11:00,303 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:00,378 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:00,486 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Script/Users.pm
+2025-08-26 09:11:00,588 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:00,690 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:00,800 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/js/project/permissions.js
+2025-08-26 09:11:00,890 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:00,972 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:01,098 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet/RecipeOfTheDay.pm
+2025-08-26 09:11:01,191 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:01,278 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:01,365 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet/Tag.pm
+2025-08-26 09:11:01,496 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:01,595 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:01,705 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/examples/dbic.yaml
+2025-08-26 09:11:01,803 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:01,894 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:01,985 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/Dish.pm
+2025-08-26 09:11:02,094 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:02,179 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:02,271 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/4-5/002_url_names.pl
+2025-08-26 09:11:02,364 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:02,463 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:02,563 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/user_lifecycle.t
+2025-08-26 09:11:02,658 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:02,775 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:02,889 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/11-12/001-auto.sql
+2025-08-26 09:11:02,974 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:03,071 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:03,176 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/util/perltidy.sh
+2025-08-26 09:11:03,281 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:03,384 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:03,489 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet/OrganizationUser.pm
+2025-08-26 09:11:03,615 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:03,715 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:03,811 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/schema_ProjectUser.t
+2025-08-26 09:11:03,888 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:03,966 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:04,089 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/22/001-auto-__VERSION.sql
+2025-08-26 09:11:04,179 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:04,279 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:04,403 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/4/001-auto-__VERSION.yml
+2025-08-26 09:11:04,499 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:04,578 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:04,675 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/13/001-auto-__VERSION.yml
+2025-08-26 09:11:04,763 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:04,858 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:04,988 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/script/coocook_fastcgi.pl
+2025-08-26 09:11:05,077 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:05,161 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:05,275 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/23/001-auto.yml
+2025-08-26 09:11:05,383 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:05,450 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:05,537 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/5/001-auto.sql
+2025-08-26 09:11:05,629 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:05,756 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:05,833 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/controller_Badge.t
+2025-08-26 09:11:05,955 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:06,065 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:06,180 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/14/001-auto.sql
+2025-08-26 09:11:06,290 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:06,406 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:06,508 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/deploy/21/001-auto.sql
+2025-08-26 09:11:06,620 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:06,706 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:06,811 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/ArticleTag.pm
+2025-08-26 09:11:06,913 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:07,032 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:07,128 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/4/001-auto-__VERSION.sql
+2025-08-26 09:11:07,236 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:07,354 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:07,456 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/cascade_delete.t
+2025-08-26 09:11:07,555 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:07,649 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:07,750 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Terms.pm
+2025-08-26 09:11:07,879 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:07,961 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:08,060 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/24-25/001-auto.sql
+2025-08-26 09:11:08,185 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:08,282 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:08,370 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/upgrade/23-24/001-auto.sql
+2025-08-26 09:11:08,483 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:08,563 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:08,678 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/TestDB.t
+2025-08-26 09:11:08,792 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:08,893 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:09,030 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/script_passwd.t
+2025-08-26 09:11:09,126 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:09,211 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:09,284 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/22/001-auto-__VERSION.yml
+2025-08-26 09:11:09,380 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:09,500 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:09,597 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/23/001-auto.sql
+2025-08-26 09:11:09,680 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:09,758 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:09,845 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/css/autocomplete.css
+2025-08-26 09:11:09,934 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:10,028 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:10,140 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/15-16/001-auto.sql
+2025-08-26 09:11:10,261 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:10,386 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:10,469 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/View/Ajax.pm
+2025-08-26 09:11:10,589 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:10,665 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:10,740 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet/Article.pm
+2025-08-26 09:11:10,867 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:10,961 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:11,085 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/14/001-auto.yml
+2025-08-26 09:11:11,180 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:11,257 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:11,353 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Util.pm
+2025-08-26 09:11:11,442 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:11,532 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:11,662 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/5/001-auto.yml
+2025-08-26 09:11:11,759 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:11,840 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:11,942 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/13/001-auto-__VERSION.sql
+2025-08-26 09:11:12,061 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:12,165 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:12,260 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/Unit.pm
+2025-08-26 09:11:12,342 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:12,413 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:12,528 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/schema_Component_Boolify.t
+2025-08-26 09:11:12,622 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:12,709 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:12,827 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/script_users.t
+2025-08-26 09:11:12,928 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:13,012 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:13,102 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/1/001-auto.sql
+2025-08-26 09:11:13,203 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:13,309 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:13,408 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/controller_Item.t
+2025-08-26 09:11:13,492 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:13,605 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:13,700 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet/Unit.pm
+2025-08-26 09:11:13,816 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:13,904 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:14,001 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/Tag.pm
+2025-08-26 09:11:14,090 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:14,171 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:14,257 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/script/coocook_deploy.pl
+2025-08-26 09:11:14,339 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:14,424 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:14,546 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/RecipeOfTheDay.pm
+2025-08-26 09:11:14,631 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:14,756 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:14,839 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/sqlite.t
+2025-08-26 09:11:14,932 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:15,035 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:15,118 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/01app.t
+2025-08-26 09:11:15,252 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:15,335 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:15,431 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/7-8/001.sql
+2025-08-26 09:11:15,524 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:15,640 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:15,720 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/10/001-auto.sql
+2025-08-26 09:11:15,804 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:15,890 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:15,983 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Admin/User.pm
+2025-08-26 09:11:16,111 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:16,190 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:16,279 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/13-14/001-auto.sql
+2025-08-26 09:11:16,388 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:16,475 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:16,599 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Project.pm
+2025-08-26 09:11:16,706 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:16,794 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:16,916 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/OrganizationProject.pm
+2025-08-26 09:11:17,012 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:17,099 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:17,195 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/zz-perlcritic.t
+2025-08-26 09:11:17,293 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:17,384 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:17,501 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Model/RecipeImporter.pm
+2025-08-26 09:11:17,611 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:17,703 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:17,831 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/upgrade/21-22/001-auto.sql
+2025-08-26 09:11:17,929 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:18,030 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:18,124 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/22-23/001-auto.sql
+2025-08-26 09:11:18,228 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:18,321 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:18,400 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/controller_User.t
+2025-08-26 09:11:18,486 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:18,604 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:18,716 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/1/001-auto.yml
+2025-08-26 09:11:18,828 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:18,906 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:19,022 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/PurchaseList.pm
+2025-08-26 09:11:19,148 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:19,267 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:19,353 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/17-18/002-email_fc.sql
+2025-08-26 09:11:19,461 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:19,560 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:19,680 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/10/001-auto.yml
+2025-08-26 09:11:19,775 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:19,889 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:19,972 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/17/001-auto-__VERSION.yml
+2025-08-26 09:11:20,066 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:20,167 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:20,287 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet/Recipe.pm
+2025-08-26 09:11:20,415 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:20,534 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:20,641 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/9/001-auto.sql
+2025-08-26 09:11:20,747 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:20,844 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:20,972 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/test_data_v9_upgrade.sql
+2025-08-26 09:11:21,049 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:21,154 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:21,240 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/27/001-auto.yml
+2025-08-26 09:11:21,365 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:21,457 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:21,591 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/js/tagAutocomplete.js
+2025-08-26 09:11:21,697 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:21,799 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:21,919 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Script/Role/HasSchema.pm
+2025-08-26 09:11:22,032 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:22,140 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:22,247 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/Session.pm
+2025-08-26 09:11:22,351 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:22,447 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:22,528 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Item.pm
+2025-08-26 09:11:22,641 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:22,723 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:22,843 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/26/001-auto-__VERSION.sql
+2025-08-26 09:11:22,955 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:23,035 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:23,122 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/8/001-auto-__VERSION.yml
+2025-08-26 09:11:23,207 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:23,289 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:23,406 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/ArticleUnit.pm
+2025-08-26 09:11:23,532 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:23,627 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:23,715 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/root/static/lib/themed-bootstrap/themed.css
+2025-08-26 09:11:23,793 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:23,905 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:24,001 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/controller_PurchaseList.t
+2025-08-26 09:11:24,088 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:24,207 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:24,313 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/deploy/25/001-auto.sql
+2025-08-26 09:11:24,404 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:24,510 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:24,638 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/RecipeTag.pm
+2025-08-26 09:11:24,748 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:24,839 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:24,918 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_common/upgrade/27-28/unassigned_dish_ingredients.pl
+2025-08-26 09:11:25,000 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:25,117 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:25,233 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/18/001-auto.sql
+2025-08-26 09:11:25,337 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:25,438 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:25,560 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/Article.pm
+2025-08-26 09:11:25,661 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:25,760 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:25,881 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/26/001-auto-__VERSION.yml
+2025-08-26 09:11:25,976 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:26,050 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:26,151 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/DishTag.pm
+2025-08-26 09:11:26,248 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:26,339 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:26,416 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/3-4/001.sql
+2025-08-26 09:11:26,507 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:26,635 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:26,740 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/8/001-auto-__VERSION.sql
+2025-08-26 09:11:26,819 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:26,945 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:27,045 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/17-18/001-auto.sql
+2025-08-26 09:11:27,157 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:27,253 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:27,343 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/model_RecipeImporter.t
+2025-08-26 09:11:27,441 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:27,526 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:27,607 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/Meal.pm
+2025-08-26 09:11:27,714 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:27,832 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:27,928 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/9/001-auto.yml
+2025-08-26 09:11:28,016 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:28,102 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:28,190 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Model/Autocomplete.pm
+2025-08-26 09:11:28,289 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:28,392 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:28,490 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/ResultSet/Dish.pm
+2025-08-26 09:11:28,623 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:28,696 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:28,825 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/17/001-auto-__VERSION.sql
+2025-08-26 09:11:28,938 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:29,017 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:29,103 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Schema/Result/OrganizationUser.pm
+2025-08-26 09:11:29,211 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:29,286 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:29,381 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/_source/deploy/18/001-auto.yml
+2025-08-26 09:11:29,472 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:29,558 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:29,635 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/deploy/24/001-auto-__VERSION.sql
+2025-08-26 09:11:29,751 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:29,831 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:29,945 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/PostgreSQL/upgrade/25-26/001-auto.sql
+2025-08-26 09:11:30,088 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:30,174 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:30,268 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/View/Email.pm
+2025-08-26 09:11:30,350 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:30,436 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:30,530 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/26-27/001-auto.sql
+2025-08-26 09:11:30,632 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:30,721 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:30,832 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/User.pm
+2025-08-26 09:11:30,917 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:31,037 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:31,165 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/deploy/27/001-auto.sql
+2025-08-26 09:11:31,266 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:31,369 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:31,452 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/t/controller_Project.t
+2025-08-26 09:11:31,548 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:31,644 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:31,734 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/share/ddl/SQLite/upgrade/8-9/usernames_fc.pl
+2025-08-26 09:11:31,817 - Knowledge - INFO - Found code-base-name: https://github.com/kavia-common/coocook-163538.git:kavia-master
+2025-08-26 09:11:31,913 - Knowledge - INFO - Found code_base: <app.utils.kg_build.knowledge.KnowledgeCodeBase object at 0x7f9f50129c10>
+2025-08-26 09:11:32,000 - Knowledge - INFO - process ingested knowledge for /app/data/b2c/163538/b3226ih/coocook-163538/lib/Coocook/Controller/ShopSection.pm
+2025-08-26 09:11:32,087 - Knowledge - INFO - load persisted knowledge: end
+2025-08-26 09:11:32,166 - Knowledge - INFO - load persisted docinfo: begin
+2025-08-26 09:11:32,262 - Knowledge - INFO - load persisted docinfo: end
+2025-08-26 09:11:33,182 - Knowledge - INFO - worker kw1 created with dedicated MongoDB connection (total: 1)
+2025-08-26 09:11:33,284 - Knowledge - INFO - knowledge worker kw1 start
+2025-08-26 09:11:33,406 - Knowledge - INFO - Knowledge creation complete
+2025-08-26 09:11:33,491 - Knowledge - INFO - Updating org costs, total cost: 0
+2025-08-26 09:11:34,299 - Knowledge - INFO - Saving knowledge to Redis...
+2025-08-26 09:11:34,539 - Knowledge - INFO - Knowledge saved to Redis successfully
